@@ -21,6 +21,18 @@ od razu zostać zaakceptowana lub odrzucona.
 Zgłaszanie, dyskusja i rozwiązywanie błędów w aplikacji odbywa się przez
 stronę [Issues](https://github.com/Krakow2016/wolontariusze/issues).
 
+# Uruchomienie
+
+Aby uruchomić lokalnie serwer www, upewnij się że masz zainstalowane wszystkie zależności:
+
+    $ npm install
+
+Następnie wykonaj komendę:
+
+    $ gulp
+
+i skieruj się pod adres <http://127.0.0.1:7000>.
+
 # Licencja MIT
 
 Niniejszym gwarantuje się, bez opłat, że każda osoba, która wejdzie w

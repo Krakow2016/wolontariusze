@@ -1,16 +1,16 @@
-var gulp       = require('gulp'),
-    browserify = require('gulp-browserify')
+'use strict';
+var gulp = require('gulp');
 
-gulp.task('scripts', function () {
+require('./gulp/app');
+require('./gulp/serve');
+require('./gulp/vendor');
+require('./gulp/watch');
 
-    gulp.src(['app/main.js'])
-    .pipe(browserify({
-        debug: true,
-        transform: [ 'reactify' ]
-    }))
-    .pipe(gulp.dest('./public/'));
+gulp.task('build', [
+  'app',
+  'vendor',
+]);
 
+gulp.task('default', ['build'], function() {
+  return gulp.start('serve', 'watch');
 });
-
-gulp.task('default', ['scripts']);
-

@@ -1,32 +1,29 @@
 var express = require('express'),
-    path = require('path')
+    handlebars  = require('express-handlebars'),
+    path = require('path'),
+    bodyParser = require('body-parser')
 
 require("node-jsx").install({extension: '.jsx'})
 
-var app = express()
+var app = module.exports = express()
 
-var bodyParser = require('body-parser')
-
-// get information from html forms
+// Get information from html forms
 app.use(bodyParser.json())
-// parse the URL-encoded data with qs library
+// Parse the URL-encoded data with qs library
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'ejs')
+// Użyj silnika szablonów Handlebars
+app.engine('handlebars', handlebars({defaultLayout: 'main'}))
+app.set('view engine', 'handlebars')
 
 // Set up Routes for the application
 require('./app/routes/all.js')(app)
 
-//Route not found -- Set 404
+// Ustaw domyślną ścieżkę
 app.get('*', function(req, res) {
   res.json({
     "route": "Sorry this page does not exist!"
   })
 })
-
-app.listen(7000)
-
-console.log('Server is Up and Running')

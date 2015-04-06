@@ -1,17 +1,17 @@
 var React = require('react')
 
-var App = React.createClass({
+var Volonteer = React.createClass({
   click: function() {
-    alert('hello')
+    alert('hello '+this.props.name)
   },
   render: function () {
     return (
       <button onClick={this.click}>
-        Hello!
+        Hello {this.props.name}!
       </button>
     )
   }
 })
 
 /* Module.exports instead of normal dom mounting */
-module.exports.App = App
+module.exports = Volonteer
