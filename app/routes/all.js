@@ -20,7 +20,13 @@ module.exports = function(app) {
     var html = React.renderToString(Volonteer(data))
     // Wyślij html wygenerowany przez React
     res.render('wolontariusz', {
-      html: html
+      html: html,
+      helpers: {
+        script: function(path) {
+          res.locals.scripts.push(path)
+          return
+        }
+      }
     })
   })
 }

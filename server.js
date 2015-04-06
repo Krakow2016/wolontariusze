@@ -14,8 +14,15 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(express.static(path.join(__dirname, 'public')))
 
+app.use(function(req, res, next){
+    res.locals.scripts = ['/js/vendor.js']
+    next();
+});
+
 // Użyj silnika szablonów Handlebars
-app.engine('handlebars', handlebars({defaultLayout: 'main'}))
+app.engine('handlebars', handlebars({
+    defaultLayout: 'main',
+}))
 app.set('view engine', 'handlebars')
 
 // Set up Routes for the application

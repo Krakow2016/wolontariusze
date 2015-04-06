@@ -5,7 +5,9 @@
     <link href='/styles.css' rel="stylesheet">
   </head>
   <body>
-    <script src="/vendor.js"></script>
     {{{ body }}}
+    {{#each scripts}}
+    <script src="{{this}}"></script>
+    {{/each}}
   </body>
 </html>

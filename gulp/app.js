@@ -28,6 +28,6 @@ gulp.task('app', function () {
 
   return gulp.src(['./app/*.js'])
     .pipe(browserified)
-    .pipe(gulp.dest('./public'));
+    .pipe(gulp.dest('./public/js'));
 
 });
