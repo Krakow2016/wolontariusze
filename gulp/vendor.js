@@ -5,7 +5,9 @@ var gulp = require('gulp'),
     through2 = require('through2');
 
 var libs = [
-  'react'
+  'react',
+  'fluxible',
+  'fluxible-plugin-routr'
 ];
 
 gulp.task('vendor', function() {
