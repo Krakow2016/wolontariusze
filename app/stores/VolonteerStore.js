@@ -4,13 +4,14 @@
  */
 'use strict';
 var createStore = require('fluxible/addons').createStore;
-var routesConfig= require('../pages/home/routes')
+var routesConfig= require('../pages/volonteer/routes')
 
 var ApplicationStore = createStore({
     storeName: 'ApplicationStore',
     handlers: {
         'CHANGE_ROUTE_SUCCESS' : 'handleNavigate',
-        'UPDATE_PAGE_TITLE'    : 'updatePageTitle'
+        'UPDATE_PAGE_TITLE'    : 'updatePageTitle',
+        'LOAD_PAGE'            : 'loadPage'
     },
     initialize: function () {
         this.currentPageName = null;
@@ -35,6 +36,9 @@ var ApplicationStore = createStore({
     updatePageTitle: function (title) {
         this.pageTitle = title.pageTitle;
         this.emitChange();
+    },
+    loadPage: function(id) {
+        console.log("Wczytaj wolontariusza ", id)
     },
     getCurrentPageName: function () {
         return this.currentPageName;

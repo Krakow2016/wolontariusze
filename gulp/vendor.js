@@ -2,11 +2,13 @@
 var gulp = require('gulp'),
     browserify = require('browserify'),
     rename = require('gulp-rename'),
-    through2 = require('through2');
+    through2 = require('through2'),
+    uglify = require('gulp-uglify')
 
 var libs = [
   'react',
   'fluxible',
+  'fluxible/addons',
   'fluxible-plugin-routr'
 ];
 

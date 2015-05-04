@@ -11,17 +11,18 @@
     "react": "0.13.1",
     "flux-router-component": "^0.6.0",
     "serialize-javascript": "^1.0.0",
-    "fluxible": "^0.3.0",
+    "fluxible": "0.4.6",
     "fluxible-plugin-routr": "^0.3.0",
-
     "gulp": "^3.8.11",
     "gulp-rename": "*",
     "gulp-util": "*",
     "gulp-livereload": "*",
     "browserify": "9.0.6",
     "reactify": "^1.0.0",
-    "through2": "*"
-
-    ,"debug" : "*"
+    "through2": "*",
+    "debug": "*"
+  },
+  "devDependencies": {
+    "gulp-uglify": "^1.2.0"
   }
 }

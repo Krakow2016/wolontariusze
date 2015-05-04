@@ -2,7 +2,11 @@
 var gulp       = require('gulp'),
     browserify = require('browserify'),
     reactify = require('reactify'),
-    through2 = require('through2');
+    through2 = require('through2'),
+    debug = require('debug')
+
+var bootstrapDebug = debug('Example');
+debug.enable('*');
 
 var libs = require('./vendor').libs;
 
@@ -26,7 +30,7 @@ gulp.task('app', function () {
     })
   })
 
-  return gulp.src(['./app/*.js'])
+  return gulp.src(['./app/pages/*/client.js'])
     .pipe(browserified)
     .pipe(gulp.dest('./public/js'));
 

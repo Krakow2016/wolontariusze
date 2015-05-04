@@ -1,11 +1,8 @@
-/**
- * Copyright 2014, Yahoo! Inc.
- * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
- */
 'use strict';
+
 var React = require('react');
 var ApplicationStore = require('../stores/ApplicationStore');
-var FluxibleMixin = require('fluxible').FluxibleMixin;
+var FluxibleMixin = require('fluxible/addons/FluxibleMixin')
 
 /**
  * React class to handle the rendering of the HTML head section
@@ -35,8 +32,8 @@ var Html = React.createClass({
                 <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
             </body>
             <script dangerouslySetInnerHTML={{__html: this.props.state}}></script>
-            <script src="/js/vendor.js" defer></script>
-            <script src="/js/volonteer.js" defer></script>
+            <script src="/js/vendor.js"></script>
+            <script src={this.props.script}></script>
             </html>
         );
     }
