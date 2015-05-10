@@ -1,71 +1,37 @@
-/**
- * Copyright 2014, Yahoo! Inc.
- * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
- */
 'use strict';
-var createStore = require('fluxible/addons').createStore;
-var routesConfig= require('../pages/volonteer/routes')
+var createStore  = require('fluxible/addons').createStore;
+var routesConfig = require('../pages/volonteer/routes')
 
-var ApplicationStore = createStore({
-    storeName: 'ApplicationStore',
+var VolonteerStore = createStore({
+    storeName: 'VolonteerStore',
     handlers: {
-        'CHANGE_ROUTE_SUCCESS' : 'handleNavigate',
-        'UPDATE_PAGE_TITLE'    : 'updatePageTitle',
-        'LOAD_PAGE'            : 'loadPage'
+        'LOAD_VOLONTEER'       : 'load'
     },
+
     initialize: function () {
-        this.currentPageName = null;
-        this.currentPage = null;
-        this.currentRoute = null;
-        this.pages = routesConfig;
-        this.pageTitle = '';
+        this.name = '?'
     },
-    handleNavigate: function (route) {
-        if (this.currentRoute && (this.currentRoute.url === route.url)) {
-            return;
-        }
 
-        var pageName = route.config.page;
-        var page = this.pages[pageName];
-
-        this.currentPageName = pageName;
-        this.currentPage = page;
-        this.currentRoute = route;
+    load: function(data) {
+        console.log('>>> LOAD VOLONTEER <<<====')
+        this.name = data.name
         this.emitChange();
     },
-    updatePageTitle: function (title) {
-        this.pageTitle = title.pageTitle;
-        this.emitChange();
-    },
-    loadPage: function(id) {
-        console.log("Wczytaj wolontariusza ", id)
-    },
-    getCurrentPageName: function () {
-        return this.currentPageName;
-    },
-    getPageTitle: function () {
-        return this.pageTitle;
-    },
+
     getState: function () {
         return {
-            currentPageName: this.currentPageName,
-            currentPage: this.currentPage,
-            pages: this.pages,
-            route: this.currentRoute,
-            pageTitle: this.pageTitle
+            name: this.name
         };
     },
+
     dehydrate: function () {
         return this.getState();
     },
+
     rehydrate: function (state) {
-        this.currentPageName = state.currentPageName;
-        this.currentPage = state.currentPage;
-        this.pages = state.pages;
-        this.currentRoute = state.route;
-        this.pageTitle = state.pageTitle;
+        this.name = state.name;
     }
 });
 
 
-module.exports = ApplicationStore;
+module.exports = VolonteerStore;

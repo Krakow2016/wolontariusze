@@ -4,10 +4,10 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     React = require('react'),
     serialize = require('serialize-javascript'),
-    navigateAction = require('flux-router-component').navigateAction;
+    navigateAction = require('fluxible-router').navigateAction;
 
 require("node-jsx").install({extension: '.jsx'})
-var HtmlComponent = React.createFactory(require('../components/Html.jsx'));
+var HtmlComponent = React.createFactory(require('./app/components/Html.jsx'));
 var server = module.exports = express()
 
 // Get information from html forms
@@ -30,6 +30,15 @@ server.set('view engine', 'handlebars')
 
 var fluxify = function(app, req, res, next) {
     console.log(app)
+    // Get access to the fetchr plugin instance
+    var fetchrPlugin = app.getPlugin('FetchrPlugin');
+    if(fetchrPlugin) {
+    // Register our messages REST service
+    fetchrPlugin.registerService(require('./app/pages/volonteer/services'));
+    // Set up the fetchr middleware
+    server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
+    }
+
     var context = app.createContext();
 
     //debug('Executing navigate action');
@@ -66,8 +75,8 @@ var fluxify = function(app, req, res, next) {
 }
 
 // Set up Routes for the application
-var volonteer = require('../pages/volonteer/app')
-var home = require('../pages/home/app')
+var volonteer = require('./app/pages/volonteer/app')
+var home = require('./app/pages/home/app')
 
 server.get('/', function(req, res, next) {
   fluxify(home, req, res, next)

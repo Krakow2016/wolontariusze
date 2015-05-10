@@ -4,7 +4,7 @@
  */
 'use strict';
 var createStore = require('fluxible/addons').createStore;
-var routesConfig= require('../pages/home/routes')
+var routesConfig= require('../pages/volonteer/routes')
 
 var ApplicationStore = createStore({
     storeName: 'ApplicationStore',
@@ -13,31 +13,11 @@ var ApplicationStore = createStore({
         'UPDATE_PAGE_TITLE'    : 'updatePageTitle'
     },
     initialize: function () {
-        this.currentPageName = null;
-        this.currentPage = null;
-        this.currentRoute = null;
-        this.pages = routesConfig;
         this.pageTitle = '';
-    },
-    handleNavigate: function (route) {
-        if (this.currentRoute && (this.currentRoute.url === route.url)) {
-            return;
-        }
-
-        var pageName = route.config.page;
-        var page = this.pages[pageName];
-
-        this.currentPageName = pageName;
-        this.currentPage = page;
-        this.currentRoute = route;
-        this.emitChange();
     },
     updatePageTitle: function (title) {
         this.pageTitle = title.pageTitle;
         this.emitChange();
-    },
-    getCurrentPageName: function () {
-        return this.currentPageName;
     },
     getPageTitle: function () {
         return this.pageTitle;

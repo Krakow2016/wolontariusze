@@ -1,14 +1,15 @@
+var showVolonteer = require('./actions').showVolonteer
+
 module.exports = {
     volonteer: {
         path: '/wolontariusz/:id',
         method: 'get',
-        page: 'home',
-        label: 'Home',
         action: function (context, payload, done) {
-            var pageId = payload.params.id;
-            context.dispatch('LOAD_PAGE', { id: pageId });
-            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: pageId + ' [Dynamic Page] | flux-examples | routing' });
-            done();
+            var volonteerId  = payload.get('params').get('id');
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: volonteerId + ' [Dynamic Page] | flux-examples | routing' });
+            context.executeAction(showVolonteer, { id: volonteerId }, function() {
+                done();
+            })
         }
     },
 }

@@ -1,16 +1,22 @@
 var React = require('react');
 var Fluxible = require('fluxible');
-var routrPlugin = require('fluxible-plugin-routr');
+var fetchrPlugin = require('fluxible-plugin-fetchr');
+var RouteStore = require('fluxible-router').RouteStore;
+
+var routes = require('./routes')
+var ApplicationStore = require('../../stores/ApplicationStore')
+var VolonteerStore = require('../../stores/VolonteerStore')
 
 var app = new Fluxible({
-    component: React.createFactory(require('../../components/Volonteer.jsx'))
+    component: React.createFactory(require('../../components/Volonteer.jsx')),
+    stores: [
+        RouteStore.withStaticRoutes(routes),
+        ApplicationStore,
+        VolonteerStore
+    ]
 });
 
-app.plug(routrPlugin({
-    routes: require('./routes')
-}));
-
-app.registerStore(require('../../stores/VolonteerStore'));
+app.plug(fetchrPlugin())
 
 app.script = '/js/volonteer/client.js'
 
