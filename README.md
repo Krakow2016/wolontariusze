@@ -4,6 +4,8 @@ zlecenie sekcji wolontariatu ŚDM.
 
 # Kontrybucje
 
+[![Join the chat at https://gitter.im/Krakow2016/wolontariusze](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Krakow2016/wolontariusze?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Ponieważ kod jest otwarty, nie ma ograniczeń co do tego kto może zaproponować
 zmiany w kodzie. Aby to zrobić należy przestrzegać prostych zasad.
 
