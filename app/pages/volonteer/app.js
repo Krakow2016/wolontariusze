@@ -6,6 +6,7 @@ var RouteStore = require('fluxible-router').RouteStore;
 var routes = require('./routes')
 var ApplicationStore = require('../../stores/ApplicationStore')
 var VolonteerStore = require('../../stores/VolonteerStore')
+var passportPlugin = require('../../plugins/passportPlugin')
 
 var app = new Fluxible({
     component: React.createFactory(require('../../components/Volonteer.jsx')),
@@ -17,6 +18,7 @@ var app = new Fluxible({
 });
 
 app.plug(fetchrPlugin())
+app.plug(passportPlugin())
 
 app.script = '/js/volonteer/client.js'
 

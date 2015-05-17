@@ -9,18 +9,22 @@ var VolonteerStore = createStore({
     },
 
     initialize: function () {
-        this.name = '?'
+        //
     },
 
     load: function(data) {
         console.log('>>> LOAD VOLONTEER <<<====')
-        this.name = data.name
+        this.first_name = data.first_name
+        this.last_name  = data.last_name
+        this.city       = data.city
         this.emitChange();
     },
 
     getState: function () {
         return {
-            name: this.name
+            first_name: this.first_name,
+            last_name: this.last_name,
+            city: this.city
         };
     },
 
@@ -29,7 +33,9 @@ var VolonteerStore = createStore({
     },
 
     rehydrate: function (state) {
-        this.name = state.name;
+        this.first_name = state.first_name
+        this.last_name  = state.last_name
+        this.city       = state.city
     }
 });
 

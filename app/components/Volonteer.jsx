@@ -9,8 +9,9 @@ var ApplicationStore = require('../stores/ApplicationStore')
 
 var Volonteer = React.createClass({
   contextTypes: {
-    getStore     : React.PropTypes.func.isRequired,
-    executeAction: React.PropTypes.func.isRequired
+    getStore      : React.PropTypes.func,
+    executeAction : React.PropTypes.func,
+    getUser       : React.PropTypes.func
   },
 
   getInitialState: function () {
@@ -26,20 +27,32 @@ var Volonteer = React.createClass({
   },
 
   click: function() {
-    alert('hello '+this.state.name)
+    alert('hello '+this.name())
   },
 
   render: function () {
     return (
       <div>
         <button onClick={this.click}>
-          Hello {this.state.name}!
+          Hello {this.state.first_name}!
         </button>
+
+        <img src={this.state.profile_picture} />
+        <b>{this.name()}</b>
+        <span>{this.state.city}</span>
+
         <br />
         <NavLink href="/wolontariusz/1">wolontariusz 1</NavLink>
         <NavLink href="/wolontariusz/2">wolontariusz 2</NavLink>
+
+        <br />
+        <a href="/login">login</a>
       </div>
     )
+  },
+
+  name: function() {
+    return this.state.first_name +" "+ this.state.last_name
   }
 })
 
@@ -53,4 +66,6 @@ Volonteer = connectToStores(Volonteer, [ApplicationStore, VolonteerStore], funct
 Volonteer = handleHistory(Volonteer)
 
 /* Module.exports instead of normal dom mounting */
-module.exports = provideContext(Volonteer)
+module.exports = provideContext(Volonteer, {
+    getUser: React.PropTypes.func.isRequired
+})
