@@ -1,10 +1,26 @@
+# Góra dobra
+
+[![Code Climate](https://codeclimate.com/github/Krakow2016/wolontariusze/badges/gpa.svg)](https://codeclimate.com/github/Krakow2016/wolontariusze)
+[![Dependency Status](https://david-dm.org/krakow2016/wolontariusze.svg)](https://david-dm.org/krakow2016/wolontariusze)
+
 Oficjalny serwis internetowy prezentujący wolontariuszy i ich pracę w
 przygotowaniach do Światowych Dni Młodzieży w Krakowie w 2016 roku, tworzony na
 zlecenie sekcji wolontariatu ŚDM.
 
-# Kontrybucje
+Masz pytanie? Nie wiesz jak się zaangażować? Zapraszamy do dyskusji na:
 
 [![Join the chat at https://gitter.im/Krakow2016/wolontariusze](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Krakow2016/wolontariusze?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+# Wizja
+
+Naszym celem jest budowa narzędzia, które pomaga pomagać. Serwis będzie składał
+się z dwóch stref: publicznej i o ograniczonej dostępności. Widoczne dla
+wszystkich będą profile najbardziej aktywnych wolontariuszy mających realny
+wpływ na przebieg przygotowań do ŚDM w Krakowie. Z drugiej strony, po
+zalogowaniu, użytkownicy z odpowiednimi przywilejami otrzymają dostęp do
+poufnych danych, które będą im niezbędne przy wykonywaniu swoich zadań.
+
+# Kontrybucje
 
 Ponieważ kod jest otwarty, nie ma ograniczeń co do tego kto może zaproponować
 zmiany w kodzie. Aby to zrobić należy przestrzegać prostych zasad.
