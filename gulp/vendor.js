@@ -9,7 +9,8 @@ var libs = [
   'react',
   'fluxible',
   'fluxible/addons',
-  'fluxible-plugin-routr'
+  'fluxible-router',
+  'fluxible-plugin-fetchr'
 ];
 
 gulp.task('vendor', function() {
