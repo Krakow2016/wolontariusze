@@ -6,7 +6,8 @@ var volonteers = {
         email: "faustyna@kowalska.pl",
         password: "faustyna",
         city: "Łagiewniki",
-        profile_picture: ""
+        profile_picture: "http://i.picresize.com/images/2015/05/25/2VNu8.jpg",
+        background_picture: "http://www.solvaypark.pl/_img/solvaypark/galeria/tereny/1.jpg"
     },
     "2": {
         id: "2",
@@ -15,7 +16,12 @@ var volonteers = {
         email: "karol@wojtyla.pl",
         password: "karol",
         city: "Wadowice",
-        profile_picture: ""
+        profile_picture: "http://i.picresize.com/images/2015/05/25/Fj0AB.jpg",
+        background_picture: "http://www.fakt.pl/m/crop/-658/-500/faktonline/635660778242473315.jpg",
+        interests: 'piłka nożna i sporty zespołowe. Uwielbiam wycieczki po górach i jajecznicę w schronisku po całym dniu wspinaczki.',
+        departments: 'organizację spotkań wolontariuszy i pomagać tworzyć atmosferę braterstwa i wspólnej sprawy jaką są Światowe Dni Młodzieży w Krakowie.',
+        my_dream: 'aby wszyscy ludzie byli braćmi.'
+
     }
 }
 

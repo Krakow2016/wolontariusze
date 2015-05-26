@@ -1,7 +1,8 @@
 var React = require('react')
-var provideContext = require('fluxible/addons/provideContext');
+var provideContext = require('fluxible/addons/provideContext')
 
-var ApplicationStore = require('../stores/ApplicationStore');
+var ApplicationStore = require('../stores/ApplicationStore')
+var Authentication = require('./Authentication.jsx')
 
 var App = React.createClass({
   contextTypes: {
@@ -16,7 +17,9 @@ var App = React.createClass({
         <button onClick={this.click}>
           Hello!
         </button>
-        <Login user_name={this.user_name()} />
+        <Authentication user_name={this.user_name()} />
+
+        <a href="/wolontariusz/2">Przejdź do przykładowego profilu</a>
       </div>
     )
   },
@@ -28,42 +31,6 @@ var App = React.createClass({
   }
 })
 
-var Login = React.createClass({
-  render: function () {
-    var loginButton
-    if (this.props.user_name) { loginButton = <LogoutButton user_name={this.props.user_name} /> }
-    else { loginButton = <LoginButton /> }
-
-    return (
-      <div>
-        {loginButton}
-      </div>
-    )
-  },
-})
-
-var LoginButton = React.createClass({
-  render: function() {
-    return (
-      <a href="/login">
-        Zaloguj się
-      </a>
-    )
-  }
-})
-
-var LogoutButton = React.createClass({
-  render: function() {
-    return (
-      <span>
-        Witaj {this.props.user_name}!
-        <a href="/login">
-          Wyloguj się
-        </a>
-      </span>
-    )
-  }
-})
 
 /* Module.exports instead of normal dom mounting */
 module.exports = provideContext(App, {

@@ -12,20 +12,29 @@ var VolonteerStore = createStore({
         //
     },
 
+    attributes: [
+      'first_name',
+      'last_name',
+      'city',
+      'profile_picture',
+      'background_picture',
+      'interests',
+      'departments',
+      'my_dream'
+    ],
+
     load: function(data) {
-        console.log('>>> LOAD VOLONTEER <<<====')
-        this.first_name = data.first_name
-        this.last_name  = data.last_name
-        this.city       = data.city
-        this.emitChange();
+      console.log('>>> LOAD VOLONTEER <<<====')
+      this.rehydrate(data)
+      this.emitChange();
     },
 
     getState: function () {
-        return {
-            first_name: this.first_name,
-            last_name: this.last_name,
-            city: this.city
-        };
+      var state = {}
+      this.attributes.forEach(function(attr) {
+        state[attr] = this[attr]
+      }, this)
+      return state
     },
 
     dehydrate: function () {
@@ -33,9 +42,9 @@ var VolonteerStore = createStore({
     },
 
     rehydrate: function (state) {
-        this.first_name = state.first_name
-        this.last_name  = state.last_name
-        this.city       = state.city
+      this.attributes.forEach(function(attr) {
+        this[attr] = state[attr]
+      }, this)
     }
 });
 
