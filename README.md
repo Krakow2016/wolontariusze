@@ -41,7 +41,32 @@ stronę [Issues](https://github.com/Krakow2016/wolontariusze/issues).
 
 # Uruchomienie
 
-Aby uruchomić lokalnie serwer www, upewnij się że masz zainstalowane wszystkie zależności:
+## Pierwszy raz
+
+Kod aplikacji jest w całości pisany w języku JavaScript i uruchamiany w
+środowisku *Node.js*. Aby zainstalować to środowisko w najnowszej wersji
+podążaj za wskazówkami na stronie [iojs.org](https://iojs.org/en/index.html).
+Upewnij się, że instalacja przebiegła poprawnie wykonując polecenie:
+
+    $ node --version
+    v2.1.0
+
+Wraz z poleceniem `node` zainstalowane zostanie narzędzie do zarządzania
+zależnościami `npm`.
+
+    $ npm --version
+    2.10.1
+
+Korzystając z niego możemy zainstalować naszą pierwszą zależność. Flaga `-g`
+oznacza, że pakiet zostanie zainstalowany globalnie - dzięki temu będziemy
+mieli do niego dostęp z poziomu komendy systemowej (w naszym wypadku `gulp`).
+
+    $ npm install -g gulp
+
+## Serwer www
+
+Przed uruchomieniem serwera www, upewnij się że masz zainstalowane wszystkie
+zależności:
 
     $ npm install
 
@@ -49,7 +74,8 @@ Następnie wykonaj komendę:
 
     $ gulp
 
-i skieruj się pod adres <http://127.0.0.1:7000>.
+i skieruj się pod adres <http://127.0.0.1:7000>. Powinieneś teraz zobacz stronę
+główną naszego serwisu. A teraz czas na programowanie :)
 
 # Licencja MIT
 
