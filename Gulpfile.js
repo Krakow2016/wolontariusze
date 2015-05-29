@@ -2,7 +2,6 @@
 var gulp = require('gulp');
 
 require('./gulp/app');
-require('./gulp/serve');
 require('./gulp/vendor');
 require('./gulp/watch');
 
