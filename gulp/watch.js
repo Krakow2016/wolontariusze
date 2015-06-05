@@ -21,8 +21,11 @@ gulp.task('watch', function() {
   app.on('change', function(event) {
     gulp.start('app', function() {
       gutil.log(gutil.colors.bgGreen('Reloading...'));
-      // Poinformuj przeglądarkę o zmianach
-      server.notify(event)
+      server.start() // Przeładuj serwer
+      .then(function(){
+        // Poinformuj przeglądarkę o zmianach
+        server.notify(event)
+      })
     });
   });
 

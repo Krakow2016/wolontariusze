@@ -50,7 +50,7 @@ passport.serializeUser(function(user, done) {
 // Zdefiniuj metodę odtworzenia obiektu użytkownika na podstawie wcześniej
 // zapamiętanej referencji (numeru id w bazie danych).
 passport.deserializeUser(function(id, done) {
-  Users.read({}, 'volonteer', { id: id }, {}, function (err, user) {
+  Users.read({}, 'volonteer', { id: id }, {is_owner: true}, function (err, user) {
     done(err, user)
   })
 })

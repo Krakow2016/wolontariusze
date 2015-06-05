@@ -12,17 +12,6 @@ var VolonteerStore = createStore({
         //
     },
 
-    attributes: [
-      'first_name',
-      'last_name',
-      'city',
-      'profile_picture',
-      'background_picture',
-      'interests',
-      'departments',
-      'my_dream'
-    ],
-
     load: function(data) {
       console.log('>>> LOAD VOLONTEER <<<====')
       this.rehydrate(data)
@@ -31,18 +20,28 @@ var VolonteerStore = createStore({
 
     getState: function () {
       var state = {}
-      this.attributes.forEach(function(attr) {
-        state[attr] = this[attr]
+      Object.keys(this).forEach(function(attr) {
+        if(this.hasOwnProperty(attr) &&
+           attr !== 'dispatcher') {
+          state[attr] = this[attr]
+        }
       }, this)
       return state
     },
 
+    // Returns a serializable object containing the state of the Fluxible and
+    // passed FluxibleContext instances. This is useful for serializing the
+    // state of the application to send it to the client.
     dehydrate: function () {
         return this.getState();
     },
 
+    // Takes an object representing the state of the Fluxible and
+    // FluxibleContext instances (usually retrieved from dehydrate) to
+    // rehydrate them to the same state as they were on the server
     rehydrate: function (state) {
-      this.attributes.forEach(function(attr) {
+      var keys = Object.keys(state)
+      keys.forEach(function(attr) {
         this[attr] = state[attr]
       }, this)
     }

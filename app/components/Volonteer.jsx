@@ -28,6 +28,14 @@ var Volonteer = React.createClass({
   },
 
   render: function () {
+    var extra
+    var user = this.user()
+    if (user && (user.is_admin || user.is_owner)) {
+      extra = <ExtraAttributesVisible {...this.state} />
+    } else {
+      extra = <div />
+    }
+
     return (
         <div>
             <div className="globalNav navBar"> {/* Nawigacja serwisu */}
@@ -52,6 +60,7 @@ var Volonteer = React.createClass({
                         <p><b>Chcę się angażować w </b>{this.state.departments}</p>
                         <p><b>Moim wielkim marzeniem jest </b>{this.state.my_dream}</p>
                         <p><b>Wolontariusze z którymi działam</b></p>
+                        {extra}
                         <NavLink href="/wolontariusz/1">
                             <img src="http://i.picresize.com/images/2015/05/25/2VNu8.jpg" className="smallProfilePicture" />
                         </NavLink>
@@ -78,6 +87,14 @@ var Volonteer = React.createClass({
 
   user_name: function() {
     return this.user() && this.user().first_name
+  }
+})
+
+var ExtraAttributesVisible = React.createClass({
+  render: function() {
+    return(
+      <p style={{color: 'red'}}><b>Doświadczenie </b>{this.props.experience}</p>
+    )
   }
 })
 
