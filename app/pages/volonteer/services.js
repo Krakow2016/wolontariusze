@@ -1,3 +1,11 @@
+// The service code that you write is always executed on the server, but can be
+// accessed transparently from actions without any knowledge of whether it's on
+// the server or client. Fetchr provides an appropriate abstraction so that you
+// can fetch (CRUD) the data needed in your stores using the same exact syntax
+// on server and client side.
+//
+// Więcej: http://fluxible.io/guides/data-services.html
+
 var volonteers = {
     "1": {
         id: "1",
@@ -51,39 +59,48 @@ module.exports = {
     name: 'volonteer',
     // at least one of the CRUD methods is required
     read: function(req, resource, params, config, callback) {
-        var volonteer
-        if(params.id) {
-            volonteer = volonteers[params.id]
-        } else if(params.email) {
-            id = Object.keys(volonteers).filter(function(id) {
-                el = volonteers[id]
-                return el.email === params.email
-            })[0]
+      // W przypadku zapytania xhr zmienna `req` reprezentuje obiekt tego
+      // zapytania. W przeciwnym razie obiekt zalogowanego użytkownika
+      // przekazujemy w parametrze `config`.
+      var user = req.user || config.user
+      // Flaga przywilejów administratora
+      var is_admin = user && user.is_admin
+      // Flaga właściciela profilu
+      var is_owner = (user && (params.id == user.id)) || config.is_owner
 
-            volonteer = id ? volonteers[id] : null
+      var volonteer
+      if(params.id) {
+        volonteer = volonteers[params.id]
+      } else if(params.email) {
+        id = Object.keys(volonteers).filter(function(id) {
+          el = volonteers[id]
+          return el.email === params.email
+        })[0]
+
+        volonteer = id ? volonteers[id] : null
+      }
+
+      if(volonteer) {
+        var model = {}
+        // Tablica parametrów uprawnionych do odczytu
+        var attrs = public_attrs
+
+        // Jeźeli posiadamy uprawnienia administratora lub
+        // przeglądamy własny profil potrzebujemy dostępu do
+        // wszystkich parametrówmodelu wolontariusza
+        if(is_admin || is_owner) {
+          attrs = attrs.concat(private_attrs)
         }
 
-        if(volonteer) {
-          var model = {}
-          // Tablica parametrów uprawnionych do odczytu
-          var attrs = public_attrs
+        // Przepisz dozwolone parametry do zwracanego obiektu
+        attrs.forEach(function(attr){
+          model[attr] = volonteer[attr]
+        })
 
-          // Jeźeli posiadamy uprawnienia administratora lub
-          // przeglądamy własny profil potrzebujemy dostępu do
-          // wszystkich parametrówmodelu wolontariusza
-          if(config.is_admin || config.is_owner) {
-            attrs = attrs.concat(private_attrs)
-          }
-
-          // Przepisz dozwolone parametry do zwracanego obiektu
-          attrs.forEach(function(attr){
-            model[attr] = volonteer[attr]
-          })
-
-          callback(null, model);
-        } else {
-          callback("404")
-        }
+        callback(null, model);
+      } else {
+        callback("404")
+      }
     },
 
     create: function(req, resource, params, body, config, callback) {

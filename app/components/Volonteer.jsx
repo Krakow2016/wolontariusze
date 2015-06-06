@@ -30,7 +30,8 @@ var Volonteer = React.createClass({
   render: function () {
     var extra
     var user = this.user()
-    if (user && (user.is_admin || user.is_owner)) {
+    var is_owner = user && user.id === this.state.id
+    if (user && (user.is_admin || is_owner)) {
       extra = <ExtraAttributesVisible {...this.state} />
     } else {
       extra = <div />
@@ -67,6 +68,7 @@ var Volonteer = React.createClass({
                     </div>
                 </div>
                 <div className="profileActivity">
+                    <h3 style={{display: is_owner ? 'block' : 'none'}}>Jesteś właścicielem tego profilu ☺</h3>
                     <h3>Ostatnia aktywność:</h3>
                     <div className="activity"></div>
                     <div className="activity"></div>
