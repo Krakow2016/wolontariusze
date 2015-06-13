@@ -153,3 +153,8 @@ server.post('/login', passport.authenticate('local', {
     failureRedirect: '/login',
     failureFlash: true
 }));
+
+server.get('/logout', function(req, res){
+  req.logout()
+  res.redirect('/')
+})

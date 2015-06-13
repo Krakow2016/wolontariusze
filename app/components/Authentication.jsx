@@ -29,7 +29,7 @@ var LogoutButton = React.createClass({
   render: function() {
     return (
       <span>
-        Witaj <b>{this.props.user_name}</b>! | <a href="/login">Wyloguj się</a>
+        Witaj <b>{this.props.user_name}</b>! | <a href="/logout">Wyloguj się</a>
       </span>
     )
   }
