@@ -1,11 +1,10 @@
-#app {
-  margin: auto;
+body {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
 }
 
-.container {
-  display : flex;
-  width: 1000px;
-  margin: auto
+#app {
+  margin: auto;
 }
 
 .globalNav, .coverPhoto {
@@ -24,13 +23,6 @@
   height: 300px;
   background-size: cover;
   background-position-y: 50%;
-}
-
-.profileDetails {
-  text-align: center;
-  flex: 1 1 350px;
-  position: relative;
-  top: -150px
 }
 
 .profileActivity {

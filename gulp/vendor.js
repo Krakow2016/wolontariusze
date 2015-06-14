@@ -10,7 +10,9 @@ var libs = [
   'fluxible',
   'fluxible/addons',
   'fluxible-router',
-  'fluxible-plugin-fetchr'
+  'fluxible-plugin-fetchr',
+  'material-ui',
+  'react-tap-event-plugin'
 ];
 
 gulp.task('vendor', function() {

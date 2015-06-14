@@ -26,6 +26,7 @@ var Html = React.createClass({
                 <meta name="viewport" content="width=device-width, user-scalable=no" />
                 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css" />
                 <link rel="stylesheet" href="/css/main.css" />
+                <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,300,500" />
             </head>
             <body>
                 <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
