@@ -43,6 +43,11 @@ stronę [Issues](https://github.com/Krakow2016/wolontariusze/issues).
 
 ## Pierwszy raz
 
+Aby pobrać kod aplikacji wykonaj komendę [git](https://git-scm.com/), która
+skopiuje cały kod wraz z całą historią zmian na Twój lokalny komputer:
+
+    $ git clone https://github.com/Krakow2016/wolontariusze.git && cd wolontariusze/
+
 Kod aplikacji jest w całości pisany w języku JavaScript i uruchamiany w
 środowisku *Node.js*. Aby zainstalować to środowisko w najnowszej wersji
 podążaj za wskazówkami na stronie [iojs.org](https://iojs.org/en/index.html).
@@ -57,11 +62,13 @@ zależnościami `npm`.
     $ npm --version
     2.10.1
 
-Korzystając z niego możemy zainstalować naszą pierwszą zależność. Flaga `-g`
-oznacza, że pakiet zostanie zainstalowany globalnie - dzięki temu będziemy
-mieli do niego dostęp z poziomu komendy systemowej (w naszym wypadku `gulp`).
+Korzystając z niego możemy zainstalować naszą pierwszą zależność:
 
     $ npm install -g gulp
+
+Flaga `-g` oznacza, że pakiet zostanie zainstalowany globalnie - dzięki temu
+będziemy mieli do niego dostęp z poziomu komendy systemowej (w naszym wypadku
+`gulp`).
 
 ## Serwer www
 
