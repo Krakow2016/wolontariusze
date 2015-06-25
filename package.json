@@ -10,7 +10,7 @@
     "express": "^4.11.2",
     "express-handlebars": "2.0.0",
     "express-session": "*",
-    "fluxible": "0.4.6",
+    "fluxible": "^0.4.9",
     "fluxible-plugin-fetchr": "*",
     "fluxible-router": "*",
     "gulp": "3.9.0",
