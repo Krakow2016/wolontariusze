@@ -1,5 +1,6 @@
 # Góra dobra
 
+[![Build Status](https://travis-ci.org/Krakow2016/wolontariusze.svg)](https://travis-ci.org/Krakow2016/wolontariusze)
 [![Code Climate](https://codeclimate.com/github/Krakow2016/wolontariusze/badges/gpa.svg)](https://codeclimate.com/github/Krakow2016/wolontariusze)
 [![Dependency Status](https://david-dm.org/krakow2016/wolontariusze.svg)](https://david-dm.org/krakow2016/wolontariusze)
 
@@ -83,6 +84,12 @@ Następnie wykonaj komendę:
 
 i skieruj się pod adres <http://127.0.0.1:7000>. Powinieneś teraz zobacz stronę
 główną naszego serwisu. A teraz czas na programowanie :)
+
+# Testy
+
+Testy wykonywane są standardową komendą '$ npm test', kóra uruchamia narzędzie
+[Jasmine](http://jasmine.github.io/). Wszyskie testy znajdują się w katalogu
+`spec/`.
 
 # Licencja MIT
 

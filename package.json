@@ -10,7 +10,7 @@
     "express": "^4.11.2",
     "express-handlebars": "2.0.0",
     "express-session": "*",
-    "fluxible": "0.4.6",
+    "fluxible": "0.4.12",
     "fluxible-plugin-fetchr": "*",
     "fluxible-router": "*",
     "gulp": "3.9.0",
@@ -21,13 +21,18 @@
     "node-jsx": "^0.12.4",
     "passport": "*",
     "passport-local": "*",
-    "react": "0.13.1",
+    "react": "0.13.3",
     "react-tap-event-plugin": "^0.1.7",
     "reactify": "^1.0.0",
     "serialize-javascript": "^1.0.0",
     "through2": "*"
   },
   "devDependencies": {
-    "gulp-uglify": "^1.2.0"
+    "gulp-uglify": "^1.2.0",
+    "jasmine": "2.3",
+    "jsdom": "5.4.3"
+  },
+  "scripts": {
+    "test": "jasmine"
   }
 }

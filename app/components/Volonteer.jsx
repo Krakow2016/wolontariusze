@@ -96,7 +96,7 @@ var ProfileTabs = React.createClass({
 
             <img src={this.props.profile_picture} className="profilePicture" />
 
-            <b>{this.name()}</b>
+            <b className="fullName">{this.name()}</b>
             <br/>
             <span>{this.props.city}</span>
 
@@ -148,7 +148,7 @@ Volonteer = connectToStores(Volonteer, [ApplicationStore, VolonteerStore], funct
 
 Volonteer = handleHistory(Volonteer)
 
-/* Module.exports instead of normal dom mounting */
+// Module.exports instead of normal dom mounting
 module.exports = provideContext(Volonteer, {
     getUser: React.PropTypes.func.isRequired
 })

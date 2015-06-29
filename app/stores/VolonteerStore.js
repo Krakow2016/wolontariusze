@@ -13,7 +13,7 @@ var VolonteerStore = createStore({
     },
 
     load: function(data) {
-      console.log('>>> LOAD VOLONTEER <<<====')
+      //console.log('>>> LOAD VOLONTEER <<<====')
       this.rehydrate(data)
       this.emitChange();
     },
