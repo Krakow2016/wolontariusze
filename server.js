@@ -87,6 +87,7 @@ var fluxify = function(app, req, res, next) {
     if(fetchrPlugin) {
         // Register our messages REST service
         fetchrPlugin.registerService(require('./app/pages/volonteer/services'));
+        fetchrPlugin.registerService(require('./app/pages/activity/services'));
         // Set up the fetchr middleware
         server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
     }
@@ -133,8 +134,10 @@ var fluxify = function(app, req, res, next) {
 
 // Zdefiniuj wszystkie dostępne ścieżki w aplikacji
 var volonteer = require('./app/pages/volonteer/app')
+var activity = require ('./app/pages/activity/app')
 var home = require('./app/pages/home/app')
 var login = require('./app/pages/login/app')
+
 
 server.get('/', function(req, res, next) {
   fluxify(home, req, res, next)
@@ -142,6 +145,10 @@ server.get('/', function(req, res, next) {
 
 server.get('/wolontariusz/:id', function(req, res, next) {
   fluxify(volonteer, req, res, next)
+})
+
+server.get('/aktywnosc/:id', function(req, res, next) {
+  fluxify(activity, req, res, next)
 })
 
 server.get('/login', function(req, res, next) {
