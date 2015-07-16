@@ -1,6 +1,5 @@
 'use strict';
 var createStore  = require('fluxible/addons').createStore;
-var routesConfig = require('../pages/volonteer/routes')
 
 var VolonteerStore = createStore({
     storeName: 'VolonteerStore',
@@ -13,7 +12,6 @@ var VolonteerStore = createStore({
     },
 
     load: function(data) {
-      //console.log('>>> LOAD VOLONTEER <<<====')
       this.rehydrate(data)
       this.emitChange();
     },

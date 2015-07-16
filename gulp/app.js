@@ -24,14 +24,14 @@ gulp.task('app', function () {
     });
 
     b.bundle(function(err, res){
-         if(err) console.log(err.toString())
+      if(err) console.log(err.toString())
       // assumes file.contents is a Buffer
       file.contents = res;
       next(null, file);
     })
   })
 
-  return gulp.src(['./app/pages/*/client.js'])
+  return gulp.src('./client.js')
     .pipe(browserified)
     .pipe(gulp.dest('./public/js'));
 

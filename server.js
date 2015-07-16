@@ -24,6 +24,7 @@ passport.use(new LocalStrategy(
   function(username, password, done) {
     // Próba logowania
     Users.read({}, 'volonteer', { email: username }, {}, function (err, user) {
+        console.log('------------------------------------------------------------------------------>', err)
       // Wystąpił niespodziewany błąd
       if (err) { return done(err) }
       // Nie znaleziono użytkownika o danym loginie
@@ -77,77 +78,23 @@ server.use(passport.session())
 
 // Użyj silnika szablonów Handlebars
 server.engine('handlebars', handlebars({
-    defaultLayout: 'main',
+  defaultLayout: 'main',
 }))
 server.set('view engine', 'handlebars')
 
-var fluxify = function(app, req, res, next) {
-    // Get access to the fetchr plugin instance
-    var fetchrPlugin = app.getPlugin('FetchrPlugin');
-    if(fetchrPlugin) {
-        // Register our messages REST service
-        fetchrPlugin.registerService(require('./app/pages/volonteer/services'));
-        // Set up the fetchr middleware
-        server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
-    }
+var app = require('./app/fluxible')
 
-    // Dołącz obiekt zalogowanego użytkownika do kontekstu (stanu) zapytania,
-    // który zostanie przekazay do klienta (przeglądarki).
-    var context = app.createContext({
-      user: req.user
-    });
-
-    debug('Executing navigate action');
-    context.executeAction(navigateAction, {
-        url: req.url
-    }, function (err) {
-        if (err) {
-            debug('There was an error: '+ JSON.stringify(err));
-            if (err.status && err.status === 404) {
-                next();
-            } else {
-                next(err);
-            }
-            return;
-        }
-
-        debug('Exposing context state');
-        var exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
-
-        debug('Rendering Application component into html');
-        var Component = app.getComponent();
-
-        var html = React.renderToStaticMarkup(HtmlComponent({
-            state: exposed,
-            markup: React.renderToString(Component({
-                context: context.getComponentContext()
-            })),
-            context: context.getComponentContext(),
-            script: app.script
-        }));
-
-        debug('Sending markup');
-        res.send(html);
-    })
+// Get access to the fetchr plugin instance
+var fetchrPlugin = app.getPlugin('FetchrPlugin');
+if(fetchrPlugin) {
+  // Register our messages REST service
+  fetchrPlugin.registerService(require('./app/pages/volonteer/services'));
+  // Set up the fetchr middleware
+  server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
 }
 
-// Zdefiniuj wszystkie dostępne ścieżki w aplikacji
-var volonteer = require('./app/pages/volonteer/app')
-var home = require('./app/pages/home/app')
-var login = require('./app/pages/login/app')
-
-server.get('/', function(req, res, next) {
-  fluxify(home, req, res, next)
-})
-
-server.get('/wolontariusz/:id', function(req, res, next) {
-  fluxify(volonteer, req, res, next)
-})
-
-server.get('/login', function(req, res, next) {
-  fluxify(login, req, res, next)
-})
-
+// W pierwszej kolejności sprawdź ścieżki z poza single-page
+// application
 server.post('/login', passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
@@ -157,4 +104,46 @@ server.post('/login', passport.authenticate('local', {
 server.get('/logout', function(req, res){
   req.logout()
   res.redirect('/')
+})
+
+// Zwraca stronę aplikacji
+server.use(function(req, res, next) {
+  // Dołącz obiekt zalogowanego użytkownika do kontekstu (stanu) zapytania,
+  // który zostanie przekazay do klienta (przeglądarki).
+  var context = app.createContext({
+    user: req.user
+  });
+
+  debug('Executing navigate action');
+  context.executeAction(navigateAction, {
+    url: req.url
+  }, function (err) {
+    if (err) {
+      debug('There was an error: '+ JSON.stringify(err));
+      if (err.status && err.status === 404) {
+        next();
+      } else {
+        next(err);
+      }
+      return;
+    }
+
+    debug('Exposing context state');
+    var exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
+
+    debug('Rendering Application component into html');
+    var Component = app.getComponent();
+
+    var html = React.renderToStaticMarkup(HtmlComponent({
+      state: exposed,
+      markup: React.renderToString(Component({
+        context: context.getComponentContext()
+      })),
+      context: context.getComponentContext(),
+      script: app.script
+    }));
+
+    debug('Sending markup');
+    res.send(html);
+  })
 })

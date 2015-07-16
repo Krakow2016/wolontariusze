@@ -1,19 +1,8 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
-var handleHistory = require('fluxible-router').handleHistory
-var provideContext = require('fluxible/addons/provideContext')
-var connectToStores = require('fluxible/addons/connectToStores')
 
 var VolonteerStore = require('../stores/VolonteerStore')
-var ApplicationStore = require('../stores/ApplicationStore')
 var Authentication = require('./Authentication.jsx')
-
-var injectTapEventPlugin = require('react-tap-event-plugin');
-//Needed for onTouchTap
-//Can go away when react 1.0 release
-//Check this repo:
-//https://github.com/zilverline/react-tap-event-plugin
-injectTapEventPlugin();
 
 var material = require('material-ui'),
     ThemeManager = new material.Styles.ThemeManager()
@@ -22,11 +11,6 @@ var Tabs = material.Tabs,
     Tab = material.Tab
 
 var Volonteer = React.createClass({
-  contextTypes: {
-    getStore      : React.PropTypes.func,
-    executeAction : React.PropTypes.func,
-    getUser       : React.PropTypes.func
-  },
 
   childContextTypes: {
       muiTheme: React.PropTypes.object
@@ -39,15 +23,15 @@ var Volonteer = React.createClass({
   },
 
   getInitialState: function () {
-    return this.props.VolonteerStore;
+      return this.props.context.getStore(VolonteerStore).getState()
   },
 
   _changeListener: function() {
-    this.setState(this.context.getStore(VolonteerStore).getState());
+    this.setState(this.props.context.getStore(VolonteerStore).getState());
   },
 
   componentDidMount: function() {
-    this.context.getStore(VolonteerStore).addChangeListener(this._changeListener);
+    this.props.context.getStore(VolonteerStore).addChangeListener(this._changeListener);
   },
 
   render: function () {
@@ -68,7 +52,7 @@ var Volonteer = React.createClass({
   },
 
   user: function() {
-    return this.context.getUser()
+    return this.props.context.getUser()
   },
 
   user_name: function() {
@@ -139,16 +123,5 @@ var ExtraAttributesVisible = React.createClass({
   }
 })
 
-Volonteer = connectToStores(Volonteer, [ApplicationStore, VolonteerStore], function (stores, props) {
-  return {
-    ApplicationStore: stores.ApplicationStore.getState(),
-    VolonteerStore: stores.VolonteerStore.getState()
-  }
-})
-
-Volonteer = handleHistory(Volonteer)
-
 // Module.exports instead of normal dom mounting
-module.exports = provideContext(Volonteer, {
-    getUser: React.PropTypes.func.isRequired
-})
+module.exports = Volonteer

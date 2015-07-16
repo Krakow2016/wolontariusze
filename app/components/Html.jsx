@@ -33,7 +33,7 @@ var Html = React.createClass({
             </body>
             <script dangerouslySetInnerHTML={{__html: this.props.state}}></script>
             <script src="/js/vendor.js"></script>
-            <script src={this.props.script}></script>
+            <script src="/js/client.js"></script>
             </html>
         );
     }
