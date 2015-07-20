@@ -1,5 +1,4 @@
 var React = require('react')
-var provideContext = require('fluxible/addons/provideContext')
 
 var ApplicationStore = require('../stores/ApplicationStore')
 var Authentication = require('./Authentication.jsx')
@@ -33,6 +32,4 @@ var App = React.createClass({
 
 
 /* Module.exports instead of normal dom mounting */
-module.exports = provideContext(App, {
-    getUser: React.PropTypes.func.isRequired
-})
+module.exports = App

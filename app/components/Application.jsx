@@ -1,7 +1,8 @@
 var React = require('react')
 var handleHistory = require('fluxible-router').handleHistory
-var provideContext = require('fluxible/addons/provideContext')
-var connectToStores = require('fluxible/addons/connectToStores')
+var addons = require('fluxible-addons-react')
+var provideContext = addons.provideContext
+var connectToStores = addons.connectToStores
 
 var ApplicationStore = require('../stores/ApplicationStore')
 var VolonteerStore = require('../stores/VolonteerStore')
@@ -32,10 +33,10 @@ var Application = React.createClass({
   }
 })
 
-Application = connectToStores(Application, [ApplicationStore, VolonteerStore], function (stores, props) {
+Application = connectToStores(Application, [ApplicationStore, VolonteerStore], function (context, props) {
   return {
-    ApplicationStore: stores.ApplicationStore.getState(),
-    VolonteerStore: stores.VolonteerStore.getState()
+    ApplicationStore: context.getStore(ApplicationStore).getState(),
+    VolonteerStore: context.getStore(VolonteerStore).getState()
   }
 })
 
