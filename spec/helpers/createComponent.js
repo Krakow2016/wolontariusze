@@ -2,12 +2,14 @@ var React = require('react/addons')
 var Fluxible = require('fluxible');
 var TestUtils = React.addons.TestUtils
 
-var routes = require('../../app/pages/volonteer/routes')
+var routes = require('../../app/routes')
 var RouteStore = require('fluxible-router').RouteStore;
 var ApplicationStore = require('../../app/stores/ApplicationStore')
 var VolonteerStore = require('../../app/stores/VolonteerStore')
 
 var passportPlugin = require('../../app/plugins/passportPlugin')
+
+var Application = require('../../app/components/TestApplication.jsx')
 
 // Assing global variable
 createComponent = function(component, props, children) {
@@ -28,7 +30,7 @@ createComponent = function(component, props, children) {
 
   //console.log( component )
   var app = new Fluxible({
-    component: React.createFactory(component),
+    component: React.createFactory(Application),
     stores: [
       RouteStore.withStaticRoutes(routes),
       ApplicationStore,
@@ -43,6 +45,7 @@ createComponent = function(component, props, children) {
   })
   var element = app.getComponent()
 
+  props.handler = component
   props.context = context.getComponentContext()
 
   context.getActionContext().dispatch('LOAD_VOLONTEER', {
