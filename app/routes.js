@@ -1,4 +1,4 @@
-var showVolonteer = require('./actions').showVolonteer
+var actions = require('./actions')
 
 module.exports = {
     home: {
@@ -18,7 +18,20 @@ module.exports = {
         action: function (context, payload, done) {
             var volonteerId  = payload.get('params').get('id');
             context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: volonteerId + ' [Dynamic Page] | flux-examples | routing' });
-            context.executeAction(showVolonteer, { id: volonteerId }, function() {
+            context.executeAction(actions.showVolonteer, { id: volonteerId }, function() {
+                done();
+            })
+        }
+    },
+
+    activity: {
+        path: '/aktywnosc/:id',
+        method: 'get',
+        handler: require('./components/Activity.jsx'),
+        action: function (context, payload, done) {
+            var activityId  = payload.get('params').get('id');
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: activityId + ' Aktywnosc' });
+            context.executeAction(actions.showActivity, { id: activityId }, function() {
                 done();
             })
         }

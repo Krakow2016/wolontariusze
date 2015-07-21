@@ -87,8 +87,9 @@ var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
 var fetchrPlugin = app.getPlugin('FetchrPlugin');
 if(fetchrPlugin) {
-  // Register our messages REST service
+  // Register our messages REST services
   fetchrPlugin.registerService(require('./app/pages/volonteer/services'));
+  fetchrPlugin.registerService(require('./app/pages/activity/services'));
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
 }
