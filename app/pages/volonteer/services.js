@@ -78,6 +78,13 @@ module.exports = {
         })[0]
 
         volonteer = id ? volonteers[id] : null
+      } else { // Brak identyfikatora
+          // Zwróć wszyskich wolontariuszy
+          var results = Object.keys(volonteers).map(function(key) {
+              return volonteers[key]
+          })
+          callback(null, results)
+          return
       }
 
       if(volonteer) {

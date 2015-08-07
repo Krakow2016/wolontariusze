@@ -6,6 +6,7 @@ var React = require('react'),
 var routes = require('./routes')
 var ApplicationStore = require('./stores/ApplicationStore')
 var VolonteerStore = require('./stores/VolonteerStore')
+var VolonteersStore = require('./stores/VolonteersStore')
 var ActivityStore = require('./stores/ActivityStore')
 var passportPlugin = require('./plugins/passportPlugin')
 
@@ -16,6 +17,7 @@ var app = new Fluxible({
         RouteStore.withStaticRoutes(routes),
         ApplicationStore,
         VolonteerStore,
+        VolonteersStore,
         ActivityStore
     ]
 });
