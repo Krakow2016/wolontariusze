@@ -107,6 +107,21 @@ server.get('/logout', function(req, res){
   res.redirect('/')
 })
 
+// Obsługa komentarzy do profilu
+var DatabaseProfileComments = require('./app/modules/database/DatabaseProfileComments.js');
+server.post('/profileCommentAdd', function (req, res) {
+    DatabaseProfileComments.createComment(req.body.volonteerId, req.body.comment, req.body.adminId);
+    res.redirect('/wolontariusz/'+req.body.volonteerId);
+});
+server.post('/profileCommentRemove', function (req, res) {
+    DatabaseProfileComments.removeComment(req.body.volonteerId, req.body.commentId);
+    res.redirect('/wolontariusz/'+req.body.volonteerId);
+});
+server.post('/profileCommentUpdate', function (req, res) {
+    DatabaseProfileComments.updateComment(req.body.volonteerId, req.body.commentId, req.body.comment, req.body.adminId);
+    res.redirect('/wolontariusz/'+req.body.volonteerId);
+});
+
 // Zwraca stronę aplikacji
 server.use(function(req, res, next) {
   // Dołącz obiekt zalogowanego użytkownika do kontekstu (stanu) zapytania,

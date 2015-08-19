@@ -63,6 +63,65 @@ body {
   display: inline-block
 }
 
+.profileComments {
+    width: 900px;
+    
+}
+#profileCommentsAddTitle {
+    padding: 2px 0px 2px 2px;    
+    width: 100%;
+    background-color: #E9967A;
+    color: white;
+}
+#profileCommentsAddTextarea {
+    width: 100%;
+    height: 200px;
+    overflow-y: auto;
+    resize: none;
+}
+#profileCommentsAddToolbar {
+    width: 100%;
+    background-color: #9ACD32;
+    text-align: right;
+}
+#profileCommentsEditTextarea {
+    width: 100%;
+    height: 200px;
+    overflow-y: auto;
+    resize: none;
+}
+#profileCommentsEditToolbar {
+    width: 100%;
+    background-color: #9ACD32; 
+    text-align: right;
+}
+#profileCommentsListTitle {
+    padding: 2px 0px 2px 2px;  
+    width: 100%;
+    background-color: #E9967A;
+    color: white;
+}
+.profileComments table {
+    width: 100%
+}
+.profileComments tr {
+    border-bottom: 1px solid blue;
+    vertical-align: top;
+}
+.profileComments td:nth-child(1) {
+    width: 70%;
+}
+.profileComments td:nth-child(2) {
+    width: 15%;
+}
+.profileComments td:nth-child(3) {
+    color: blue;
+}
+.profileCommentsEditColumn {
+    width: 100%;
+}
+
 .loginBar {
   float: right
 }
+

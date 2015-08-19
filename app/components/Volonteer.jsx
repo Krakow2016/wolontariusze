@@ -9,7 +9,10 @@ var material = require('material-ui'),
 
 var Tabs = material.Tabs,
     Tab = material.Tab
+    
+var ProfileComments = require('./ProfileComments.jsx')
 
+   
 var Volonteer = React.createClass({
 
   childContextTypes: {
@@ -60,6 +63,8 @@ var Volonteer = React.createClass({
   }
 })
 
+
+
 var ProfileTabs = React.createClass({
 
   render: function() {
@@ -67,12 +72,20 @@ var ProfileTabs = React.createClass({
     var extra
     var user = this.props.user
     var is_owner = user && user.id === this.props.id
-    if (user && (user.is_admin || is_owner)) {
+    var is_admin = user && user.is_admin;
+    if (is_admin || is_owner) {
       extra = <ExtraAttributesVisible {...this.props} />
     } else {
       extra = <div />
     }
-
+    
+    var commentsTab = {}
+    if (is_admin) {
+      commentsTab = <Tab label="Komentarze">
+        <ProfileComments data={this.props.comments} volonteerId={this.props.id} adminId={user.id}></ProfileComments>
+      </Tab>
+    }
+    
     return (
       <Tabs>
         <Tab label="Item One" >
@@ -105,6 +118,7 @@ var ProfileTabs = React.createClass({
             <div className="activity"></div>
           </div>
         </Tab>
+        {commentsTab}
       </Tabs>
     )
   },

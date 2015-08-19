@@ -23,6 +23,7 @@
     "passport": "*",
     "passport-local": "*",
     "react": "0.13.3",
+    "react-markdown": "*",
     "react-tap-event-plugin": "^0.1.7",
     "reactify": "^1.0.0",
     "serialize-javascript": "^1.0.0",
