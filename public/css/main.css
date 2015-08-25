@@ -109,7 +109,7 @@ body {
     vertical-align: top;
 }
 .profileComments td:nth-child(1) {
-    width: 70%;
+    width: 65%;
 }
 .profileComments td:nth-child(2) {
     width: 15%;

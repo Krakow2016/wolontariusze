@@ -75,7 +75,9 @@ module.exports = {
     read: function(req, resource, params, config, callback) {
               
       var getAdminName = function (adminId) {
-          return "Admin "+adminId;
+          var id = adminId+'';
+          //return adminId + 'Adm';
+          return volonteers[id].first_name+' '+volonteers[id].last_name+' - '+id;
       }
       // W przypadku zapytania xhr zmienna `req` reprezentuje obiekt tego
       // zapytania. W przeciwnym razie obiekt zalogowanego użytkownika
