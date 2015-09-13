@@ -16,14 +16,14 @@ require("node-jsx").install({extension: '.jsx'})
 var HtmlComponent = React.createFactory(require('./app/components/Html.jsx'));
 var server = module.exports = express()
 // Obiekt udostępniający metody dostępu do danych wolontariuszy (CRUD)
-var Users = require('./app/pages/volonteer/services')
+var User = require('./app/services/rethinkdb/volonteers')
 
 // Konfiguracja middleware-u Passport definująca metodę weryfikacji poprawności
 // logowania.
 passport.use(new LocalStrategy(
   function(username, password, done) {
     // Próba logowania
-    Users.read({}, 'volonteer', { email: username }, {}, function (err, user) {
+    User.read({}, 'volonteers', { email: username }, {}, function (err, user) {
         console.log('------------------------------------------------------------------------------>', err)
       // Wystąpił niespodziewany błąd
       if (err) { return done(err) }
@@ -51,7 +51,7 @@ passport.serializeUser(function(user, done) {
 // Zdefiniuj metodę odtworzenia obiektu użytkownika na podstawie wcześniej
 // zapamiętanej referencji (numeru id w bazie danych).
 passport.deserializeUser(function(id, done) {
-  Users.read({}, 'volonteer', { id: id }, {is_owner: true}, function (err, user) {
+  User.read({}, 'volonteers', { id: id }, {is_owner: true}, function (err, user) {
     done(err, user)
   })
 })
@@ -88,8 +88,7 @@ var app = require('./app/fluxible')
 var fetchrPlugin = app.getPlugin('FetchrPlugin');
 if(fetchrPlugin) {
   // Register our messages REST services
-  fetchrPlugin.registerService(require('./app/pages/volonteer/services'));
-  fetchrPlugin.registerService(require('./app/pages/activity/services'));
+  fetchrPlugin.registerService(User);
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
 }

@@ -34,8 +34,6 @@ var App = React.createClass({
         </button>
         <Authentication user_name={this.user_name()} />
 
-        <a href="/wolontariusz/2">Przejdź do przykładowego profilu</a>
-
         <h1>Lista wszyskich wolontariuszy:</h1>
 
         <VolonteerList results={this.state.all} />

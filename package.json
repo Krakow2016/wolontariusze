@@ -26,7 +26,8 @@
     "react-tap-event-plugin": "^0.1.7",
     "reactify": "^1.0.0",
     "serialize-javascript": "^1.0.0",
-    "through2": "*"
+    "through2": "*",
+    "rethinkdb": "*"
   },
   "devDependencies": {
     "gulp-uglify": "^1.2.0",
