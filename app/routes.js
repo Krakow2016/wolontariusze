@@ -13,6 +13,17 @@ module.exports = {
         }
     },
 
+    registration: {
+        path: '/rejestracja',
+        method: 'get',
+        handler: require('./components/Registration.jsx'),
+        action: function (context, payload, done) {
+            //context.executeAction(actions.showVolonteer, { id: volonteerId }, function() {
+                done();
+            //})
+        }
+    },
+
     volonteer: {
         path: '/wolontariusz/:id',
         method: 'get',

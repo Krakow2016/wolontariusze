@@ -16,6 +16,10 @@ var VolonteerStore = createStore({
       this.emitChange();
     },
 
+    createVolonteer: function(volonteer) {
+        return volonteer
+    },
+
     getState: function () {
       var state = {}
       Object.keys(this).forEach(function(attr) {
