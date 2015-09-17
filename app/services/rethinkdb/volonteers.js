@@ -87,7 +87,17 @@ module.exports = {
       //}
     },
 
-    // create: function(req, resource, params, body, config, callback) {},
+    create: function(req, resource, params, body, config, callback) {
+        r.connect({db: 'sdm'}, function(err, conn) {
+            if(err) {
+                callback(err)
+                return
+            }
+
+            r.table(resource).insert(params).run(conn, callback)
+        })
+    },
+
     // update: function(resource, params, body, config, callback) {},
     // delete: function(resource, params, config, callback) {}
 
