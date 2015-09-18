@@ -15,15 +15,22 @@ var debug = require('debug')('Server')
 require("node-jsx").install({extension: '.jsx'})
 var HtmlComponent = React.createFactory(require('./app/components/Html.jsx'));
 var server = module.exports = express()
+
 // Obiekt udostępniający metody dostępu do danych wolontariuszy (CRUD)
-var User = require('./app/services/rethinkdb/volonteers')
+var Volonteer = require('./app/services/rethinkdb/volonteers')
+
+var app = require('./app/fluxible')
+// Get access to the fetchr plugin instance
+var fetchrPlugin = app.getPlugin('FetchrPlugin');
+// Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów
+var Protect = require('./lib/protect')
 
 // Konfiguracja middleware-u Passport definująca metodę weryfikacji poprawności
 // logowania.
 passport.use(new LocalStrategy(
   function(username, password, done) {
     // Próba logowania
-    User.read({}, 'volonteers', { email: username }, {}, function (err, user) {
+    Volonteer.read({}, 'Volonteers', { email: username }, {}, function (err, user) {
         console.log('------------------------------------------------------------------------------>', err)
       // Wystąpił niespodziewany błąd
       if (err) { return done(err) }
@@ -51,7 +58,7 @@ passport.serializeUser(function(user, done) {
 // Zdefiniuj metodę odtworzenia obiektu użytkownika na podstawie wcześniej
 // zapamiętanej referencji (numeru id w bazie danych).
 passport.deserializeUser(function(id, done) {
-  User.read({}, 'volonteers', { id: id }, {is_owner: true}, function (err, user) {
+  User.read({}, 'Volonteers', { id: id }, {is_owner: true}, function (err, user) {
     done(err, user)
   })
 })
@@ -82,13 +89,9 @@ server.engine('handlebars', handlebars({
 }))
 server.set('view engine', 'handlebars')
 
-var app = require('./app/fluxible')
-
-// Get access to the fetchr plugin instance
-var fetchrPlugin = app.getPlugin('FetchrPlugin');
 if(fetchrPlugin) {
   // Register our messages REST services
-  fetchrPlugin.registerService(User);
+  fetchrPlugin.registerService(Protect(Volonteer));
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
 }

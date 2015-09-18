@@ -2,7 +2,7 @@
 var createStore  = require('fluxible/addons').createStore;
 
 var VolonteerStore = createStore({
-    storeName: 'VolonteerStore',
+    storeName: 'Volonteers',
     handlers: {
         'LOAD_VOLONTEER'  : 'load'
     },
@@ -44,5 +44,19 @@ var VolonteerStore = createStore({
       }, this)
     }
 });
+
+VolonteerStore.attributes = function() {
+  return [
+    'id',
+    'first_name',
+    'last_name',
+    'city',
+    'profile_picture',
+    'background_picture',
+    'interests',
+    'departments',
+    'my_dream'
+  ]
+}
 
 module.exports = VolonteerStore;

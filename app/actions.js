@@ -3,7 +3,7 @@
 module.exports = {
   showVolonteer: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
-    context.service.read('volonteers', payload, {
+    context.service.read('Volonteers', payload, {
       // Przekaż obiekt zalogowanego użytkownia niezbędy do podjęcia
       // decyzji o tym jakie dane mają być zwrócone.
       user: context.getUser()
@@ -17,7 +17,7 @@ module.exports = {
   showVolonteers: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
     console.log('payload', payload)
-    context.service.read('volonteers', payload, {
+    context.service.read('Volonteers', payload, {
       // Przekaż obiekt zalogowanego użytkownia niezbędy do podjęcia
       // decyzji o tym jakie dane mają być zwrócone.
       user: context.getUser()
@@ -29,9 +29,8 @@ module.exports = {
   },
 
   showActivity: function(context, payload, cb) {
-      console.log('well shit')
     // Pobierz dane aktywności z bazy danych
-    context.service.read('activity', payload, {
+    context.service.read('Activity', payload, {
       // Przekaż obiekt zalogowanego użytkownia niezbędy do podjęcia
       // decyzji o tym jakie dane mają być zwrócone.
       user: context.getUser()
