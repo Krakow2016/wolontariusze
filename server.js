@@ -17,8 +17,11 @@ require("node-jsx").install({extension: '.jsx'})
 var HtmlComponent = React.createFactory(require('./app/components/Html.jsx'));
 var server = module.exports = express()
 
-// Obiekt udostępniający metody dostępu do danych wolontariuszy (CRUD)
-var Volonteer = require('./app/services/rethinkdb/volonteers')
+// Źródło danych - obiekt udostępniający metody dostępu do danych wolontariuszy
+// (CRUD). Zamień w ścieżkach pliku `static` na `rethinkdb` aby podłączyć się
+// pod lokalną bazę danych.
+var Volonteer = require('./app/services/static/volonteers')
+var Activity = require('./app/services/static/activities')
 
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
@@ -95,6 +98,7 @@ server.set('view engine', 'handlebars')
 if(fetchrPlugin) {
   // Register our messages REST services
   fetchrPlugin.registerService(Protect(Volonteer));
+  fetchrPlugin.registerService(Protect(Activity));
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
 }

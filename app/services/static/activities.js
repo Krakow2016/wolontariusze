@@ -82,55 +82,23 @@ var private_attrs = [
 ]
 
 module.exports = {
-    name: 'activity',
+    name: 'Activities',
     // at least one of the CRUD methods is required
     read: function(req, resource, params, config, callback) {
-      // zobacz /app/pages/volonteers/services
-      var user = req.user || config.user
-      // Flaga przywilejów administratora
-      var is_admin = user && user.is_admin
-      // Flaga właściciela profilu
-      var is_owner = false;
-      
-
 
       var activity
       if(params.id) {
         activity = activities[params.id];
-        is_owner = (user && (activity.creatorId == user.id)) || config.is_owner;
       }
 
       if(activity) {
-        var model = {}
-        // Tablica parametrów uprawnionych do odczytu
-        var attrs = public_attrs
-
-        if(is_admin || is_owner) {
-          attrs = attrs.concat(private_attrs)
-        }
-
-        attrs.forEach(function(attr){
-          model[attr] = activity[attr]
-        })
-
-        callback(null, model);
+        callback(null, activity);
       } else {
         callback("404")
       }
     },
 
-    create: function(req, resource, params, body, config, callback) {
-        activities.push({
-            id: params.id,
-            threadID: params.threadID,
-            threadName: params.threadName,
-            authorName: params.authorName,
-            text: params.text,
-            timestamp: params.timestamp
-        });
-        callback(null, _messages);
-    }
-
+    // create: function(req, resource, params, body, config, callback) {},
     // update: function(resource, params, body, config, callback) {},
     // delete: function(resource, params, config, callback) {}
 
