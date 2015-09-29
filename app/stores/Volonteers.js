@@ -1,5 +1,6 @@
 'use strict';
 var createStore  = require('fluxible/addons').createStore;
+var Volonteer = require('./Volonteer')
 
 var VolonteersStore = createStore({
     storeName: 'VolonteersStore',
@@ -32,5 +33,7 @@ var VolonteersStore = createStore({
         this.all = state.all;
     }
 });
+
+VolonteersStore.model = Volonteer
 
 module.exports = VolonteersStore;

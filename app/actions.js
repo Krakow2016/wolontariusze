@@ -1,6 +1,6 @@
 'use strict'
 
-var VolonteerStore = require('./stores/VolonteerStore')
+var VolonteerStore = require('./stores/Volonteer')
 
 module.exports = {
   showVolonteer: function(context, payload, cb) {
@@ -34,7 +34,7 @@ module.exports = {
       var volonteerStore = context.getStore(VolonteerStore)
       var volonteer = volonteerStore.createVolonteer(payload)
 
-      context.service.create('volonteers', volonteer, {}, function (err) {
+      context.service.create('Volonteers', volonteer, {}, function (err) {
         if (err) { // Błąd po stronie serwera
             //debug('dispatching CREATE_VOLONTEER_FAILURE', volonteer)
             context.dispatch('CREATE_VOLONTEER_FAILURE', [volonteer])
