@@ -5,9 +5,9 @@ var React = require('react'),
 
 var routes = require('./routes')
 var ApplicationStore = require('./stores/ApplicationStore')
-var VolonteerStore = require('./stores/VolonteerStore')
-var VolonteersStore = require('./stores/VolonteersStore')
-var ActivityStore = require('./stores/ActivityStore')
+var VolonteerStore = require('./stores/Volonteer')
+var VolonteersStore = require('./stores/Volonteers')
+var ActivityStore = require('./stores/Activity')
 var passportPlugin = require('./plugins/passportPlugin')
 
 // Instancja kontenera aplikacji Fluxible
