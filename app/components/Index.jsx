@@ -1,7 +1,7 @@
 var React = require('react')
 
 var ApplicationStore = require('../stores/ApplicationStore')
-var VolonteersStore = require('../stores/VolonteersStore')
+var VolonteersStore = require('../stores/Volonteers')
 
 var Authentication = require('./Authentication.jsx')
 var VolonteerList = require('./VolonteersList.jsx')
@@ -26,6 +26,7 @@ var App = React.createClass({
   click: function() {
     alert("React is working")
   },
+
   render: function () {
     return (
       <div>
@@ -40,9 +41,11 @@ var App = React.createClass({
       </div>
     )
   },
+
   user: function() {
     return this.context.getUser()
   },
+
   user_name: function() {
     return this.user() && this.user().first_name
   }

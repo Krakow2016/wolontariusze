@@ -1,7 +1,7 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 
-var VolonteerStore = require('../stores/VolonteerStore')
+var VolonteerStore = require('../stores/Volonteer')
 var Authentication = require('./Authentication.jsx')
 
 var material = require('material-ui'),
