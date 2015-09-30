@@ -20,7 +20,6 @@ var volonteers = {
         departments: 'Ut aliquam sagittis felis a aliquet. Quisque in tempor lacus. Nulla mattis bibendum nibh, gravida consectetur ante condimentum eget. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed eu leo consectetur, vestibulum dui sed, convallis massa. Mauris aliquam porttitor dolor id aliquam. Sed tellus diam, eleifend quis elit molestie, imperdiet dapibus leo.',
         my_dream: 'Aliquam at fermentum mi. Vestibulum varius lorem sit amet semper tempor. Nullam aliquam pulvinar commodo. Nulla volutpat cursus dolor, eget tincidunt velit pretium in. Donec dictum rutrum condimentum. Ut tincidunt ante ac odio venenatis, eu laoreet velit pharetra. Proin placerat sapien velit, vitae vulputate libero eleifend sit amet.',
         experience: 'Ut sem dolor, volutpat vitae urna quis, aliquam bibendum dolor. Sed id diam in nulla mollis porta. Nulla facilisi. Morbi gravida tortor euismod, faucibus nunc nec, porttitor lacus. Maecenas nisi velit, suscipit sed justo ac, gravida eleifend sapien.',
-        comments: [{id: 1, text: "I komentarz", creationTimestamp: 1200043, adminId: 1}, {id:2, text: "A to jest drugi komentarz", creationTimestamp: 2200044, adminId: 1}]
     },
     "2": {
         id: "2",
@@ -35,8 +34,7 @@ var volonteers = {
         interests: 'piłka nożna i sporty zespołowe. Uwielbiam wycieczki po górach i jajecznicę w schronisku po całym dniu wspinaczki.',
         departments: 'organizację spotkań wolontariuszy i pomagać tworzyć atmosferę braterstwa i wspólnej sprawy jaką są Światowe Dni Młodzieży w Krakowie.',
         my_dream: 'aby wszyscy ludzie byli braćmi.',
-        experience: 'Prywatne - pole nie powinno być widoczne publicznie. Tylko do wglądu administratorów i samego wolontariusza.',
-        comments: []
+        experience: 'Prywatne - pole nie powinno być widoczne publicznie. Tylko do wglądu administratorów i samego wolontariusza.'
     }
 }
 
@@ -59,7 +57,6 @@ var private_attrs = [
 
 //these attrs are only visible for admins
 var admin_attrs = [
-  'comments'
 ]
 
 
@@ -74,11 +71,6 @@ module.exports = {
     // at least one of the CRUD methods is required
     read: function(req, resource, params, config, callback) {
               
-      var getAdminName = function (adminId) {
-          var id = adminId+'';
-          //return adminId + 'Adm';
-          return volonteers[id].first_name+' '+volonteers[id].last_name+' - '+id;
-      }
       // W przypadku zapytania xhr zmienna `req` reprezentuje obiekt tego
       // zapytania. W przeciwnym razie obiekt zalogowanego użytkownika
       // przekazujemy w parametrze `config`.
@@ -119,12 +111,6 @@ module.exports = {
         attrs.forEach(function(attr){
           model[attr] = volonteer[attr]
         })
-        //uzupełnij komentarze o imię i nazwisko administratora
-        if(model['comments']) {
-          model['comments'].forEach(function (comment) {
-            comment.adminName = getAdminName(comment.adminId);
-          });
-        }
 
         callback(null, model);
       } else {

@@ -12,6 +12,9 @@ var Tabs = material.Tabs,
     
 var ProfileComments = require('./ProfileComments.jsx')
 
+var actions = require('../actions')
+var profileCommentsReadAction = actions.profileCommentsRead;
+
    
 var Volonteer = React.createClass({
 
@@ -49,7 +52,7 @@ var Volonteer = React.createClass({
         <div className="coverPhoto" style={{backgroundImage: 'url('+ this.state.background_picture +')'}}>
         </div>
 
-        <ProfileTabs {...this.state} user={this.user()} />
+        <ProfileTabs {...this.state} user={this.user()} context={this.props.context}/>
       </div>
     )
   },
@@ -67,6 +70,12 @@ var Volonteer = React.createClass({
 
 var ProfileTabs = React.createClass({
 
+  showProfileComments: function (){
+        console.log ('show comments');
+            this.props.context.executeAction(profileCommentsReadAction, {
+                volonteerId: this.props.id
+            });
+  },
   render: function() {
 
     var extra
@@ -78,11 +87,10 @@ var ProfileTabs = React.createClass({
     } else {
       extra = <div />
     }
-    
     var commentsTab = {}
     if (is_admin) {
-      commentsTab = <Tab label="Komentarze">
-        <ProfileComments data={this.props.comments} volonteerId={this.props.id} adminId={user.id}></ProfileComments>
+      commentsTab = <Tab label="Komentarze" onClick={this.showProfileComments()}>
+        <ProfileComments volonteerId={this.props.id} adminId={user.id} context={this.props.context}></ProfileComments>
       </Tab>
     }
     

@@ -89,6 +89,7 @@ var fetchrPlugin = app.getPlugin('FetchrPlugin');
 if(fetchrPlugin) {
   // Register our messages REST services
   fetchrPlugin.registerService(require('./app/pages/volonteer/services'));
+  fetchrPlugin.registerService(require('./app/pages/volonteer/profileComments/services'));
   fetchrPlugin.registerService(require('./app/pages/activity/services'));
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
@@ -106,21 +107,6 @@ server.get('/logout', function(req, res){
   req.logout()
   res.redirect('/')
 })
-
-// Obsługa komentarzy do profilu
-var DatabaseProfileComments = require('./app/modules/database/DatabaseProfileComments.js');
-server.post('/profileCommentAdd', function (req, res) {
-    DatabaseProfileComments.createComment(req.body.volonteerId, req.body.comment, req.body.adminId);
-    res.redirect('/wolontariusz/'+req.body.volonteerId);
-});
-server.post('/profileCommentRemove', function (req, res) {
-    DatabaseProfileComments.removeComment(req.body.volonteerId, req.body.commentId);
-    res.redirect('/wolontariusz/'+req.body.volonteerId);
-});
-server.post('/profileCommentUpdate', function (req, res) {
-    DatabaseProfileComments.updateComment(req.body.volonteerId, req.body.commentId, req.body.comment, req.body.adminId);
-    res.redirect('/wolontariusz/'+req.body.volonteerId);
-});
 
 // Zwraca stronę aplikacji
 server.use(function(req, res, next) {
