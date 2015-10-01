@@ -5,8 +5,8 @@ var provideContext = addons.provideContext
 var connectToStores = addons.connectToStores
 
 var ApplicationStore = require('../stores/ApplicationStore')
-var VolonteerStore = require('../stores/VolonteerStore')
-var ActivityStore = require('../stores/ActivityStore')
+var VolonteerStore = require('../stores/Volonteer')
+var ActivityStore = require('../stores/Activity')
 
 var injectTapEventPlugin = require('react-tap-event-plugin');
 //Needed for onTouchTap

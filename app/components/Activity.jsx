@@ -1,6 +1,6 @@
 var React = require('react')
 
-var ActivityStore = require('../stores/ActivityStore')
+var ActivityStore = require('../stores/Activity')
 
 var Activity = React.createClass({
 

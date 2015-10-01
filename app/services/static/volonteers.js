@@ -38,47 +38,10 @@ var volonteers = {
     }
 }
 
-var public_attrs = [
-  'id',
-  'first_name',
-  'last_name',
-  'city',
-  'profile_picture',
-  'background_picture',
-  'interests',
-  'departments',
-  'my_dream'
-]
-
-var private_attrs = [
-  'is_admin',
-  'experience',
-]
-
-//these attrs are only visible for admins
-var admin_attrs = [
-]
-
-
-
-
-
 module.exports = {
-    volonteers: volonteers, //for test only (add a volonteer, add comments)
-                            //
-    
-    name: 'volonteer',
+    name: 'Volonteers',
     // at least one of the CRUD methods is required
     read: function(req, resource, params, config, callback) {
-              
-      // W przypadku zapytania xhr zmienna `req` reprezentuje obiekt tego
-      // zapytania. W przeciwnym razie obiekt zalogowanego użytkownika
-      // przekazujemy w parametrze `config`.
-      var user = req.user || config.user
-      // Flaga przywilejów administratora
-      var is_admin = user && user.is_admin
-      // Flaga właściciela profilu
-      var is_owner = (user && (params.id == user.id)) || config.is_owner
 
       var volonteer
       if(params.id) {
@@ -89,47 +52,24 @@ module.exports = {
           return el.email === params.email
         })[0]
 
-        volonteer = id ? volonteers[id] : null
+        volonteer = id ? [volonteers[id]] : null
+      } else { // Brak identyfikatora
+          // Zwróć wszyskich wolontariuszy
+          var results = Object.keys(volonteers).map(function(key) {
+              return volonteers[key]
+          })
+          callback(null, results)
+          return
       }
 
       if(volonteer) {
-        var model = {}
-        // Tablica parametrów uprawnionych do odczytu
-        var attrs = public_attrs
-
-        // Jeźeli posiadamy uprawnienia administratora lub
-        // przeglądamy własny profil potrzebujemy dostępu do
-        // wszystkich parametrówmodelu wolontariusza
-        if(is_admin || is_owner) {
-          attrs = attrs.concat(private_attrs)
-        }
-        if(is_admin) {
-          attrs = attrs.concat(admin_attrs)
-        }
-
-        // Przepisz dozwolone parametry do zwracanego obiektu
-        attrs.forEach(function(attr){
-          model[attr] = volonteer[attr]
-        })
-
-        callback(null, model);
+        callback(null, volonteer);
       } else {
         callback("404")
       }
     },
 
-    create: function(req, resource, params, body, config, callback) {
-        volonteers.push({
-            id: params.id,
-            threadID: params.threadID,
-            threadName: params.threadName,
-            authorName: params.authorName,
-            text: params.text,
-            timestamp: params.timestamp
-        });
-        callback(null, _messages);
-    }
-
+    // create: function(req, resource, params, body, config, callback) {},
     // update: function(resource, params, body, config, callback) {},
     // delete: function(resource, params, config, callback) {}
 

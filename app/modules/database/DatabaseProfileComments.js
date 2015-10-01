@@ -1,4 +1,4 @@
-var volonteers = require('../../pages/volonteer/services.js').volonteers;
+var volonteers = require('../../services/static/volonteer.js').volonteers;
 
 var updateDatabase = function (volonteerId)
 {

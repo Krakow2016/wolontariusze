@@ -5,7 +5,7 @@ var TestUtils = React.addons.TestUtils
 var routes = require('../../app/routes')
 var RouteStore = require('fluxible-router').RouteStore;
 var ApplicationStore = require('../../app/stores/ApplicationStore')
-var VolonteerStore = require('../../app/stores/VolonteerStore')
+var VolonteerStore = require('../../app/stores/Volonteer')
 
 var passportPlugin = require('../../app/plugins/passportPlugin')
 
