@@ -5,7 +5,7 @@
 // on server and client side.
 //
 // Więcej: http://fluxible.io/guides/data-services.html
-var volonteers = require("../services.js").volonteers;
+var volonteers = require('./volonteers.json')
 var comments = [
     {
         volonteerId: 1,
@@ -46,14 +46,14 @@ var comments = [
 
 var getAdminName = function (adminId) {
     var id = adminId+'';
-    return volonteers[id].first_name+' '+volonteers[id].last_name+' - '+id;
+    return volonteers[id].first_name
 }
-      
+
 //https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
 var filteredComments = function (volonteerId) {
     return comments.filter ( function (obj) {
         if (obj.volonteerId && obj.volonteerId == volonteerId) {
-            obj.adminName = getAdminName(obj.adminId);
+            obj.first_name = getAdminName(obj.adminId);
             return true;
         } else
             return false;
@@ -61,7 +61,7 @@ var filteredComments = function (volonteerId) {
 }
 
 module.exports = {
-    name: 'profileComments',
+    name: 'Comments',
     // at least one of the CRUD methods is required
     read: function(req, resource, params, config, callback) {
         var volonteerId = params.volonteerId;
@@ -81,16 +81,19 @@ module.exports = {
         if (length > 0) {
             commentId = volonteerComments[length-1].id+1; 
         }
-        comments.push({
-            volonteerId: volonteerId,
-            id: commentId,
-            adminId: adminId,
-            text: text, 
-            creationTimestamp: timestamp});
-        volonteerComments = filteredComments(volonteerId);
-        
-        callback(null, volonteerComments);
+        var comment = {
+          volonteerId: volonteerId,
+          id: commentId,
+          adminId: adminId,
+          text: text,
+          creationTimestamp: timestamp
+        }
+        comments.push(comment)
+        //volonteerComments = filteredComments(volonteerId);
+
+        callback(null, comment);
     },
+
     update: function(req, resource, params, body, config, callback) {
         var volonteerId = params.volonteerId;
         var commentId = params.commentId;
@@ -111,6 +114,7 @@ module.exports = {
         volonteerComments = filteredComments(volonteerId);
         callback(null, volonteerComments);
     },
+
     delete: function(req, resource, params, config, callback) {
         var volonteerId = params.volonteerId;
         var commentId = params.commentId;

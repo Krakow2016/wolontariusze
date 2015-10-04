@@ -9,13 +9,12 @@ var material = require('material-ui'),
 
 var Tabs = material.Tabs,
     Tab = material.Tab
-    
+
 var ProfileComments = require('./ProfileComments.jsx')
 
 var actions = require('../actions')
-var profileCommentsReadAction = actions.profileCommentsRead;
+var showCommentsAction = actions.showComments;
 
-   
 var Volonteer = React.createClass({
 
   childContextTypes: {
@@ -71,11 +70,12 @@ var Volonteer = React.createClass({
 var ProfileTabs = React.createClass({
 
   showProfileComments: function (){
-        console.log ('show comments');
-            this.props.context.executeAction(profileCommentsReadAction, {
-                volonteerId: this.props.id
-            });
+    console.log ('show comments');
+    this.props.context.executeAction(showCommentsAction, {
+      volonteerId: this.props.id
+    })
   },
+
   render: function() {
 
     var extra
@@ -89,11 +89,11 @@ var ProfileTabs = React.createClass({
     }
     var commentsTab = {}
     if (is_admin) {
-      commentsTab = <Tab label="Komentarze" onClick={this.showProfileComments()}>
+      commentsTab = <Tab label="Komentarze" onActive={this.showProfileComments}>
         <ProfileComments volonteerId={this.props.id} adminId={user.id} context={this.props.context}></ProfileComments>
       </Tab>
     }
-    
+
     return (
       <Tabs>
         <Tab label="Item One" >

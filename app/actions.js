@@ -41,31 +41,38 @@ module.exports = {
       cb()
     })
   },
-  profileCommentsRead: function(context, payload, cb) {
-      console.log('profile comment read')
-    context.service.read('profileComments', payload, {}, function (err, data) {
-      context.dispatch('PROFILE_COMMENTS_READ', data);
+
+  showComments: function(context, payload, cb) {
+    console.log('profile comment read')
+    context.service.read('Comments', payload, {}, function (err, data) {
+      context.dispatch('LOAD_COMMENTS', data);
       cb()
     })
   },
-  profileCommentsCreate: function(context, payload, cb) {
-      console.log('profile comment create')
-    context.service.create('profileComments', payload, {}, function (err, data) {
-      context.dispatch('PROFILE_COMMENTS_CREATE', data);
+
+  createComment: function(context, payload, cb) {
+    console.log('profile comment create')
+    context.service.create('Comments', payload, {}, function (err, data) {
+      if(err) { console.log(err) }
+      else { context.dispatch('COMMENT_CREATED', data) }
       cb()
     })
   },
-   profileCommentsUpdate: function(context, payload, cb) {
-      console.log('profile comment update')
-    context.service.update('profileComments', payload, {}, function (err, data) {
-      context.dispatch('PROFILE_COMMENTS_UPDATE', data);
+
+  profileCommentsUpdate: function(context, payload, cb) {
+    console.log('profile comment update')
+    context.service.update('Comments', payload, {}, function (err, data) {
+      if(err) { console.log(err) }
+      else { context.dispatch('COMMENT_UPDATED', payload) }
       cb()
     })
   },
+
   profileCommentsDelete: function(context, payload, cb) {
-      console.log('profile comment delete')
-    context.service.delete('profileComments', payload, {}, function (err, data) {
-      context.dispatch('PROFILE_COMMENTS_DELETE', data);
+    console.log('profile comment delete')
+    context.service.delete('Comments', payload, {}, function (err, data) {
+      if(err) { console.log(err) }
+      else { context.dispatch('COMMENT_DELETED', payload) }
       cb()
     })
   }
