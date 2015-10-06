@@ -4,7 +4,7 @@ var createStore  = require('fluxible/addons').createStore;
 var VolonteerStore = createStore({
     storeName: 'Volonteers',
     handlers: {
-        'LOAD_VOLONTEER'  : 'load'
+      'LOAD_VOLONTEER'  : 'load'
     },
 
     initialize: function () {

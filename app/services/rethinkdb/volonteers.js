@@ -15,26 +15,25 @@ module.exports = {
   read: function(req, resource, params, config, callback) {
     // Połącz się z bazą danych `sdm`
     r.connect({db: 'sdm'}, function(error, conn){
-
       if(error) { // Wystąpił błąd przy połączeniu z bazą danych
         callback(error)
         return
       }
 
       if(params.id) { // Pobierz krotkę o danym numerze id
-        r.table('volonteers').get(params.id).run(conn, function(err, row){
+        r.table('Volonteers').get(params.id).run(conn, function(err, row){
           console.log(err, row)
           callback(err || !row, row)
         })
       } else { // Pobierz listę krotek
         if(params.email) { // use index
-          r.table('volonteers').getAll(params.email, {index: 'email'}).run(conn, function(err, cursor) {
+          r.table('Volonteers').getAll(params.email, {index: 'email'}).run(conn, function(err, cursor) {
             if(err) { callback(err) }
             else { cursor.toArray(callback) }
           })
         } else { // Brak identyfikatora
           // Zwróć wszyskich wolontariuszy
-          r.table('volonteers').limit(50).run(conn, function(err, cursor) {
+          r.table('Volonteers').limit(50).run(conn, function(err, cursor) {
             if(err) { callback(err) }
             else { cursor.toArray(callback) }
           })

@@ -20,8 +20,9 @@ var server = module.exports = express()
 // Źródło danych - obiekt udostępniający metody dostępu do danych wolontariuszy
 // (CRUD). Zamień w ścieżkach pliku `static` na `rethinkdb` aby podłączyć się
 // pod lokalną bazę danych.
-var Volonteer = require('./app/services/static/volonteers')
+var Volonteer = require('./app/services/rethinkdb/volonteers')
 var Activity = require('./app/services/static/activities')
+var Comments = require('./app/services/rethinkdb/comments')
 
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
@@ -99,6 +100,7 @@ if(fetchrPlugin) {
   // Register our messages REST services
   fetchrPlugin.registerService(Protect(Volonteer));
   fetchrPlugin.registerService(Protect(Activity));
+  fetchrPlugin.registerService(Protect(Comments));
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
 }

@@ -10,6 +10,11 @@ var material = require('material-ui'),
 var Tabs = material.Tabs,
     Tab = material.Tab
 
+var ProfileComments = require('./ProfileComments.jsx')
+
+var actions = require('../actions')
+var showCommentsAction = actions.showComments;
+
 var Volonteer = React.createClass({
 
   childContextTypes: {
@@ -46,7 +51,7 @@ var Volonteer = React.createClass({
         <div className="coverPhoto" style={{backgroundImage: 'url('+ this.state.background_picture +')'}}>
         </div>
 
-        <ProfileTabs {...this.state} user={this.user()} />
+        <ProfileTabs {...this.state} user={this.user()} context={this.props.context}/>
       </div>
     )
   },
@@ -60,17 +65,33 @@ var Volonteer = React.createClass({
   }
 })
 
+
+
 var ProfileTabs = React.createClass({
+
+  showProfileComments: function (){
+    console.log ('show comments');
+    this.props.context.executeAction(showCommentsAction, {
+      volonteerId: this.props.id
+    })
+  },
 
   render: function() {
 
     var extra
     var user = this.props.user
     var is_owner = user && user.id === this.props.id
-    if (user && (user.is_admin || is_owner)) {
+    var is_admin = user && user.is_admin;
+    if (is_admin || is_owner) {
       extra = <ExtraAttributesVisible {...this.props} />
     } else {
       extra = <div />
+    }
+    var commentsTab = {}
+    if (is_admin) {
+      commentsTab = <Tab label="Komentarze" onActive={this.showProfileComments}>
+        <ProfileComments volonteerId={this.props.id} adminId={user.id} context={this.props.context}></ProfileComments>
+      </Tab>
     }
 
     return (
@@ -105,6 +126,7 @@ var ProfileTabs = React.createClass({
             <div className="activity"></div>
           </div>
         </Tab>
+        {commentsTab}
       </Tabs>
     )
   },
