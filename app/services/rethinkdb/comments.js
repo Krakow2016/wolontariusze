@@ -43,8 +43,13 @@ module.exports = {
         if(err) { callback(err) }
         else {
           callback(null, result.changes.map(function(change) {
-            return change.new_val
-          }))
+            var new_val = change.new_val
+            // Dołącz dane autora komentarza
+            new_val.first_name = req.user.first_name
+            new_val.last_name = req.user.last_name
+            return new_val
+          })
+)
         }
       })
     })
