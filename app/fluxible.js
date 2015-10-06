@@ -9,7 +9,7 @@ var VolonteerStore = require('./stores/Volonteer')
 var VolonteersStore = require('./stores/Volonteers')
 var ActivityStore = require('./stores/Activity')
 var NewCommentStore = require('./stores/NewComment')
-var CommentsListStore = require('./stores/CommentsList')
+var CommentsStore = require('./stores/Comments')
 
 var passportPlugin = require('./plugins/passportPlugin')
 
@@ -22,7 +22,7 @@ var app = new Fluxible({
         VolonteerStore,
         VolonteersStore,
         NewCommentStore,
-        CommentsListStore,
+        CommentsStore,
         ActivityStore
     ]
 });

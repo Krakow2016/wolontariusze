@@ -1,8 +1,9 @@
 'use strict';
 var createStore  = require('fluxible/addons').createStore;
+var NewComment = require('./NewComment')
 
-var CommentsList = createStore({
-  storeName: 'CommentsList',
+var Comments = createStore({
+  storeName: 'Comments',
   handlers: {
     'LOAD_COMMENTS': 'load',
     'COMMENT_CREATED': 'add',
@@ -64,5 +65,11 @@ var CommentsList = createStore({
   }
 });
 
+Comments.model = NewComment
 
-module.exports = CommentsList
+// Oznacz wszystkie atrybuty jako dostępne tylko dla administratorów
+Comments.attributes = function() {
+  return []
+}
+
+module.exports = Comments

@@ -3,7 +3,7 @@ var ReactMarkdown = require('react-markdown');
 
 var TimeService = require('../modules/time/TimeService.js');
 
-var CommentsListStore = require('../stores/CommentsList')
+var CommentsStore = require('../stores/Comments')
 
 var actions = require('../actions')
 var updateAction = actions.profileCommentsUpdate;
@@ -106,22 +106,22 @@ var ProfileComment = React.createClass ({
 var ProfileComments = React.createClass({
 
   getInitialState: function () {
-     return this.props.context.getStore(CommentsListStore).getState();
+     return this.props.context.getStore(CommentsStore).getState();
   },
 
   componentDidMount: function componentDidMount() {
-    this.props.context.getStore(CommentsListStore)
+    this.props.context.getStore(CommentsStore)
       .addChangeListener(this._onStoreChange)
   },
 
   componentWillUnmount: function componentWillUnmount() {
     // Usuń funkcję nasłychującą.
-    this.props.context.getStore(CommentsListStore)
+    this.props.context.getStore(CommentsStore)
       .removeChangeListener(this._onStoreChange)
   },
 
   _onStoreChange: function() {
-     this.setState(this.props.context.getStore(CommentsListStore).getState())
+     this.setState(this.props.context.getStore(CommentsStore).getState())
   },
 
   render: function (){

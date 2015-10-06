@@ -47,5 +47,9 @@ var NewComment = createStore({
   }
 })
 
+// Oznacz wszystkie atrybuty jako dostępne tylko dla administratorów
+NewComment.attributes = function() {
+  return []
+}
 
 module.exports = NewComment

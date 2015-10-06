@@ -100,7 +100,7 @@ if(fetchrPlugin) {
   // Register our messages REST services
   fetchrPlugin.registerService(Protect(Volonteer));
   fetchrPlugin.registerService(Protect(Activity));
-  fetchrPlugin.registerService((Comments));
+  fetchrPlugin.registerService(Protect(Comments));
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
 }
