@@ -1,4 +1,5 @@
 var React = require('react')
+var NavLink = require('fluxible-router').NavLink
 
 var Authentication = React.createClass({
   render: function () {
@@ -20,7 +21,7 @@ var Authentication = React.createClass({
 var LoginButton = React.createClass({
   render: function() {
     return (
-      <a href="/login">Zaloguj się</a>
+      <NavLink href="/login">Zaloguj się</NavLink>
     )
   }
 })

@@ -3,6 +3,7 @@ var React = require('react')
 var ApplicationStore = require('../stores/ApplicationStore')
 var VolonteersStore = require('../stores/Volonteers')
 
+var NavLink = require('fluxible-router').NavLink
 var Authentication = require('./Authentication.jsx')
 var VolonteerList = require('./VolonteersList.jsx')
 
@@ -34,6 +35,10 @@ var App = React.createClass({
           Hello!
         </button>
         <Authentication user_name={this.user_name()} />
+
+        <p style={{'text-align': 'center'}}>
+            <NavLink href="/rejestracja">Zarejestruj się!</NavLink>
+        </p>
 
         <h1>Lista wszyskich wolontariuszy:</h1>
 
