@@ -27,6 +27,7 @@
     "react-markdown": "*",
     "react-tap-event-plugin": "^0.1.7",
     "reactify": "^1.0.0",
+    "formsy-react": "*",
     "rethinkdb": "*",
     "serialize-javascript": "^1.0.0",
     "through2": "*"

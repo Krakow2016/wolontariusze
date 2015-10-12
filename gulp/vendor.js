@@ -7,6 +7,8 @@ var gulp = require('gulp'),
 
 var libs = [
   'react',
+  'react-markdown',
+  'formsy-react',
   'fluxible',
   'fluxible/addons',
   'fluxible-router',

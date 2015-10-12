@@ -31,20 +31,17 @@ module.exports = {
   },
 
   createVolonteer: function(context, payload, cb) {
-      var volonteerStore = context.getStore(VolonteerStore)
-      var volonteer = volonteerStore.createVolonteer(payload)
+    var volonteerStore = context.getStore(VolonteerStore)
+    var volonteer = volonteerStore.createVolonteer(payload)
 
-      context.service.create('Volonteers', volonteer, {}, function (err) {
-        if (err) { // Błąd po stronie serwera
-            //debug('dispatching CREATE_VOLONTEER_FAILURE', volonteer)
-            context.dispatch('CREATE_VOLONTEER_FAILURE', [volonteer])
-            cb()
-            return
-        }
-        //debug('dispatching CREATE_VOLONTEER_SUCCESS', volonteer)
-        context.dispatch('CREATE_VOLONTEER_SUCCESS', [volonteer])
-        cb()
-    });
+    context.service.create('Volonteers', volonteer, {}, function (err) {
+      if (err) { // Błąd po stronie serwera
+        context.dispatch('VOLONTEER_CREATION_FAILURE', [volonteer])
+      } else {
+        context.dispatch('VOLONTEER_CREATION_SUCCESS', [volonteer])
+      }
+      cb()
+    })
   },
 
   showActivity: function(context, payload, cb) {

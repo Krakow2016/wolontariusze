@@ -125,3 +125,18 @@ body {
   float: right
 }
 
+form .pure-g > div:first-child {
+  text-align: right
+}
+
+.registrationForm .pure-g > div:first-child {
+  padding-top: 17px;
+}
+
+.registrationForm .pure-g > div:first-child label {
+  margin-right: 10px
+}
+
+.registrationForm .pure-g > div:last-child {
+  padding-bottom: 10px
+}
