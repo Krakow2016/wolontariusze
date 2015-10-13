@@ -2,7 +2,6 @@ var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 
 var VolonteerStore = require('../stores/Volonteer')
-var Authentication = require('./Authentication.jsx')
 
 var material = require('material-ui'),
     ThemeManager = new material.Styles.ThemeManager()
@@ -42,27 +41,12 @@ var Volonteer = React.createClass({
   render: function () {
     return (
       <div>
-        <div className="globalNav navBar"> {/* Nawigacja serwisu */}
-          <NavLink href="/">
-            Strona główna
-          </NavLink>
-          <Authentication user_name={this.user_name()} />
-        </div>
         <div className="coverPhoto" style={{backgroundImage: 'url('+ this.state.background_picture +')'}}>
         </div>
-
-        <ProfileTabs {...this.state} user={this.user()} context={this.props.context}/>
+        <ProfileTabs {...this.state} context={this.props.context}/>
       </div>
     )
   },
-
-  user: function() {
-    return this.props.context.getUser()
-  },
-
-  user_name: function() {
-    return this.user() && this.user().first_name
-  }
 })
 
 
@@ -79,7 +63,7 @@ var ProfileTabs = React.createClass({
   render: function() {
 
     var extra
-    var user = this.props.user
+    var user = this.user()
     var is_owner = user && user.id === this.props.id
     var is_admin = user && user.is_admin;
     if (is_admin || is_owner) {
@@ -133,8 +117,11 @@ var ProfileTabs = React.createClass({
 
   name: function() {
     return this.props.first_name +" "+ this.props.last_name
-  }
+  },
 
+  user: function() {
+    return this.props.context.getUser()
+  }
 })
 
 var ExtraAttributesVisible = React.createClass({

@@ -116,6 +116,7 @@ server.post('/login', passport.authenticate('local', {
 
 server.get('/logout', function(req, res){
   req.logout()
+  req.flash('success', 'Wylogowano.')
   res.redirect('/')
 })
 

@@ -1,12 +1,14 @@
 var React = require('react')
 var handleHistory = require('fluxible-router').handleHistory
 var addons = require('fluxible-addons-react')
+var NavLink = require('fluxible-router').NavLink
 var provideContext = addons.provideContext
-var connectToStores = addons.connectToStores
 
 var ApplicationStore = require('../stores/ApplicationStore')
 var VolonteerStore = require('../stores/Volonteer')
 var ActivityStore = require('../stores/Activity')
+
+var Authentication = require('./Authentication.jsx')
 
 var injectTapEventPlugin = require('react-tap-event-plugin');
 //Needed for onTouchTap
@@ -28,17 +30,27 @@ var Application = React.createClass({
     //render content
     return (
       <div>
+        <div className="globalNav navBar">
+          <NavLink href="/">
+            Strona główna
+          </NavLink>
+          <Authentication user_id={this.user_id()} user_name={this.user_name()} />
+        </div>
         <Handler context={this.context} />
       </div>
     );
-  }
-})
+  },
 
-Application = connectToStores(Application, [ApplicationStore, VolonteerStore, ActivityStore], function (context, props) {
-  return {
-    ApplicationStore: context.getStore(ApplicationStore).getState(),
-    VolonteerStore: context.getStore(VolonteerStore).getState(),
-    ActivityStore: context.getStore(ActivityStore).getState()
+  user: function() {
+    return this.props.context.getUser()
+  },
+
+  user_id: function() {
+    return this.user() && this.user().id
+  },
+
+  user_name: function() {
+    return this.user() && this.user().first_name
   }
 })
 

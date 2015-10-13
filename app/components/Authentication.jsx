@@ -5,9 +5,11 @@ var Authentication = React.createClass({
   render: function () {
     var loginButton
     if (this.props.user_name) {
-        loginButton = <LogoutButton user_name={this.props.user_name} />
+      loginButton = <LogoutButton
+        user_id={this.props.user_id}
+        user_name={this.props.user_name} />
     } else {
-        loginButton = <LoginButton />
+      loginButton = <LoginButton />
     }
 
     return (
@@ -30,7 +32,7 @@ var LogoutButton = React.createClass({
   render: function() {
     return (
       <span>
-        Witaj <b>{this.props.user_name}</b>! | <a href="/logout">Wyloguj się</a>
+        Witaj <b><NavLink href={"/wolontariusz/"+this.props.user_id}>{this.props.user_name}</NavLink></b>! <NavLink href="/ustawienia">Ustawienia</NavLink> | <a href="/logout">Wyloguj się</a>
       </span>
     )
   }

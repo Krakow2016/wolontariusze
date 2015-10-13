@@ -4,7 +4,6 @@ var ApplicationStore = require('../stores/ApplicationStore')
 var VolonteersStore = require('../stores/Volonteers')
 
 var NavLink = require('fluxible-router').NavLink
-var Authentication = require('./Authentication.jsx')
 var VolonteerList = require('./VolonteersList.jsx')
 
 var App = React.createClass({
@@ -31,10 +30,6 @@ var App = React.createClass({
   render: function () {
     return (
       <div>
-        <button onClick={this.click}>
-          Hello!
-        </button>
-        <Authentication user_name={this.user_name()} />
 
         <p style={{'text-align': 'center'}}>
             <NavLink href="/rejestracja">Zarejestruj się!</NavLink>
@@ -46,14 +41,6 @@ var App = React.createClass({
       </div>
     )
   },
-
-  user: function() {
-    return this.context.getUser()
-  },
-
-  user_name: function() {
-    return this.user() && this.user().first_name
-  }
 })
 
 

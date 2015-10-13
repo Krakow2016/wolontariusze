@@ -140,3 +140,19 @@ form .pure-g > div:first-child {
 .registrationForm .pure-g > div:last-child {
   padding-bottom: 10px
 }
+
+.flashMessage {
+  animation-duration: 1s;
+  animation-name: opacity;
+  animation-delay: 5s;
+  animation-fill-mode: forwards
+}
+
+@keyframes opacity {
+  from {
+    opacity: 1
+  }
+  to {
+    opacity: 0
+  }
+}
