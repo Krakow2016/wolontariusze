@@ -87,7 +87,7 @@ główną naszego serwisu. A teraz czas na programowanie :)
 
 # Testy
 
-Testy wykonywane są standardową komendą '$ npm test', kóra uruchamia narzędzie
+Testy wykonywane są standardową komendą `$ npm test`, kóra uruchamia narzędzie
 [Jasmine](http://jasmine.github.io/). Wszyskie testy znajdują się w katalogu
 `spec/`.
 

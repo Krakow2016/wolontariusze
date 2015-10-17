@@ -30,7 +30,8 @@
     "formsy-react": "*",
     "rethinkdb": "*",
     "serialize-javascript": "^1.0.0",
-    "through2": "*"
+    "through2": "*",
+    "request": "*"
   },
   "devDependencies": {
     "gulp-uglify": "^1.2.0",

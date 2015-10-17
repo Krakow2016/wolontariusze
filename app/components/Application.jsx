@@ -29,7 +29,7 @@ var Application = React.createClass({
     var Handler = this.props.currentRoute.get('handler');
     //render content
     return (
-      <div>
+      <div className="container">
         <div className="globalNav navBar">
           <NavLink href="/">
             Strona główna

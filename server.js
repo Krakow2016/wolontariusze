@@ -8,7 +8,8 @@ var express = require('express'),
     passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     session = require('express-session'),
-    flash = require('connect-flash')
+    flash = require('connect-flash'),
+    request = require('request')
 
 // Wyświetlanie komunikatów kontrolnych
 var debug = require('debug')('Server')
@@ -118,6 +119,15 @@ server.get('/logout', function(req, res){
   req.logout()
   req.flash('success', 'Wylogowano.')
   res.redirect('/')
+})
+
+server.post('/search', function(req, res) {
+  if(req.user && req.user.is_admin) {
+    var elasticSearch = 'http://192.168.1.99:9200/sdm/_search'
+    request(elasticSearch).pipe(res);
+  } else {
+    res.send(403)
+  }
 })
 
 // Zwraca stronę aplikacji

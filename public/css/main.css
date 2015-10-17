@@ -156,3 +156,30 @@ form .pure-g > div:first-child {
     opacity: 0
   }
 }
+
+.container {
+  width: 980;
+  margin: auto
+}
+
+.pure-g > div {
+  box-sizing: border-box;
+  padding: 5px 10px
+}
+
+.searchForm {
+  line-height: 30px
+}
+
+.searchForm input:not([type]) {
+  padding: 5px;
+  width: 100%
+}
+
+.searchForm label {
+  padding: 5px
+}
+
+.searchForm .search {
+  margin: 10px
+}

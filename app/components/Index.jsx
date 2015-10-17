@@ -37,6 +37,10 @@ var App = React.createClass({
 
         <h1>Lista wszyskich wolontariuszy:</h1>
 
+        <p style={{'text-align': 'center'}}>
+            <NavLink href="/wyszukiwarka">Szukaj</NavLink>
+        </p>
+
         <VolonteerList results={this.state.all} />
       </div>
     )

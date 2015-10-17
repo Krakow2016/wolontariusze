@@ -58,6 +58,15 @@ module.exports = {
           context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Home | flux-examples | routing' });
           done();
       }
+    },
+
+    search: {
+      path: '/wyszukiwarka',
+      method: 'get',
+      handler: require('./components/Search.jsx'),
+      action: function(context, payload, done) {
+        done()
+      }
     }
 }
 
