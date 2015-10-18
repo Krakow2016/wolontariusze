@@ -3,11 +3,8 @@ var NavLink = require('fluxible-router').NavLink
 
 var VolonteerStore = require('../stores/Volonteer')
 
-var material = require('material-ui'),
-    ThemeManager = new material.Styles.ThemeManager()
-
-var Tabs = material.Tabs,
-    Tab = material.Tab
+var Tabs = require('material-ui/lib/tabs/tabs')
+var Tab =  require('material-ui/lib/tabs/tab')
 
 var ProfileComments = require('./ProfileComments.jsx')
 
@@ -15,16 +12,6 @@ var actions = require('../actions')
 var showCommentsAction = actions.showComments;
 
 var Volonteer = React.createClass({
-
-  childContextTypes: {
-      muiTheme: React.PropTypes.object
-  },
-
-  getChildContext: function() {
-    return {
-      muiTheme: ThemeManager.getCurrentTheme()
-    }
-  },
 
   getInitialState: function () {
       return this.props.context.getStore(VolonteerStore).getState()

@@ -1,8 +1,7 @@
 var React = require('react')
 var Formsy = require('formsy-react')
-var material = require('material-ui'),
-    ThemeManager = new material.Styles.ThemeManager()
 
+var TextField = require('material-ui/lib/text-field')
 var VolonteerStore = require('../stores/Volonteer')
 var createVolonteer = require('../actions').createVolonteer
 
@@ -15,16 +14,6 @@ var MyTextField = React.createClass({
   // turn will validate it and the rest of the form
   changeValue: function (event) {
     this.setValue(event.currentTarget.value)
-  },
-
-  childContextTypes: {
-      muiTheme: React.PropTypes.object
-  },
-
-  getChildContext: function() {
-    return {
-      muiTheme: ThemeManager.getCurrentTheme()
-    }
   },
 
   render: function () {
@@ -41,7 +30,7 @@ var MyTextField = React.createClass({
     var errorMessage = this.getErrorMessage();
 
     return (
-      <material.TextField
+      <TextField
         className={className}
         onChange={this.changeValue}
         value={this.getValue()}
