@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+
 var ApplicationStore = require('../stores/ApplicationStore');
 
 /**
@@ -34,7 +35,6 @@ var Html = React.createClass({
           <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
         </body>
         <script dangerouslySetInnerHTML={{__html: this.props.state}}></script>
-        <script src="/js/vendor.js"></script>
         <script src="/js/client.js"></script>
       </html>
     );
