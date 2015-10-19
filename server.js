@@ -70,9 +70,9 @@ passport.deserializeUser(function(id, done) {
 })
 
 // Get information from html forms
-server.use(bodyParser.json())
+var jsonParser = bodyParser.json()
 // Parse the URL-encoded data with qs library
-server.use(bodyParser.urlencoded({ extended: true }))
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 // Serwuj wszystkie pliki w katalogu public/ jako zwykłe pliki statyczne.
 server.use(express.static(path.join(__dirname, 'public')))
 
@@ -108,7 +108,7 @@ if(fetchrPlugin) {
 
 // W pierwszej kolejności sprawdź ścieżki z poza single-page
 // application
-server.post('/login', passport.authenticate('local', {
+server.post('/login', jsonParser, urlencodedParser, passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true,
@@ -124,7 +124,7 @@ server.get('/logout', function(req, res){
 server.post('/search', function(req, res) {
   if(req.user && req.user.is_admin) {
     var elasticSearch = 'http://192.168.1.99:9200/sdm/_search'
-    request(elasticSearch).pipe(res);
+    req.pipe(request(elasticSearch)).pipe(res)
   } else {
     res.send(403)
   }

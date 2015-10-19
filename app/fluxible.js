@@ -10,22 +10,24 @@ var VolonteersStore = require('./stores/Volonteers')
 var ActivityStore = require('./stores/Activity')
 var NewCommentStore = require('./stores/NewComment')
 var CommentsStore = require('./stores/Comments')
+var ResultsStore = require('./stores/Results')
 
 var passportPlugin = require('./plugins/passportPlugin')
 
 // Instancja kontenera aplikacji Fluxible
 var app = new Fluxible({
-    component: React.createFactory(require('./components/Application.jsx')),
-    stores: [
-        RouteStore.withStaticRoutes(routes),
-        ApplicationStore,
-        VolonteerStore,
-        VolonteersStore,
-        NewCommentStore,
-        CommentsStore,
-        ActivityStore
-    ]
-});
+  component: React.createFactory(require('./components/Application.jsx')),
+  stores: [
+    RouteStore.withStaticRoutes(routes),
+    ApplicationStore,
+    VolonteerStore,
+    VolonteersStore,
+    NewCommentStore,
+    CommentsStore,
+    ActivityStore,
+    ResultsStore
+  ]
+})
 
 app.plug(fetchrPlugin())
 app.plug(passportPlugin())
