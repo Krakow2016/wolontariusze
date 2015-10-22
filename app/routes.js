@@ -60,6 +60,22 @@ module.exports = {
       }
     },
 
+    settings: {
+      path: '/ustawienia',
+      method: 'get',
+      handler: require('./components/Settings.jsx'),
+      action: function (context, payload, done) {
+        var user = context.getUser()
+        if(user) {
+          context.executeAction(actions.showVolonteer, { id: user.id }, function() {
+            done()
+          })
+        } else {
+          done()
+        }
+      }
+    },
+
     search: {
       path: '/wyszukiwarka',
       method: 'get',
