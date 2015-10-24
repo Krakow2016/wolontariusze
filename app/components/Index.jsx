@@ -31,13 +31,13 @@ var App = React.createClass({
     return (
       <div>
 
-        <p style={{'text-align': 'center'}}>
+        <p style={{'textAlign': 'center'}}>
             <NavLink href="/rejestracja">Zarejestruj się!</NavLink>
         </p>
 
         <h1>Lista wszyskich wolontariuszy:</h1>
 
-        <p style={{'text-align': 'center'}}>
+        <p style={{'textAlign': 'center'}}>
             <NavLink href="/wyszukiwarka">Szukaj</NavLink>
         </p>
 

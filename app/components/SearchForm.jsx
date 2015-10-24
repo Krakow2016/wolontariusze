@@ -189,7 +189,7 @@ var SearchForm = React.createClass({
           <div className="pure-u-7-24">
             <input name="age-from" value={this.state['age-from']} onChange={this.handleChange} />
           </div>
-          <div className="pure-u-2-24" style={{'text-align': 'center'}}>
+          <div className="pure-u-2-24" style={{'textAlign': 'center'}}>
             <span className="range-a">do</span>
           </div>
           <div className="pure-u-7-24">
