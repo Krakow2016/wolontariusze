@@ -21,9 +21,9 @@ var server = module.exports = express()
 // Źródło danych - obiekt udostępniający metody dostępu do danych wolontariuszy
 // (CRUD). Zamień w ścieżkach pliku `static` na `rethinkdb` aby podłączyć się
 // pod lokalną bazę danych.
-var Volonteer = require('./app/services/rethinkdb/volonteers')
+var Volonteer = require('./app/services/static/volonteers')
 var Activity = require('./app/services/static/activities')
-var Comments = require('./app/services/rethinkdb/comments')
+var Comments = require('./app/services/static/comments')
 
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
