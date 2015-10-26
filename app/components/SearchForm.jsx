@@ -6,6 +6,15 @@ var RaisedButton = require('material-ui/lib/raised-button')
 var SearchForm = React.createClass({
 
   getInitialState: function() {
+    if(typeof location !== 'undefined') {
+      var search = location.search.substring(1)
+      if(search) {
+        return JSON.parse('{"' + decodeURI(search).replace(new RegExp('"','g'), '\\"')
+                                                  .replace(new RegExp('&','g'), '","')
+                                                  .replace(new RegExp('=','g'), '":"') + '"}')
+      }
+    }
+
     return {
       name: "",
       email: "",
@@ -33,126 +42,7 @@ var SearchForm = React.createClass({
   },
 
   search: function(){
-
-    var age_from = parseInt(this.state['age-from'])
-    var age_to = parseInt(this.state['age-to'])
-
-    var languages
-
-    var query = {
-      size: 100,
-      query : {
-        function_score: {
-          query : {
-            filtered : {
-              query: {
-                bool: {
-                  should: [
-                    { bool: {
-                    should: [
-                      { match: { first_name: this.state.name } },
-                      { match: { last_name: this.state.name } },
-                    ]
-                  }},
-                  { match: { email: this.state.email } },
-                  { match: { address: this.state.address } },
-                  { match: { address2: this.state.address } },
-                  { match: { parish: this.state.parish } },
-                  { match: { education: this.state.education } },
-                  { match: { study_field: this.state.studies } },
-                  { match: { departments: this.state.departments } },
-                  { match: { comments: this.state.comments } },
-                  { bool: {
-                    should: [
-                      { match: { interests: this.state.interests } },
-                      { match: { experience: this.state.interests } }
-                    ]
-                  }}
-                  ],
-                  must: []
-                },
-              },
-              filter : { },
-            }
-          },
-          functions: [],
-          score_mode: "avg"
-        }
-      },
-      //explain: true,
-      highlight : {
-        fields : {
-          experience: {},
-          interests: {},
-          departments: {},
-          comments: {}
-        }
-      }
-    }
-
-    // Jęzkyki
-    var language = this.state.language
-    var language_keys = language ? Object.keys(language) : []
-    language_keys.forEach(function(key){
-      if(language[key]) {
-        var range = {}
-        range['languages.'+key+'.level'] = { gte: 1, lte: 10 }
-        query.query.function_score.query.filtered.query.bool.must.push({range: range})
-        query.query.function_score.functions.push({
-          field_value_factor: {
-            "field" : "languages."+key+".level",
-            "modifier" : "square"
-          }
-        })
-      }
-    })
-
-    if(this.state['other_val']) {
-      var val = this.state['other_val']
-      var range = {}
-      range['languages.'+val+'.level'] = { gte: 1, lte: 10 }
-      query.query.function_score.query.filtered.query.bool.must.push({range: range})
-      query.query.function_score.functions.push({
-        field_value_factor: {
-          "field" : "languages."+val+".level",
-          "modifier" : "square"
-        }
-      })
-    }
-
-    // Uczestnictwo w poprzednich Światowych Dniach Młodzieży
-    var wyds = this.state.wyd
-    var wyds_keys = wyds ? Object.keys(wyds) : []
-    if(wyds_keys.length) {
-      query.query.function_score.query.filtered.filter.and = []
-      wyds_keys.forEach(function(key){
-        if(wyds[key]) {
-          query.query.function_score.query.filtered.filter.and.push({
-            exists: { field: 'previous_wyd.'+key }
-          })
-        }
-      })
-    }
-
-    if(age_from || age_to) {
-      var today = new Date()
-      var range = {
-        range: {
-          birth_date: {} }}
-
-          if(age_from)
-            range.range.birth_date.lte = new Date(new Date().setMonth(today.getMonth() - 12*(age_from-1)))
-          if(age_to)
-            range.range.birth_date.gte = new Date(new Date().setMonth(today.getMonth() - 12*age_to))
-
-          if(query.query.filtered.filter.and) {
-            query.query.filtered.filter.and.push(range)
-          } else {
-            query.query.filtered.filter.and = [range]
-          }
-    }
-
-    this.props.context.executeAction(actions.showResults, query)
+    this.props.context.executeAction(actions.showResults, this.state)
   },
 
   render: function() {
