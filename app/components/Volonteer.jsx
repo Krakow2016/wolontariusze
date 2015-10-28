@@ -5,6 +5,7 @@ var VolonteerStore = require('../stores/Volonteer')
 
 var Tabs = require('material-ui/lib/tabs/tabs')
 var Tab =  require('material-ui/lib/tabs/tab')
+var Paper = require('material-ui/lib/paper')
 
 var ProfileComments = require('./ProfileComments.jsx')
 
@@ -26,14 +27,26 @@ var Volonteer = React.createClass({
   },
 
   render: function () {
+         // {this.state.profile_picture}
     return (
       <div>
-        <div className="coverPhoto" style={{backgroundImage: 'url('+ this.state.background_picture +')'}}>
+        <div className="pure-g">
+          <div className="pure-u-1-2">
+            <img src="/img/profile.jpg" className="profilePicture" />
+          </div>
+          <div className="pure-u-1-2">
+            <h1 className="fullName">{this.name()}</h1>
+          </div>
         </div>
-        <ProfileTabs {...this.state} context={this.props.context}/>
+          <ProfileTabs {...this.state} context={this.props.context}/>
       </div>
     )
   },
+
+  name: function() {
+    return this.state.first_name +" "+ this.state.last_name
+  },
+
 })
 
 
@@ -58,22 +71,12 @@ var ProfileTabs = React.createClass({
     } else {
       extra = <div />
     }
-    var commentsTab = {}
-    if (is_admin) {
-      commentsTab = <Tab label="Komentarze" onActive={this.showProfileComments}>
-        <ProfileComments volonteerId={this.props.id} adminId={user.id} context={this.props.context}></ProfileComments>
-      </Tab>
-    }
 
-    return (
-      <Tabs>
-        <Tab label="Item One" >
+    var tabs = [
+      <Tab label="Profil" >
+        <Paper>
           <div className="profileDetails">
 
-            <img src={this.props.profile_picture} className="profilePicture" />
-
-            <b className="fullName">{this.name()}</b>
-            <br/>
             <span>{this.props.city}</span>
 
             <div className="profileBio">
@@ -87,23 +90,36 @@ var ProfileTabs = React.createClass({
               </NavLink>
             </div>
           </div>
-        </Tab>
-        <Tab label="Item Two" >
+        </Paper>
+      </Tab>,
+      <Tab label="Aktywność" >
+        <Paper>
           <div className="profileActivity">
             <h3 style={{display: is_owner ? 'block' : 'none'}}>Jesteś właścicielem tego profilu ☺</h3>
-            <h3>Ostatnia aktywność:</h3>
+            <div style={{'display': 'inline-block'}}>
+              <h3>Ostatnia aktywność:</h3>
+            </div>
             <div className="activity"></div>
             <div className="activity"></div>
             <div className="activity"></div>
           </div>
+        </Paper>
+      </Tab>
+    ]
+
+    if (is_admin) {
+      tabs.push(
+        <Tab label="Komentarze" onActive={this.showProfileComments}>
+          <ProfileComments volonteerId={this.props.id} adminId={user.id} context={this.props.context}></ProfileComments>
         </Tab>
-        {commentsTab}
+      )
+    }
+
+    return (
+      <Tabs tabItemContainerStyle={{'backgroundColor': 'rgba(0,0,0,0.1)'}}>
+        {tabs}
       </Tabs>
     )
-  },
-
-  name: function() {
-    return this.props.first_name +" "+ this.props.last_name
   },
 
   user: function() {

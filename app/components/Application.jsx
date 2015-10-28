@@ -32,7 +32,7 @@ var Application = React.createClass({
       <div className="container">
         <div className="globalNav navBar">
           <NavLink href="/">
-            Strona główna
+              <img src="/img/logo.png" style={{'height': '100px', 'margin': '25px 0'}} />
           </NavLink>
           <Authentication user_id={this.user_id()} user_name={this.user_name()} />
         </div>

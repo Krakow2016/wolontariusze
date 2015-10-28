@@ -1,4 +1,5 @@
 var React = require('react')
+var Paper = require('material-ui/lib/paper')
 
 var ApplicationStore = require('../stores/ApplicationStore')
 var VolonteersStore = require('../stores/Volonteers')
@@ -29,7 +30,7 @@ var App = React.createClass({
 
   render: function () {
     return (
-      <div>
+      <Paper className="paper">
 
         <p style={{'textAlign': 'center'}}>
             <NavLink href="/rejestracja">Zarejestruj się!</NavLink>
@@ -42,7 +43,7 @@ var App = React.createClass({
         </p>
 
         <VolonteerList results={this.state.all} />
-      </div>
+      </Paper>
     )
   },
 })

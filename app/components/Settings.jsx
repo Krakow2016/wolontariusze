@@ -66,24 +66,26 @@ var Settings = React.createClass({
 
   render: function() {
     return (
-      <div className="pure-g">
-        <LeftPanel />
+      <Paper className="paper">
+        <div className="pure-g">
+          <LeftPanel />
 
-        <Formsy.Form className="basicSettingsForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
-          <div className="pure-u-3-4">
-            <BasicSettings {...this.state.profile} />
+          <Formsy.Form className="basicSettingsForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
+            <div className="pure-u-3-4">
+              <BasicSettings {...this.state.profile} />
 
-            <div className="pure-g">
-              <div className="pure-u-1 pure-u-md-1-3"></div>
-              <div className="pure-u-1 pure-u-md-2-3">
-                <button type="submit" className="pure-button pure-button-primary" disabled={!this.state.canSubmit}>
-                  Zmień
-                </button>
+              <div className="pure-g">
+                <div className="pure-u-1 pure-u-md-1-3"></div>
+                <div className="pure-u-1 pure-u-md-2-3">
+                  <button type="submit" className="pure-button pure-button-primary" disabled={!this.state.canSubmit}>
+                    Zmień
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </Formsy.Form>
-      </div>
+          </Formsy.Form>
+        </div>
+      </Paper>
     )
   }
 })

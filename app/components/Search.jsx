@@ -1,4 +1,6 @@
 var React = require('react')
+var Paper = require('material-ui/lib/paper')
+
 var SearchForm = require('./SearchForm.jsx')
 var SearchResults = require('./SearchResults.jsx')
 var ResultsStore = require('../stores/Results')
@@ -28,10 +30,10 @@ var Search = React.createClass({
 
   render: function() {
     return (
-      <div>
+      <Paper className="paper">
         <SearchForm context={this.props.context} />
         <SearchResults results={this.state.all} />
-      </div>
+      </Paper>
     )
   }
 })

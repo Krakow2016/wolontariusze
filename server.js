@@ -103,7 +103,7 @@ if(fetchrPlugin) {
   fetchrPlugin.registerService(Protect(Activity));
   fetchrPlugin.registerService(Protect(Comments));
   // Set up the fetchr middleware
-  server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
+  server.use(fetchrPlugin.getXhrPath(), jsonParser, fetchrPlugin.getMiddleware());
 }
 
 // W pierwszej kolejności sprawdź ścieżki z poza single-page
