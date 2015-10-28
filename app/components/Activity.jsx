@@ -1,52 +1,24 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 
-var ActivityStore = require('../stores/ActivityStore')
+var ActivityStore = require('../stores/Activity')
 var Authentication = require('./Authentication.jsx')
 
-var TimeService = require('../modules/time/TimeService.js');
+var TimeService = require('../modules/time/TimeService.js')
 
-var material = require('material-ui'),
-    ThemeManager = new material.Styles.ThemeManager()
+var Tabs = require('material-ui/lib/tabs/tabs')
+var Tab =  require('material-ui/lib/tabs/tab')
 
-var Tabs = material.Tabs,
-    Tab = material.Tab
+var actions = require('../actions')
+var updateAction = actions.updateActivity
 
 var Activity = React.createClass({
-
-  childContextTypes: {
-      muiTheme: React.PropTypes.object
-  },
-
-  getChildContext: function() {
-    return {
-      muiTheme: ThemeManager.getCurrentTheme()
-    }
-  },
-
-  getInitialState: function () {
-      return this.props.context.getStore(ActivityStore).getState()
-  },
-
-  _changeListener: function() {
-    this.setState(this.props.context.getStore(ActivityStore).getState());
-  },
-
-  componentDidMount: function() {
-    this.props.context.getStore(ActivityStore).addChangeListener(this._changeListener);
-  },
-
+  
   render: function () {
    
     return ( 
       <div>
-        <div className="globalNav navBar"> {/* Nawigacja serwisu */}
-          <NavLink href="/">
-            Strona główna
-          </NavLink>
-          <Authentication user_name={this.user_name()} />
-        </div>
-        <ActivityTabs {...this.state} user={this.user()} />
+        <ActivityTabs user={this.user()} context={this.props.context} />
       </div>
     )
   },
@@ -62,27 +34,63 @@ var Activity = React.createClass({
 })
 
 var ActivityTabs = React.createClass({
+    
+  getInitialState: function () {
+      return this.props.context.getStore(ActivityStore).getState()
+  },
+
+  _changeListener: function() {
+    this.setState(this.props.context.getStore(ActivityStore).getState());
+  },
+
+  componentDidMount: function() {
+    this.props.context.getStore(ActivityStore).addChangeListener(this._changeListener);
+  },
+  
+  update: function() {
+    this.props.context.executeAction(updateAction, this.state)
+  },
+  
+  onAcceptButtonClick: function () {
+    var modifiedState = this.state ;
+    modifiedState.activeVolonteersIds.push(this.props.user.id);
+    this.setState(modifiedState);
+    this.update();
+      
+  },
+  onCancelButtonClick: function () {
+    var modifiedState = this.state ;
+    for (var i = 0; i < modifiedState.activeVolonteersIds.length; i++) {
+        if (modifiedState.activeVolonteersIds[i] == this.props.user.id) {
+            modifiedState.activeVolonteersIds.splice(i,1);
+        }         
+    }
+    this.setState(modifiedState);
+    this.update();
+  },
+  
+    
   render: function () {
   
     var extra
     var user = this.props.user
-    var is_owner = user && user.id === this.props.creatorId
+    var is_owner = user && user.id === this.state.creatorId
     var is_admin = user && user.is_admin;
     if (is_admin || is_owner) {
-      extra = <ExtraAttributesVisible {...this.props} />
+      extra = <ExtraAttributesVisible {...this.state} />
     } else {
       extra = <div />
     }
     
     var editTab = {}
-    is_admin = true;
+    is_admin = false;
     if (is_admin) {
-      editTab = <Tab label="Edycja"><ActivityEdit {...this.props} /></Tab>
+      editTab = <Tab label="Edycja"><ActivityEdit {...this.state} /></Tab>
     }
     
     var activeVolonteersList = {}
-    if (this.props.activeVolonteers) {
-        activeVolonteersList = this.props.activeVolonteers.map (function (volonteer) {
+    if (this.state.activeVolonteers) {
+        activeVolonteersList = this.state.activeVolonteers.map (function (volonteer) {
             return (
                 <span><a href={'/wolontariusz/'+volonteer.id}>{volonteer.name}</a>, </span>
             )
@@ -91,24 +99,16 @@ var ActivityTabs = React.createClass({
     
     var acceptButton = {}
     if (user &&
-        this.props.visibilityIds.indexOf(user.id) !== -1 &&
-        this.props.activeVolonteers.length < this.props.maxVolonteers &&
-        this.props.activeVolonteersIds.indexOf(user.id) == -1 ) {
-        acceptButton = <form action="/activityAddActiveVolonteer" method="POST">
-              <input type="submit" value="Dopisz się" />
-              <input type="hidden" name="activityId" value={this.props.id} />
-              <input type="hidden" name="volonteerId" value={user.id} />
-            </form>
+        this.state.visibilityIds.indexOf(user.id) !== -1 &&
+        this.state.activeVolonteers.length < this.state.maxVolonteers &&
+        this.state.activeVolonteersIds.indexOf(user.id) == -1 ) {
+        acceptButton = <input type="button" onClick={this.onAcceptButtonClick} value="Dopisz się" />
     }
     
     var cancelButton = {}
     if (user &&
-        this.props.activeVolonteersIds.indexOf(user.id) !== -1 ) {
-        cancelButton = <form action="/activityRemoveActiveVolonteer" method="POST">
-              <input type="submit" value="Wypisz się" />
-              <input type="hidden" name="activityId" value={this.props.id} />
-              <input type="hidden" name="volonteerId" value={user.id} />
-            </form>
+        this.state.activeVolonteersIds.indexOf(user.id) !== -1 ) {
+        cancelButton = <input type="button" onClick={this.onCancelButtonClick} value="Wypisz się" />
     }
     
     if (user) {
@@ -118,24 +118,24 @@ var ActivityTabs = React.createClass({
     return (
     <Tabs>
         <Tab label="Opis" >
-            <h2>{this.props.title}</h2>
-            <b>Dodano:</b> {TimeService.showTime(this.props.creationTimestamp)} przez <a href={'/wolontariusz/'+this.props.creatorId}>{this.props.creatorName}</a>
+            <h2>{this.state.title}</h2>
+            <b>Dodano:</b> {TimeService.showTime(this.state.creationTimestamp)} przez <a href={'/wolontariusz/'+this.state.creatorId}>{this.state.creatorName}</a>
             <br></br>
-            <b>Ostatnia edycja:</b> {TimeService.showTime(this.props.editionTimestamp)} przez <a href={'/wolontariusz/'+this.props.editorId}>{this.props.editorName}</a>
+            <b>Ostatnia edycja:</b> {TimeService.showTime(this.state.editionTimestamp)} przez <a href={'/wolontariusz/'+this.state.editorId}>{this.state.editorName}</a>
             <br></br>
-            <b>Czas rozpoczęcia:</b> {TimeService.showTime(this.props.startEventTimestamp)}  <b>Czas trwania:</b> {this.props.duration}
+            <b>Czas rozpoczęcia:</b> {TimeService.showTime(this.state.startEventTimestamp)}  <b>Czas trwania:</b> {this.state.duration}
             <br></br>
-            <b>Miejsce wydarzenia:</b> {this.props.place}
+            <b>Miejsce wydarzenia:</b> {this.state.place}
             <br></br>
-            <b>Kamyczki: </b> {this.props.points}
+            <b>Kamyczki: </b> {this.state.points}
             <br></br>
             <br></br>
-            <span>{this.props.content}</span>
+            <span>{this.state.content}</span>
             <br></br>
             <br></br>
             <b>Wolontariusze, którzy biorą udział:</b> {activeVolonteersList}
             <br></br>
-            <b>Limit(maksymalna liczba wolontariuszy):</b> {this.props.volonteersLimit}
+            <b>Limit(maksymalna liczba wolontariuszy):</b> {this.state.volonteersLimit}
             <br></br>
             {acceptButton} {cancelButton}
         </Tab>

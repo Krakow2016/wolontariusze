@@ -103,6 +103,7 @@ if(fetchrPlugin) {
   fetchrPlugin.registerService(Protect(Activity));
   fetchrPlugin.registerService(Protect(Comments));
   // Set up the fetchr middleware
+  server.use(jsonParser);
   server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
 }
 

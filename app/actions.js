@@ -1,6 +1,7 @@
 'use strict'
 
 var VolonteerStore = require('./stores/Volonteer')
+var ActivityStore = require('./stores/Activity')
 
 module.exports = {
   showVolonteer: function(context, payload, cb) {
@@ -59,6 +60,7 @@ module.exports = {
   },
 
   showActivity: function(context, payload, cb) {
+      console.log('show activity');
     // Pobierz dane aktywności z bazy danych
     context.service.read('Activities', payload, {
       store: 'Activity',
@@ -69,6 +71,17 @@ module.exports = {
       if(err) { console.log(err) }
       else { context.dispatch('LOAD_ACTIVITY', data) }
       cb()
+    })
+  },
+  updateActivity: function(context, payload, cb) {
+    console.log('update activity');
+    context.service.update('Activities', payload, {
+      store: 'Activity',
+      user: context.getUser()
+    }, function (err, data) {
+        if(err) { console.log(err) }
+        else { context.dispatch('ACTIVITY_UPDATED', data) }
+        cb()  
     })
   },
 
