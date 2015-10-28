@@ -34,7 +34,7 @@ module.exports = {
     var volonteerStore = context.getStore(VolonteerStore)
     var volonteer = volonteerStore.createVolonteer(payload)
 
-    context.service.create('Volonteers', volonteer, {}, function (err) {
+    context.service.create('Volonteers', {}, volonteer, function (err) {
       if (err) { // Błąd po stronie serwera
         context.dispatch('VOLONTEER_CREATION_FAILURE', [volonteer])
       } else {
@@ -48,7 +48,7 @@ module.exports = {
     var volonteerStore = context.getStore(VolonteerStore)
     var volonteer = volonteerStore.createVolonteer(payload)
 
-    context.service.update('Volonteers', volonteer, {}, function (err) {
+    context.service.update('Volonteers', {}, volonteer, function (err) {
       if (err) { // Błąd po stronie serwera
         context.dispatch('VOLONTEER_UPDATE_FAILURE', [volonteer])
       } else {

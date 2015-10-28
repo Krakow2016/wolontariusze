@@ -8,6 +8,7 @@
 
 var r = require('rethinkdb')
 var conf = require('../../../config.json').rethinkdb
+var debug = require('debug')('Server')
 
 module.exports = {
 
@@ -51,11 +52,23 @@ module.exports = {
         return
       }
 
-      r.table(resource).insert(params).run(conn, callback)
+      r.table(resource).insert(body).run(conn, callback)
     })
-  }
+  },
 
-  // update: function(resource, params, body, config, callback) {},
+  update: function(req, resource, params, body, config, callback) {
+    // Połącz się z bazą danych `sdm`
+    r.connect({db: 'sdm'}, function(err, conn) {
+      if(err) {
+        callback(err)
+        return
+      }
+
+      debug(resource, body.id, body)
+      r.table(resource).get(body.id).update(body).run(conn, callback)
+    })
+  },
+
   // delete: function(resource, params, config, callback) {}
 
 }

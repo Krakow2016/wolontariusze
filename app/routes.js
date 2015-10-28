@@ -60,13 +60,31 @@ module.exports = {
       }
     },
 
-    settings: {
-      path: '/ustawienia',
+    account_settings: {
+      path: '/ustawienia/konto',
       method: 'get',
       handler: require('./components/Settings.jsx'),
       action: function (context, payload, done) {
         var user = context.getUser()
         if(user) {
+          context.dispatch('SHOW_ACCOUNT_SETTINGS');
+          context.executeAction(actions.showVolonteer, { id: user.id }, function() {
+            done()
+          })
+        } else {
+          done()
+        }
+      }
+    },
+
+    profil_settings: {
+      path: '/ustawienia/profil',
+      method: 'get',
+      handler: require('./components/Settings.jsx'),
+      action: function (context, payload, done) {
+        var user = context.getUser()
+        if(user) {
+          context.dispatch('SHOW_PROFILE_SETTINGS');
           context.executeAction(actions.showVolonteer, { id: user.id }, function() {
             done()
           })
