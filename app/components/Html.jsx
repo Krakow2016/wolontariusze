@@ -28,6 +28,7 @@ var Html = React.createClass({
           <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css" />
           <link rel="stylesheet" href="/css/main.css" />
           <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,300,500" />
+          <link rel="stylesheet" type="text/css" href="https://rawgit.com/arqex/react-datetime/master/css/react-datetime.css" />
         </head>
         <body>
           <b className="flashMessage">{this.props.error}</b>

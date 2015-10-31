@@ -73,7 +73,7 @@ body {
     background-color: #E9967A;
     color: white;
 }
-#profileCommentsAddTextarea {
+#profileCommentsAddTextarea, #activityContentTextarea {
     width: 100%;
     height: 200px;
     overflow-y: auto;
@@ -90,7 +90,7 @@ body {
     overflow-y: auto;
     resize: none;
 }
-#profileCommentsEditToolbar {
+#profileCommentsEditToolbar, #activityEditToolbar {
     width: 100%;
     background-color: #9ACD32; 
     text-align: right;
