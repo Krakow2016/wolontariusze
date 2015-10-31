@@ -5,10 +5,26 @@ var ApplicationStore = createStore({
     storeName: 'ApplicationStore',
     handlers: {
         'CHANGE_ROUTE_SUCCESS' : 'handleNavigate',
-        'UPDATE_PAGE_TITLE'    : 'updatePageTitle'
+        'UPDATE_PAGE_TITLE'    : 'updatePageTitle',
+        'SAVE_FLASH_SUCCESS'   : 'saveSuccess',
+        'SAVE_FLASH_FAILURE'   : 'saveFailure'
     },
     initialize: function () {
         this.pageTitle = '';
+    },
+    saveFailure: function(message) {
+        this.flashFailure = message
+        this.emitChange();
+    },
+    saveSuccess: function(message) {
+        this.flashSuccess = message
+        this.emitChange();
+    },
+    getFailure: function(message) {
+        return this.flashFailure
+    },
+    getSuccess: function(message) {
+        return this.flashSuccess
     },
     updatePageTitle: function (title) {
         this.pageTitle = title.pageTitle;
@@ -23,7 +39,9 @@ var ApplicationStore = createStore({
             currentPage: this.currentPage,
             pages: this.pages,
             route: this.currentRoute,
-            pageTitle: this.pageTitle
+            pageTitle: this.pageTitle,
+            flashSuccess: this.flashSuccess,
+            flashFailure: this.flashFailure
         };
     },
     dehydrate: function () {
@@ -35,6 +53,8 @@ var ApplicationStore = createStore({
         this.pages = state.pages;
         this.currentRoute = state.route;
         this.pageTitle = state.pageTitle;
+        this.flashSuccess = state.flashSuccess;
+        this.flashFailure = state.flashFailure;
     }
 });
 

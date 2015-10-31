@@ -138,6 +138,15 @@ server.use(function(req, res, next) {
     user: req.user
   });
 
+  // Przekaż do aplikacji wiadomości flash (pochodzące z serwera)
+  var success = req.flash('success')[0]
+  var failure = req.flash('error')[0]
+  if(success) { // Sukces
+    context.getActionContext().dispatch('SAVE_FLASH_SUCCESS', success)
+  } else if(failure) { // Błąd
+    context.getActionContext().dispatch('SAVE_FLASH_FAILURE', failure)
+  }
+
   debug('Executing navigate action');
   context.executeAction(navigateAction, {
     url: req.url
@@ -161,12 +170,10 @@ server.use(function(req, res, next) {
     var html = React.renderToStaticMarkup(HtmlComponent({
       state: exposed,
       markup: React.renderToString(Component({
-        context: context.getComponentContext()
+        context: context.getComponentContext(),
       })),
       context: context.getComponentContext(),
       script: app.script,
-      error: req.flash('error'),
-      success: req.flash('success')
     }));
 
     debug('Sending markup');

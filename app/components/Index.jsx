@@ -13,15 +13,21 @@ var App = React.createClass({
   },
 
   getInitialState: function () {
-      return this.props.context.getStore(VolonteersStore).getAll()
+    return this.props.context.getStore(VolonteersStore).getAll()
   },
 
   _changeListener: function() {
-      this.setState(this.props.context.getStore(VolonteersStore).getAll())
+    this.setState(this.props.context.getStore(VolonteersStore).getAll())
   },
 
   componentDidMount: function() {
-      this.props.context.getStore(VolonteersStore).addChangeListener(this._changeListener)
+    this.props.context.getStore(VolonteersStore)
+      .addChangeListener(this._changeListener)
+  },
+
+  componentWillUnmount: function() {
+    this.props.context.getStore(VolonteersStore)
+      .removeChangeListener(this._changeListener)
   },
 
   click: function() {
@@ -31,10 +37,6 @@ var App = React.createClass({
   render: function () {
     return (
       <Paper className="paper">
-
-        <p style={{'textAlign': 'center'}}>
-            <NavLink href="/rejestracja">Zarejestruj się!</NavLink>
-        </p>
 
         <h1>Lista wszyskich wolontariuszy:</h1>
 

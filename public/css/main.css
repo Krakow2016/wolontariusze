@@ -5,7 +5,9 @@ body {
   background-image: url(/img/bg.svg);
   background-color: #f4f5f6;
   background-repeat: no-repeat;
-  background-size: contain;
+  background-repeat-x: repeat;
+  background-position-x: 50%;
+  background-size: auto 538px;
   background-attachment: fixed
 }
 
@@ -123,7 +125,12 @@ body {
 }
 
 .loginBar {
-  float: right
+  float: right;
+  margin-top: 15px
+}
+
+.loginBar, .loginBar a {
+  color: #fff;
 }
 
 .registrationForm .pure-g > div:first-child {
@@ -136,13 +143,6 @@ body {
 
 .registrationForm .pure-g > div:last-child {
   padding-bottom: 10px
-}
-
-.flashMessage {
-  animation-duration: 1s;
-  animation-name: opacity;
-  animation-delay: 5s;
-  animation-fill-mode: forwards
 }
 
 @keyframes opacity {
@@ -182,10 +182,16 @@ body {
 }
 
 .paper {
-  padding: 50px
+  padding: 50px;
+  margin-bottom: 30px
 }
 
-.fullName {
+.paper h1 {
+  margin-top: 0;
+  color: #0082bd
+}
+
+.volonteerHeader {
   color: #fff;
   text-shadow: 0px 1px #000;
 }

@@ -23,7 +23,9 @@ var Authentication = React.createClass({
 var LoginButton = React.createClass({
   render: function() {
     return (
-      <NavLink href="/login">Zaloguj się</NavLink>
+      <span>
+        <NavLink href="/login">Zaloguj się</NavLink> | <NavLink href="/rejestracja">Zarejestruj się!</NavLink>
+      </span>
     )
   }
 })

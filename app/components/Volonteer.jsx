@@ -23,22 +23,29 @@ var Volonteer = React.createClass({
   },
 
   componentDidMount: function() {
-    this.props.context.getStore(VolonteerStore).addChangeListener(this._changeListener);
+    this.props.context.getStore(VolonteerStore)
+      .addChangeListener(this._changeListener);
+  },
+
+  componentWillUnmount: function() {
+    this.props.context.getStore(VolonteerStore)
+      .removeChangeListener(this._changeListener);
   },
 
   render: function () {
          // {this.state.profile_picture}
     return (
-      <div>
-        <div className="pure-g">
+      <div className="volonteer">
+        <div className="pure-g volonteerHeader">
           <div className="pure-u-1-2">
             <img src="/img/profile.jpg" className="profilePicture" />
           </div>
           <div className="pure-u-1-2">
-            <h1 className="fullName">{this.name()}</h1>
+            <h1>{this.name()}</h1>
+            <span>Kraków, Polska</span>
           </div>
         </div>
-          <ProfileTabs {...this.state} context={this.props.context}/>
+        <ProfileTabs {...this.state} context={this.props.context}/>
       </div>
     )
   },
@@ -73,8 +80,8 @@ var ProfileTabs = React.createClass({
     }
 
     var tabs = [
-      <Tab label="Profil" >
-        <Paper>
+      <Tab label="Profil" key="profile" >
+        <Paper className="paper">
           <div className="profileDetails">
 
             <span>{this.props.city}</span>
@@ -83,17 +90,24 @@ var ProfileTabs = React.createClass({
               <p><b>Interesuje mnie </b>{this.props.interests}</p>
               <p><b>Chcę się angażować w </b>{this.props.departments}</p>
               <p><b>Moim wielkim marzeniem jest </b>{this.props.my_dream}</p>
-              <p><b>Wolontariusze z którymi działam</b></p>
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
               {extra}
-              <NavLink href="/wolontariusz/1">
-                <img src="http://i.picresize.com/images/2015/05/25/2VNu8.jpg" className="smallProfilePicture" />
-              </NavLink>
             </div>
           </div>
         </Paper>
+
+        <Paper className="paper">
+            <h1>Języki</h1>
+            lulz
+        </Paper>
+
+        <Paper className="paper">
+            <h1>#sdm2016</h1>
+            lulz
+        </Paper>
       </Tab>,
-      <Tab label="Aktywność" >
-        <Paper>
+      <Tab label="Aktywność" key="activity" >
+        <Paper className="paper">
           <div className="profileActivity">
             <h3 style={{display: is_owner ? 'block' : 'none'}}>Jesteś właścicielem tego profilu ☺</h3>
             <div style={{'display': 'inline-block'}}>
@@ -109,7 +123,7 @@ var ProfileTabs = React.createClass({
 
     if (is_admin) {
       tabs.push(
-        <Tab label="Komentarze" onActive={this.showProfileComments}>
+        <Tab label="Komentarze" key="comments" onActive={this.showProfileComments}>
           <ProfileComments volonteerId={this.props.id} adminId={user.id} context={this.props.context}></ProfileComments>
         </Tab>
       )

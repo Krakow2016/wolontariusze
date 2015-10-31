@@ -30,8 +30,6 @@ var Html = React.createClass({
           <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,300,500" />
         </head>
         <body>
-          <b className="flashMessage">{this.props.error}</b>
-          <b className="flashMessage">{this.props.success}</b>
           <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
         </body>
         <script dangerouslySetInnerHTML={{__html: this.props.state}}></script>
