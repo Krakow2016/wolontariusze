@@ -13,6 +13,7 @@ var express = require('express'),
 
 // Wyświetlanie komunikatów kontrolnych
 var debug = require('debug')('Server')
+var config = require('./config.json')
 
 require("node-jsx").install({extension: '.jsx'})
 var HtmlComponent = React.createFactory(require('./app/components/Html.jsx'));
@@ -21,9 +22,9 @@ var server = module.exports = express()
 // Źródło danych - obiekt udostępniający metody dostępu do danych wolontariuszy
 // (CRUD). Zamień w ścieżkach pliku `static` na `rethinkdb` aby podłączyć się
 // pod lokalną bazę danych.
-var Volonteer = require('./app/services/rethinkdb/volonteers')
-var Activity = require('./app/services/static/activities')
-var Comments = require('./app/services/rethinkdb/comments')
+var Activity = require('./app/services/'+config.service+'/activities')
+var Comments = require('./app/services/'+config.service+'/comments')
+var Volonteer = require('./app/services/'+config.service+'/volonteers')
 
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
@@ -123,7 +124,7 @@ server.get('/logout', function(req, res){
 
 server.post('/search', function(req, res) {
   if(req.user && req.user.is_admin) {
-    var elasticSearch = 'http://192.168.1.99:9200/sdm/_search'
+    var elasticSearch = config.elasticSearch
     req.pipe(request(elasticSearch)).pipe(res)
   } else {
     res.send(403)

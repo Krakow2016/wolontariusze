@@ -7,6 +7,7 @@
 // Więcej: http://fluxible.io/guides/data-services.html
 
 var r = require('rethinkdb')
+var conf = require('../../../config.json').rethinkdb
 
 module.exports = {
 
@@ -14,7 +15,7 @@ module.exports = {
 
   read: function(req, resource, params, config, callback) {
     // Połącz się z bazą danych `sdm`
-    r.connect({db: 'sdm'}, function(error, conn){
+    r.connect(conf, function(error, conn){
       if(error) { // Wystąpił błąd przy połączeniu z bazą danych
         callback(error)
         return
@@ -44,7 +45,7 @@ module.exports = {
 
   create: function(req, resource, params, body, config, callback) {
     // Połącz się z bazą danych `sdm`
-    r.connect({db: 'sdm'}, function(err, conn) {
+    r.connect(conf, function(err, conn) {
       if(err) {
         callback(err)
         return

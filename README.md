@@ -78,6 +78,10 @@ zależności:
 
     $ npm install
 
+W kolejnym kroku musisz utworzyć plik konfiguracyjny `config.json` lub po
+prostu skopiować go z `config.json.example`. Możesz w nim zdefiniować mi. adres
+do bazy danych i port na którym ma zostać uruchomiony serwer www.
+
 Następnie wykonaj komendę:
 
     $ gulp
