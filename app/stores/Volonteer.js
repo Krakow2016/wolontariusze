@@ -22,7 +22,7 @@ var VolonteerStore = createStore({
     },
 
     createVolonteer: function(volonteer) {
-        return volonteer
+      return volonteer
     },
 
     onFailure: function() {
@@ -49,7 +49,7 @@ var VolonteerStore = createStore({
 
     getState: function () {
       return {
-        profile: this.profile,
+        profile: this.profile || {},
         subpage: this.subpage,
         error: this.error,
         success: this.success

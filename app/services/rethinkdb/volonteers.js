@@ -52,7 +52,17 @@ module.exports = {
         return
       }
 
-      r.table(resource).insert(body).run(conn, callback)
+      // Upewnij się, że podany email nie istnieje jeszcze w bazie danych
+      r.table(resource).getAll(body.email, {index: 'email'}).run(conn, function(err, cursor) {
+        if(err) { callback(err) }
+        else {
+          cursor.next(function(err, row) {
+            // Brak emaila w bazie
+            if (err) { r.table(resource).insert(body).run(conn, callback) }
+            else { callback({message: 'Email is already in the database.'}) }
+          })
+        }
+      })
     })
   },
 
@@ -64,7 +74,6 @@ module.exports = {
         return
       }
 
-      debug(resource, body.id, body)
       r.table(resource).get(body.id).update(body).run(conn, callback)
     })
   },

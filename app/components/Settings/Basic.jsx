@@ -16,7 +16,7 @@ var Basic = React.createClass({
               placeholder="Faustyna"
               validations="minLength:3"
               validationError="Imię jest wymagane"
-              disabled={true}
+              disabled={!!this.props.first_name}
               value={this.props.first_name} />
           </div>
         </div>
@@ -32,7 +32,7 @@ var Basic = React.createClass({
               placeholder="Kowalska"
               validations="minLength:3"
               validationError="Nazwisko jest wymagane"
-              disabled={true}
+              disabled={!!this.props.last_name}
               value={this.props.last_name} />
           </div>
         </div>

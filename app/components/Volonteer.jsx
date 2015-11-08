@@ -15,11 +15,11 @@ var showCommentsAction = actions.showComments;
 var Volonteer = React.createClass({
 
   getInitialState: function () {
-      return this.props.context.getStore(VolonteerStore).getState()
+    return this.props.context.getStore(VolonteerStore).getState().profile
   },
 
   _changeListener: function() {
-    this.setState(this.props.context.getStore(VolonteerStore).getState());
+    this.setState(this.props.context.getStore(VolonteerStore).getState().profile)
   },
 
   componentDidMount: function() {
@@ -33,7 +33,6 @@ var Volonteer = React.createClass({
   },
 
   render: function () {
-         // {this.state.profile_picture}
     return (
       <div className="volonteer">
         <div className="pure-g volonteerHeader">
