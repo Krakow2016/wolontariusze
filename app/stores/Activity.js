@@ -1,6 +1,26 @@
 'use strict';
 var createStore  = require('fluxible/addons').createStore;
 
+http://stackoverflow.com/questions/728360/most-elegant-way-to-clone-a-javascript-object
+var cloneState = function (obj) {
+    //założenie: activity to obiekt z polami i tablicami (nie ma głębszych obiektów)
+    var copy = {};
+    for (var attr in obj) {
+        if(attr != 'dispatcher') {
+            if (obj[attr] instanceof Array) {
+                copy[attr] = [];
+                for (var i = 0 ; i < obj[attr].length; i++) {
+                    copy[attr].push(obj[attr][i]);
+                }
+            } else {
+                copy[attr] = obj[attr];
+            }
+        }
+    }
+    return copy;
+    
+}
+
 var ActivityStore = createStore({
     storeName: 'ActivityStore',
     handlers: {
@@ -25,15 +45,16 @@ var ActivityStore = createStore({
     },
 
     getState: function () {
-      return this.state;
+      var copyState = cloneState(this.state);
+      return copyState;
     },
 
     dehydrate: function () {
         return this.getState();
     },
 
-    rehydrate: function (state) {
-      this.state = state;
+    rehydrate: function (copyState) {
+        this.state = cloneState(copyState);
     }
 });
 

@@ -2,13 +2,16 @@ var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 
 var ActivityStore = require('../stores/Activity')
+var VolonteersStore = require('../stores/Volonteers')
 var Authentication = require('./Authentication.jsx')
+var ActivityEdit = require('./ActivityEdit.jsx')
 
 var TimeService = require('../modules/time/TimeService.js')
 
 var Tabs = require('material-ui/lib/tabs/tabs')
 var Tab =  require('material-ui/lib/tabs/tab')
 var DateTime = require('react-datetime');
+var AutoSuggest = require('react-autosuggest');
 
 var actions = require('../actions')
 var updateAction = actions.updateActivity
@@ -146,136 +149,6 @@ var ActivityTabs = React.createClass({
   }
 
 })
-
-
-var ActivityEdit = React.createClass({
-
-  getInitialState: function () {
-      return this.props.context.getStore(ActivityStore).getState()
-  },
-
-  _changeListener: function() {
-    this.setState(this.props.context.getStore(ActivityStore).getState());
-  },
-
-  componentDidMount: function() {
-    this.props.context.getStore(ActivityStore).addChangeListener(this._changeListener);
-  },
-  
-  handleTitleChange: function (evt) {
-    var modifiedState = this.state;
-    modifiedState.title = evt.target.value;
-    this.setState(modifiedState);
-  },
-  handleStartEventTimestampChange: function (m) {
-    var modifiedState = this.state;
-    modifiedState.timestamp = m.milliseconds();
-    this.setState(modifiedState);
-  },
-  handleDurationChange: function (evt) {
-    var modifiedState = this.state;
-    modifiedState.duration = evt.target.value;
-    this.setState(modifiedState);
-  },
-  handlePlaceChange: function (evt) {
-    var modifiedState = this.state;
-    modifiedState.place = evt.target.value;
-    this.setState(modifiedState);
-  },
-  handlePointsChange: function (evt) {
-    var modifiedState = this.state;
-    modifiedState.points = evt.target.value;
-    this.setState(modifiedState);
-  },
-  handleContentChange: function (evt) {
-    var modifiedState = this.state;
-    modifiedState.content = evt.target.value;
-    this.setState(modifiedState);
-  },
-  loadInitialState: function () {
-    this.setState(this.getInitialState());
-  },
-  validateInputs: function () {
-    var msg = '';
-    if (!Number.isInteger(this.state.points)) {
-        msg += "Liczba kamyczków powinna być nieujemną liczbą całkowitą"
-    }
-    if (Number.isInteger(this.state.points) && this.state.points < 0 ) {
-        msg += "Liczba kamyczków powinna być nieujemną liczbą całkowitą"
-    }
-    
-    if (msg != '') {
-        alert(msg)
-    }
-  },
-  update: function () {
-    this.validateInputs();
-    //this.props.context.executeAction(updateAction, this.state)
-  },
-  render: function() {    
-    var startEventDate = new Date(this.state.startEventTimestamp);
-      
-    var activeVolonteersList = {}
-    if (this.state.activeVolonteers) {
-        activeVolonteersList = this.state.activeVolonteers.map (function (volonteer) {
-            return (
-                <span><a href={'/wolontariusz/'+volonteer.id}>{volonteer.name}</a>, </span>
-            )
-        })
-    }
-    
-    return (
-       <div>
-            <b>Tytuł</b> 
-            <br></br>
-            <input name="title" value={this.state.title} onChange={this.handleTitleChange} />
-            <br></br>
-            
-            <b>Czas rozpoczęcia</b> <DateTime open={false} 
-                      dateFormat={'YYYY/M/D'}
-                      timeFormat={'HH:mm'}
-                      defaultValue={startEventDate}
-                      onChange={this.handleStartEventTimestampChange}/>
-            
-            <b>Czas trwania </b>
-            <br></br>
-            <input name="duration" value={this.state.duration} onChange={this.handleDurationChange} />
-            <br></br>
-            
-            <b>Miejsce wydarzenia</b>
-            <br></br>
-            <input name="place" value={this.state.place} onChange={this.handlePlaceChange} />
-            <br></br>
-            
-            <b>Kamyczki</b>
-            <br></br>
-            <input name="points" value={this.state.points} onChange={this.handlePointsChange} />
-            <br></br>
-            
-            <b>Treść </b>
-            <br></br>
-            <textarea id="activityContentTextarea" name="content" placeholder="Dodaj treść wiadomości" value={this.state.content} onChange={this.handleContentChange} />
-            <br></br>
-            
-            <b>Wolontariusze, którzy biorą udział:</b> 
-            <br></br>
-            {activeVolonteersList}
-            <br></br>
-            
-            
-            <div id="activityEditToolbar">
-                <input type="button" onClick={this.loadInitialState} value="Przywróć stan początkowy" />
-                <a href="https://guides.github.com/features/mastering-markdown/">
-                <input type="button" value="Markdown" />
-                </a>
-                <input type="button" onClick={this.update} value="Zapisz" />
-            </div>
-            <br></br>
-       </div>
-    )
-  }
-})
-
 
 var ExtraAttributesVisible = React.createClass({
   render: function() {

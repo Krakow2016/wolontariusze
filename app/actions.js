@@ -18,7 +18,7 @@ module.exports = {
     })
   },
 
-  showVolonteers: function(context, payload, cb) {
+  loadVolonteers: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
     context.service.read('Volonteers', payload, {
       // Przekaż obiekt zalogowanego użytkownia niezbędy do podjęcia

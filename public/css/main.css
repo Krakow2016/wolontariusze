@@ -179,3 +179,31 @@ body {
 .searchForm .search {
   margin: 10px
 }
+
+.addedVolonteer {
+    appearance: button;
+    text-decoration: none;
+    background-color: #6699FF;
+    color: white;
+    padding: 2px 0px 2px 5px;
+    margin: 2px 5px 2px 0px;
+    display: inline-block;
+}
+
+a.addedVolonteerButton {
+    color: white;
+}
+
+.addedVolonteerRemoveButton {
+    appearance: button;
+    text-decoration: none;
+    background-color: #66CC33;
+    color: white;
+}
+
+.react-autosuggest__suggestion {
+cursor: pointer;
+}
+.react-autosuggest__suggestion--focused {
+background-color: #6699FF;
+}

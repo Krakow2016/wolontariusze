@@ -7,7 +7,7 @@ module.exports = {
         handler: require('./components/Index.jsx'),
         action: function (context, payload, done) {
             context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Home | flux-examples | routing' });
-            context.executeAction(actions.showVolonteers, {}, function() {
+            context.executeAction(actions.loadVolonteers, {}, function() {
                 done();
             })
         }
@@ -45,6 +45,9 @@ module.exports = {
             var activityId  = payload.get('params').get('id');
             context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: activityId + ' Aktywnosc' });
             context.executeAction(actions.showActivity, { id: activityId }, function() {
+                done();
+            })
+            context.executeAction(actions.loadVolonteers, {}, function() {
                 done();
             })
         }
