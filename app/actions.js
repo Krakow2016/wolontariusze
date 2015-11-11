@@ -73,6 +73,18 @@ module.exports = {
       cb()
     })
   },
+  loadActivities: function(context, payload, cb) {
+    // Pobierz dane wolontariusza z bazy danych
+    context.service.read('Activities', payload, {
+      // Przekaż obiekt zalogowanego użytkownia niezbędy do podjęcia
+      // decyzji o tym jakie dane mają być zwrócone.
+      user: context.getUser()
+    }, function (err, data) {
+      if(err) { console.log(err) }
+      else { context.dispatch('LOAD_ACTIVITIES', data) }
+      cb()
+    })
+  },
   updateActivity: function(context, payload, cb) {
     console.log('update activity');
     context.service.update('Activities', payload, {

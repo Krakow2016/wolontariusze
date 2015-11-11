@@ -154,12 +154,20 @@ module.exports = {
     name: 'Activities',
     // at least one of the CRUD methods is required
     read: function(req, resource, params, config, callback) {
-      var activity = modifiedActivity(params.id, req, config);
-      if(activity) {
-        callback(null, activity);
-      } else {
-        callback("404")
-      }  
+      if(params.id) {
+        var activity = modifiedActivity(params.id, req, config);
+        if(activity) {
+            callback(null, activity);
+        } else {
+            callback("404")
+        }
+      } else { // Brak identyfikatora, zwróć wszystkie aktywności
+          var results = Object.keys(activities).map(function(key) {
+              return activities[key]
+          })
+          callback(null, results)
+          return
+      }
     },
     update: function(req, resource, params, body, config, callback) {
         activities[params.id] = params;

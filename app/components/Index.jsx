@@ -2,9 +2,11 @@ var React = require('react')
 
 var ApplicationStore = require('../stores/ApplicationStore')
 var VolonteersStore = require('../stores/Volonteers')
+var ActivitiesStore = require('../stores/Activities')
 
 var NavLink = require('fluxible-router').NavLink
 var VolonteerList = require('./VolonteersList.jsx')
+var ActivitiesList = require('./ActivitiesList.jsx')
 
 var App = React.createClass({
   contextTypes: {
@@ -12,15 +14,27 @@ var App = React.createClass({
   },
 
   getInitialState: function () {
-      return this.props.context.getStore(VolonteersStore).getAll()
+      var volonteers = this.props.context.getStore(VolonteersStore).getAll();
+      var activities = this.props.context.getStore(ActivitiesStore).getAll();
+      return {
+            allVolonteers: volonteers.all,
+            allActivities: activities.all
+        }
+
   },
 
   _changeListener: function() {
-      this.setState(this.props.context.getStore(VolonteersStore).getAll())
+      var volonteers = this.props.context.getStore(VolonteersStore).getAll();
+      var activities = this.props.context.getStore(ActivitiesStore).getAll();
+      this.setState({
+            allVolonteers: volonteers.all,
+            allActivities: activities.all
+        })
   },
 
   componentDidMount: function() {
       this.props.context.getStore(VolonteersStore).addChangeListener(this._changeListener)
+      //this.props.context.getStore(ActivitiesStore).addChangeListener(this._changeListener)
   },
 
   click: function() {
@@ -41,7 +55,11 @@ var App = React.createClass({
             <NavLink href="/wyszukiwarka">Szukaj</NavLink>
         </p>
 
-        <VolonteerList results={this.state.all} />
+        <VolonteerList results={this.state.allVolonteers} />
+        
+        <h1>Lista wszystkich aktywności: </h1>
+        <ActivitiesList results={this.state.allActivities} />
+        
       </div>
     )
   },

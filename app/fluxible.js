@@ -8,6 +8,7 @@ var ApplicationStore = require('./stores/ApplicationStore')
 var VolonteerStore = require('./stores/Volonteer')
 var VolonteersStore = require('./stores/Volonteers')
 var ActivityStore = require('./stores/Activity')
+var ActivitiesStore = require('./stores/Activities')
 var NewCommentStore = require('./stores/NewComment')
 var CommentsStore = require('./stores/Comments')
 var ResultsStore = require('./stores/Results')
@@ -25,6 +26,7 @@ var app = new Fluxible({
     NewCommentStore,
     CommentsStore,
     ActivityStore,
+    ActivitiesStore,
     ResultsStore
   ]
 })

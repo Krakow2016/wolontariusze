@@ -10,6 +10,9 @@ module.exports = {
             context.executeAction(actions.loadVolonteers, {}, function() {
                 done();
             })
+            context.executeAction(actions.loadActivities, {}, function() {
+                done();
+            })
         }
     },
 
