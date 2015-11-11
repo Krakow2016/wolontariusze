@@ -98,9 +98,9 @@ var private_attrs = [
         
 var getName = function (id) {
     if (volonteers[id]) {
-    return volonteers[id].first_name+' '+volonteers[id].last_name+' - '+id;
+        return volonteers[id].first_name+' '+volonteers[id].last_name;
     } else {
-    return 'error';
+        return 'error';
     }
         
 }

@@ -11,6 +11,7 @@ var DateTime = require('react-datetime');
 
 var actions = require('../actions')
 var updateAction = actions.updateActivity
+var createAction = actions.createActivity
 
 
 
@@ -129,15 +130,49 @@ var ActivityEdit = React.createClass({
     
     if (msg != '') {
         alert(msg)
+        return false;
     }
+    
+    return true;
   },
   update: function () {
-    this.validateInputs();
-    //this.props.context.executeAction(updateAction, this.state)
+    var isInputValid = this.validateInputs();
+    if (isInputValid) {
+        var modifiedState = this.state;
+        modifiedState.editorId = this.props.user.id;
+        modifiedState.editionTimestamp = Date.now();
+        this.props.context.executeAction(updateAction, modifiedState);
+    }
+  },
+  create: function () {
+    var isInputValid = this.validateInputs();
+    if (isInputValid) {
+        var modifiedState = this.state;
+        modifiedState.creatorId = this.props.user.id;
+        modifiedState.creationTimestamp = Date.now();
+        modifiedState.editorId = modifiedState.creatorId;
+        modifiedState.editionTimestamp = modifiedState.creationTimestamp;
+        this.props.context.executeAction(createAction, modifiedState);
+    }
   },
   render: function() {    
     var startEventDate = new Date(this.state.startEventTimestamp);
     var allVolonteers = this.props.context.getStore(VolonteersStore).getAll().all;
+    
+    var initialStateButton = {}
+    if (this.props.creationMode == false) {
+        initialStateButton = <input type="button" onClick={this.loadInitialState} value="Przywróć stan początkowy" />
+    }
+    
+    var updateButton = {}
+    if (this.props.creationMode == false) {
+        updateButton = <input type="button" onClick={this.update} value="Zapisz" />
+    }
+    
+    var createButton = {} 
+    if (this.props.creationMode == true) {
+        createButton = <input type="button" onClick={this.create} value="Utwórz" />
+    }
     
     return (
        <div>
@@ -193,11 +228,13 @@ var ActivityEdit = React.createClass({
             
             
             <div id="activityEditToolbar">
-                <input type="button" onClick={this.loadInitialState} value="Przywróć stan początkowy" />
+                {initialStateButton}
                 <a href="https://guides.github.com/features/mastering-markdown/">
-                <input type="button" value="Markdown" />
+                    <input type="button" value="Markdown" />
                 </a>
-                <input type="button" onClick={this.update} value="Zapisz" />
+                {updateButton}
+                {createButton}
+                
             </div>
             <br></br>
        </div>

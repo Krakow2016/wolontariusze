@@ -180,6 +180,21 @@ body {
   margin: 10px
 }
 
+.volonteerLabel {
+    appearance: button;
+    text-decoration: none;
+    background-color: #6699FF;
+    color: white;
+    padding: 2px 5px 2px 5px;
+    margin: 2px 5px 2px 0px;
+    display: inline-block;
+}
+
+.volonteerLabel a {
+    color: white;
+    text-decoration: none;
+}
+
 .addedVolonteer {
     appearance: button;
     text-decoration: none;
@@ -190,8 +205,9 @@ body {
     display: inline-block;
 }
 
-a.addedVolonteerButton {
+.addedVolonteer a {
     color: white;
+    text-decoration: none;
 }
 
 .addedVolonteerRemoveButton {

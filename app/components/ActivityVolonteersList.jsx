@@ -68,7 +68,7 @@ var AddedVolonteer = React.createClass({
                 }
             }
             return (
-                <div className="addedVolonteer" ><a href={'/wolontariusz/'+id} className="addedVolonteerButton">{name}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
+                <div className="addedVolonteer" ><a href={'/wolontariusz/'+id}>{name}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
             )
     }
 })

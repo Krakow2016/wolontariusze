@@ -84,6 +84,17 @@ module.exports = {
         cb()  
     })
   },
+  createActivity: function(context, payload, cb) {
+    console.log('create activity');
+    context.service.create('Activities', payload, {
+      store: 'Activity',
+      user: context.getUser()
+    }, function (err, data) {
+        if(err) { console.log(err) }
+        else { context.dispatch('ACTIVITY_CREATED', data) }
+        cb()  
+    })
+  },
 
   showComments: function(context, payload, cb) {
     console.log('profile comment read')

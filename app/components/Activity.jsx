@@ -1,5 +1,6 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
+var ReactMarkdown = require('react-markdown');
 
 var ActivityStore = require('../stores/Activity')
 var VolonteersStore = require('../stores/Volonteers')
@@ -89,14 +90,14 @@ var ActivityTabs = React.createClass({
     var editTab = {}
     is_admin = true;
     if (is_admin) {
-      editTab = <Tab label="Edycja"><ActivityEdit {...this.props} /></Tab>
+      editTab = <Tab label="Edycja"><ActivityEdit {...this.props} creationMode={false} /></Tab>
     }
     
     var activeVolonteersList = {}
     if (this.state.activeVolonteers) {
         activeVolonteersList = this.state.activeVolonteers.map (function (volonteer) {
             return (
-                <span><a href={'/wolontariusz/'+volonteer.id}>{volonteer.name}</a>, </span>
+                <span className="volonteerLabel"><a href={'/wolontariusz/'+volonteer.id}>{volonteer.name}</a></span>
             )
         })
     }
@@ -104,7 +105,7 @@ var ActivityTabs = React.createClass({
     var acceptButton = {}
     if (user &&
         this.state.visibilityIds.indexOf(user.id) !== -1 &&
-        this.state.activeVolonteers.length < this.state.maxVolonteers &&
+        (this.state.activeVolonteers.length < this.state.maxVolonteers || this.state.maxVolonteers == 0) &&
         this.state.activeVolonteersIds.indexOf(user.id) == -1 ) {
         acceptButton = <input type="button" onClick={this.onAcceptButtonClick} value="Dopisz się" />
     }
@@ -123,9 +124,9 @@ var ActivityTabs = React.createClass({
     <Tabs>
         <Tab label="Opis" >
             <h2>{this.state.title}</h2>
-            <b>Dodano:</b> {TimeService.showTime(this.state.creationTimestamp)} przez <a href={'/wolontariusz/'+this.state.creatorId}>{this.state.creatorName}</a>
+            <b>Dodano:</b> {TimeService.showTime(this.state.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+this.state.creatorId}>{this.state.creatorName}</a></span>
             <br></br>
-            <b>Ostatnia edycja:</b> {TimeService.showTime(this.state.editionTimestamp)} przez <a href={'/wolontariusz/'+this.state.editorId}>{this.state.editorName}</a>
+            <b>Ostatnia edycja:</b> {TimeService.showTime(this.state.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+this.state.editorId}>{this.state.editorName}</a></span>
             <br></br>
             <b>Czas rozpoczęcia:</b> {TimeService.showTime(this.state.startEventTimestamp)}  <b>Czas trwania:</b> {this.state.duration}
             <br></br>
@@ -133,9 +134,7 @@ var ActivityTabs = React.createClass({
             <br></br>
             <b>Kamyczki: </b> {this.state.points}
             <br></br>
-            <br></br>
-            <span>{this.state.content}</span>
-            <br></br>
+            <ReactMarkdown source={this.state.content} />
             <br></br>
             <b>Wolontariusze, którzy biorą udział:</b> {activeVolonteersList}
             <br></br>
