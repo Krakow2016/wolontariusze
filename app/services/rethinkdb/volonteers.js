@@ -24,12 +24,11 @@ module.exports = {
 
       if(params.id) { // Pobierz krotkę o danym numerze id
         r.table('Volonteers').get(params.id).run(conn, function(err, row){
-          console.log(err, row)
           callback(err || !row, row)
         })
       } else { // Pobierz listę krotek
-        if(params.email) { // use index
-          r.table('Volonteers').getAll(params.email, {index: 'email'}).run(conn, function(err, cursor) {
+        if(config.index) { // use index
+          r.table('Volonteers').getAll(params.key, {index: config.index}).run(conn, function(err, cursor) {
             if(err) { callback(err) }
             else { cursor.toArray(callback) }
           })
@@ -67,6 +66,11 @@ module.exports = {
   },
 
   update: function(req, resource, params, body, config, callback) {
+    // Błąd gdy brak id
+    if(!params.id) {
+      callback(400)
+      return
+    }
     // Połącz się z bazą danych `sdm`
     r.connect({db: 'sdm'}, function(err, conn) {
       if(err) {
@@ -74,7 +78,7 @@ module.exports = {
         return
       }
 
-      r.table(resource).get(body.id).update(body).run(conn, callback)
+      r.table(resource).get(params.id).update(body).run(conn, callback)
     })
   },
 

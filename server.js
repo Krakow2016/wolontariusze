@@ -7,13 +7,17 @@ var express = require('express'),
     navigateAction = require('fluxible-router').navigateAction,
     passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
+    LocalAPIKeyStrategy = require('passport-localapikey').Strategy,
     session = require('express-session'),
     flash = require('connect-flash'),
-    request = require('request')
+    request = require('request'),
+    crypto = require('crypto')
 
 // Wyświetlanie komunikatów kontrolnych
 var debug = require('debug')('Server')
 var config = require('./config.json')
+// Połączenie z sendgrid daje nam możliwość wysyłania emaili
+var sendgrid = require('sendgrid')(config.sendgrid_apikey)
 
 require("node-jsx").install({extension: '.jsx'})
 var HtmlComponent = React.createFactory(require('./app/components/Html.jsx'));
@@ -37,7 +41,7 @@ var Protect = require('./lib/protect')
 passport.use(new LocalStrategy(
   function(username, password, done) {
     // Próba logowania
-    Volonteer.read({}, 'Volonteers', { email: username }, {}, function (err, users) {
+    Volonteer.read({}, 'Volonteers', { key: username }, { index: 'email' }, function (err, users) {
       var user = users[0]
       // Wystąpił niespodziewany błąd
       if (err) { return done(err) }
@@ -52,6 +56,17 @@ passport.use(new LocalStrategy(
       // Zalogowano poprawnie, zwróć obiekt zalogowanego użytkownika
       return done(null, user, { message: 'Welcome!' })
     });
+  }
+))
+
+passport.use(new LocalAPIKeyStrategy(
+  function(apikey, done) {
+    Volonteer.read({}, 'Volonteers', { key: apikey }, { index: 'token' }, function (err, users) {
+      var user = users[0]
+      if (err) { return done(err) }
+      if (!user) { return done(null, false) }
+      return done(null, user)
+    })
   }
 ))
 
@@ -110,11 +125,11 @@ if(fetchrPlugin) {
 // W pierwszej kolejności sprawdź ścieżki z poza single-page
 // application
 server.post('/login', jsonParser, urlencodedParser, passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/login',
-    failureFlash: true,
-    successFlash: true
-}));
+  successRedirect: '/',
+  failureRedirect: '/login',
+  failureFlash: true,
+  successFlash: true
+}))
 
 server.get('/logout', function(req, res){
   req.logout()
@@ -131,8 +146,62 @@ server.post('/search', function(req, res) {
   }
 })
 
+server.get('/invitation', passport.authenticate('localapikey', {
+  successRedirect: '/',
+  failureRedirect: '/login',
+  failureFlash: true,
+  successFlash: true
+}))
+
+server.post('/invitation', jsonParser, function(req, res) {
+  var id = req.body.id
+  if(req.user && req.user.is_admin) {
+     Volonteer.read(req, 'Volonteers', {id: id}, {}, function (err, user) {
+
+       // Generuje losowy token dostępu
+       crypto.randomBytes(32, function(ex, buf) {
+         var tokens = [] //user.access_tokens || []
+         // Token przekształcony do formatu szesnastkowego
+         var token = buf.toString('hex')
+         tokens.push({
+           token: token,
+           // Data potrzebna do późniejszego sprawdzenia ważności tokenu
+           generated_at: new Date(),
+           // Data użycia (token jest jednorazowy)
+           //used_at: null,
+           // IP komputera z którego nastąpiło zalogowanie
+           //used_by: null
+         })
+         // Zapisz w token w bazie
+         Volonteer.update(req, 'Volonteers', {id: id}, {access_tokens: tokens}, {}, function (err, user) {
+           if(err) {
+             res.send(err)
+           } else {
+             var url = '/invitation/'+ token
+             var email = new sendgrid.Email({
+               to:       'staszek.wasiutynski@gmail.com', //user.email,
+               from:     'wolontariat@krakow2016.com',
+               subject:  'Hello World',
+               text:     'My first email through SendGrid.'
+             })
+             sendgrid.send(email, function(err, json) {
+               if (err) { return console.error(err) }
+               console.log(url, json)
+             });
+             res.send({foo: "bar"})
+           }
+         })
+       })
+     })
+  } else {
+    res.send(403)
+  }
+})
+
 // Zwraca stronę aplikacji
 server.use(function(req, res, next) {
+  // material-ui wymaga tej zmiennej globalnej
+  GLOBAL.navigator = {userAgent: req.headers['user-agent']}
   // Dołącz obiekt zalogowanego użytkownika do kontekstu (stanu) zapytania,
   // który zostanie przekazay do klienta (przeglądarki).
   var context = app.createContext({

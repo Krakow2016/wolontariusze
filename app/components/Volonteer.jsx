@@ -6,6 +6,8 @@ var VolonteerStore = require('../stores/Volonteer')
 var Tabs = require('material-ui/lib/tabs/tabs')
 var Tab =  require('material-ui/lib/tabs/tab')
 var Paper = require('material-ui/lib/paper')
+var Button = require('material-ui/lib/raised-button')
+var Dialog = require('material-ui/lib/dialog')
 
 var ProfileComments = require('./ProfileComments.jsx')
 
@@ -32,6 +34,19 @@ var Volonteer = React.createClass({
       .removeChangeListener(this._changeListener);
   },
 
+  showDialog: function() {
+    this.setState({openDialog: true})
+  },
+
+  _onDialogSubmit: function() {
+    this.props.context.executeAction(actions.inviteUser, {id: this.state.id})
+    this._handleRequestClose()
+  },
+
+  _handleRequestClose: function() {
+    this.setState({openDialog: false})
+  },
+
   render: function () {
     return (
       <div className="volonteer">
@@ -44,7 +59,18 @@ var Volonteer = React.createClass({
             <span>Kraków, Polska</span>
           </div>
         </div>
-        <ProfileTabs {...this.state} context={this.props.context}/>
+
+        <ProfileTabs {...this.state} context={this.props.context} handleInvitationButton={this.showDialog} />
+
+        <Dialog
+           ref="dialog"
+          title="Dialog With Standard Actions"
+          actions={[ { text: 'Cancel' }, { text: 'Submit', onTouchTap: this._onDialogSubmit, ref: 'submit' } ]}
+          actionFocus="submit"
+          open={this.state.openDialog}
+          onRequestClose={this._handleRequestClose} >
+          The actions in this window are created from the json thats passed in.
+        </Dialog>
       </div>
     )
   },
@@ -80,6 +106,21 @@ var ProfileTabs = React.createClass({
 
     var tabs = [
       <Tab label="Profil" key="profile" >
+        <Paper className="paper">
+          <p>
+            Oglądasz profil w trybie administratora.
+          </p>
+
+          <p>
+            Profil jest nieaktywny do czasu, aż wolontariusz nie zostanie zaproszony do serwisu.
+          </p>
+
+          <div style={{textAlign: 'center'}}>
+            <Button label="Wyślij zaproszenie" secondary={true} onClick={this.props.handleInvitationButton} />
+          </div>
+
+        </Paper>
+
         <Paper className="paper">
           <div className="profileDetails">
 

@@ -256,5 +256,31 @@ module.exports = {
         return key + '=' + state[key];
     }).join('&')
     history.replaceState({}, "", base +'?'+ attributes)
+  },
+
+  inviteUser: function(context, user) {
+    var query = {id: user.id}
+    var request = new XMLHttpRequest()
+    request.open('POST', '/invitation', true)
+    request.setRequestHeader('Content-Type', 'application/json')
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        // Success!
+        var resp = request.responseText;
+        var json = JSON.parse(resp)
+
+        console.log(json) // TODO: wyświetl wyniki
+
+        context.dispatch('INVITATION_SEND', json)
+      } else {
+        // We reached our target server, but it returned an error
+      }
+    }
+
+    request.onerror = function() {
+      // There was a connection error of some sort
+    }
+
+    request.send(JSON.stringify(query))
   }
 }
