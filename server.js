@@ -41,7 +41,7 @@ var Protect = require('./lib/protect')
 passport.use(new LocalStrategy(
   function(username, password, done) {
     // Próba logowania
-    Volonteer.read({}, 'Volonteers', { key: username }, { index: 'email' }, function (err, users) {
+    Volonteer.read({force_admin: true}, 'Volonteers', { key: username }, { index: 'email' }, function (err, users) {
       var user = users[0]
       // Wystąpił niespodziewany błąd
       if (err) { return done(err) }
@@ -107,7 +107,7 @@ passport.serializeUser(function(user, done) {
 // Zdefiniuj metodę odtworzenia obiektu użytkownika na podstawie wcześniej
 // zapamiętanej referencji (numeru id w bazie danych).
 passport.deserializeUser(function(id, done) {
-  Volonteer.read({}, 'Volonteers', { id: id }, {is_owner: true}, function (err, user) {
+  Volonteer.read({force_admin: true}, 'Volonteers', { id: id }, {}, function (err, user) {
     done(err, user)
   })
 })
