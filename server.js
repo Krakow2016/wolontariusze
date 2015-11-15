@@ -167,7 +167,10 @@ server.get('/logout', function(req, res){
 server.post('/search', function(req, res) {
   if(req.user && req.user.is_admin) {
     var elasticSearch = config.elasticSearch
-    req.pipe(request(elasticSearch)).pipe(res)
+    req.pipe(request(elasticSearch))
+      .on('error', function(e){
+        res.send(500) // Brak połączenia z bazą
+      }).pipe(res)
   } else {
     res.send(403)
   }

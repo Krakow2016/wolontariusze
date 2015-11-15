@@ -20,12 +20,12 @@ var SearchResults = React.createClass({
       return (<SearchResult {...result._source} key={result._id} />)
     })
 
-    return (
+    return results.length ? (
       <div>
         <h2>Wyniki wyszukiwania:</h2>
         <div> {results} </div>
       </div>
-    )
+    ) : false
   }
 })
 
