@@ -72,6 +72,7 @@ var VolonteerStore = createStore({
     }
 });
 
+// Atrubyty do odczytu przez wszystkich
 VolonteerStore.attributes = function() {
   return [
     'first_name',

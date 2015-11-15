@@ -50,7 +50,12 @@ passport.use(new LocalStrategy(
         return done(null, false, { message: 'Incorrect username.' })
       }
       // Sprawdź poprawność hasła
-      if (user.password !== password) { // TODO: bcrypt
+      password_hash  = crypto
+        .createHash("md5")
+        .update(password)
+        .digest('hex')
+
+      if (user.password !== password_hash) { // TODO: bcrypt
         return done(null, false, { message: 'Incorrect password.' })
       }
       // Zalogowano poprawnie, zwróć obiekt zalogowanego użytkownika
@@ -59,13 +64,35 @@ passport.use(new LocalStrategy(
   }
 ))
 
+// Logowanie za pomocą jednorazowego tokena
 passport.use(new LocalAPIKeyStrategy(
   function(apikey, done) {
+    // Znajdź konto na które podany token został wygenerowany
     Volonteer.read({}, 'Volonteers', { key: apikey }, { index: 'token' }, function (err, users) {
       var user = users[0]
-      if (err) { return done(err) }
-      if (!user) { return done(null, false) }
-      return done(null, user)
+      if (err) { return done(err) } // Błąd bazy danych
+      if (!user) {
+        return done(null, false)
+      } else {
+        var token
+        var list = user.access_tokens
+        var length = list.length
+        for (var i=0; i<length; i++) {
+          value = list[i]
+          if (value.token === apikey) {
+            token = value
+          }
+        }
+        var expiration_date = token.generated_at + 48*60*60*1000 // +48h
+
+        if(token.used_at) { // Sprawdź czy token nie został już użyty
+          return('Token already used. You must generate a new one.')
+        } else if(new Date() > expiration_date) { // Sprawdź czy token nie wygasł
+          return('Token expired. You must generate a new one.')
+        } else { // Autoryzacja przebiegła pomyślnie
+          return done(null, user)
+        }
+      }
     })
   }
 ))
@@ -147,7 +174,7 @@ server.post('/search', function(req, res) {
 })
 
 server.get('/invitation', passport.authenticate('localapikey', {
-  successRedirect: '/',
+  successRedirect: '/witaj',
   failureRedirect: '/login',
   failureFlash: true,
   successFlash: true

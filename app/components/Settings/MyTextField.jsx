@@ -29,6 +29,7 @@ var MyTextField = React.createClass({
 
     return (
       <TextField
+        type={this.props.type}
         className={className}
         onChange={this.changeValue}
         value={this.getValue()}
