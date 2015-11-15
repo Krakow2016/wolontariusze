@@ -155,7 +155,7 @@ body {
 }
 
 .container {
-  width: 980;
+  max-width: 980px;
   margin: auto
 }
 

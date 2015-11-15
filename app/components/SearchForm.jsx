@@ -28,6 +28,12 @@ var SearchForm = React.createClass({
     }
   },
 
+  componentDidMount: function componentDidMount() {
+    if(location.search.substring(1)) {
+      this.search()
+    }
+  },
+
   handleChange: function(event) {
     var state = {}
     state[event.target.name] = event.target.value

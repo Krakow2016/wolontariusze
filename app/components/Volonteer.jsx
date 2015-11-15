@@ -51,10 +51,10 @@ var Volonteer = React.createClass({
     return (
       <div className="volonteer">
         <div className="pure-g volonteerHeader">
-          <div className="pure-u-1-2">
+          <div className="pure-u-1 pure-u-sm-1-2">
             <img src="/img/profile.jpg" className="profilePicture" />
           </div>
-          <div className="pure-u-1-2">
+          <div className="pure-u-1 pure-u-sm-1-2">
             <h1>{this.name()}</h1>
             <span>Kraków, Polska</span>
           </div>
@@ -104,47 +104,105 @@ var ProfileTabs = React.createClass({
       extra = <div />
     }
 
-    var tabs = [
-      <Tab label="Profil" key="profile" >
-        <Paper className="paper">
-          <p>
-            Oglądasz profil w trybie administratora.
-          </p>
+    var stars = {
+        0: '☆☆☆☆☆',
+        2: '★☆☆☆☆',
+        4: '★★☆☆☆',
+        6: '★★★☆☆',
+        8: '★★★★☆',
+        10:'★★★★★' }
 
-          <p>
-            Profil jest nieaktywny do czasu, aż wolontariusz nie zostanie zaproszony do serwisu.
-          </p>
+    var languages = this.props.languages || {}
+    var langs = Object.keys(languages).map(function(lang) {
+      var level = languages[ lang ]
+      return (
+        <p key={lang}>
+          {lang}: {stars[level.level]}
+        </p>
+      )
+    })
 
+    console.log(languages, langs)
+
+    var profile_papers = [
+      <Paper className="paper" key="details">
+        <div className="profileDetails">
+
+          <span>{this.props.city}</span>
+
+          <div className="profileBio">
+
+      <h4>Dane osobowe</h4>
+
+      <p>
+        Data urodzenia:
+        {this.props.birth_date || 'n/a'}
+      </p>
+
+      <p>
+        Telefon:
+        {this.props.phone || 'n/a'}
+      </p>
+
+      <p>
+        Parafia:
+        {this.props.parish || 'n/a'}
+      </p>
+
+      <h4>Edukacja</h4>
+
+      <p>
+        Wykształcenie
+        {this.props.eduction || 'n/a'}
+      </p>
+
+      <p>
+        Kierunek
+        {this.props.study_field || 'n/a'}
+      </p>
+
+      <h4>Doświadczenie</h4>
+      <p>{this.props.experience || 'n/a'}</p>
+
+      <h4>Zainteresowania</h4>
+      <p>{this.props.interests || 'n/a'}</p>
+
+      <h4>Gdzie chcę się zaangażować</h4>
+      <p>{this.props.departments || 'n/a'}</p>
+
+      <h4>Dostępność</h4>
+      <p>{this.props.avalibitity || 'n/a'}</p>
+
+          </div>
+        </div>
+      </Paper>,
+
+      <Paper className="paper" key="langs">
+        <h1>Języki</h1>
+        {langs}
+      </Paper>,
+
+      <Paper className="paper" key="instagram">
+        <h1>#sdm2016</h1>
+        instagram
+      </Paper>
+    ]
+
+    if (is_admin && !this.props.password) {
+      profile_papers.unshift(
+        <Paper className="paper" key="admin">
+          <p>Oglądasz profil w trybie administratora.</p>
+          <p>Profil jest nieaktywny do czasu, aż wolontariusz nie zostanie zaproszony do serwisu.</p>
           <div style={{textAlign: 'center'}}>
             <Button label="Wyślij zaproszenie" secondary={true} onClick={this.props.handleInvitationButton} />
           </div>
-
         </Paper>
+      )
+    }
 
-        <Paper className="paper">
-          <div className="profileDetails">
-
-            <span>{this.props.city}</span>
-
-            <div className="profileBio">
-              <p><b>Interesuje mnie </b>{this.props.interests}</p>
-              <p><b>Chcę się angażować w </b>{this.props.departments}</p>
-              <p><b>Moim wielkim marzeniem jest </b>{this.props.my_dream}</p>
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-              {extra}
-            </div>
-          </div>
-        </Paper>
-
-        <Paper className="paper">
-            <h1>Języki</h1>
-            lulz
-        </Paper>
-
-        <Paper className="paper">
-            <h1>#sdm2016</h1>
-            lulz
-        </Paper>
+    var tabs = [
+      <Tab label="Profil" key="profile" >
+        {profile_papers}
       </Tab>,
       <Tab label="Aktywność" key="activity" >
         <Paper className="paper">
