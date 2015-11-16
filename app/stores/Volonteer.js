@@ -75,6 +75,7 @@ var VolonteerStore = createStore({
 // Atrubyty do odczytu przez wszystkich
 VolonteerStore.attributes = function() {
   return [
+    'id',
     'first_name',
     'last_name',
     'email',

@@ -7,9 +7,9 @@ var Tabs = require('material-ui/lib/tabs/tabs')
 var Tab =  require('material-ui/lib/tabs/tab')
 var Paper = require('material-ui/lib/paper')
 var Button = require('material-ui/lib/raised-button')
-var Dialog = require('material-ui/lib/dialog')
 
 var ProfileComments = require('./ProfileComments.jsx')
+var Invite = require('./Admin/Invite.jsx')
 
 var actions = require('../actions')
 var showCommentsAction = actions.showComments;
@@ -34,20 +34,13 @@ var Volonteer = React.createClass({
       .removeChangeListener(this._changeListener);
   },
 
-  showDialog: function() {
-    this.setState({openDialog: true})
-  },
-
-  _onDialogSubmit: function() {
-    this.props.context.executeAction(actions.inviteUser, {id: this.state.id})
-    this._handleRequestClose()
-  },
-
-  _handleRequestClose: function() {
-    this.setState({openDialog: false})
-  },
-
   render: function () {
+    var editLink
+    var user = this.user()
+    if(user && user.is_admin) {
+      editLink = <NavLink href={"/wolontariusz/"+ this.state.id +"/admin"}>Edytuj</NavLink>
+    }
+
     return (
       <div className="volonteer">
         <div className="pure-g volonteerHeader">
@@ -57,20 +50,12 @@ var Volonteer = React.createClass({
           <div className="pure-u-1 pure-u-sm-1-2">
             <h1>{this.name()}</h1>
             <span>Kraków, Polska</span>
+            {editLink}
           </div>
         </div>
 
-        <ProfileTabs {...this.state} context={this.props.context} handleInvitationButton={this.showDialog} />
+        <ProfileTabs {...this.state} context={this.props.context} />
 
-        <Dialog
-           ref="dialog"
-          title="Dialog With Standard Actions"
-          actions={[ { text: 'Cancel' }, { text: 'Submit', onTouchTap: this._onDialogSubmit, ref: 'submit' } ]}
-          actionFocus="submit"
-          open={this.state.openDialog}
-          onRequestClose={this._handleRequestClose} >
-          The actions in this window are created from the json thats passed in.
-        </Dialog>
       </div>
     )
   },
@@ -79,6 +64,9 @@ var Volonteer = React.createClass({
     return this.state.first_name +" "+ this.state.last_name
   },
 
+  user: function() {
+    return this.props.context.getUser()
+  }
 })
 
 
@@ -121,8 +109,6 @@ var ProfileTabs = React.createClass({
         </p>
       )
     })
-
-    console.log(languages, langs)
 
     var profile_papers = [
       <Paper className="paper" key="details">
@@ -190,13 +176,7 @@ var ProfileTabs = React.createClass({
 
     if (is_admin && !this.props.password) {
       profile_papers.unshift(
-        <Paper className="paper" key="admin">
-          <p>Oglądasz profil w trybie administratora.</p>
-          <p>Profil jest nieaktywny do czasu, aż wolontariusz nie zostanie zaproszony do serwisu.</p>
-          <div style={{textAlign: 'center'}}>
-            <Button label="Wyślij zaproszenie" secondary={true} onClick={this.props.handleInvitationButton} />
-          </div>
-        </Paper>
+        <Invite id={this.props.id} context={this.props.context} />
       )
     }
 

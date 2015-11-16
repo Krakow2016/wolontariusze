@@ -57,6 +57,8 @@ passport.use(new LocalStrategy(
 
       if (user.password !== password_hash) { // TODO: bcrypt
         return done(null, false, { message: 'Incorrect password.' })
+      } else if (!user.approved) {
+        return done(null, false, { message: 'You have been banned.' })
       }
       // Zalogowano poprawnie, zwróć obiekt zalogowanego użytkownika
       return done(null, user, { message: 'Welcome!' })
@@ -202,8 +204,12 @@ server.post('/invitation', jsonParser, function(req, res) {
            // IP komputera z którego nastąpiło zalogowanie
            //used_by: null
          })
+
          // Zapisz w token w bazie
-         Volonteer.update(req, 'Volonteers', {id: id}, {access_tokens: tokens}, {}, function (err, user) {
+         Volonteer.update(req, 'Volonteers', {id: id}, {
+             approved: true,
+             access_tokens: tokens
+         }, {}, function (err, user) {
            if(err) {
              res.send(err)
            } else {
@@ -212,7 +218,7 @@ server.post('/invitation', jsonParser, function(req, res) {
                to:       'staszek.wasiutynski@gmail.com', //user.email,
                from:     'wolontariat@krakow2016.com',
                subject:  'Hello World',
-               text:     'My first email through SendGrid.'
+               text:     'My first email through SendGrid. http://'+ config.domain +":"+ config.post + url
              })
              sendgrid.send(email, function(err, json) {
                if (err) { return console.error(err) }

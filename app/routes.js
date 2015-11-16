@@ -49,6 +49,18 @@ module.exports = {
     }
   },
 
+  volonteer_administration: {
+    path: '/wolontariusz/:id/admin',
+    method: 'get',
+    handler: require('./components/VolonteerAdministration.jsx'),
+    action: function (context, payload, done) {
+      var volonteerId  = payload.get('params').get('id');
+      context.executeAction(actions.showVolonteer, { id: volonteerId }, function() {
+        done();
+      })
+    }
+  },
+
   activity: {
     path: '/aktywnosc/:id',
     method: 'get',
