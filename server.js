@@ -11,7 +11,8 @@ var express = require('express'),
     session = require('express-session'),
     flash = require('connect-flash'),
     request = require('request'),
-    crypto = require('crypto')
+    crypto = require('crypto'),
+    bcrypt = require('bcrypt')
 
 // Wyświetlanie komunikatów kontrolnych
 var debug = require('debug')('Server')
@@ -50,19 +51,18 @@ passport.use(new LocalStrategy(
         return done(null, false, { message: 'Incorrect username.' })
       }
       // Sprawdź poprawność hasła
-      password_hash  = crypto
-        .createHash("md5")
-        .update(password)
-        .digest('hex')
-
-      if (user.password !== password_hash) { // TODO: bcrypt
-        return done(null, false, { message: 'Incorrect password.' })
-      } else if (!user.approved) {
-        return done(null, false, { message: 'You have been banned.' })
-      }
-      // Zalogowano poprawnie, zwróć obiekt zalogowanego użytkownika
-      return done(null, user, { message: 'Welcome!' })
-    });
+      bcrypt.compare(password, user.password, function(err, res) {
+        console.log(err, res)
+        if (!res) {
+          return done(null, false, { message: 'Incorrect password.' })
+        } else if (!user.approved) {
+          return done(null, false, { message: 'You have been banned.' })
+        } else {
+          // Zalogowano poprawnie, zwróć obiekt zalogowanego użytkownika
+          return done(null, user, { message: 'Welcome!' })
+        }
+      })
+    })
   }
 ))
 
@@ -222,7 +222,7 @@ server.post('/invitation', jsonParser, function(req, res) {
              })
              sendgrid.send(email, function(err, json) {
                if (err) { return console.error(err) }
-               console.log(url, json)
+               console.log('sendgrid:', err, url, json)
              });
              res.send({foo: "bar"})
            }

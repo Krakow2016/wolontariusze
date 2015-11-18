@@ -39,7 +39,8 @@
     "serialize-javascript": "^1.0.0",
     "through2": "*",
     "request": "*",
-    "sendgrid": "1.9.2"
+    "sendgrid": "1.9.2",
+    "bcrypt": "*"
   },
   "devDependencies": {
     "gulp-uglify": "^1.2.0",

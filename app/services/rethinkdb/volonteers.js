@@ -7,7 +7,7 @@
 // Więcej: http://fluxible.io/guides/data-services.html
 
 var r = require('rethinkdb')
-var crypto = require('crypto')
+var bcrypt = require('bcrypt')
 
 var conf = require('../../../config.json').rethinkdb
 var debug = require('debug')('Server')
@@ -83,11 +83,17 @@ module.exports = {
 
       // Przepuść hasło przez funckję haszującą MD5
       if(body.password) {
-        body.password = crypto
-          .createHash("md5")
-          .update(body.password)
-          .digest('hex')
-        delete body.password_
+        bcrypt.genSalt(10, function(err, salt) {
+          bcrypt.hash(body.password, salt, function(err, hash) {
+            if( err ) {
+              return 500
+            } else {
+              // Store hash in your password DB.
+              body.password = hash
+              delete body.password_
+            }
+          })
+        })
       }
 
       r.table(resource).get(id).update(body).run(conn, callback)
