@@ -34,12 +34,12 @@ var Invite = React.createClass({
 
         <Dialog
            ref="dialog"
-          title="Dialog With Standard Actions"
+          title="Potwierdź"
           actions={[ { text: 'Cancel' }, { text: 'Submit', onTouchTap: this._onDialogSubmit, ref: 'submit' } ]}
           actionFocus="submit"
           open={this.state.openDialog}
           onRequestClose={this._handleRequestClose} >
-          The actions in this window are created from the json thats passed in.
+          Czy jesteś pewnien aby to zrobić?
         </Dialog>
       </Paper>
     )

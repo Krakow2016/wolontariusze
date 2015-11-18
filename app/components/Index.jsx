@@ -38,13 +38,10 @@ var App = React.createClass({
     return (
       <Paper className="paper">
 
-        <h1>Lista wszyskich wolontariuszy:</h1>
-
         <p style={{'textAlign': 'center'}}>
             <NavLink href="/wyszukiwarka">Szukaj</NavLink>
         </p>
 
-        <VolonteerList results={this.state.all} />
       </Paper>
     )
   },

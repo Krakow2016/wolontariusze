@@ -104,22 +104,22 @@ var VolonteerAdministration = React.createClass({
 
         <Dialog
           ref="rejection_dialog"
-          title="Dialog With Standard Actions"
+          title="Potwierdź"
           actions={[ { text: 'Cancel' }, { text: 'Submit', onTouchTap: this._onRejectionDialogSubmit, ref: 'submit' } ]}
           actionFocus="submit"
           open={this.state.openRejectionDialog}
           onRequestClose={this._handleRequestClose} >
-          The actions in this window are created from the json thats passed in.
+          Czy jesteś pewnien aby to zrobić?
         </Dialog>
 
         <Dialog
           ref="admin_dialog"
-          title="Dialog With Standard Actions"
+          title="Potwierdź"
           actions={[ { text: 'Cancel' }, { text: 'Submit', onTouchTap: this._onAdminDialogSubmit, ref: 'submit' } ]}
           actionFocus="submit"
           open={this.state.openAdminDialog}
           onRequestClose={this._handleRequestClose} >
-          The actions in this window are created from the json thats passed in.
+          Czy jesteś pewnien aby to zrobić?
         </Dialog>
       </div>
     )
