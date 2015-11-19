@@ -52,7 +52,6 @@ passport.use(new LocalStrategy(
       }
       // Sprawdź poprawność hasła
       bcrypt.compare(password, user.password, function(err, res) {
-        console.log(err, res)
         if (!res) {
           return done(null, false, { message: 'Incorrect password.' })
         } else if (!user.approved) {
@@ -70,14 +69,14 @@ passport.use(new LocalStrategy(
 passport.use(new LocalAPIKeyStrategy(
   function(apikey, done) {
     // Znajdź konto na które podany token został wygenerowany
-    Volonteer.read({}, 'Volonteers', { key: apikey }, { index: 'token' }, function (err, users) {
+    Volonteer.read({force_admin: true}, 'Volonteers', { key: apikey }, { index: 'token' }, function (err, users) {
       var user = users[0]
       if (err) { return done(err) } // Błąd bazy danych
       if (!user) {
         return done(null, false)
       } else {
         var token
-        var list = user.access_tokens
+        var list = user.access_tokens || []
         var length = list.length
         for (var i=0; i<length; i++) {
           value = list[i]
@@ -85,6 +84,8 @@ passport.use(new LocalAPIKeyStrategy(
             token = value
           }
         }
+
+        if(!token) { return(500) } // Brak tokena - nie powinno się zdarzyć
         var expiration_date = token.generated_at + 48*60*60*1000 // +48h
 
         if(token.used_at) { // Sprawdź czy token nie został już użyty
@@ -213,12 +214,12 @@ server.post('/invitation', jsonParser, function(req, res) {
            if(err) {
              res.send(err)
            } else {
-             var url = '/invitation/'+ token
+             var url = '/invitation?apikey='+ token
              var email = new sendgrid.Email({
                to:       'staszek.wasiutynski@gmail.com', //user.email,
                from:     'wolontariat@krakow2016.com',
                subject:  'Hello World',
-               text:     'My first email through SendGrid. http://'+ config.domain +":"+ config.post + url
+               text:     'My first email through SendGrid. http://'+ config.domain +":"+ config.port + url // TODO: what if proxy?
              })
              sendgrid.send(email, function(err, json) {
                if (err) { return console.error(err) }

@@ -83,19 +83,13 @@ module.exports = {
 
       // Przepuść hasło przez funckję haszującą MD5
       if(body.password) {
-        bcrypt.genSalt(10, function(err, salt) {
-          bcrypt.hash(body.password, salt, function(err, hash) {
-            if( err ) {
-              return 500
-            } else {
-              // Store hash in your password DB.
-              body.password = hash
-              delete body.password_
-            }
-          })
-        })
+        var salt = bcrypt.genSaltSync(10)
+        // Zapisz hash w bazie danych (zawiera w sobie również sól)
+        body.password = bcrypt.hashSync(body.password, salt)
+        delete body.password_
       }
 
+      // Wykonaj zapytanie do bazy danych
       r.table(resource).get(id).update(body).run(conn, callback)
     })
   },
