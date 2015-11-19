@@ -1,5 +1,6 @@
 var React = require('react')
 var Paper = require('material-ui/lib/paper')
+var navigateAction = require('fluxible-router').navigateAction
 
 var Password = require('./Settings/Password.jsx')
 var updateVolonteer = require('../actions').updateVolonteer
@@ -12,6 +13,26 @@ var Welcome = React.createClass({
       profile: this.props.context.getStore(VolonteerStore).getState().profile,
       canSubmit: false
     }
+  },
+
+  _changeListener: function() {
+    if(this.props.context.getStore(VolonteerStore).getState().success) {
+      // Hasło zostało zmienione
+      this.props.context.executeAction(navigateAction, {
+        type: 'replacestate',
+        url: '/ustawienia/profil'
+      })
+    }
+  },
+
+  componentDidMount: function() {
+    this.props.context.getStore(VolonteerStore).addChangeListener(this._changeListener)
+  },
+
+  componentWillUnmount: function componentWillUnmount() {
+    // Usuń funkcję nasłychującą
+    this.props.context.getStore(VolonteerStore)
+      .removeChangeListener(this._changeListener)
   },
 
   enableButton: function () {
