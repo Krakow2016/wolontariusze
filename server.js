@@ -216,10 +216,10 @@ server.post('/invitation', jsonParser, function(req, res) {
            } else {
              var url = '/invitation?apikey='+ token
              var email = new sendgrid.Email({
-               to:       'staszek.wasiutynski@gmail.com', //user.email,
+               to:       user.email,
                from:     'wolontariat@krakow2016.com',
-               subject:  'Hello World',
-               text:     'My first email through SendGrid. http://'+ config.domain +":"+ config.port + url // TODO: what if proxy?
+               subject:  'Zaproszenie do Góry Dobra!',
+               text:     'Wolontariuszu! Chcemy zaprosić Cię do Góry Dobra - portalu dla wolontariuszy, który będzie równocześnie naszą platformą komunikacji. To tutaj chcemy stworzyć środowisko młodych i zaangażowanych ludzi, dzielić się tym, co robimy i przekazywać Wam ważne informacje o ŚDM i zadaniach, jakie czekają na realizację. Zrób coś dla siebie! Zostań Wolontariuszem ŚDM Kraków 2016. Aby się zarejestrować kliknij: http://'+ config.domain + url
              })
              sendgrid.send(email, function(err, json) {
                if (err) { return console.error(err) }
