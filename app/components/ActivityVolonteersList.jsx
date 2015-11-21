@@ -76,13 +76,16 @@ var AddedVolonteer = React.createClass({
 var ActivityVolonteersList = React.createClass({
     render: function () {
             var that = this
-            var list = this.props.data.map (function (volonteerId) {
-                return (
-                    <AddedVolonteer id={volonteerId} 
-                                    onRemoveButtonClick={that.props.onRemoveButtonClick}
-                                    allVolonteers={that.props.allVolonteers} />                 
-                )
-            })
+            var list = {}
+            if (this.props.data) {
+                var list = this.props.data.map (function (volonteerId) {
+                    return (
+                        <AddedVolonteer id={volonteerId} 
+                                        onRemoveButtonClick={that.props.onRemoveButtonClick}
+                                        allVolonteers={that.props.allVolonteers} />                 
+                    )
+                })
+            }
             return (
                 <div>
                     <AutoSuggestVolonteer allVolonteers={this.props.allVolonteers} 

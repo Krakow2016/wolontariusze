@@ -3,9 +3,9 @@ var createStore  = require('fluxible/addons').createStore;
 var Activity = require('./Activity')
 
 var ActivitiesStore = createStore({
-    storeName: 'ActivitiesStore',
+    storeName: 'Activities',
     handlers: {
-        'LOAD_ACTIVITIES' : 'loadAll',
+        'LOAD_ACTIVITIES' : 'loadAll'
     },
 
     loadAll: function(data) {
@@ -35,5 +35,11 @@ var ActivitiesStore = createStore({
 });
 
 ActivitiesStore.model = Activity
+
+// Oznacz wszystkie atrybuty jako dostępne tylko dla administratorów
+//ActivitiesStore.attributes = function() {
+//  return []
+//}
+
 
 module.exports = ActivitiesStore;

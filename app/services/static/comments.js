@@ -46,6 +46,7 @@ var comments = [
 
 var getAdminName = function (adminId) {
     var id = adminId+'';
+    console.log("ID", id);
     return volonteers[id].first_name
 }
 
@@ -71,7 +72,8 @@ module.exports = {
 
     create: function(req, resource, params, body, config, callback) {
         var volonteerId = params.volonteerId;
-        var adminId = params.adminId;
+        var user = req.user || config.user
+        var adminId = user.id;
         var text = params.text;
         var timestamp = Date.now();
         
@@ -97,7 +99,8 @@ module.exports = {
     update: function(req, resource, params, body, config, callback) {
         var volonteerId = params.volonteerId;
         var commentId = params.commentId;
-        var adminId = params.adminId;
+        var user = req.user || config.user
+        var adminId = user.id;
         var text = params.text;
         var timestamp = Date.now();
         for (var i = 0 ; i < comments.length; i++) {

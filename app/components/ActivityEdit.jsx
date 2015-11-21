@@ -112,10 +112,7 @@ var ActivityEdit = React.createClass({
  
   
   loadInitialState: function () {
-   //this.state.visibilityIds = this.getInitialState().visibilityIds;
-   //this.state.activeVolonteersIds= this.getInitialState().activeVolonteersIds;
     this.setState(this.getInitialState());
-    //this.forceUpdate();
   },
 
   
@@ -148,11 +145,12 @@ var ActivityEdit = React.createClass({
     var isInputValid = this.validateInputs();
     if (isInputValid) {
         var modifiedState = this.state;
+        var timestamp = Date.now();
         modifiedState.creatorId = this.props.user.id;
-        modifiedState.creationTimestamp = Date.now();
-        modifiedState.editorId = modifiedState.creatorId;
-        modifiedState.editionTimestamp = modifiedState.creationTimestamp;
-        this.props.context.executeAction(createAction, modifiedState);
+        modifiedState.creationTimestamp = timestamp;
+        modifiedState.editorId = this.props.user.id;
+        modifiedState.editionTimestamp = timestamp;
+        this.props.context.executeAction(createAction, modifiedState)
     }
   },
   render: function() {    

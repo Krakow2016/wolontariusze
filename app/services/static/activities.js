@@ -169,6 +169,22 @@ module.exports = {
           return
       }
     },
+    
+    create: function(req, resource, params, body, config, callback) {
+        var ids = Object.keys(activities);
+        var len = ids.length;
+        var id = parseInt(ids[len-1])+1; //ostatnie id + 1
+        params.id = id+"";
+        activities[id] = params;
+        var activity = modifiedActivity(params.id, req, config);
+        if(activity) {
+            callback(null, activity);
+        } else {
+            callback("404")
+        }  
+        
+    },
+    
     update: function(req, resource, params, body, config, callback) {
         activities[params.id] = params;
         var activity = modifiedActivity(params.id, req, config);
@@ -177,10 +193,10 @@ module.exports = {
         } else {
             callback("404")
         }  
-    }
+    },
 
     
     // update: function(resource, params, body, config, callback) {},
-    // delete: function(resource, params, config, callback) {}
+    delete: function(resource, params, config, callback) {}
 
 };

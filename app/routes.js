@@ -41,7 +41,7 @@ module.exports = {
     },
 
     activity: {
-        path: '/aktywnosc/:id',
+        path: '/aktywnosc/wyswietl/:id',
         method: 'get',
         handler: require('./components/Activity.jsx'),
         action: function (context, payload, done) {
@@ -50,6 +50,19 @@ module.exports = {
             context.executeAction(actions.showActivity, { id: activityId }, function() {
                 done();
             })
+            context.executeAction(actions.loadVolonteers, {}, function() {
+                done();
+            })
+        }
+    },
+    
+    createActivity: {
+        path: '/aktywnosc/nowa',
+        method: 'get',
+        handler: require('./components/ActivityCreate.jsx'),
+        action: function (context, payload, done) {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Nowa Aktywnosc' });
+            context.dispatch('NEW_ACTIVITY', {});
             context.executeAction(actions.loadVolonteers, {}, function() {
                 done();
             })

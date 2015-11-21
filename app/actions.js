@@ -2,6 +2,7 @@
 
 var VolonteerStore = require('./stores/Volonteer')
 var ActivityStore = require('./stores/Activity')
+var navigateAction = require('fluxible-router').navigateAction;
 
 module.exports = {
   showVolonteer: function(context, payload, cb) {
@@ -100,10 +101,14 @@ module.exports = {
     console.log('create activity');
     context.service.create('Activities', payload, {
       store: 'Activity',
-      user: context.getUser()
-    }, function (err, data) {
+      // Przekaż obiekt zalogowanego użytkownia niezbędy do podjęcia
+      // decyzji o tym jakie dane mają być zwrócone.
+      user: context.getUser()}, function (err, data) {
         if(err) { console.log(err) }
-        else { context.dispatch('ACTIVITY_CREATED', data) }
+        else { 
+            context.dispatch('ACTIVITY_CREATED', data);
+            context.executeAction(navigateAction, {url: "/"});
+        }
         cb()  
     })
   },

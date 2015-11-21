@@ -22,14 +22,22 @@ var cloneState = function (obj) {
 }
 
 var ActivityStore = createStore({
-    storeName: 'ActivityStore',
+    storeName: 'Activity',
     handlers: {
         'LOAD_ACTIVITY'       : 'load',
-        'ACTIVITY_UPDATED': 'update'
+        'NEW_ACTIVITY'        : 'preCreate',  //do czyszczenia danych przy tworzeniu nowej aktywności
+        'ACTIVITY_UPDATED': 'update',
+        'ACTIVITY_CREATED': 'create'
     },
 
     initialize: function () {
-        this.state = {};
+        this.state = {
+            id: 0,
+            visibilityIds: [],
+            activeVolonteersIds: [],
+            points: 10,
+            maxVolonteers: 5,
+        };
     },
 
     load: function(data) {
@@ -40,6 +48,15 @@ var ActivityStore = createStore({
     
     update: function(data) {
       console.log('>>> UPDATE ACTIVITY <<<====')
+      this.rehydrate(data)
+      this.emitChange();
+    },
+    preCreate: function () {
+        this.initialize();
+        this.emitChange();
+    },
+    create: function(data) {
+      console.log('>>> CREATE ACTIVITY <<<====')
       this.rehydrate(data)
       this.emitChange();
     },
@@ -58,5 +75,23 @@ var ActivityStore = createStore({
     }
 });
 
+ActivityStore.attributes = function() {
+  return [
+    'id',
+    'title',
+    'content',
+    'creationTimestamp',
+    'editionTimestamp',
+    'startEventTimestamp',
+    'duration',
+    'place',
+    'creatorId',
+    'editorId',
+    'points',
+    'visibilityIds',
+    'maxVolonteers',
+    'activeVolonteersIds'
+  ]
+}
 
 module.exports = ActivityStore;

@@ -3,7 +3,7 @@ var NavLink = require('fluxible-router').NavLink
 
 var ActivityLi = React.createClass({
     render: function() {
-        var id = "/aktywnosc/"+ this.props.id
+        var id = "/aktywnosc/wyswietl/"+ this.props.id
         return (
             <li>
                 <NavLink href={id}>
