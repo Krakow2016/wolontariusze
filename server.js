@@ -66,8 +66,8 @@ passport.use(new LocalStrategy(
 ))
 
 // Logowanie za pomocą jednorazowego tokena
-passport.use(new LocalAPIKeyStrategy(
-  function(apikey, done) {
+passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
+  function(req, apikey, done) {
     // Znajdź konto na które podany token został wygenerowany
     Volonteer.read({force_admin: true}, 'Volonteers', { key: apikey }, { index: 'token' }, function (err, users) {
       var user = users[0]
@@ -76,24 +76,32 @@ passport.use(new LocalAPIKeyStrategy(
         return done(null, false)
       } else {
         var token
-        var list = user.access_tokens || []
-        var length = list.length
+        var tokens = user.access_tokens || []
+        var length = tokens.length
         for (var i=0; i<length; i++) {
-          value = list[i]
+          value = tokens[i]
           if (value.token === apikey) {
             token = value
           }
         }
 
-        if(!token) { return(500) } // Brak tokena - nie powinno się zdarzyć
+        if(!token) { return done(500) } // Brak tokena - nie powinno się zdarzyć
         var expiration_date = token.generated_at + 48*60*60*1000 // +48h
 
-        if(token.used_at) { // Sprawdź czy token nie został już użyty
-          return('Token already used. You must generate a new one.')
+        if(token.used) { // Sprawdź czy token nie został już użyty
+          return done('Token already used. You must generate a new one.')
         } else if(new Date() > expiration_date) { // Sprawdź czy token nie wygasł
-          return('Token expired. You must generate a new one.')
+          return done({message: 'Token expired. You must generate a new one.'})
         } else { // Autoryzacja przebiegła pomyślnie
-          return done(null, user)
+          token.used = { datetime: new Date(), ip: req.ip, headers: req.headers }
+          Volonteer.update({force_admin: true}, 'Volonteers', {id: user.id}, {
+            access_tokens: tokens
+          }, {}, function (err) {
+            if(err) {
+              return done(err)
+            }
+            return done(null, user)
+          })
         }
       }
     })
