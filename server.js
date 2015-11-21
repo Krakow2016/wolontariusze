@@ -7,7 +7,7 @@ var express = require('express'),
     navigateAction = require('fluxible-router').navigateAction,
     passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
-    LocalAPIKeyStrategy = require('passport-localapikey').Strategy,
+    LocalAPIKeyStrategy = require('passport-localapikey-update').Strategy,
     session = require('express-session'),
     flash = require('connect-flash'),
     request = require('request'),
@@ -210,7 +210,7 @@ server.post('/invitation', jsonParser, function(req, res) {
          Volonteer.update(req, 'Volonteers', {id: id}, {
              approved: true,
              access_tokens: tokens
-         }, {}, function (err, user) {
+         }, {}, function (err) {
            if(err) {
              res.send(err)
            } else {
@@ -222,10 +222,9 @@ server.post('/invitation', jsonParser, function(req, res) {
                text:     'Wolontariuszu! Chcemy zaprosić Cię do Góry Dobra - portalu dla wolontariuszy, który będzie równocześnie naszą platformą komunikacji. To tutaj chcemy stworzyć środowisko młodych i zaangażowanych ludzi, dzielić się tym, co robimy i przekazywać Wam ważne informacje o ŚDM i zadaniach, jakie czekają na realizację. Zrób coś dla siebie! Zostań Wolontariuszem ŚDM Kraków 2016. Aby się zarejestrować kliknij: http://'+ config.domain + url
              })
              sendgrid.send(email, function(err, json) {
-               if (err) { return console.error(err) }
                console.log('sendgrid:', err, url, json)
-             });
-             res.send({foo: "bar"})
+               res.send(err || json)
+             })
            }
          })
        })
