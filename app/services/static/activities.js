@@ -195,8 +195,9 @@ module.exports = {
         }  
     },
 
-    
-    // update: function(resource, params, body, config, callback) {},
-    delete: function(resource, params, config, callback) {}
+    delete: function(req, resource, params, config, callback) {
+        delete activities[params.id];
+        callback(null, activities);
+    }
 
 };

@@ -5,12 +5,19 @@ var Activity = require('./Activity')
 var ActivitiesStore = createStore({
     storeName: 'Activities',
     handlers: {
-        'LOAD_ACTIVITIES' : 'loadAll'
+        'LOAD_ACTIVITIES' : 'loadAll',
+        'ACTIVITY_DELETED': 'delete'
     },
 
     loadAll: function(data) {
         this.all = data
         this.emitChange();
+    },
+    
+    delete: function (data) {
+       console.log('ACTIVITY DELETED');
+       this.all =  data;
+       this.emitChange();
     },
 
     getAll: function () {

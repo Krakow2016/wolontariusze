@@ -63,7 +63,7 @@ var App = React.createClass({
             <NavLink href="/aktywnosc/nowa">Utwórz nową</NavLink>
         </p>
         
-        <ActivitiesList results={this.state.allActivities} />
+        <ActivitiesList results={this.state.allActivities} context={this.props.context} />
         
       </div>
     )

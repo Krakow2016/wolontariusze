@@ -112,6 +112,18 @@ module.exports = {
         cb()  
     })
   },
+  deleteActivity: function(context, payload, cb) {
+    console.log('delete activity');
+    context.service.delete('Activities', payload, {
+      user: context.getUser()}, function (err, data) {
+        if(err) { console.log(err) }
+        else { 
+            context.dispatch('ACTIVITY_DELETED', data);
+            context.executeAction(navigateAction, {url: "/"});
+        }
+        cb()  
+    })
+  },
 
   showComments: function(context, payload, cb) {
     console.log('profile comment read')
