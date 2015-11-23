@@ -37,8 +37,9 @@ var ActivityEdit = React.createClass({
     this.setState(modifiedState);
   },
   handleStartEventTimestampChange: function (m) {
+    //http://stackoverflow.com/questions/18022534/moment-js-and-unix-epoch-conversion
     var modifiedState = this.state;
-    modifiedState.timestamp = m.milliseconds();
+    modifiedState.startEventTimestamp = m.toDate().getTime();
     this.setState(modifiedState);
   },
   handleDurationChange: function (evt) {
@@ -182,7 +183,7 @@ var ActivityEdit = React.createClass({
             <b>Czas rozpoczęcia</b> <DateTime open={false} 
                       dateFormat={'YYYY/M/D'}
                       timeFormat={'HH:mm'}
-                      defaultValue={startEventDate}
+                      value={startEventDate}
                       onChange={this.handleStartEventTimestampChange}/>
             
             <b>Czas trwania </b>

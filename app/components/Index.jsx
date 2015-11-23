@@ -34,7 +34,6 @@ var App = React.createClass({
 
   componentDidMount: function() {
       this.props.context.getStore(VolonteersStore).addChangeListener(this._changeListener)
-      //this.props.context.getStore(ActivitiesStore).addChangeListener(this._changeListener)
   },
 
   click: function() {
