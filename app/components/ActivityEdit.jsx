@@ -52,35 +52,10 @@ var ActivityEdit = React.createClass({
     modifiedState.place = evt.target.value;
     this.setState(modifiedState);
   },
-  handlePointsChange: function (evt) {
-    var modifiedState = this.state;
-    modifiedState.points = evt.target.value;
-    this.setState(modifiedState);
-  },
   handleContentChange: function (evt) {
     var modifiedState = this.state;
     modifiedState.content = evt.target.value;
     this.setState(modifiedState);
-  },
-  addVisibilityId: function (id) {
-    var modifiedState = this.state;
-    if (id == 0) {
-        alert('Wybierz wolontariusza lub grupę');
-    } else  if(modifiedState.visibilityIds.indexOf(id) !== -1) {
-        alert('Wolontariusz lub grupa jest już dodana');
-    } else {
-        modifiedState.visibilityIds.push(id);
-    }
-    this.setState(modifiedState);
-  },
-  removeVisibilityId: function (id) {
-      var modifiedState = this.state ;
-      for (var i = 0; i < modifiedState.visibilityIds.length; i++) {
-            if (modifiedState.visibilityIds[i] == id) {
-                modifiedState.visibilityIds.splice(i,1);
-            }         
-      }
-      this.setState(modifiedState);
   },
   addActiveVolonteer: function (id) {
     console.log('ButtonClicked', id);
@@ -119,13 +94,6 @@ var ActivityEdit = React.createClass({
   
   validateInputs: function () {
     var msg = '';
-    if (!Number.isInteger(this.state.points)) {
-        msg += "Liczba kamyczków powinna być nieujemną liczbą całkowitą"
-    }
-    if (Number.isInteger(this.state.points) && this.state.points < 0 ) {
-        msg += "Liczba kamyczków powinna być nieujemną liczbą całkowitą"
-    }
-    
     if (msg != '') {
         alert(msg)
         return false;
@@ -196,23 +164,11 @@ var ActivityEdit = React.createClass({
             <input name="place" value={this.state.place} onChange={this.handlePlaceChange} />
             <br></br>
             
-            <b>Kamyczki</b>
-            <br></br>
-            <input name="points" value={this.state.points} onChange={this.handlePointsChange} />
-            <br></br>
-            
             <b>Treść </b>
             <br></br>
             <textarea id="activityContentTextarea" name="content" placeholder="Dodaj treść wiadomości" value={this.state.content} onChange={this.handleContentChange} />
             <br></br>
             
-            
-            <b>Wolontariusze i grupy, które mogą brać udział:</b> 
-            <br></br>
-            <ActivityVolonteersList data={this.state.visibilityIds} 
-                                 onAddButtonClick={this.addVisibilityId}
-                                 onRemoveButtonClick={this.removeVisibilityId} 
-                                 allVolonteers={allVolonteers}/>
             <b>Wolontariusze, którzy biorą udział:</b> 
             <br></br>
             <ActivityVolonteersList data={this.state.activeVolonteersIds} 

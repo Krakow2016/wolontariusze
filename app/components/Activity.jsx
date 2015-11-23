@@ -104,8 +104,7 @@ var ActivityTabs = React.createClass({
     
     var acceptButton = {}
     if (user &&
-        this.state.visibilityIds.indexOf(user.id) !== -1 &&
-        (this.state.activeVolonteers.length < this.state.maxVolonteers || this.state.maxVolonteers == 0) &&
+        (this.state.activeVolonteersIds.length < this.state.maxVolonteers || this.state.maxVolonteers == 0) &&
         this.state.activeVolonteersIds.indexOf(user.id) == -1 ) {
         acceptButton = <input type="button" onClick={this.onAcceptButtonClick} value="Dopisz się" />
     }
@@ -131,8 +130,6 @@ var ActivityTabs = React.createClass({
             <b>Czas rozpoczęcia:</b> {TimeService.showTime(this.state.startEventTimestamp)}  <b>Czas trwania:</b> {this.state.duration}
             <br></br>
             <b>Miejsce wydarzenia:</b> {this.state.place}
-            <br></br>
-            <b>Kamyczki: </b> {this.state.points}
             <br></br>
             <ReactMarkdown source={this.state.content} />
             <br></br>

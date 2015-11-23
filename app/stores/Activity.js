@@ -87,8 +87,6 @@ ActivityStore.attributes = function() {
     'place',
     'creatorId',
     'editorId',
-    'points',
-    'visibilityIds',
     'maxVolonteers',
     'activeVolonteersIds'
   ]

@@ -14,18 +14,12 @@ var activities = {
         creationTimestamp: 120000,
         editionTimestamp: 120000,
         startEventTimestamp: 1200200,
-        endEventTimestamp: 1500200,
         duration: "1h",
-        attachments: ["1", "2", "3"],
         place: "Kraków",
         creatorId: "1",
         editorId: "1",
-        points: 100,
-        visibilityIds: ["1", "2"],
         maxVolonteers: 5,
-        activeVolonteersIds: ["1","2"],
-        isOpen: true,
-        privateField: "Test1"
+        activeVolonteersIds: ["1","2"]
      },
     "2": {
         id: "2",
@@ -34,18 +28,12 @@ var activities = {
         creationTimestamp: 220000,
         editionTimestamp: 1220000,
         startEventTimestamp: 2200200,
-        endEventTimestamp: 25000200,
         duration: "2h",
-        attachments: ["1", "2", "3"],
         place: "Dobczyce",
         creatorId: "2",
         editorId: "1",
-        points: 100,
-        visibilityIds: ["2"],
-        maxVolonteers: 0,
-        activeVolonteersIds: ["2"],
-        isOpen: true,
-        privateField: "Test2"
+        maxVolonteers: 1,
+        activeVolonteersIds: ["2"]
      },
     "3": {     
         id: "3",
@@ -54,18 +42,12 @@ var activities = {
         creationTimestamp: 320000,
         editionTimestamp: 1320000,
         startEventTimestamp: 3200200,
-        endEventTimestamp: 3500200,
         duration: "1d",
-        attachments: ["1", "2", "3"],
         place: "Myślenice",
         creatorId: "1",
         editorId: "2",
-        points: 100,
-        visibilityIds: ["1"],
         maxVolonteers: 10,
-        activeVolonteersIds: [],
-        isOpen: false,
-        privateField: "Test3"
+        activeVolonteersIds: []
      },
 }
 
@@ -77,22 +59,16 @@ var public_attrs = [
   'content',
   'creationTimestamp',
   'editionTimestamp',
-  'startEventTimestamp',
-  'endEventTimestamp',
+  'startEventTimestamp'
   'duration',
-  'attachments',
   'place',
   'creatorId',
   'editorId',
-  'points',
-  'visibilityIds',
   'maxVolonteers',
   'activeVolonteersIds',
-  'isOpen'
 ]
 
 var private_attrs = [
-    'privateField'
 ]
 
         
