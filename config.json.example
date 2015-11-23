@@ -1,0 +1,8 @@
+{
+  "port": 7000,
+  "service": "rethinkdb",
+  "elasticSearch": "http://192.168.1.99:9200/sdm/_search",
+  "rethinkdb": {
+    "db": "sdm"
+  }
+}

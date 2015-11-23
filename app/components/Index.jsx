@@ -1,4 +1,5 @@
 var React = require('react')
+var Paper = require('material-ui/lib/paper')
 
 var ApplicationStore = require('../stores/ApplicationStore')
 var VolonteersStore = require('../stores/Volonteers')
@@ -33,7 +34,13 @@ var App = React.createClass({
   },
 
   componentDidMount: function() {
-      this.props.context.getStore(VolonteersStore).addChangeListener(this._changeListener)
+    this.props.context.getStore(VolonteersStore)
+      .addChangeListener(this._changeListener)
+  },
+
+  componentWillUnmount: function() {
+    this.props.context.getStore(VolonteersStore)
+      .removeChangeListener(this._changeListener)
   },
 
   click: function() {
@@ -42,29 +49,13 @@ var App = React.createClass({
 
   render: function () {
     return (
-      <div>
+      <Paper className="paper">
 
-        <p style={{'text-align': 'center'}}>
-            <NavLink href="/rejestracja">Zarejestruj się!</NavLink>
-        </p>
-
-        <h1>Lista wszyskich wolontariuszy:</h1>
-
-        <p style={{'text-align': 'center'}}>
+        <p style={{'textAlign': 'center'}}>
             <NavLink href="/wyszukiwarka">Szukaj</NavLink>
         </p>
-
-        <VolonteerList results={this.state.allVolonteers} />
         
-        <h1>Lista wszystkich aktywności: </h1>
-        
-        <p style={{'text-align': 'center'}}>
-            <NavLink href="/aktywnosc/nowa">Utwórz nową</NavLink>
-        </p>
-        
-        <ActivitiesList results={this.state.allActivities} context={this.props.context} />
-        
-      </div>
+      </Paper>
     )
   },
 })

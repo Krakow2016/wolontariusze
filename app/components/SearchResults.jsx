@@ -17,15 +17,15 @@ var SearchResults = React.createClass({
   render: function() {
 
     var results = this.props.results.map(function(result) {
-      return (<SearchResult {...result._source} />)
+      return (<SearchResult {...result._source} key={result._id} />)
     })
 
-    return (
+    return results.length ? (
       <div>
         <h2>Wyniki wyszukiwania:</h2>
         <div> {results} </div>
       </div>
-    )
+    ) : false
   }
 })
 

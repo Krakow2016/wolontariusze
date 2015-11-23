@@ -5,66 +5,77 @@ var VolonteerStore = createStore({
     storeName: 'Volonteers',
     handlers: {
       'LOAD_VOLONTEER'  : 'load',
-      'VOLONTEER_CREATION_FAILURE': 'failure',
-      'VOLONTEER_CREATION_SUCCESS': 'success'
+      'VOLONTEER_CREATION_FAILURE': 'onFailure',
+      'VOLONTEER_CREATION_SUCCESS': 'onSuccess',
+      'VOLONTEER_UPDATE_FAILURE': 'onFailure',
+      'VOLONTEER_UPDATE_SUCCESS': 'onSuccess',
+      'SHOW_ACCOUNT_SETTINGS': 'trigger_account',
+      'SHOW_PROFILE_SETTINGS': 'trigger_profile'
     },
 
     initialize: function () {
-        //
     },
 
     load: function(data) {
-      this.rehydrate(data)
+      this.profile = data;
       this.emitChange();
     },
 
     createVolonteer: function(volonteer) {
-        return volonteer
+      return volonteer
     },
 
-    failure: function() {
+    onFailure: function() {
       this.error = true
       this.success = null
       this.emitChange()
     },
 
-    success: function() {
+    onSuccess: function() {
       this.error = null
       this.success = true
       this.emitChange()
     },
 
+    trigger_account: function() {
+      this.subpage = 'BasicSettings'
+      this.emitChange()
+    },
+
+    trigger_profile: function() {
+      this.subpage = 'InfoSettings'
+      this.emitChange()
+    },
+
     getState: function () {
-      var state = {}
-      Object.keys(this).forEach(function(attr) {
-        if(this.hasOwnProperty(attr) &&
-           attr !== 'dispatcher') {
-          state[attr] = this[attr]
-        }
-      }, this)
-      return state
+      return {
+        profile: this.profile || {},
+        subpage: this.subpage,
+        error: this.error,
+        success: this.success
+      }
     },
 
     // Returns a serializable object containing the state of the Fluxible and
     // passed FluxibleContext instances. This is useful for serializing the
     // state of the application to send it to the client.
     dehydrate: function () {
-        return this.getState();
+      return this.getState()
     },
 
     // Takes an object representing the state of the Fluxible and
     // FluxibleContext instances (usually retrieved from dehydrate) to
     // rehydrate them to the same state as they were on the server
     rehydrate: function (state) {
-      var keys = Object.keys(state)
-      keys.forEach(function(attr) {
-        this[attr] = state[attr]
-      }, this)
+      this.profile = state.profile
+      this.subpage = state.subpage
     }
 });
 
+// Atrubyty do odczytu przez wszystkich
 VolonteerStore.attributes = function() {
   return [
+    'id',
     'first_name',
     'last_name',
     'email',

@@ -127,7 +127,7 @@ var ProfileComments = React.createClass({
   render: function (){
     var that = this
     var comments = this.state.comments.map(function(comment) {
-      return (<ProfileComment context={that.props.context} comment={comment} />)
+      return (<ProfileComment context={that.props.context} comment={comment} key={comment.id} />)
     })
 
     return (

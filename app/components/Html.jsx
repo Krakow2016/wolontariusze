@@ -25,14 +25,13 @@ var Html = React.createClass({
           <meta charSet="utf-8" />
           <title>{this.props.context.getStore(ApplicationStore).getPageTitle()}</title>
           <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-          <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css" />
+          <link rel="stylesheet" href="/css/pure-min.css" />
+          <link rel="stylesheet" href="/css/grids-responsive-min.css" />
           <link rel="stylesheet" href="/css/main.css" />
           <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,300,500" />
           <link rel="stylesheet" type="text/css" href="https://rawgit.com/arqex/react-datetime/master/css/react-datetime.css" />
         </head>
         <body>
-          <b className="flashMessage">{this.props.error}</b>
-          <b className="flashMessage">{this.props.success}</b>
           <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
         </body>
         <script dangerouslySetInnerHTML={{__html: this.props.state}}></script>

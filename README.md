@@ -14,12 +14,19 @@ Masz pytanie? Nie wiesz jak się zaangażować? Zapraszamy do dyskusji na:
 
 # Wizja
 
-Naszym celem jest budowa narzędzia, które pomaga pomagać. Serwis będzie składał
-się z dwóch stref: publicznej i o ograniczonej dostępności. Widoczne dla
-wszystkich będą profile najbardziej aktywnych wolontariuszy mających realny
-wpływ na przebieg przygotowań do ŚDM w Krakowie. Z drugiej strony, po
-zalogowaniu, użytkownicy z odpowiednimi przywilejami otrzymają dostęp do
-poufnych danych, które będą im niezbędne przy wykonywaniu swoich zadań.
+Naszym celem jest budowa narzędzia, które pomaga pomagać. Serwis będzie pełnił
+3 funkcje:
+
+* **Administracyją** - jako narzędzie dla koordynatorów dające im wgląd w bazę danych wolontariuszy oraz jako warstwa autoryzacji dla aplikacji mobilnej dla wolontariuszy.
+* **Promocyjną** - jako platforma promująca wolontariuszy jako ludzi aktywnych.
+* **Organizacyjną** - jako baza zadań do wykonania przez wolontariuszy w ramach wolontariatu.
+
+Aby to osiągnąć potrzebujemy dwóch stref: publicznej i o ograniczonej
+dostępności. Widoczne dla wszystkich będą profile najbardziej aktywnych
+wolontariuszy mających realny wpływ na przebieg przygotowań do ŚDM w Krakowie.
+Z drugiej strony, po zalogowaniu, użytkownicy z odpowiednimi przywilejami
+(koordynatorzy i wolontariusze) otrzymają dostęp do poufnych danych, które będą
+im niezbędne przy wykonywaniu swoich zadań.
 
 # Kontrybucje
 
@@ -77,6 +84,10 @@ Przed uruchomieniem serwera www, upewnij się że masz zainstalowane wszystkie
 zależności:
 
     $ npm install
+
+W kolejnym kroku musisz utworzyć plik konfiguracyjny `config.json` lub po
+prostu skopiować go z `config.json.example`. Możesz w nim zdefiniować mi. adres
+do bazy danych i port na którym ma zostać uruchomiony serwer www.
 
 Następnie wykonaj komendę:
 

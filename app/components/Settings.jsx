@@ -1,59 +1,43 @@
 var React = require('react')
 var Formsy = require('formsy-react')
 
-var List = require('material-ui/lib/lists/list')
-var ListItem = require('material-ui/lib/lists/list-item')
-var TextField = require('material-ui/lib/text-field')
+var NavLink = require('fluxible-router').NavLink
+var Menu = require('material-ui/lib/menus/menu')
+var MenuItem = require('material-ui/lib/menus/menu-item')
 var Paper = require('material-ui/lib/paper')
+var Snackbar = require('material-ui/lib/snackbar')
 
 var VolonteerStore = require('../stores/Volonteer')
 
+var Subpages = {
+  'BasicSettings': require('./Settings/Basic.jsx'),
+  'InfoSettings': require('./Settings/Info.jsx')
+}
+
+var updateVolonteer = require('../actions').updateVolonteer
+
 var LeftPanel = React.createClass({
+  getInitialState: function () {
+    return {}
+  },
+
+  handleMenuChange: function(e, val) {
+    console.log(e, val)
+  },
+
   render: function() {
     return (
       <div className="pure-u-1-4">
         <Paper zDepth={1}>
-          <List>
-            <ListItem primaryText="Profil" />
-            <ListItem primaryText="Ustawienia" />
-          </List>
+          <NavLink href="/ustawienia/konto">
+            Konto
+          </NavLink>
+          <br />
+          <NavLink href="/ustawienia/profil">
+            Informacje publiczne
+          </NavLink>
         </Paper>
       </div>
-    )
-  }
-})
-
-var MyTextField = React.createClass({
-
-  // Add the Formsy Mixin
-  mixins: [Formsy.Mixin],
-
-  // setValue() will set the value of the component, which in
-  // turn will validate it and the rest of the form
-  changeValue: function (event) {
-    this.setValue(event.currentTarget.value)
-  },
-
-  render: function () {
-
-    // Set a specific className based on the validation
-    // state of this component. showRequired() is true
-    // when the value is empty and the required prop is
-    // passed to the input. showError() is true when the
-    // value typed is invalid
-    var className = this.showRequired() ? 'required' : this.showError() ? 'error' : null;
-
-    // An error message is returned ONLY if the component is invalid
-    // or the server has returned an error message
-    var errorMessage = this.getErrorMessage();
-
-    return (
-      <TextField
-        className={className}
-        onChange={this.changeValue}
-        value={this.getValue()}
-        hintText={this.props.placeholder}
-        errorText={errorMessage} />
     )
   }
 })
@@ -62,15 +46,14 @@ var Settings = React.createClass({
 
   getInitialState: function () {
     return {
-      profile: this.props.context.getStore(VolonteerStore).getState(),
+      profile: this.props.context.getStore(VolonteerStore).getState().profile,
+      subpage: 'BasicSettings',
       canSubmit: false
     }
   },
 
   _changeListener: function() {
-    this.setState({
-      profile: this.props.context.getStore(VolonteerStore).getState()
-    })
+    this.setState(this.props.context.getStore(VolonteerStore).getState())
   },
 
   componentDidMount: function() {
@@ -96,73 +79,49 @@ var Settings = React.createClass({
   },
 
   handleSubmit: function(data) {
+    data.id = this.state.profile.id
     this.props.context.executeAction(updateVolonteer, data)
   },
 
   render: function() {
+    var subpage = React.createElement(Subpages[this.state.subpage], this.state.profile)
+    var snackbar
+
+    console.log(this.state.success )
+    if (this.state.success ) {
+      snackbar = <Snackbar
+        openOnMount={true}
+        message="Zapisano"
+        autoHideDuration={5000} />
+    } else if (this.state.error ) {
+      snackbar = <Snackbar
+        openOnMount={true}
+        message="Wystąpił błąd"
+        autoHideDuration={5000} />
+    }
+
     return (
-      <div className="pure-g">
-        <LeftPanel />
-
-        <Formsy.Form className="basicSettingsForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
-        <div className="pure-u-3-4">
+      <Paper className="paper">
+        <Formsy.Form className="settingsForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
           <div className="pure-g">
-            <div className="pure-u-1 pure-u-md-1-3">
-              <label htmlFor="first_name">Imię</label>
-            </div>
-            <div className="pure-u-1 pure-u-md-2-3">
-              <MyTextField required
-                id="first_name"
-                name="first_name"
-                placeholder="Faustyna"
-                validations="minLength:3"
-                validationError="Imię jest wymagane"
-                value={this.state.profile.first_name} />
+            <LeftPanel />
+
+            <div className="pure-u-3-4">
+              {subpage}
+
+              <div className="pure-g">
+                <div className="pure-u-1 pure-u-md-1-3"></div>
+                <div className="pure-u-1 pure-u-md-2-3">
+                  <button type="submit" className="pure-button pure-button-primary" disabled={!this.state.canSubmit}>
+                    Zmień
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-
-          <div className="pure-g">
-            <div className="pure-u-1 pure-u-md-1-3">
-              <label htmlFor="last_name">Nazwisko</label>
-            </div>
-            <div className="pure-u-1 pure-u-md-2-3">
-              <MyTextField required
-                id="last_name"
-                name="last_name"
-                placeholder="Kowalska"
-                validations="minLength:3"
-                validationError="Nazwisko jest wymagane"
-                value={this.state.profile.last_name} />
-            </div>
-          </div>
-
-          <div className="pure-g">
-            <div className="pure-u-1 pure-u-md-1-3">
-              <label htmlFor="email">Adres e-mail</label>
-            </div>
-            <div className="pure-u-1 pure-u-md-2-3">
-              <MyTextField required
-                id="email"
-                type="email"
-                name="email"
-                validations="isEmail"
-                validationError="Adres email jest niepoprawny"
-                placeholder="faustyna@kowalska.pl"
-                value={this.state.profile.email} />
-            </div>
-          </div>
-
-          <div className="pure-g">
-            <div className="pure-u-1 pure-u-md-1-3"></div>
-            <div className="pure-u-1 pure-u-md-2-3">
-              <button type="submit" className="pure-button pure-button-primary" disabled={!this.state.canSubmit}>
-                Zmień
-              </button>
-            </div>
-          </div>
-        </div>
         </Formsy.Form>
-      </div>
+        {snackbar}
+      </Paper>
     )
   }
 })

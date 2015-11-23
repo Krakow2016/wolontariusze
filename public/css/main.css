@@ -1,6 +1,14 @@
 body {
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
+
+  background-image: url(/img/bg.svg);
+  background-color: #f4f5f6;
+  background-repeat: no-repeat;
+  background-repeat-x: repeat;
+  background-position-x: 50%;
+  background-size: auto 538px;
+  background-attachment: fixed
 }
 
 #app {
@@ -12,11 +20,6 @@ body {
   width: 100%;
   padding: 0 20px;
   box-sizing: border-box;
-}
-
-.navBar {
-  height: 45px;
-  line-height: 45px
 }
 
 .coverPhoto {
@@ -122,7 +125,12 @@ body {
 }
 
 .loginBar {
-  float: right
+  float: right;
+  margin-top: 15px
+}
+
+.loginBar, .loginBar a {
+  color: #fff;
 }
 
 .registrationForm .pure-g > div:first-child {
@@ -137,13 +145,6 @@ body {
   padding-bottom: 10px
 }
 
-.flashMessage {
-  animation-duration: 1s;
-  animation-name: opacity;
-  animation-delay: 5s;
-  animation-fill-mode: forwards
-}
-
 @keyframes opacity {
   from {
     opacity: 1
@@ -154,7 +155,7 @@ body {
 }
 
 .container {
-  width: 980;
+  max-width: 980px;
   margin: auto
 }
 
@@ -178,6 +179,26 @@ body {
 
 .searchForm .search {
   margin: 10px
+}
+
+.paper {
+  padding: 50px;
+  margin-bottom: 30px
+}
+
+.paper h1 {
+  margin-top: 0;
+  color: #0082bd
+}
+
+.volonteerHeader {
+  color: #fff;
+  text-shadow: 0px 1px #000;
+}
+
+.settingsForm textarea {
+  width: 75%;
+  height: 150px;
 }
 
 .volonteerLabel {

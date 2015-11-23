@@ -7,6 +7,10 @@
 // Więcej: http://fluxible.io/guides/data-services.html
 
 var r = require('rethinkdb')
+var bcrypt = require('bcrypt')
+
+var conf = require('../../../config.json').rethinkdb
+var debug = require('debug')('Server')
 
 module.exports = {
 
@@ -14,7 +18,7 @@ module.exports = {
 
   read: function(req, resource, params, config, callback) {
     // Połącz się z bazą danych `sdm`
-    r.connect({db: 'sdm'}, function(error, conn){
+    r.connect(conf, function(error, conn){
       if(error) { // Wystąpił błąd przy połączeniu z bazą danych
         callback(error)
         return
@@ -22,12 +26,11 @@ module.exports = {
 
       if(params.id) { // Pobierz krotkę o danym numerze id
         r.table('Volonteers').get(params.id).run(conn, function(err, row){
-          console.log(err, row)
           callback(err || !row, row)
         })
       } else { // Pobierz listę krotek
-        if(params.email) { // use index
-          r.table('Volonteers').getAll(params.email, {index: 'email'}).run(conn, function(err, cursor) {
+        if(config.index) { // use index
+          r.table('Volonteers').getAll(params.key, {index: config.index}).run(conn, function(err, cursor) {
             if(err) { callback(err) }
             else { cursor.toArray(callback) }
           })
@@ -44,17 +47,53 @@ module.exports = {
 
   create: function(req, resource, params, body, config, callback) {
     // Połącz się z bazą danych `sdm`
+    r.connect(conf, function(err, conn) {
+      if(err) {
+        callback(err)
+        return
+      }
+
+      // Upewnij się, że podany email nie istnieje jeszcze w bazie danych
+      r.table(resource).getAll(body.email, {index: 'email'}).run(conn, function(err, cursor) {
+        if(err) { callback(err) }
+        else {
+          cursor.next(function(err, row) {
+            // Brak emaila w bazie
+            if (err) { r.table(resource).insert(body).run(conn, callback) }
+            else { callback({message: 'Email is already in the database.'}) }
+          })
+        }
+      })
+    })
+  },
+
+  update: function(req, resource, params, body, config, callback) {
+    var id = body.id || params.id
+    // Błąd gdy brak id
+    if(!id) {
+      callback(400)
+      return
+    }
+    // Połącz się z bazą danych `sdm`
     r.connect({db: 'sdm'}, function(err, conn) {
       if(err) {
         callback(err)
         return
       }
 
-      r.table(resource).insert(params).run(conn, callback)
-    })
-  }
+      // Przepuść hasło przez funckję haszującą MD5
+      if(body.password) {
+        var salt = bcrypt.genSaltSync(10)
+        // Zapisz hash w bazie danych (zawiera w sobie również sól)
+        body.password = bcrypt.hashSync(body.password, salt)
+        delete body.password_
+      }
 
-  // update: function(resource, params, body, config, callback) {},
+      // Wykonaj zapytanie do bazy danych
+      r.table(resource).get(id).update(body).run(conn, callback)
+    })
+  },
+
   // delete: function(resource, params, config, callback) {}
 
 }

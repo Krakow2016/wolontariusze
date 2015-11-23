@@ -5,8 +5,11 @@ var VolonteerStore = require('../stores/Volonteer')
 
 var Tabs = require('material-ui/lib/tabs/tabs')
 var Tab =  require('material-ui/lib/tabs/tab')
+var Paper = require('material-ui/lib/paper')
+var Button = require('material-ui/lib/raised-button')
 
 var ProfileComments = require('./ProfileComments.jsx')
+var Invite = require('./Admin/Invite.jsx')
 
 var actions = require('../actions')
 var showCommentsAction = actions.showComments;
@@ -14,26 +17,56 @@ var showCommentsAction = actions.showComments;
 var Volonteer = React.createClass({
 
   getInitialState: function () {
-      return this.props.context.getStore(VolonteerStore).getState()
+    return this.props.context.getStore(VolonteerStore).getState().profile
   },
 
   _changeListener: function() {
-    this.setState(this.props.context.getStore(VolonteerStore).getState());
+    this.setState(this.props.context.getStore(VolonteerStore).getState().profile)
   },
 
   componentDidMount: function() {
-    this.props.context.getStore(VolonteerStore).addChangeListener(this._changeListener);
+    this.props.context.getStore(VolonteerStore)
+      .addChangeListener(this._changeListener);
+  },
+
+  componentWillUnmount: function() {
+    this.props.context.getStore(VolonteerStore)
+      .removeChangeListener(this._changeListener);
   },
 
   render: function () {
+    var editLink
+    var user = this.user()
+    if(user && user.is_admin) {
+      editLink = <NavLink href={"/wolontariusz/"+ this.state.id +"/admin"}>Edytuj</NavLink>
+    }
+
     return (
-      <div>
-        <div className="coverPhoto" style={{backgroundImage: 'url('+ this.state.background_picture +')'}}>
+      <div className="volonteer">
+        <div className="pure-g volonteerHeader">
+          <div className="pure-u-1 pure-u-sm-1-2">
+            <img src="/img/profile.jpg" className="profilePicture" />
+          </div>
+          <div className="pure-u-1 pure-u-sm-1-2">
+            <h1>{this.name()}</h1>
+            <span>Kraków, Polska</span>
+            {editLink}
+          </div>
         </div>
-        <ProfileTabs {...this.state} context={this.props.context}/>
+
+        <ProfileTabs {...this.state} context={this.props.context} />
+
       </div>
     )
   },
+
+  name: function() {
+    return this.state.first_name +" "+ this.state.last_name
+  },
+
+  user: function() {
+    return this.props.context.getUser()
+  }
 })
 
 
@@ -58,52 +91,127 @@ var ProfileTabs = React.createClass({
     } else {
       extra = <div />
     }
-    var commentsTab = {}
-    if (is_admin) {
-      commentsTab = <Tab label="Komentarze" onActive={this.showProfileComments}>
-        <ProfileComments volonteerId={this.props.id} adminId={user.id} context={this.props.context}></ProfileComments>
+
+    var stars = {
+        0: '☆☆☆☆☆',
+        2: '★☆☆☆☆',
+        4: '★★☆☆☆',
+        6: '★★★☆☆',
+        8: '★★★★☆',
+        10:'★★★★★' }
+
+    var languages = this.props.languages || {}
+    var langs = Object.keys(languages).map(function(lang) {
+      var level = languages[ lang ]
+      return (
+        <p key={lang}>
+          {lang}: {stars[level.level]}
+        </p>
+      )
+    })
+
+    var profile_papers = [
+      <Paper className="paper" key="details">
+        <div className="profileDetails">
+
+          <span>{this.props.city}</span>
+
+          <div className="profileBio">
+
+      <h4>Dane osobowe</h4>
+
+      <p>
+        Data urodzenia:
+        {this.props.birth_date || 'n/a'}
+      </p>
+
+      <p>
+        Telefon:
+        {this.props.phone || 'n/a'}
+      </p>
+
+      <p>
+        Parafia:
+        {this.props.parish || 'n/a'}
+      </p>
+
+      <h4>Edukacja</h4>
+
+      <p>
+        Wykształcenie
+        {this.props.eduction || 'n/a'}
+      </p>
+
+      <p>
+        Kierunek
+        {this.props.study_field || 'n/a'}
+      </p>
+
+      <h4>Doświadczenie</h4>
+      <p>{this.props.experience || 'n/a'}</p>
+
+      <h4>Zainteresowania</h4>
+      <p>{this.props.interests || 'n/a'}</p>
+
+      <h4>Gdzie chcę się zaangażować</h4>
+      <p>{this.props.departments || 'n/a'}</p>
+
+      <h4>Dostępność</h4>
+      <p>{this.props.avalibitity || 'n/a'}</p>
+
+          </div>
+        </div>
+      </Paper>,
+
+      <Paper className="paper" key="langs">
+        <h1>Języki</h1>
+        {langs}
+      </Paper>,
+
+      <Paper className="paper" key="instagram">
+        <h1>#sdm2016</h1>
+        instagram
+      </Paper>
+    ]
+
+    if (is_admin && !this.props.password) {
+      profile_papers.unshift(
+        <Invite id={this.props.id} context={this.props.context} />
+      )
+    }
+
+    var tabs = [
+      <Tab label="Profil" key="profile" >
+        {profile_papers}
+      </Tab>,
+      <Tab label="Aktywność" key="activity" >
+        <Paper className="paper">
+          <div className="profileActivity">
+            <h3 style={{display: is_owner ? 'block' : 'none'}}>Jesteś właścicielem tego profilu ☺</h3>
+            <div style={{'display': 'inline-block'}}>
+              <h3>Ostatnia aktywność:</h3>
+            </div>
+            <div className="activity"></div>
+            <div className="activity"></div>
+            <div className="activity"></div>
+          </div>
+        </Paper>
       </Tab>
+    ]
+
+    if (is_admin) {
+      tabs.push(
+        <Tab label="Komentarze" key="comments" onActive={this.showProfileComments}>
+          <ProfileComments volonteerId={this.props.id} adminId={user.id} context={this.props.context}></ProfileComments>
+        </Tab>
+      )
     }
 
     return (
-      <Tabs>
-        <Tab label="Item One" >
-          <div className="profileDetails">
-
-            <img src={this.props.profile_picture} className="profilePicture" />
-
-            <b className="fullName">{this.name()}</b>
-            <br/>
-            <span>{this.props.city}</span>
-
-            <div className="profileBio">
-              <p><b>Interesuje mnie </b>{this.props.interests}</p>
-              <p><b>Chcę się angażować w </b>{this.props.departments}</p>
-              <p><b>Moim wielkim marzeniem jest </b>{this.props.my_dream}</p>
-              <p><b>Wolontariusze z którymi działam</b></p>
-              {extra}
-              <NavLink href="/wolontariusz/1">
-                <img src="http://i.picresize.com/images/2015/05/25/2VNu8.jpg" className="smallProfilePicture" />
-              </NavLink>
-            </div>
-          </div>
-        </Tab>
-        <Tab label="Item Two" >
-          <div className="profileActivity">
-            <h3 style={{display: is_owner ? 'block' : 'none'}}>Jesteś właścicielem tego profilu ☺</h3>
-            <h3>Ostatnia aktywność:</h3>
-            <div className="activity"></div>
-            <div className="activity"></div>
-            <div className="activity"></div>
-          </div>
-        </Tab>
-        {commentsTab}
+      <Tabs tabItemContainerStyle={{'backgroundColor': 'rgba(0,0,0,0.1)'}}>
+        {tabs}
       </Tabs>
     )
-  },
-
-  name: function() {
-    return this.props.first_name +" "+ this.props.last_name
   },
 
   user: function() {

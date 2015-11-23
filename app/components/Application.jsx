@@ -2,6 +2,7 @@ var React = require('react')
 var handleHistory = require('fluxible-router').handleHistory
 var addons = require('fluxible-addons-react')
 var NavLink = require('fluxible-router').NavLink
+var Snackbar = require('material-ui/lib/snackbar')
 var provideContext = addons.provideContext
 
 var ApplicationStore = require('../stores/ApplicationStore')
@@ -27,12 +28,30 @@ var Application = React.createClass({
 
   render: function() {
     var Handler = this.props.currentRoute.get('handler');
+
+   // Wyświetl komunikat flash
+    var bar
+    var successFlash = this.props.context.getStore(ApplicationStore).getSuccess()
+    var failureFlash = this.props.context.getStore(ApplicationStore).getFailure()
+    if(successFlash) { // Komunikat
+      bar = <Snackbar
+        openOnMount={true}
+        message={successFlash}
+        autoHideDuration={5000} />
+    } else if(failureFlash) { // Błąd
+      bar = <Snackbar
+        openOnMount={true}
+        message={failureFlash}
+        autoHideDuration={5000} />
+    }
+
     //render content
     return (
       <div className="container">
+        {bar}
         <div className="globalNav navBar">
           <NavLink href="/">
-            Strona główna
+              <img src="/img/logo.png" style={{'height': '100px', 'margin': '25px 0'}} />
           </NavLink>
           <Authentication user_id={this.user_id()} user_name={this.user_name()} />
         </div>

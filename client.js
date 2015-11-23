@@ -1,4 +1,5 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 var debug = require('debug');
 var app = require('./fluxible.js')
 
@@ -20,7 +21,7 @@ app.rehydrate(dehydratedState, function (err, context) {
 
   bootstrapDebug('React Rendering');
   var Component = app.getComponent();
-  React.render(
+  ReactDOM.render(
     Component({
       context: context.getComponentContext()
     }),
