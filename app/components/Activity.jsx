@@ -88,8 +88,8 @@ var ActivityTabs = React.createClass({
     }
     
     var editTab = {}
-    is_admin = true;
-    if (is_admin) {
+    //is_admin = true;
+    if (is_admin || is_owner) {
       editTab = <Tab label="Edycja"><ActivityEdit {...this.props} creationMode={false} /></Tab>
     }
     

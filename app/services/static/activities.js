@@ -6,51 +6,8 @@
 //
 // Więcej: http://fluxible.io/guides/data-services.html
 
-var activities = {
-    "1": {
-        id: "1",
-        title: "Pierwsza Aktywność",
-        content: "Treść pierwszej aktywności",
-        creationTimestamp: 120000,
-        editionTimestamp: 120000,
-        startEventTimestamp: 1200200,
-        duration: "1h",
-        place: "Kraków",
-        creatorId: "1",
-        editorId: "1",
-        maxVolonteers: 5,
-        activeVolonteersIds: ["1","2"]
-     },
-    "2": {
-        id: "2",
-        title: "Druga Aktywność",
-        content: "Treść drugiej aktywności",
-        creationTimestamp: 220000,
-        editionTimestamp: 1220000,
-        startEventTimestamp: 2200200,
-        duration: "2h",
-        place: "Dobczyce",
-        creatorId: "2",
-        editorId: "1",
-        maxVolonteers: 1,
-        activeVolonteersIds: ["2"]
-     },
-    "3": {     
-        id: "3",
-        title: "Trzecia Aktywność",
-        content: "Treść trzeciej aktywności",
-        creationTimestamp: 320000,
-        editionTimestamp: 1320000,
-        startEventTimestamp: 3200200,
-        duration: "1d",
-        place: "Myślenice",
-        creatorId: "1",
-        editorId: "2",
-        maxVolonteers: 10,
-        activeVolonteersIds: []
-     },
-}
 
+var activities = require('./activities.json')
 var volonteers = require('./volonteers.json')
 
 var public_attrs = [
@@ -59,7 +16,7 @@ var public_attrs = [
   'content',
   'creationTimestamp',
   'editionTimestamp',
-  'startEventTimestamp'
+  'startEventTimestamp',
   'duration',
   'place',
   'creatorId',
