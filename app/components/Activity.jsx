@@ -20,7 +20,6 @@ var updateAction = actions.updateActivity
 var Activity = React.createClass({
   
   render: function () {
-   
     return ( 
       <div>
         <ActivityTabs user={this.user()} context={this.props.context} />
@@ -87,13 +86,14 @@ var ActivityTabs = React.createClass({
       extra = <div />
     }
     
-    var editTab = {}
-    //is_admin = true;
-    if (is_admin || is_owner) {
-      editTab = <Tab label="Edycja"><ActivityEdit {...this.props} creationMode={false} /></Tab>
+    var editLink
+    if(is_admin) {
+      editLink = <div className="adminToolbar">
+        <NavLink href={"/aktywnosc/"+ this.state.id +"/edytuj"}>Edytuj</NavLink>
+      </div>
     }
     
-    var activeVolonteersList = {}
+    var activeVolonteersList = []
     if (this.state.activeVolonteers) {
         activeVolonteersList = this.state.activeVolonteers.map (function (volonteer) {
             return (
@@ -102,26 +102,23 @@ var ActivityTabs = React.createClass({
         })
     }
     
-    var acceptButton = {}
+    var buttons = [];
+    //acceptButton
     if (user &&
         (this.state.activeVolonteersIds.length < this.state.maxVolonteers || this.state.maxVolonteers == 0) &&
         this.state.activeVolonteersIds.indexOf(user.id) == -1 ) {
-        acceptButton = <input type="button" onClick={this.onAcceptButtonClick} value="Dopisz się" />
+        buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Dopisz się" />)
     }
     
-    var cancelButton = {}
+    //canceButton
     if (user &&
         this.state.activeVolonteersIds.indexOf(user.id) !== -1 ) {
-        cancelButton = <input type="button" onClick={this.onCancelButtonClick} value="Wypisz się" />
+        buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz się" />)
     }
     
-    if (user) {
-        console.log(user);
-    }
-    
-    return (
-    <Tabs>
+    var tabs = [
         <Tab label="Opis" >
+            {editLink}
             <h2>{this.state.title}</h2>
             <b>Dodano:</b> {TimeService.showTime(this.state.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+this.state.creatorId}>{this.state.creatorName}</a></span>
             <br></br>
@@ -137,10 +134,14 @@ var ActivityTabs = React.createClass({
             <br></br>
             <b>Limit(maksymalna liczba wolontariuszy):</b> {this.state.volonteersLimit}
             <br></br>
-            {acceptButton} {cancelButton}
+            {buttons}
         </Tab>
-        {editTab}
-      </Tabs>
+    ]
+    
+    return (
+        <Tabs tabItemContainerStyle={{'backgroundColor': 'rgba(0,0,0,0.1)'}}>
+            {tabs}
+        </Tabs>
     )
   }
 

@@ -39,9 +39,9 @@ var getName = function (id) {
 }
 
 var modifiedActivity = function (activityId, req, config) {
-    if (activityId) {
-        var activity = activities[activityId];
-        
+    var activity = activities[activityId];
+    if (activity != null) {
+
         var user = req.user || config.user
         // Flaga przywilejów administratora
         var is_admin = user && user.is_admin
@@ -89,7 +89,7 @@ module.exports = {
     read: function(req, resource, params, config, callback) {
       if(params.id) {
         var activity = modifiedActivity(params.id, req, config);
-        if(activity) {
+        if(activity != null) {
             callback(null, activity);
         } else {
             callback("404")
@@ -117,7 +117,7 @@ module.exports = {
         params.id = id+"";
         activities[id] = params;
         var activity = modifiedActivity(params.id, req, config);
-        if(activity) {
+        if(activity != null) {
             callback(null, activity);
         } else {
             callback("404")
@@ -128,7 +128,7 @@ module.exports = {
     update: function(req, resource, params, body, config, callback) {
         activities[params.id] = params;
         var activity = modifiedActivity(params.id, req, config);
-        if(activity) {
+        if(activity != null) {
             callback(null, activity);
         } else {
             callback("404")

@@ -88,7 +88,11 @@ ActivityStore.attributes = function() {
     'creatorId',
     'editorId',
     'maxVolonteers',
-    'activeVolonteersIds'
+    'activeVolonteersIds',
+    'creatorName',
+    'editorName',
+    'activeVolonteers',
+    'volonteersLimit'
   ]
 }
 

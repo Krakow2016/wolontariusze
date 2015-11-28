@@ -65,34 +65,47 @@ module.exports = {
   },
 
   activity: {
-        path: '/aktywnosc/wyswietl/:id',
+    path: '/aktywnosc/:id',
     method: 'get',
     handler: require('./components/Activity.jsx'),
     action: function (context, payload, done) {
       var activityId  = payload.get('params').get('id');
       context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: activityId + ' Aktywnosc' });
       context.executeAction(actions.showActivity, { id: activityId }, function() {
-                done();
-            })
-            context.executeAction(actions.loadVolonteers, {}, function() {
-                done();
-            })
-        }
-    },
-    
-    createActivity: {
-        path: '/aktywnosc/nowa',
-        method: 'get',
-        handler: require('./components/ActivityCreate.jsx'),
-        action: function (context, payload, done) {
-            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Nowa Aktywnosc' });
-            context.dispatch('NEW_ACTIVITY', {});
-            context.executeAction(actions.loadVolonteers, {}, function() {
+        done();
+      })
+      context.executeAction(actions.loadVolonteers, {}, function() {
         done();
       })
     }
   },
-
+  activity_edition: {
+    path: '/aktywnosc/:id/edytuj',
+    method: 'get',
+    handler: require('./components/ActivityEdit.jsx'),
+    action: function (context, payload, done) {
+      var activityId  = payload.get('params').get('id');  
+      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: activityId + ' Edytuj Aktywnosc' });
+      context.executeAction(actions.showActivity, { id: activityId }, function() {
+        done();
+      })
+      context.executeAction(actions.loadVolonteers, {}, function() {
+        done();
+      })
+    }
+  },
+  activity_creation: {
+    path: '/nowa_aktywnosc',
+    method: 'get',
+    handler: require('./components/ActivityCreate.jsx'),
+    action: function (context, payload, done) {
+      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Nowa Aktywnosc' });
+      context.dispatch('NEW_ACTIVITY', {});
+      context.executeAction(actions.loadVolonteers, {}, function() {
+        done();
+      })
+    }
+  },
   login: {
     path: '/login',
     method: 'get',

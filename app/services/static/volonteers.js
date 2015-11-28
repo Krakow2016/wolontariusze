@@ -16,13 +16,13 @@ module.exports = {
       var volonteer
       if(params.id) {
         volonteer = volonteers[params.id]
-      } else if(params.email) {
+      } else if(params.key) {
         id = Object.keys(volonteers).filter(function(id) {
           el = volonteers[id]
-          return el.email === params.email
+          return el.email === params.key
         })[0]
 
-        volonteer = id ? [volonteers[id]] : null
+        volonteer = (id) ? [volonteers[id]] : null
       } else { // Brak identyfikatora
           // Zwróć wszyskich wolontariuszy
           var results = Object.keys(volonteers).map(function(key) {

@@ -45,6 +45,13 @@ var Application = React.createClass({
         autoHideDuration={5000} />
     }
 
+    var newActivityLink
+    var user = this.user()
+    if(user && user.is_admin) {
+      newActivityLink = <div className="adminToolbar">
+            <NavLink href="/nowa_aktywnosc">Nowa aktywność</NavLink>
+        </div>
+    }
     //render content
     return (
       <div className="container">
@@ -54,7 +61,9 @@ var Application = React.createClass({
               <img src="/img/logo.png" style={{'height': '100px', 'margin': '25px 0'}} />
           </NavLink>
           <Authentication user_id={this.user_id()} user_name={this.user_name()} />
+          {newActivityLink}
         </div>
+        
         <Handler context={this.context} />
       </div>
     );

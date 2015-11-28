@@ -106,7 +106,7 @@ module.exports = {
         if(err) { console.log(err) }
         else { 
             context.dispatch('ACTIVITY_CREATED', data);
-            context.executeAction(navigateAction, {url: "/"});
+            context.executeAction(navigateAction, {url: "/aktywnosc/"+data.id});
         }
         cb()  
     })
