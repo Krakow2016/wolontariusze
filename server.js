@@ -43,9 +43,9 @@ passport.use(new LocalStrategy(
   function(username, password, done) {
     // Próba logowania
     Volonteer.read({force_admin: true}, 'Volonteers', { key: username }, { index: 'email' }, function (err, users) {
-      var user = users[0]
       // Wystąpił niespodziewany błąd
       if (err) { return done(err) }
+      var user = users[0]
       // Nie znaleziono użytkownika o danym loginie
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' })
