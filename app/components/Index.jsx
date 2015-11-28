@@ -3,11 +3,9 @@ var Paper = require('material-ui/lib/paper')
 
 var ApplicationStore = require('../stores/ApplicationStore')
 var VolonteersStore = require('../stores/Volonteers')
-var ActivitiesStore = require('../stores/Activities')
 
 var NavLink = require('fluxible-router').NavLink
 var VolonteerList = require('./VolonteersList.jsx')
-var ActivitiesList = require('./ActivitiesList.jsx')
 
 var App = React.createClass({
   contextTypes: {
@@ -15,22 +13,11 @@ var App = React.createClass({
   },
 
   getInitialState: function () {
-      var volonteers = this.props.context.getStore(VolonteersStore).getAll();
-      var activities = this.props.context.getStore(ActivitiesStore).getAll();
-      return {
-            allVolonteers: volonteers.all,
-            allActivities: activities.all
-        }
-
+    return this.props.context.getStore(VolonteersStore).getAll()
   },
 
   _changeListener: function() {
-      var volonteers = this.props.context.getStore(VolonteersStore).getAll();
-      var activities = this.props.context.getStore(ActivitiesStore).getAll();
-      this.setState({
-            allVolonteers: volonteers.all,
-            allActivities: activities.all
-        })
+    this.setState(this.props.context.getStore(VolonteersStore).getAll())
   },
 
   componentDidMount: function() {
@@ -54,7 +41,7 @@ var App = React.createClass({
         <p style={{'textAlign': 'center'}}>
             <NavLink href="/wyszukiwarka">Szukaj</NavLink>
         </p>
-        
+
       </Paper>
     )
   },
