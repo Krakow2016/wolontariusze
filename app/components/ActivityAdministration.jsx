@@ -117,9 +117,13 @@ var ActivityAdministrationBody = React.createClass({
     this.setState(this.getInitialState());
   },
 
-  
   validateInputs: function () {
     var msg = '';
+      
+    if (this.state.maxVolonteers > 0 && this.state.activeVolonteersIds.length > this.state.maxVolonteers) {
+        msg += "\n Liczba zapisanych wolontariuszy nie powinna przekraczać limitu"
+    }
+    
     if (msg != '') {
         alert(msg)
         return false;
@@ -215,7 +219,7 @@ var ActivityAdministrationBody = React.createClass({
                                  onRemoveButtonClick={this.removeActiveVolonteer} 
                                  allVolonteers={allVolonteers}/>
             
-            <b>Limit (maksymalna liczba wolontariuszy)</b>
+            <b>Limit (maksymalna liczba wolontariuszy, jeśli 0 to brak limitu)</b>
             <br></br>
             <input name="maxVolonteers" value={this.state.maxVolonteers} onChange={this.handleMaxVolonteersChange} />
             <br></br>

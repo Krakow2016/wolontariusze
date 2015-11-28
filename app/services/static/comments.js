@@ -46,7 +46,6 @@ var comments = [
 
 var getAdminName = function (adminId) {
     var id = adminId+'';
-    console.log("ID", id);
     return volonteers[id].first_name
 }
 

@@ -76,15 +76,9 @@ var ActivityTabs = React.createClass({
     
   render: function () {
   
-    var extra
     var user = this.props.user
     var is_owner = user && user.id === this.state.creatorId
     var is_admin = user && user.is_admin;
-    if (is_admin || is_owner) {
-      extra = <ExtraAttributesVisible {...this.state} />
-    } else {
-      extra = <div />
-    }
     
     var editLink
     if(is_admin) {
@@ -145,14 +139,6 @@ var ActivityTabs = React.createClass({
     )
   }
 
-})
-
-var ExtraAttributesVisible = React.createClass({
-  render: function() {
-    return(
-      <p style={{color: 'red'}}><b>Doświadczenie </b></p>
-    )
-  }
 })
 
 /* Module.exports instead of normal dom mounting */
