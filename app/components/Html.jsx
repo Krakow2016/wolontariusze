@@ -28,7 +28,7 @@ var Html = React.createClass({
           <link rel="stylesheet" href="/css/pure-min.css" />
           <link rel="stylesheet" href="/css/grids-responsive-min.css" />
           <link rel="stylesheet" href="/css/main.css" />
-          <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,300,500" />
+          <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,300,500" />
         </head>
         <body>
           <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
