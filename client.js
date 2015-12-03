@@ -6,7 +6,10 @@ var app = require('./fluxible.js')
 var bootstrapDebug = debug('Example');
 var dehydratedState = window.App; // Sent from the server
 
-window.React = React; // For chrome dev tool support
+// Polyfill dla fluxible-router
+Object.assign = require('object.assign/polyfill')()
+// For chrome dev tool support
+window.React = React
 debug.enable('*');
 
 // Przywróć zapisany stan aplikacji, który wystąpił po stronie serwera, po
