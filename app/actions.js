@@ -4,6 +4,33 @@ var VolonteerStore = require('./stores/Volonteer')
 var ActivityStore = require('./stores/Activity')
 var navigateAction = require('fluxible-router').navigateAction;
 
+
+var sendActivityEmailAction = function(context, query) {
+    console.log("Send Activity Email", query);
+    var request = new XMLHttpRequest()
+    request.open('POST', '/activity_email', true)
+    request.setRequestHeader('Content-Type', 'application/json')
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        // Success!
+        var resp = request.responseText;
+        var json = JSON.parse(resp)
+
+        console.log(json) // TODO: wyświetl wyniki
+
+        context.dispatch('ACTIVITY_EMAIL_SEND', json)
+      } else {
+        // We reached our target server, but it returned an error
+      }
+    }
+
+    request.onerror = function() {
+      // There was a connection error of some sort
+    }
+
+    request.send(JSON.stringify(query))
+  }
+
 module.exports = {
   showVolonteer: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
@@ -97,16 +124,26 @@ module.exports = {
     })
   },
   createActivity: function(context, payload, cb) {
+      
+    var activityData = payload.data;
+    var query = payload.query;
+    
     console.log('create activity');
-    context.service.create('Activities', payload, {
+    
+    context.service.create('Activities', activityData, {
       store: 'Activity',
       // Przekaż obiekt zalogowanego użytkownia niezbędy do podjęcia
       // decyzji o tym jakie dane mają być zwrócone.
       user: context.getUser()}, function (err, data) {
         if(err) { console.log(err) }
         else { 
-            context.dispatch('ACTIVITY_CREATED', data);
+            context.dispatch('ACTIVITY_CREATED', data);            
             context.executeAction(navigateAction, {url: "/aktywnosc/"+data.id});
+            
+            query.text = "Jeśli otrzymujesz tego maila, możesz być dopisany do tej aktywności. Aktualna lista wolontariuszy, którzy"+
+                  " biorą udział znajduje się na stronie http:localhost:7000/aktywnosc/"+data.id+" .\n"
+            context.executeAction(sendActivityEmailAction, query);
+
         }
         cb()  
     })
@@ -334,5 +371,7 @@ module.exports = {
     }
 
     request.send(JSON.stringify(query))
-  }
+  },
+  
+  sendActivityEmail: sendActivityEmailAction
 }

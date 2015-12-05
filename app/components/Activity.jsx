@@ -54,13 +54,11 @@ var ActivityTabs = React.createClass({
   update: function() {
     this.props.context.executeAction(updateAction, this.state)
   },
-  
-  onAcceptButtonClick: function () {
+  onAcceptButtonClick: function () {   
     var modifiedState = this.state ;
     modifiedState.activeVolonteersIds.push(this.props.user.id);
     this.setState(modifiedState);
-    this.update();
-      
+    this.update();   
   },
   onCancelButtonClick: function () {
     var modifiedState = this.state ;
@@ -69,7 +67,7 @@ var ActivityTabs = React.createClass({
             modifiedState.activeVolonteersIds.splice(i,1);
         }         
     }
-    this.setState(modifiedState);
+    this.setState(modifiedState);   
     this.update();
   },
   

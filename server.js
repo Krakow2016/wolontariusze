@@ -254,6 +254,20 @@ server.post('/invitation', jsonParser, function(req, res) {
   }
 })
 
+server.post('/activity_email', jsonParser, function(req, res) {    
+  var email = new sendgrid.Email({
+    to:       req.body.users,
+    from:     'wolontariat@krakow2016.com',
+    subject:  req.body.subject,
+    text:     req.body.text
+  })
+  sendgrid.send(email, function(err, json) {
+    console.log('sendgrid:', err, json)
+    res.send(err || json)
+  })  
+})
+
+
 // Zwraca stronę aplikacji
 server.use(function(req, res, next) {
   // material-ui wymaga tej zmiennej globalnej

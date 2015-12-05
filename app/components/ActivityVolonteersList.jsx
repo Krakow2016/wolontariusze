@@ -40,14 +40,14 @@ var AutoSuggestVolonteer = React.createClass ({
   },
   render: function () {
     return (
-            <div>
-            <input type="button" onClick={this.onClick} value="Dodaj" />
-            <AutoSuggest
-                        id="activeVolonteers" 
-                        suggestions={this.getSuggestions} 
-                        suggestionRenderer={this.renderSuggestion}
-                        suggestionValue={this.getSuggestionValue}/>
-            </div>
+      <div>
+      <input type="button" onClick={this.onClick} value="Dodaj" />
+      <AutoSuggest
+                  id="activeVolonteers" 
+                  suggestions={this.getSuggestions} 
+                  suggestionRenderer={this.renderSuggestion}
+                  suggestionValue={this.getSuggestionValue}/>
+      </div>
     )
   }
 });
@@ -58,42 +58,42 @@ var AddedVolonteer = React.createClass({
         this.props.onRemoveButtonClick(this.props.id);
     },
     render: function () {
-            var name = '';
-            var volonteers = this.props.allVolonteers;
-            var id = this.props.id;
-            for (var index = 0; index < volonteers.length; index++) {
-                if (volonteers[index].id == id) {
-                    name = volonteers[index].first_name+' '+volonteers[index].last_name+' - '+volonteers[index].id;
-                    break;
-                }
-            }
-            return (
-                <div className="addedVolonteer" ><a href={'/wolontariusz/'+id}>{name}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
-            )
+      var name = '';
+      var volonteers = this.props.allVolonteers;
+      var id = this.props.id;
+      for (var index = 0; index < volonteers.length; index++) {
+        if (volonteers[index].id == id) {
+          name = volonteers[index].first_name+' '+volonteers[index].last_name+' - '+volonteers[index].id;
+          break;
+        }
+      }
+      return (
+        <div className="addedVolonteer" ><a href={'/wolontariusz/'+id}>{name}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
+      )
     }
 })
 
 var ActivityVolonteersList = React.createClass({
-    render: function () {
-            var that = this
-            var list = {}
-            if (this.props.data) {
-                var list = this.props.data.map (function (volonteerId) {
-                    return (
-                        <AddedVolonteer id={volonteerId} 
-                                        onRemoveButtonClick={that.props.onRemoveButtonClick}
-                                        allVolonteers={that.props.allVolonteers} />                 
-                    )
-                })
-            }
-            return (
-                <div>
-                    <AutoSuggestVolonteer allVolonteers={this.props.allVolonteers} 
-                                          onAddButtonClick={this.props.onAddButtonClick} />
-                    {list}
-                </div>
-            )
+  render: function () {
+    var that = this
+    var list = {}
+    if (this.props.data) {
+      var list = this.props.data.map (function (volonteerId) {
+        return (
+            <AddedVolonteer id={volonteerId} 
+                            onRemoveButtonClick={that.props.onRemoveButtonClick}
+                            allVolonteers={that.props.allVolonteers} />                 
+        )
+      })
     }
+    return (
+      <div>
+        <AutoSuggestVolonteer allVolonteers={this.props.allVolonteers} 
+                              onAddButtonClick={this.props.onAddButtonClick} />
+        {list}
+      </div>
+    )
+  }
 })
 
 /* Module.exports instead of normal dom mounting */

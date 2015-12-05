@@ -34,8 +34,7 @@ var getName = function (id) {
         return volonteers[id].first_name+' '+volonteers[id].last_name;
     } else {
         return 'error';
-    }
-        
+    }        
 }
 
 var modifiedActivity = function (activityId, req, config) {
