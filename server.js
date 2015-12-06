@@ -6,13 +6,11 @@ var express = require('express'),
     serialize = require('serialize-javascript'),
     navigateAction = require('fluxible-router').navigateAction,
     passport = require('passport'),
-    LocalStrategy = require('passport-local').Strategy,
     LocalAPIKeyStrategy = require('passport-localapikey-update').Strategy,
     session = require('express-session'),
     flash = require('connect-flash'),
     request = require('request'),
-    crypto = require('crypto'),
-    bcrypt = require('bcrypt')
+    crypto = require('crypto')
 
 // Wyświetlanie komunikatów kontrolnych
 var debug = require('debug')('Server')
@@ -39,31 +37,7 @@ var Protect = require('./lib/protect')
 
 // Konfiguracja middleware-u Passport definująca metodę weryfikacji poprawności
 // logowania.
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    // Próba logowania
-    Volonteer.read({force_admin: true}, 'Volonteers', { key: username }, { index: 'email' }, function (err, users) {
-      // Wystąpił niespodziewany błąd
-      if (err) { return done(err) }
-      var user = users[0]
-      // Nie znaleziono użytkownika o danym loginie
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' })
-      }
-      // Sprawdź poprawność hasła
-      bcrypt.compare(password, user.password, function(err, res) {
-        if (!res) {
-          return done(null, false, { message: 'Incorrect password.' })
-        } else if (!user.approved) {
-          return done(null, false, { message: 'You have been banned.' })
-        } else {
-          // Zalogowano poprawnie, zwróć obiekt zalogowanego użytkownika
-          return done(null, user, { message: 'Welcome!' })
-        }
-      })
-    })
-  }
-))
+require('./auth');
 
 // Logowanie za pomocą jednorazowego tokena
 passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
@@ -107,21 +81,6 @@ passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
     })
   }
 ))
-
-// Zdefiniuj metodę przechowywania referencji do obiektu zalogowanego
-// użytkownika. Ta zmienna będę skojarzona z sesją użytkownika i przechowywana
-// w pamięci serwera.
-passport.serializeUser(function(user, done) {
-  done(null, user.id)
-})
-
-// Zdefiniuj metodę odtworzenia obiektu użytkownika na podstawie wcześniej
-// zapamiętanej referencji (numeru id w bazie danych).
-passport.deserializeUser(function(id, done) {
-  Volonteer.read({force_admin: true}, 'Volonteers', { id: id }, {}, function (err, user) {
-    done(err, user)
-  })
-})
 
 // Get information from html forms
 var jsonParser = bodyParser.json()
