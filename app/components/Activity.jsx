@@ -20,10 +20,17 @@ var updateAction = actions.updateActivity
 var Activity = React.createClass({
   
   render: function () {
+    var activityTitle = this.props.context.getStore(ActivityStore).getState().title;
+    var content;
+    if (activityTitle) {
+      content = <ActivityTabs user={this.user()} context={this.props.context} />
+    } else {
+      content = <h1>Ta aktywność nie istnieje</h1>
+    }
     return ( 
       <div>
-        <ActivityTabs user={this.user()} context={this.props.context} />
-      </div>
+        {content}
+       </div>
     )
   },
   
