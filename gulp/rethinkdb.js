@@ -29,6 +29,17 @@ gulp.task('rethinkdb', function (cb) {
                       })
                     }, {multi: true}).run(conn, function(err, resp) {
                         ;
+                      r.tableCreate("APIClients").run(conn, function(err, resp) {
+                        r.tableCreate("APICodes").run(conn, function(err, resp) {
+                          r.tableCreate("APITokens").run(conn, function(err, resp) {
+                            r.table("APIClients").insert({
+                              id: "foo",
+                              clientSecret: "bar"
+                            }).run(conn, function(err, resp){
+                            })
+                          })
+                        })
+                      })
                     })
                   })
                 })

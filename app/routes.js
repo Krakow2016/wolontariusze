@@ -7,14 +7,11 @@ module.exports = {
     handler: require('./components/Index.jsx'),
     action: function (context, payload, done) {
       context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Home | flux-examples | routing' });
-            context.executeAction(actions.loadVolonteers, {}, function() {
-                done();
-            })
-            context.executeAction(actions.loadActivities, {}, function() {
-                done();
-            })
+      done();
         }
     },
+    }
+  },
 
   registration: {
     path: '/rejestracja',
