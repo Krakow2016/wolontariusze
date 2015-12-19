@@ -75,7 +75,7 @@ module.exports = {
       return
     }
     // Połącz się z bazą danych `sdm`
-    r.connect({db: 'sdm'}, function(err, conn) {
+    r.connect(conf, function(err, conn) {
       if(err) {
         callback(err)
         return

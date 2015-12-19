@@ -3,6 +3,7 @@
 var VolonteerStore = require('./stores/Volonteer')
 var ActivityStore = require('./stores/Activity')
 var navigateAction = require('fluxible-router').navigateAction;
+var conf = require('../config.json')
 
 
 var sendActivityEmailAction = function(context, query) {
@@ -114,10 +115,7 @@ module.exports = {
   },
   updateActivity: function(context, payload, cb) {
     console.log('update activity');
-    context.service.update('Activities', payload, {
-      store: 'Activity',
-      user: context.getUser()
-    }, function (err, data) {
+    context.service.update('Activities', payload, {}, function (err, data) {
         if(err) { console.log(err) }
         else { context.dispatch('ACTIVITY_UPDATED', data) }
         cb()  
@@ -130,18 +128,22 @@ module.exports = {
     
     console.log('create activity');
     
-    context.service.create('Activities', activityData, {
-      store: 'Activity',
-      // Przekaż obiekt zalogowanego użytkownia niezbędy do podjęcia
-      // decyzji o tym jakie dane mają być zwrócone.
-      user: context.getUser()}, function (err, data) {
+    context.service.create('Activities', activityData, {}, function (err, data) {
         if(err) { console.log(err) }
         else { 
-            context.dispatch('ACTIVITY_CREATED', data);            
-            context.executeAction(navigateAction, {url: "/aktywnosc/"+data.id});
+            console.log("ACTIVITY DATA", data);
+            var id;
+            if(conf.service === 'rethinkdb') {
+              id = data.generated_keys[0];
+            } else {
+              id = data.id;
+            }
+            //context.dispatch('ACTIVITY_CREATED', {});
+                
+            context.executeAction(navigateAction, {url: "/aktywnosc/"+id});
             
             query.text = "Jeśli otrzymujesz tego maila, możesz być dopisany do tej aktywności. Aktualna lista wolontariuszy, którzy"+
-                  " biorą udział znajduje się na stronie http:localhost:7000/aktywnosc/"+data.id+" .\n"
+                  " biorą udział znajduje się na stronie http:localhost:7000/aktywnosc/"+id+" .\n"
             context.executeAction(sendActivityEmailAction, query);
 
         }

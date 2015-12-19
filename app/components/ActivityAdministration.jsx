@@ -50,11 +50,18 @@ var ActivityAdministrationBody = React.createClass({
   },
 
   _changeListener: function() {
+    if (this.props.creationMode == true) {
+      this.state = {};
+    }
     this.setState(this.props.context.getStore(ActivityStore).getState());
   },
 
   componentDidMount: function() {
     this.props.context.getStore(ActivityStore).addChangeListener(this._changeListener);
+  },
+  
+  componentWillUnmount: function() {
+    this.props.context.getStore(ActivityStore).removeChangeListener(this._changeListener);
   },
   
   handleTitleChange: function (evt) {

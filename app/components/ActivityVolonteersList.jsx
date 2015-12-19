@@ -27,12 +27,12 @@ var AutoSuggestVolonteer = React.createClass ({
   },
   renderSuggestion: function (suggestion, input) {
     return (
-        <span>{suggestion.first_name} {suggestion.last_name} - {suggestion.id}</span>
+        <span>{suggestion.first_name} {suggestion.last_name}</span>
     );
   },
   getSuggestionValue: function (suggestionObj) {
     this.setState({volonteerId: suggestionObj.id});
-    var output = suggestionObj.first_name+" "+suggestionObj.last_name+" - "+suggestionObj.id 
+    var output = suggestionObj.first_name+" "+suggestionObj.last_name; 
     return output;
   },
   onClick: function () {
@@ -63,7 +63,7 @@ var AddedVolonteer = React.createClass({
       var id = this.props.id;
       for (var index = 0; index < volonteers.length; index++) {
         if (volonteers[index].id == id) {
-          name = volonteers[index].first_name+' '+volonteers[index].last_name+' - '+volonteers[index].id;
+          name = volonteers[index].first_name+' '+volonteers[index].last_name;
           break;
         }
       }
@@ -76,9 +76,9 @@ var AddedVolonteer = React.createClass({
 var ActivityVolonteersList = React.createClass({
   render: function () {
     var that = this
-    var list = {}
+    var list
     if (this.props.data) {
-      var list = this.props.data.map (function (volonteerId) {
+        list = this.props.data.map (function (volonteerId) {
         return (
             <AddedVolonteer id={volonteerId} 
                             onRemoveButtonClick={that.props.onRemoveButtonClick}

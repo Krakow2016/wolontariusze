@@ -25,18 +25,16 @@ var ActivityStore = createStore({
     storeName: 'Activity',
     handlers: {
         'LOAD_ACTIVITY'       : 'load',
-        'NEW_ACTIVITY'        : 'preCreate',  //do czyszczenia danych przy tworzeniu nowej aktywności
+        'NEW_ACTIVITY'        : 'precreate',  //do czyszczenia danych przy tworzeniu nowej aktywności
         'ACTIVITY_UPDATED': 'update',
         'ACTIVITY_CREATED': 'create'
     },
 
     initialize: function () {
         this.state = {
-            id: 0,
-            visibilityIds: [],
-            activeVolonteersIds: [],
-            points: 10,
+            content: "",
             maxVolonteers: 5,
+            activeVolonteersIds: []
         };
     },
 
@@ -51,8 +49,13 @@ var ActivityStore = createStore({
       this.rehydrate(data)
       this.emitChange();
     },
-    preCreate: function () {
-        this.initialize();
+    precreate: function () {
+      console.log('>>> PRECREATE ACTIVITY <<<====');
+        this.rehydrate( {
+            content: "",
+            maxVolonteers: 5,
+            activeVolonteersIds: []
+        });
         this.emitChange();
     },
     create: function(data) {

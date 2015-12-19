@@ -97,7 +97,8 @@ var ActivityTabs = React.createClass({
     var buttons = [];
     //acceptButton
     if (user &&
-        (this.state.activeVolonteersIds.length < this.state.maxVolonteers || this.state.maxVolonteers == 0) &&
+        ( ( this.state.activeVolonteersIds && this.state.activeVolonteersIds.length < this.state.maxVolonteers) || 
+            this.state.maxVolonteers == 0) &&
         this.state.activeVolonteersIds.indexOf(user.id) == -1 ) {
         buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Dopisz się" />)
     }

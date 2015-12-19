@@ -28,8 +28,7 @@ gulp.task('rethinkdb', function (cb) {
                         return token("token")
                       })
                     }, {multi: true}).run(conn, function(err, resp) {
-                      //if(err) { console.log(err) }
-                      cb()
+                        ;
                     })
                   })
                 })
@@ -43,6 +42,32 @@ gulp.task('rethinkdb', function (cb) {
                   password: "$2a$10$187mc9Xr6Va6W14Yh.RJLeJtsmKDUUCe41gT8.U3YoIwZsOgqTRr2", // faustyna
                   is_admin: true,
                   approved: true
+                }).run(conn, callback)
+              } 
+            })
+            
+            r.tableCreate("Activities").run(conn, function(err, resp) {
+              if(err) { console.log(err) }
+              var callback = function(err, resp) {
+                cb();
+              }
+              if(err) { 
+                callback(err); }
+              else { // Tylko jeżeli nie wystąpił błąd - to znaczy tablica jest pusta
+                //var vol = r.table("Volonteers").get(
+                r.table("Activities").insert({
+                  id: "10",
+                  title: "Aktywność 10",
+                  content: "Treść aktywności 10",
+                  creationTimestamp: 1000,
+                  editionTimestamp: 2000,
+                  startEventTimestamp: 3000,
+                  duration: "3h",
+                  place: "Kraków",
+                  creatorId: "",
+                  editorId: "",
+                  maxVolonteers: 2,
+                  activeVolonteersIds: []
                 }).run(conn, callback)
               } 
             })
