@@ -12,7 +12,10 @@ var bcrypt = require('bcrypt')
 var conf = require('../../../config.json').rethinkdb
 var debug = require('debug')('Server')
 
-module.exports = {
+// Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów
+var Protect = require('../../../lib/protect')
+
+module.exports = Protect({
 
   name: 'Volonteers',
 
@@ -96,4 +99,4 @@ module.exports = {
 
   // delete: function(resource, params, config, callback) {}
 
-}
+})

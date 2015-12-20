@@ -29,7 +29,9 @@ var app = new Fluxible({
   ]
 })
 
-app.plug(fetchrPlugin())
+app.plug(fetchrPlugin({
+  xhrPath: '/api/v1'
+}))
 app.plug(passportPlugin())
 
 module.exports = app

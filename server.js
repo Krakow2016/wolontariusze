@@ -32,8 +32,6 @@ var Volonteer = require('./app/services/'+config.service+'/volonteers')
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
 var fetchrPlugin = app.getPlugin('FetchrPlugin');
-// Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów
-var Protect = require('./lib/protect')
 
 // Konfiguracja middleware-u Passport definująca metodę weryfikacji poprawności
 // logowania.
@@ -112,9 +110,9 @@ server.set('view engine', 'handlebars')
 
 if(fetchrPlugin) {
   // Register our messages REST services
-  fetchrPlugin.registerService(Protect(Volonteer));
-  fetchrPlugin.registerService(Protect(Activity));
-  fetchrPlugin.registerService(Protect(Comments));
+  fetchrPlugin.registerService(Volonteer);
+  fetchrPlugin.registerService(Activity);
+  fetchrPlugin.registerService(Comments);
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), jsonParser, fetchrPlugin.getMiddleware());
 }
