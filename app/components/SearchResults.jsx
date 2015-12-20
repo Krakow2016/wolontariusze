@@ -17,7 +17,7 @@ var SearchResults = React.createClass({
   render: function() {
 
     var results = this.props.results.map(function(result) {
-      return (<SearchResult {...result._source} key={result._id} />)
+      return (<SearchResult {...result._source.doc} key={result._id} />)
     })
 
     return results.length ? (
