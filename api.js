@@ -14,11 +14,12 @@ var Volonteer = require('./app/services/'+config.service+'/volonteers')
 
 // Express configuration
 
-var session = expressSession({
+var session = [expressSession({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: false
-})
+}), passport.initialize(), passport.session()]
+
 var server = express();
 
 server.set('view engine', 'ejs');
@@ -36,8 +37,6 @@ server.use(function(req, res, next) {
   next()
 });
 */
-server.use(passport.initialize());
-server.use(passport.session());
 //server.use(server.router);
 //server.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 
