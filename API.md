@@ -25,10 +25,11 @@ błędnie wprowadzonymi danymi (np. brak wymaganego parametru), a kody z zakresu
 
 ### Atrybuty
 
-| Identyfikator | Opis |
-| ---           | ---  |
+| Identyfikator | Opis                                   |
+| ---           | ---                                    |
+| `status`      | Zawsze "error".                        |
 | `type`        | Typ błędu. Np. `authentication_error`. |
-| `message`     | Słowny opis błędu. |
+| `message`     | Słowny opis błędu.                     |
 
 ## OAuth
 
@@ -106,8 +107,11 @@ dołączając poniższe pary klucz-wartość w ciele zapytania:
 API serwisu wolontariuszy w odpowiedzi na zapytanie POST zwróci obiekt JSON z
 tokenem dostępu.
 
-```
-{}
+```json
+{
+  "access_token": "YNmPUK9W72TVrxOlPlDysnimcIfX2qdKsDtPpXraczYGtuJ3CdjJn8ZYkos6Ckn7",
+  "token_type": "Bearer"
+}
 ```
 
 ### Client-side
@@ -122,11 +126,10 @@ wysyłania w imieniu użytkownika autoryzowanych zapytań do API.
 API serwisu wolontariuszy wymaga aby token dostępu był wysłany w nagłówku
 `Authorization: Bearer`.
 
-You can test this using cURL with the following command:
 Używając narzędzia cURL, przykładowe zapytanie będzie wyglądało w następujący sposób:
 
 ```
-curl -H "Authorization: Bearer ACCESS_TOKEN" https://wolontariusze.krakow2016.com/api/v2/volunteers/foobar
+curl -H "Authorization: Bearer ACCESS_TOKEN" https://wolontariusze.krakow2016.com/api/v2/volunteers/e5725fc8-1837-4a32-823c-2f08c7a8b3a1
 ```
 
 API zwróci kod HTTP 401 (Brak autoryzacji) jeżeli przesłane zapytanie będzie
@@ -140,14 +143,16 @@ danych pojedynczych wolontariuszy, jak również listowanie wolontariuszy.
 
 ### Atrybuty
 
-| Klucz             | Opis                              |
-| ---               | ---                               |
-| `id`              |                                   |
-| `email`           | Adres e-mail.                     |
-| `first_name`      | Imię.                             |
-| `last_name`       | Nazwisko.                         |
-| `phone`           | Numer telefonu kontaktowego.      |
-| `profile_picture` | Adres url do zdjęcia profilowego. |
+| Klucz                 | Opis                                                    |
+| ---                   | ---                                                     |
+| `id`                  |                                                         |
+| `email`               | Adres e-mail.                                           |
+| `first_name`          | Imię.                                                   |
+| `last_name`           | Nazwisko.                                               |
+| `phone`               | Numer telefonu kontaktowego.                            |
+| `profile_picture_url` | Adres url do zdjęcia profilowego.                       |
+| `is_admin`            | 'true' jeżeli użytkownik ma uprawnienia administratora. |
+| `is_approved`         | 'true' jeżeli użytkownik może logować się w systemie.   |
 
 ### Pobieranie obiektu wolontariusza
 
@@ -158,12 +163,23 @@ GET https://wolontariusze.krakow2016.com/api/v2/volunteers/:id
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/volunteers/123
+$ curl https://wolontariusze.krakow2016.com/api/v2/volunteers/e5725fc8-1837-4a32-823c-2f08c7a8b3a1
 ```
 
 **Przykładowa odpowiedź:**  
-```
-{}
+```json
+{
+  status: "success",
+  data: {
+    "id": "e5725fc8-1837-4a32-823c-2f08c7a8b3a1",
+    "email": "faustyna@kowalska.pl",
+    "first_name": "Faustyna",
+    "last_name": "Kowalska",
+    "phone": "+48123456789",
+    "is_admin": true,
+    "is_approved": true
+  }
+}
 ```
 
 ### Aktualizacja obiektu wolontariusza
@@ -203,8 +219,8 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/volunteers
 ## Zadania
 
 Zadania są dodatkową pracą której wolontariusze będą mogli się podjąć i zgłosić
-do niej. API umożliwia tworzenie, usuwanie i aktualizację zadań oraz pobieranie
-pojedynczych zadań jak i ich całej listy.
+się do niej. API umożliwia tworzenie, usuwanie i aktualizację zadań oraz
+pobieranie pojedynczych zadań jak i ich całej listy.
 
 | Klucz         | Opis                                                    |
 | ---           | ---                                                     |
@@ -262,6 +278,23 @@ POST https://wolontariusze.krakow2016.com/api/v2/tasks/:id
 **Przykładowe zapytanie:**  
 ```
 $ curl https://wolontariusze.krakow2016.com/api/v2/tasks/123
+```
+
+**Przykładowa odpowiedź:**  
+```
+{}
+```
+
+### Wysłanie zgłoszenia do zadania
+
+**Ścieżka:**  
+```
+POST https://wolontariusze.krakow2016.com/api/v2/tasks/:id/join
+```
+
+**Przykładowe zapytanie:**  
+```
+$ curl https://wolontariusze.krakow2016.com/api/v2/tasks/123/join
 ```
 
 **Przykładowa odpowiedź:**  
