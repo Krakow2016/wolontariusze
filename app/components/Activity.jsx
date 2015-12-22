@@ -92,6 +92,13 @@ var ActivityTabs = React.createClass({
       </div>
     }
     
+    var priority;
+    if (this.state.is_urgent && this.state.is_urgent == true) {
+      priority = "PILNE"
+    } else {
+      priority = "NORMALNE"
+    }
+    
     var activeVolonteersList = []
     if (this.state.activeVolonteers) {
         activeVolonteersList = this.state.activeVolonteers.map (function (volonteer) {
@@ -107,14 +114,15 @@ var ActivityTabs = React.createClass({
         ( ( this.state.activeVolonteersIds && this.state.activeVolonteersIds.length < this.state.maxVolonteers) || 
             this.state.maxVolonteers == 0) &&
         this.state.activeVolonteersIds.indexOf(user.id) == -1 ) {
-        buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Dopisz się" />)
+        buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" />)
     }
     
     //canceButton
     if (user &&
         this.state.activeVolonteersIds.indexOf(user.id) !== -1 ) {
-        buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz się" />)
+        buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" />)
     }
+    
     
     var tabs = [
         <Tab label="Opis" >
@@ -127,6 +135,8 @@ var ActivityTabs = React.createClass({
             <b>Czas rozpoczęcia:</b> {TimeService.showTime(this.state.startEventTimestamp)}  <b>Czas trwania:</b> {this.state.duration}
             <br></br>
             <b>Miejsce wydarzenia:</b> {this.state.place}
+            <br></br>
+            <b>Prorytet:</b> {priority}
             <br></br>
             <ReactMarkdown source={this.state.content} />
             <br></br>

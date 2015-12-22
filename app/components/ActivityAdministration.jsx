@@ -85,6 +85,12 @@ var ActivityAdministrationBody = React.createClass({
     modifiedState.place = evt.target.value;
     this.setState(modifiedState);
   },
+  handleIsUrgentChange: function (evt) {
+    //https://facebook.github.io/jest/docs/tutorial-react.html
+    var modifiedState = this.state;
+    modifiedState.is_urgent = !modifiedState.is_urgent;
+    this.setState(modifiedState);
+  },
   handleContentChange: function (evt) {
     var modifiedState = this.state;
     modifiedState.content = evt.target.value;
@@ -193,6 +199,9 @@ var ActivityAdministrationBody = React.createClass({
     }
     if (oldState.place != state.place) {
         changes += "Miejsce wydarzenia \n";
+    }
+    if (oldState.is_urgent != state.is_urgent) {
+        changes += "Priorytet \n";
     }
     if (oldState.content != state.content) {
         changes += "Treść aktywności \n";
@@ -327,6 +336,12 @@ var ActivityAdministrationBody = React.createClass({
         <br></br>
         <input name="place" value={this.state.place} onChange={this.handlePlaceChange} />
         <br></br>
+        
+        <b>Zadanie jest PILNE? </b>
+        <br></br>
+        <input type="checkbox" checked={this.state.is_urgent} onChange={this.handleIsUrgentChange} />
+        <br></br>
+        
         
         <b>Treść </b>
         <br></br>

@@ -88,6 +88,7 @@ ActivityStore.attributes = function() {
     'startEventTimestamp',
     'duration',
     'place',
+    'is_urgent',
     'creatorId',
     'editorId',
     'maxVolonteers',
