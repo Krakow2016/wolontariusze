@@ -8,4 +8,4 @@ addons:
     packages:
       - g++-4.8
 node_js:
-  - "iojs"
+  - "4.1"
