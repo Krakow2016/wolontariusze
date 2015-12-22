@@ -23,7 +23,7 @@
     "gulp-live-server": "0.0.16",
     "gulp-rename": "*",
     "gulp-util": "*",
-    "material-ui": "0.13.2",
+    "material-ui": "0.13.4",
     "node-jsx": "^0.12.4",
     "oauth2orize": "^1.2.0",
     "object.assign": "*",
@@ -33,12 +33,12 @@
     "passport-local": "*",
     "passport-localapikey-update": "*",
     "passport-oauth2-client-password": "^0.1.2",
-    "react": "0.14.0",
-    "react-addons-create-fragment": "0.14.0",
-    "react-addons-pure-render-mixin": "0.14.0",
-    "react-addons-transition-group": "0.14.0",
-    "react-addons-update": "0.14.0",
-    "react-dom": "0.14.0",
+    "react": "0.14.3",
+    "react-addons-create-fragment": "0.14.3",
+    "react-addons-pure-render-mixin": "0.14.3",
+    "react-addons-transition-group": "0.14.3",
+    "react-addons-update": "0.14.3",
+    "react-dom": "0.14.3",
     "react-markdown": "1.0.5",
     "react-tap-event-plugin": "0.2.1",
     "reactify": "*",
@@ -51,7 +51,8 @@
   "devDependencies": {
     "gulp-uglify": "^1.2.0",
     "jasmine": "2.3",
-    "jsdom": "5.4.3"
+    "jsdom": "5.4.3",
+    "react-addons-test-utils": "0.14.3"
   },
   "scripts": {
     "test": "jasmine"

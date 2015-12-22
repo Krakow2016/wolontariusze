@@ -48,7 +48,7 @@ var Volonteer = React.createClass({
             <img src="/img/profile.jpg" className="profilePicture" />
           </div>
           <div className="pure-u-1 pure-u-sm-1-2">
-            <h1>{this.name()}</h1>
+            <h1 className="fullName">{this.name()}</h1>
             <span>Kraków, Polska</span>
             {editLink}
           </div>

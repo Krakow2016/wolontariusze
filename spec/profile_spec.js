@@ -1,19 +1,18 @@
-var Volonteer = require('../app/components/Volonteer.jsx')
+var Volunteer = require('../app/components/Volonteer.jsx')
 
-var React = require('react/addons')
+var ReactTestUtils = require('react-addons-test-utils');
 var Fluxible = require('fluxible');
-var TestUtils = React.addons.TestUtils
 
-describe("Volonteer profile", function() {
+describe("Volunteer profile", function() {
 
-  var volonteer
+  var volunteer
 
   beforeEach(function() {
-    volonteer = TestUtils.renderIntoDocument(createComponent(Volonteer, {}))
+    volunteer = ReactTestUtils.renderIntoDocument(createComponent(Volunteer, {}))
   })
 
-  it("contains volonteer name", function() {
-    var label = TestUtils.findRenderedDOMComponentWithClass(volonteer, 'fullName');
-    expect(label.getDOMNode().textContent).toEqual('Jan Kowalski');
+  it("contains volunteer name", function() {
+    var label = ReactTestUtils.findRenderedDOMComponentWithClass(volunteer, 'fullName');
+    expect(label.textContent).toEqual('Jan Kowalski');
   })
 });

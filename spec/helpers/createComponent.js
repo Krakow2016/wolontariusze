@@ -1,6 +1,5 @@
-var React = require('react/addons')
+var React = require('react')
 var Fluxible = require('fluxible');
-var TestUtils = React.addons.TestUtils
 
 var routes = require('../../app/routes')
 var RouteStore = require('fluxible-router').RouteStore;
