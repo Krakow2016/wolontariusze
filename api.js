@@ -47,30 +47,30 @@ require('./oauth/auth');
 
 // Formularz do logowania dla wolontariuszy chcących dać dostęp do swojego
 // konta wybranej aplikacji.
-server.get('/login', session, function(req, res) { res.render('login') })
-server.post('/login', session, passport.authenticate('local', {
-  successReturnToOrRedirect: '/',
-  failureRedirect: '/login'
+server.get('/api/v2/login', session, function(req, res) { res.render('login') })
+server.post('/api/v2/login', session, passport.authenticate('local', {
+  successReturnToOrRedirect: '/api/v2/',
+  failureRedirect: '/api/v2/login'
 }))
 
-server.get('/logout', session, function(req, res) {
+server.get('/api/v2/logout', session, function(req, res) {
   req.logout()
-  res.redirect('/')
+  res.redirect('/api/v2/')
 })
 
 // Okienko w którym wolontariusz wyraża zgodę (lub nie) na dostęp do swojego
 // konta.
-server.get('/dialog/authorize', session, oauth2.authorization);
-server.post('/dialog/authorize/decision', session, oauth2.decision);
+server.get('/api/v2/dialog/authorize', session, oauth2.authorization);
+server.post('/api/v2/dialog/authorize/decision', session, oauth2.decision);
 
 // Końcówka dla klienta oauth chcącego zamienić tymczasowy kod dostępu na
 // token.
-server.post('/oauth/token', oauth2.token);
+server.post('/api/v2/oauth/token', oauth2.token);
 
 // Autoryzacja tokenem oAuth
 var bearer = passport.authenticate('bearer', { session: false })
 
-server.get('/client', bearer, function(req, res) {
+server.get('/api/v2/client', bearer, function(req, res) {
   res.json({
     client_id: req.user.id,
     scope: req.authInfo.scope
@@ -78,21 +78,21 @@ server.get('/client', bearer, function(req, res) {
 })
 
 // Lista wolontariuszy
-server.get('/volunteers', bearer, function(req, res) {
+server.get('/api/v2/volunteers', bearer, function(req, res) {
   Volonteer.read(req, 'Volonteers', {}, req.query, function (err, users) {
     res.send(users)
   })
 })
 
 // Szczegóły wolontariusza
-server.get('/volunteers/:id', bearer, function(req, res) {
+server.get('/api/v2/volunteers/:id', bearer, function(req, res) {
   Volonteer.read(req, 'Volonteers', {id: req.params.id}, {}, function (err, user) {
     res.send(user)
   })
 })
 
 // Aktualizacja wolontariusza
-server.post('/volunteers/:id', bearer, function(req, res) {
+server.post('/api/v2/volunteers/:id', bearer, function(req, res) {
   Volonteer.update(req, 'Volonteers', {id: req.params.id}, req.body, {}, function (err, user) {
     res.send(user)
   })
