@@ -99,6 +99,17 @@ module.exports = {
     })
   },
 
+  showIntegrations: function(context, payload, cb) {
+    // Pobierz dane wolontariusza z bazy danych
+    context.service.read('Integrations', payload, {},
+      function (err, data) {
+        if (err) { console.log(err) }
+        else { context.dispatch('LOAD_INTEGRATIONS', data) }
+        cb()
+      }
+    )
+  },
+
   showResults: function(context, state, cb) {
 
     var age_from = parseInt(state['age-from'])

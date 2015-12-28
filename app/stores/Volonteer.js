@@ -10,7 +10,8 @@ var VolonteerStore = createStore({
       'VOLONTEER_UPDATE_FAILURE': 'onFailure',
       'VOLONTEER_UPDATE_SUCCESS': 'onSuccess',
       'SHOW_ACCOUNT_SETTINGS': 'trigger_account',
-      'SHOW_PROFILE_SETTINGS': 'trigger_profile'
+      'SHOW_PROFILE_SETTINGS': 'trigger_profile',
+      'SHOW_APPLICATIONS_SETTINGS': 'trigger_applications'
     },
 
     initialize: function () {
@@ -44,6 +45,11 @@ var VolonteerStore = createStore({
 
     trigger_profile: function() {
       this.subpage = 'InfoSettings'
+      this.emitChange()
+    },
+
+    trigger_applications: function() {
+      this.subpage = 'IntegrationsSettings'
       this.emitChange()
     },
 

@@ -1,10 +1,12 @@
 var React = require('react')
+
+var ProfileSettings = require('./ProfileSettings.jsx')
 var MyTextField = require('./MyTextarea.jsx')
 
 var Info = React.createClass({
   render: function() {
     return (
-      <div>
+      <ProfileSettings profileId={this.props.profile.id} context={this.props.context}>
         <div className="pure-g">
           <div className="pure-u-1 pure-u-md-1-3">
             <label htmlFor="first_name">Doświadczenie</label>
@@ -14,7 +16,7 @@ var Info = React.createClass({
               id="experience"
               name="experience"
               placeholder="Praktyki w ..."
-              value={this.props.experience} />
+              value={this.props.profile.experience} />
           </div>
         </div>
 
@@ -27,7 +29,7 @@ var Info = React.createClass({
               id="interests"
               name="interests"
               placeholder="Piłka nożna"
-              value={this.props.interests} />
+              value={this.props.profile.interests} />
           </div>
         </div>
 
@@ -40,10 +42,10 @@ var Info = React.createClass({
               id="departments"
               name="departments"
               placeholder="Sekcja tłumaczeń"
-              value={this.props.departments} />
+              value={this.props.profile.departments} />
           </div>
         </div>
-      </div>
+      </ProfileSettings>
     )
   }
 })

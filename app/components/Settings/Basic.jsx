@@ -1,10 +1,12 @@
 var React = require('react')
+
+var ProfileSettings = require('./ProfileSettings.jsx')
 var MyTextField = require('./MyTextField.jsx')
 
 var Basic = React.createClass({
   render: function() {
     return (
-      <div>
+      <ProfileSettings>
         <div className="pure-g">
           <div className="pure-u-1 pure-u-md-1-3">
             <label htmlFor="first_name">Imię</label>
@@ -16,8 +18,8 @@ var Basic = React.createClass({
               placeholder="Faustyna"
               validations="minLength:3"
               validationError="Imię jest wymagane"
-              disabled={!!this.props.first_name}
-              value={this.props.first_name} />
+              disabled={!!this.props.profile.first_name}
+              value={this.props.profile.first_name} />
           </div>
         </div>
 
@@ -32,8 +34,8 @@ var Basic = React.createClass({
               placeholder="Kowalska"
               validations="minLength:3"
               validationError="Nazwisko jest wymagane"
-              disabled={!!this.props.last_name}
-              value={this.props.last_name} />
+              disabled={!!this.props.profile.last_name}
+              value={this.props.profile.last_name} />
           </div>
         </div>
 
@@ -49,10 +51,10 @@ var Basic = React.createClass({
               validations="isEmail"
               validationError="Adres email jest niepoprawny"
               placeholder="faustyna@kowalska.pl"
-              value={this.props.email} />
+              value={this.props.profile.email} />
           </div>
         </div>
-      </div>
+      </ProfileSettings>
     )
   }
 })

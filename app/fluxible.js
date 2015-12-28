@@ -11,6 +11,7 @@ var ActivityStore = require('./stores/Activity')
 var NewCommentStore = require('./stores/NewComment')
 var CommentsStore = require('./stores/Comments')
 var ResultsStore = require('./stores/Results')
+var IntegrationsStore = require('./stores/Integrations')
 
 var passportPlugin = require('./plugins/passportPlugin')
 
@@ -25,7 +26,8 @@ var app = new Fluxible({
     NewCommentStore,
     CommentsStore,
     ActivityStore,
-    ResultsStore
+    ResultsStore,
+    IntegrationsStore
   ]
 })
 

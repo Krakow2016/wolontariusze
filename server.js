@@ -28,6 +28,7 @@ var server = module.exports = express()
 var Activity = require('./app/services/'+config.service+'/activities')
 var Comments = require('./app/services/'+config.service+'/comments')
 var Volonteer = require('./app/services/'+config.service+'/volonteers')
+var Integration = require('./app/services/'+config.service+'/integrations')
 
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
@@ -113,6 +114,7 @@ if(fetchrPlugin) {
   fetchrPlugin.registerService(Volonteer);
   fetchrPlugin.registerService(Activity);
   fetchrPlugin.registerService(Comments);
+  fetchrPlugin.registerService(Integration);
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), jsonParser, fetchrPlugin.getMiddleware());
 }

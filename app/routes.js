@@ -116,6 +116,23 @@ module.exports = {
     }
   },
 
+  applications_settings: {
+    path: '/ustawienia/aplikacje',
+    method: 'get',
+    handler: require('./components/Settings.jsx'),
+    action: function (context, payload, done) {
+      var user = context.getUser()
+      if(user) {
+        context.dispatch('SHOW_APPLICATIONS_SETTINGS');
+        context.executeAction(actions.showIntegrations, { user_id: user.id }, function() {
+          done()
+        })
+      } else {
+        done()
+      }
+    }
+  },
+
   search: {
     path: '/wyszukiwarka',
     method: 'get',

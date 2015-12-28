@@ -10,11 +10,10 @@ var Snackbar = require('material-ui/lib/snackbar')
 var VolonteerStore = require('../stores/Volonteer')
 
 var Subpages = {
+  'InfoSettings': require('./Settings/Info.jsx'),
   'BasicSettings': require('./Settings/Basic.jsx'),
-  'InfoSettings': require('./Settings/Info.jsx')
+  'IntegrationsSettings': require('./Settings/Integrations.jsx')
 }
-
-var updateVolonteer = require('../actions').updateVolonteer
 
 var LeftPanel = React.createClass({
   getInitialState: function () {
@@ -36,6 +35,10 @@ var LeftPanel = React.createClass({
           <NavLink href="/ustawienia/profil">
             Informacje publiczne
           </NavLink>
+          <br />
+          <NavLink href="/ustawienia/aplikacje">
+            Aplikacje
+          </NavLink>
         </Paper>
       </div>
     )
@@ -48,7 +51,6 @@ var Settings = React.createClass({
     return {
       profile: this.props.context.getStore(VolonteerStore).getState().profile,
       subpage: 'BasicSettings',
-      canSubmit: false
     }
   },
 
@@ -66,29 +68,20 @@ var Settings = React.createClass({
       .removeChangeListener(this._changeListener)
   },
 
-  enableButton: function () {
-    this.setState({
-      canSubmit: true
-    });
-  },
-
-  disableButton: function () {
-    this.setState({
-      canSubmit: false
-    });
-  },
-
-  handleSubmit: function(data) {
-    data.id = this.state.profile.id
-    this.props.context.executeAction(updateVolonteer, data)
-  },
-
   render: function() {
-    var subpage = React.createElement(Subpages[this.state.subpage], this.state.profile)
+    var component = Subpages[this.state.subpage]
+    // Upewnij się że strona którą chcemy wyświetlić jest zdefiniowana
+    if(!component) {
+      throw new Error('Komponent '+this.state.subpage+' nie istnieje.')
+    }
+
+    var subpage = React.createElement(component, {
+        context: this.props.context,
+        profile: this.state.profile
+    })
     var snackbar
 
-    console.log(this.state.success )
-    if (this.state.success ) {
+    if (this.state.success) {
       snackbar = <Snackbar
         openOnMount={true}
         message="Zapisano"
@@ -102,24 +95,12 @@ var Settings = React.createClass({
 
     return (
       <Paper className="paper">
-        <Formsy.Form className="settingsForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
-          <div className="pure-g">
-            <LeftPanel />
-
-            <div className="pure-u-3-4">
-              {subpage}
-
-              <div className="pure-g">
-                <div className="pure-u-1 pure-u-md-1-3"></div>
-                <div className="pure-u-1 pure-u-md-2-3">
-                  <button type="submit" className="pure-button pure-button-primary" disabled={!this.state.canSubmit}>
-                    Zmień
-                  </button>
-                </div>
-              </div>
-            </div>
+        <div className="pure-g">
+          <LeftPanel />
+          <div className="pure-u-3-4">
+            {subpage}
           </div>
-        </Formsy.Form>
+        </div>
         {snackbar}
       </Paper>
     )
