@@ -6,6 +6,13 @@
 //
 // Więcej: http://fluxible.io/guides/data-services.html
 
+//hasła dla wolontariuszy - https://www.dailycred.com/article/bcrypt-calculator
+//faustyna@kowalska.pl  faustyna
+//karol@wojtyla.pl  karol
+//wolontariusz3@testowy.pl wolontariusz
+//wolontariuszka4@testowa.pl wolontariuszka
+//wolontariusz5@testowy.pl  wolontariusz
+
 var volonteers = require('./volonteers.json')
 
 module.exports = {

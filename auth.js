@@ -24,27 +24,16 @@ passport.use(new LocalStrategy(
         return done(null, false, { message: 'Incorrect username.' })
       }
       // Sprawdź poprawność hasła
-      if(config.service == 'rethinkdb') {
-        bcrypt.compare(password, user.password, function(err, res) {
-            if (!res) {
-            return done(null, false, { message: 'Incorrect password.' })
-            } else if (!user.approved) {
-            return done(null, false, { message: 'You have been banned.' })
-            } else {
-            // Zalogowano poprawnie, zwróć obiekt zalogowanego użytkownika
-            return done(null, user, { message: 'Welcome!' })
-            }
-        })
-      } else {
-          if (password != user.password) {
-              return done(null, false, { message: 'Incorrect password.' })
+      bcrypt.compare(password, user.password, function(err, res) {
+          if (!res) {
+          return done(null, false, { message: 'Incorrect password.' })
           } else if (!user.approved) {
-            return done(null, false, { message: 'You have been banned.' })
+          return done(null, false, { message: 'You have been banned.' })
           } else {
-            // Zalogowano poprawnie, zwróć obiekt zalogowanego użytkownika
-            return done(null, user, { message: 'Welcome!' })
+          // Zalogowano poprawnie, zwróć obiekt zalogowanego użytkownika
+          return done(null, user, { message: 'Welcome!' })
           }
-      }
+      })
     })
   }
 ))
