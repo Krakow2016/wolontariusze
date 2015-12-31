@@ -75,10 +75,10 @@ gulp.task('rethinkdb', function (cb) {
                   startEventTimestamp: 3000,
                   duration: "3h",
                   place: "Kraków",
-                  creatorId: "",
-                  editorId: "",
+                  creator: {id: "", name: "", email: ""},
+                  editor: {id: "", name: "", email: ""},
                   maxVolonteers: 2,
-                  activeVolonteersIds: []
+                  activeVolonteers: []
                 }).run(conn, callback)
               } 
             })

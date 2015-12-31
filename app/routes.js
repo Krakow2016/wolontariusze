@@ -69,9 +69,6 @@ module.exports = {
       context.executeAction(actions.showActivity, { id: activityId }, function() {
         done();
       })
-      context.executeAction(actions.loadVolonteers, {}, function() {
-        done();
-      })
     }
   },
   activity_edition: {
@@ -84,9 +81,6 @@ module.exports = {
       context.executeAction(actions.showActivity, { id: activityId }, function() {
         done();
       })
-      context.executeAction(actions.loadVolonteers, {}, function() {
-        done();
-      })
     }
   },
   activity_creation: {
@@ -96,9 +90,7 @@ module.exports = {
     action: function (context, payload, done) {
       context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Nowa Aktywnosc' });
       context.dispatch('NEW_ACTIVITY', {});
-      context.executeAction(actions.loadVolonteers, {}, function() {
-        done();
-      })
+      done();
     }
   },
   login: {

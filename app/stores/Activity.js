@@ -1,9 +1,9 @@
 'use strict';
 var createStore  = require('fluxible/addons').createStore;
 
-http://stackoverflow.com/questions/728360/most-elegant-way-to-clone-a-javascript-object
+//http://stackoverflow.com/questions/728360/most-elegant-way-to-clone-a-javascript-object
 var cloneState = function (obj) {
-    //założenie: activity to obiekt z polami i tablicami (nie ma głębszych obiektów)
+    //założenie: activity to obiekt z obiektami, polami i tablicami 
     var copy = {};
     for (var attr in obj) {
         if(attr != 'dispatcher') {
@@ -12,6 +12,8 @@ var cloneState = function (obj) {
                 for (var i = 0 ; i < obj[attr].length; i++) {
                     copy[attr].push(obj[attr][i]);
                 }
+            } else if (obj[attr] instanceof Object) {
+              copy[attr] = cloneState(obj[attr]);
             } else {
                 copy[attr] = obj[attr];
             }
@@ -34,7 +36,7 @@ var ActivityStore = createStore({
         this.state = {
             content: "",
             maxVolonteers: 5,
-            activeVolonteersIds: []
+            activeVolonteers: []
         };
     },
 
@@ -54,7 +56,7 @@ var ActivityStore = createStore({
         this.rehydrate( {
             content: "",
             maxVolonteers: 5,
-            activeVolonteersIds: []
+            activeVolonteers: []
         });
         this.emitChange();
     },
@@ -89,12 +91,9 @@ ActivityStore.attributes = function() {
     'duration',
     'place',
     'is_urgent',
-    'creatorId',
-    'editorId',
+    'creator',
+    'editor',
     'maxVolonteers',
-    'activeVolonteersIds',
-    'creatorName',
-    'editorName',
     'activeVolonteers',
     'volonteersLimit'
   ]

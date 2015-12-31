@@ -146,6 +146,18 @@ server.post('/search', function(req, res) {
   }
 })
 
+server.post('/getSuggestions', function(req, res) {
+  if(req.user && req.user.is_admin) {
+    var getSuggestions = config.elasticSearchGetSuggestions
+    req.pipe(request(getSuggestions))
+      .on('error', function(e){
+        res.send(500) // Brak połączenia z bazą
+      }).pipe(res)
+  } else {
+    res.send(403)
+  }
+})
+
 server.get('/invitation', passport.authenticate('localapikey', {
   successRedirect: '/witaj',
   failureRedirect: '/login',

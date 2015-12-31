@@ -1,5 +1,6 @@
 var React = require('react')
 var AutoSuggest = require('react-autosuggest');
+var config = require('../../config.json')
 
 
 var AutoSuggestVolonteer = React.createClass ({
@@ -7,36 +8,58 @@ var AutoSuggestVolonteer = React.createClass ({
       return {volonteerId: 0};
   },
   getSuggestions: function(input, callback) {
-    var allVolonteers = this.props.allVolonteers;
-    
-    var words = input.split(" ");
-    var firstWordRegExp = new RegExp(words[0], 'i');
-    var  secondWordRegExp;
-    if (words[1]) { secondWordRegExp = new RegExp(words[1], 'i') };
-    
-    var suggestions = allVolonteers.filter(function (volonteer) {
-        if (words.length == 1) {
-            return firstWordRegExp.test(volonteer.first_name) || firstWordRegExp.test(volonteer.last_name);
-        } else if (words.length == 2) {
-            return (firstWordRegExp.test(volonteer.first_name) && secondWordRegExp.test(volonteer.last_name)) ||
-                   (secondWordRegExp.test(volonteer.first_name) && firstWordRegExp.test(volonteer.last_name));
+    var query = {
+      suggest: {
+        text: input,
+        completion: {
+          field: "suggest"
         }
-    });
+      }
+    }
+
+    var request = new XMLHttpRequest()
+    request.open('POST', '/getSuggestions', true)
+    request.setRequestHeader('Content-Type', 'application/json')
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        // Success!
+        var resp = request.responseText;
+        console.log(resp)
+        var json = JSON.parse(resp)
+        
+        var suggestions = json.suggest[0].options.map (function (option) {
+          return {
+            id: option.payload.id,
+            name: option.text,
+            email: option.payload.email
+          };
+        })
+
+        setTimeout(callback(null, suggestions), 300);
+      } else {
+        console.log('STATUS')
+        // We reached our target server, but it returned an error
+      }
+    }
+
+    request.onerror = function() {
+      // There was a connection error of some sort
+    }
+
+    request.send(JSON.stringify(query)) 
     
-    setTimeout(callback(null, suggestions.slice(0,5)), 300);
   },
   renderSuggestion: function (suggestion, input) {
     return (
-        <span>{suggestion.first_name} {suggestion.last_name}</span>
+        <span>{suggestion.name}</span>
     );
   },
   getSuggestionValue: function (suggestionObj) {
-    this.setState({volonteerId: suggestionObj.id});
-    var output = suggestionObj.first_name+" "+suggestionObj.last_name; 
-    return output;
+    this.setState({volonteer: suggestionObj});
+    return suggestionObj.name;
   },
   onClick: function () {
-    this.props.onAddButtonClick(this.state.volonteerId);
+    this.props.onAddButtonClick(this.state.volonteer);
   },
   render: function () {
     return (
@@ -55,20 +78,11 @@ var AutoSuggestVolonteer = React.createClass ({
 
 var AddedVolonteer = React.createClass({
     onClick: function () {
-        this.props.onRemoveButtonClick(this.props.id);
+        this.props.onRemoveButtonClick(this.props.volonteer);
     },
     render: function () {
-      var name = '';
-      var volonteers = this.props.allVolonteers;
-      var id = this.props.id;
-      for (var index = 0; index < volonteers.length; index++) {
-        if (volonteers[index].id == id) {
-          name = volonteers[index].first_name+' '+volonteers[index].last_name;
-          break;
-        }
-      }
       return (
-        <div className="addedVolonteer" ><a href={'/wolontariusz/'+id}>{name}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
+        <div className="addedVolonteer" ><a href={'/wolontariusz/'+this.props.volonteer.id}>{this.props.volonteer.name}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
       )
     }
 })
@@ -78,18 +92,16 @@ var ActivityVolonteersList = React.createClass({
     var that = this
     var list
     if (this.props.data) {
-        list = this.props.data.map (function (volonteerId) {
+        list = this.props.data.map (function (volonteer) {
         return (
-            <AddedVolonteer id={volonteerId} 
-                            onRemoveButtonClick={that.props.onRemoveButtonClick}
-                            allVolonteers={that.props.allVolonteers} />                 
+            <AddedVolonteer volonteer={volonteer}
+                            onRemoveButtonClick={that.props.onRemoveButtonClick}/>                 
         )
       })
     }
     return (
       <div>
-        <AutoSuggestVolonteer allVolonteers={this.props.allVolonteers} 
-                              onAddButtonClick={this.props.onAddButtonClick} />
+        <AutoSuggestVolonteer onAddButtonClick={this.props.onAddButtonClick} />
         {list}
       </div>
     )

@@ -96,23 +96,32 @@ var ActivityAdministrationBody = React.createClass({
     modifiedState.content = evt.target.value;
     this.setState(modifiedState);
   },
-  addActiveVolonteer: function (id) {
-    console.log('ButtonClicked', id);
+  addActiveVolonteer: function (volonteer) {
+    console.log('ButtonClicked', volonteer);
     var modifiedState = this.state;
-    if (id == 0) {
+    if (volonteer.id == 0) {
       alert('Wybierz wolontariusza');
-    } else if(modifiedState.activeVolonteersIds.indexOf(id) !== -1) {
-      alert('Wolontariusz jest już dodany');
     } else {
-      modifiedState.activeVolonteersIds.push(id);
+      var isPresent = false;
+      for (var i = 0; i < modifiedState.activeVolonteers.length; i++) {
+        if (modifiedState.activeVolonteers[i].id == volonteer.id) {
+          isPresent = true;
+          break;
+        }
+      }
+      if(isPresent) {
+        alert('Wolontariusz jest już dodany');
+      } else {
+        modifiedState.activeVolonteers.push(volonteer);
+      }
     }
     this.setState(modifiedState);
   },
-  removeActiveVolonteer: function (id) {
+  removeActiveVolonteer: function (volonteer) {
     var modifiedState = this.state ;
-    for (var i = 0; i < modifiedState.activeVolonteersIds.length; i++) {
-      if (modifiedState.activeVolonteersIds[i] == id) {
-        modifiedState.activeVolonteersIds.splice(i,1);
+    for (var i = 0; i < modifiedState.activeVolonteers.length; i++) {
+      if (modifiedState.activeVolonteers[i].id == volonteer.id) {
+        modifiedState.activeVolonteers.splice(i,1);
       }         
     }
     this.setState(modifiedState);
@@ -133,7 +142,7 @@ var ActivityAdministrationBody = React.createClass({
   validateInputs: function () {
     var msg = '';
       
-    if (this.state.maxVolonteers > 0 && this.state.activeVolonteersIds.length > this.state.maxVolonteers) {
+    if (this.state.maxVolonteers > 0 && this.state.activeVolonteers.length > this.state.maxVolonteers) {
       msg += "\n Liczba zapisanych wolontariuszy nie powinna przekraczać limitu"
     }
     
@@ -153,34 +162,21 @@ var ActivityAdministrationBody = React.createClass({
       emails.push(newEmail);
     }
   },
-  findEmail: function (allVolonteers, volonteerId) {
-    var email;
-    if (volonteerId) {
-      for (var i=0; i<allVolonteers.length; i++) {
-        if (allVolonteers[i].id == volonteerId) {
-          email = allVolonteers[i].email;
-          break;
-        }
-      }
-    }
-    return email;
-  },
   //zwraca adresy mailowe wolontariuszy, którzy biorą lub brali udział, twórcy aktywności oraz tego, kto ostatnio edytował
   getUsersEmails: function () {
     var emails = [];
     var findEmail = this.findEmail;
-    var allVolonteers = this.props.context.getStore(VolonteersStore).getAll().all
-    this.addEmail(emails, findEmail(allVolonteers, this.state.creatorId) );
-    this.addEmail(emails, findEmail(allVolonteers, this.state.editorId) );
-    this.addEmail(emails, this.props.user.email);
+    this.addEmail(emails, (this.state.creator) ? this.state.creator.mail : null );
+    this.addEmail(emails, (this.state.editor) ? this.state.editor.mail : null);
+    this.addEmail(emails, (this.props.user) ? this.props.user.mail : null);
         
-    var oldVolonteersIds = this.props.context.getStore(ActivityStore).getState().activeVolonteersIds;
-    for (var i = 0; i < oldVolonteersIds.length; i++) {
-      this.addEmail(emails, findEmail(allVolonteers, oldVolonteersIds[i]));    
+    var oldVolonteers = this.props.context.getStore(ActivityStore).getState().activeVolonteers;
+    for (var i = 0; i < oldVolonteers.length; i++) {
+      this.addEmail(emails, oldVolonteers[i].email);    
     }
-    var newVolonteersIds = this.state.activeVolonteersIds;
-    for (var i = 0; i < newVolonteersIds.length; i++) {
-      this.addEmail(emails, findEmail(allVolonteers, newVolonteersIds[i]));    
+    var newVolonteers = this.state.activeVolonteers;
+    for (var i = 0; i < newVolonteers.length; i++) {
+      this.addEmail(emails, newVolonteers[i].email);    
     }
     return emails;
   },
@@ -209,11 +205,11 @@ var ActivityAdministrationBody = React.createClass({
     if (oldState.title != state.title) {
         changes += "Tytuł \n";
     }
-    if (oldState.activeVolonteersIds.length != state.activeVolonteersIds.length) {
+    if (oldState.activeVolonteers.length != state.activeVolonteers.length) {
         changes += "Lista wolontariuszy \n";
     } else {
-      for (var i = 0; i < oldState.activeVolonteersIds.length; i++) {
-        if (oldState.activeVolonteersIds[i] != state.activeVolonteersIds[i]) {
+      for (var i = 0; i < oldState.activeVolonteers.length; i++) {
+        if (oldState.activeVolonteers[i].id != state.activeVolonteers[i].id) {
           changes += "Lista wolontariuszy \n";
           break;
         }
@@ -232,7 +228,11 @@ var ActivityAdministrationBody = React.createClass({
       var emails = this.getUsersEmails();
       var changeList = this.getChangeList();
       var modifiedState = this.state;
-      modifiedState.editorId = this.props.user.id;
+      modifiedState.editor = {
+        id: this.props.user.id,
+        name: this.props.user.first_name+" "+this.props.user.last_name,
+        email: this.props.user.email
+      }
       modifiedState.editionTimestamp = Date.now();
       this.props.context.executeAction(updateAction, modifiedState);
       
@@ -253,9 +253,17 @@ var ActivityAdministrationBody = React.createClass({
       var emails = this.getUsersEmails();
       var modifiedState = this.state;
       var timestamp = Date.now();
-      modifiedState.creatorId = this.props.user.id;
+      modifiedState.creator = {
+        id: this.props.user.id,
+        name: this.props.user.first_name+" "+this.props.user.last_name,
+        email: this.props.user.email
+      }
       modifiedState.creationTimestamp = timestamp;
-      modifiedState.editorId = this.props.user.id;
+      modifiedState.editor = {
+        id: this.props.user.id,
+        name: this.props.user.first_name+" "+this.props.user.last_name,
+        email: this.props.user.email
+      }
       modifiedState.editionTimestamp = timestamp;
       
       //text będzie dodany później, bo nie znamy id aktywności
@@ -287,7 +295,6 @@ var ActivityAdministrationBody = React.createClass({
   },
   render: function() {    
     var startEventDate = new Date(this.state.startEventTimestamp);
-    var allVolonteers = this.props.context.getStore(VolonteersStore).getAll().all;
     
     var initialStateButton = []
     if (this.props.creationMode == false) {
@@ -350,10 +357,9 @@ var ActivityAdministrationBody = React.createClass({
         
         <b>Wolontariusze, którzy biorą udział:</b> 
         <br></br>
-        <ActivityVolonteersList data={this.state.activeVolonteersIds} 
+        <ActivityVolonteersList data={this.state.activeVolonteers} 
                               onAddButtonClick={this.addActiveVolonteer}
-                              onRemoveButtonClick={this.removeActiveVolonteer} 
-                              allVolonteers={allVolonteers}/>
+                              onRemoveButtonClick={this.removeActiveVolonteer} />
         
         <b>Limit (maksymalna liczba wolontariuszy, jeśli 0 to brak limitu)</b>
         <br></br>

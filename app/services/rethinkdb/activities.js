@@ -1,12 +1,12 @@
 var r = require('rethinkdb')
 var conf = require('../../../config.json').rethinkdb
 
-var getName = function (id, volData) {
-    var result
+var getVolonteer = function (id, volData) {
+    var result = {id: "", name: "", email: ""};
     if (id)
     for (var i = 0 ; i<volData.length; i++) {
       if (volData[i].id == id) {
-        result = volData[i].name;
+        result = volData[i];
         break;
       }
     }
@@ -20,21 +20,22 @@ var modifiedActivity = function (activity, volData, req, config) {
         // Flaga przywilejów administratora
         var is_admin = user && user.is_admin
         // Flaga właściciela profilu
-        var is_owner = (user && (activity.creatorId == user.id));
+        var creatorId = (activity.creator) ? activity.creator.id : null;
+        var editorId = (activity.editor) ? activity.editor.id : null 
+        var is_owner = (user && (creatorId == user.id));
         
-        //uzupełnij parametry o creatorName and editorName
-        activity['creatorName'] =  getName(activity['creatorId'], volData);
-        activity['editorName']  = getName(activity['editorId'], volData);
+        //uzupełnij twórcę i ostatniego edytora o aktualne dane
+        activity['creator'] =  getVolonteer(creatorId, volData);
+        activity['editor']  = getVolonteer(editorId, volData);
         
-        //uzupełnij listę wolontariuszy
-        if(activity['activeVolonteersIds']) {
-            activity['activeVolonteers'] = activity['activeVolonteersIds'].map(function (id) {
-                return {
-                        "id": id,
-                        "name": getName(id, volData)
-                }
-            })
-        }
+        //uzupełnij listę wolontariuszy o aktualne dane
+        activity['activeVolonteers'] = activity['activeVolonteers'].map(function (vol) {
+            return getVolonteer(vol.id, volData);
+        })
+        //usun pustych wolontariuszy
+        activity['activeVolonteers'] = activity['activeVolonteers'].filter (function (vol) {
+          return (vol.id != "")
+        });
         
         //uzupełnij limit wolontariuszy
         activity['volonteersLimit'] = 'Brak';
@@ -51,9 +52,11 @@ var modifiedActivity = function (activity, volData, req, config) {
 
 var getVolonteersIds = function (activity) {
   var ids = [];
-  var creatorId = (activity.creatorId == null) ? '' : activity.creatorId  ;
-  var editorId = (activity.editorId == null) ? '' : activity.editorId  ;
-  var activeVolonteersIds = activity.activeVolonteersIds;
+  var creatorId = (activity.creator == null) ? '' : activity.creator.id  ;
+  var editorId = (activity.editor == null) ? '' : activity.editor.id  ;
+  var activeVolonteersIds = activity.activeVolonteers.map (function (vol) {
+    return vol.id 
+  });
   if (creatorId != '') {
     ids.push(creatorId);
   }
@@ -95,7 +98,8 @@ module.exports = {
                   var volData = volonteers.map(function (vol) {
                     return {
                       id: vol.id,
-                      name: vol.first_name+" "+vol.last_name
+                      name: vol.first_name+" "+vol.last_name,
+                      email: vol.email
                     }
                   })
                   var modAct = modifiedActivity(row, volData, req, config);

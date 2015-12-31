@@ -63,15 +63,19 @@ var ActivityTabs = React.createClass({
   },
   onAcceptButtonClick: function () {   
     var modifiedState = this.state ;
-    modifiedState.activeVolonteersIds.push(this.props.user.id);
+    modifiedState.activeVolonteers.push( {
+      id: this.props.user.id,
+      name: this.props.user.first_name+" "+this.props.user.last_name,
+      email: this.props.user.email
+    })
     this.setState(modifiedState);
     this.update();   
   },
   onCancelButtonClick: function () {
     var modifiedState = this.state ;
-    for (var i = 0; i < modifiedState.activeVolonteersIds.length; i++) {
-        if (modifiedState.activeVolonteersIds[i] == this.props.user.id) {
-            modifiedState.activeVolonteersIds.splice(i,1);
+    for (var i = 0; i < modifiedState.activeVolonteers.length; i++) {
+        if (modifiedState.activeVolonteers[i].id == this.props.user.id) {
+            modifiedState.activeVolonteers.splice(i,1);
         }         
     }
     this.setState(modifiedState);   
@@ -100,26 +104,31 @@ var ActivityTabs = React.createClass({
     }
     
     var activeVolonteersList = []
+    var activeVolonteersIds = []
     if (this.state.activeVolonteers) {
         activeVolonteersList = this.state.activeVolonteers.map (function (volonteer) {
             return (
                 <span className="volonteerLabel"><a href={'/wolontariusz/'+volonteer.id}>{volonteer.name}</a></span>
             )
         })
+        activeVolonteersIds = this.state.activeVolonteers.map (function (volonteer) {
+          return volonteer.id
+        })
     }
+
     
     var buttons = [];
     //acceptButton
     if (user &&
-        ( ( this.state.activeVolonteersIds && this.state.activeVolonteersIds.length < this.state.maxVolonteers) || 
+        ( ( activeVolonteersIds && activeVolonteersIds.length < this.state.maxVolonteers) || 
             this.state.maxVolonteers == 0) &&
-        this.state.activeVolonteersIds.indexOf(user.id) == -1 ) {
+        activeVolonteersIds.indexOf(user.id) == -1 ) {
         buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" />)
     }
     
     //canceButton
     if (user &&
-        this.state.activeVolonteersIds.indexOf(user.id) !== -1 ) {
+        activeVolonteersIds.indexOf(user.id) !== -1 ) {
         buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" />)
     }
     
@@ -128,9 +137,9 @@ var ActivityTabs = React.createClass({
         <Tab label="Opis" >
             {editLink}
             <h2>{this.state.title}</h2>
-            <b>Dodano:</b> {TimeService.showTime(this.state.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+this.state.creatorId}>{this.state.creatorName}</a></span>
+            <b>Dodano:</b> {TimeService.showTime(this.state.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+this.state.creator.id}>{this.state.creator.name}</a></span>
             <br></br>
-            <b>Ostatnia edycja:</b> {TimeService.showTime(this.state.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+this.state.editorId}>{this.state.editorName}</a></span>
+            <b>Ostatnia edycja:</b> {TimeService.showTime(this.state.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+this.state.editor.id}>{this.state.editor.name}</a></span>
             <br></br>
             <b>Czas rozpoczęcia:</b> {TimeService.showTime(this.state.startEventTimestamp)}  <b>Czas trwania:</b> {this.state.duration}
             <br></br>
