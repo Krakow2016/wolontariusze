@@ -110,6 +110,28 @@ module.exports = {
     )
   },
 
+  showAPIClients: function(context, payload, cb) {
+    // Pobierz dane wolontariusza z bazy danych
+    context.service.read('APIClients', payload, {},
+      function (err, data) {
+        if (err) { console.log(err) }
+        else { context.dispatch('LOAD_APICLIENTS', data) }
+        cb()
+      }
+    )
+  },
+
+  createAPIClient: function(context, payload, cb) {
+    context.service.create('APIClients', {}, payload, function (err) {
+      if (err) { // Błąd po stronie serwera
+        context.dispatch('APICLIENT_CREATION_FAILURE', [payload])
+      } else {
+        context.dispatch('APICLIENT_CREATION_SUCCESS', [payload])
+      }
+      cb()
+    })
+  },
+
   showResults: function(context, state, cb) {
 
     var age_from = parseInt(state['age-from'])

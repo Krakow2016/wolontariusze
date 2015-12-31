@@ -29,6 +29,7 @@ var Activity = require('./app/services/'+config.service+'/activities')
 var Comments = require('./app/services/'+config.service+'/comments')
 var Volonteer = require('./app/services/'+config.service+'/volonteers')
 var Integration = require('./app/services/'+config.service+'/integrations')
+var APIClient = require('./app/services/'+config.service+'/apiclients')
 
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
@@ -115,6 +116,7 @@ if(fetchrPlugin) {
   fetchrPlugin.registerService(Activity);
   fetchrPlugin.registerService(Comments);
   fetchrPlugin.registerService(Integration);
+  fetchrPlugin.registerService(APIClient);
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), jsonParser, fetchrPlugin.getMiddleware());
 }
@@ -208,6 +210,7 @@ server.use(function(req, res, next) {
   // Dołącz obiekt zalogowanego użytkownika do kontekstu (stanu) zapytania,
   // który zostanie przekazay do klienta (przeglądarki).
   var context = app.createContext({
+    req: req,
     user: req.user
   });
 

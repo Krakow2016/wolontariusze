@@ -12,6 +12,8 @@ var NewCommentStore = require('./stores/NewComment')
 var CommentsStore = require('./stores/Comments')
 var ResultsStore = require('./stores/Results')
 var IntegrationsStore = require('./stores/Integrations')
+var APIClientStore = require('./stores/APIClient')
+var APIClientsStore = require('./stores/APIClients')
 
 var passportPlugin = require('./plugins/passportPlugin')
 
@@ -27,13 +29,16 @@ var app = new Fluxible({
     CommentsStore,
     ActivityStore,
     ResultsStore,
-    IntegrationsStore
+    IntegrationsStore,
+    APIClientStore,
+    APIClientsStore
   ]
 })
 
 app.plug(fetchrPlugin({
   xhrPath: '/api/v1'
 }))
+
 app.plug(passportPlugin())
 
 module.exports = app

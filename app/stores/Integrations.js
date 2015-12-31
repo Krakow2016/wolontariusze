@@ -16,14 +16,24 @@ var IntegrationsStore = createStore({
       return {
         integrations: this.integrations || []
       }
+    },
+
+    dehydrate: function () {
+      return this.getState()
+    },
+
+    rehydrate: function (state) {
+      this.integrations = state.integrations
     }
 })
 
-IntegrationsStore.attributes = function() {
-  return [
-    'id',
-    'name'
-  ]
+IntegrationsStore.model = {
+  attributes: function() {
+    return [
+      'id',
+      'name'
+    ]
+  }
 }
 
 module.exports = IntegrationsStore

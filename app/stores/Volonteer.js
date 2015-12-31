@@ -9,9 +9,6 @@ var VolonteerStore = createStore({
       'VOLONTEER_CREATION_SUCCESS': 'onSuccess',
       'VOLONTEER_UPDATE_FAILURE': 'onFailure',
       'VOLONTEER_UPDATE_SUCCESS': 'onSuccess',
-      'SHOW_ACCOUNT_SETTINGS': 'trigger_account',
-      'SHOW_PROFILE_SETTINGS': 'trigger_profile',
-      'SHOW_APPLICATIONS_SETTINGS': 'trigger_applications'
     },
 
     initialize: function () {
@@ -38,25 +35,9 @@ var VolonteerStore = createStore({
       this.emitChange()
     },
 
-    trigger_account: function() {
-      this.subpage = 'BasicSettings'
-      this.emitChange()
-    },
-
-    trigger_profile: function() {
-      this.subpage = 'InfoSettings'
-      this.emitChange()
-    },
-
-    trigger_applications: function() {
-      this.subpage = 'IntegrationsSettings'
-      this.emitChange()
-    },
-
     getState: function () {
       return {
         profile: this.profile || {},
-        subpage: this.subpage,
         error: this.error,
         success: this.success
       }
@@ -74,7 +55,6 @@ var VolonteerStore = createStore({
     // rehydrate them to the same state as they were on the server
     rehydrate: function (state) {
       this.profile = state.profile
-      this.subpage = state.subpage
     }
 });
 
