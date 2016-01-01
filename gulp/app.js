@@ -1,10 +1,11 @@
 'use strict';
 var gulp       = require('gulp'),
     browserify = require('browserify'),
-    reactify = require('reactify'),
     through2 = require('through2'),
     debug = require('debug'),
-    uglify = require('gulp-uglify')
+    uglify = require('gulp-uglify'),
+    sourcemaps = require('gulp-sourcemaps'),
+    babel = require('gulp-babel')
 
 var bootstrapDebug = debug('Example');
 debug.enable('*');
@@ -14,8 +15,10 @@ gulp.task('app', function () {
   var production = (process.env.NODE_ENV === 'production')
   var browserified = through2.obj(function(file, enc, next) {
     var b = browserify(file, {
-      transform: [reactify],
-      basedir: './app/'
+      basedir: './app/',
+      debug: !production // dołącza source mapy
+    }).transform("babelify", {
+      presets: ["react"]
     })
 
     b.bundle(function(err, res){

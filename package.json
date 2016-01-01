@@ -41,7 +41,6 @@
     "react-dom": "0.14.3",
     "react-markdown": "1.0.5",
     "react-tap-event-plugin": "0.2.1",
-    "reactify": "*",
     "request": "*",
     "rethinkdb": "*",
     "sendgrid": "1.9.2",
@@ -49,6 +48,10 @@
     "through2": "*"
   },
   "devDependencies": {
+    "babel-preset-react": "^6.3.13",
+    "babelify": "^7.2.0",
+    "gulp-babel": "*",
+    "gulp-sourcemaps": "*",
     "gulp-uglify": "^1.2.0",
     "jasmine": "2.3",
     "jsdom": "5.4.3",

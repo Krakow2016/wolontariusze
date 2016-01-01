@@ -1,3 +1,6 @@
+// Polyfill dla fluxible-router
+Object.assign = require('object.assign/polyfill')()
+
 var React = require('react');
 var ReactDOM = require('react-dom');
 var debug = require('debug');
@@ -6,8 +9,6 @@ var app = require('./fluxible.js')
 var bootstrapDebug = debug('Example');
 var dehydratedState = window.App; // Sent from the server
 
-// Polyfill dla fluxible-router
-Object.assign = require('object.assign/polyfill')()
 // For chrome dev tool support
 window.React = React
 debug.enable('*');
