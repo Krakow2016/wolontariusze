@@ -3,6 +3,7 @@ var express = require('express'),
     path = require('path'),
     bodyParser = require('body-parser'),
     React = require('react'),
+    ReactDOMServer = require('react-dom/server'),
     serialize = require('serialize-javascript'),
     navigateAction = require('fluxible-router').navigateAction,
     passport = require('passport'),
@@ -243,9 +244,9 @@ server.use(function(req, res, next) {
     debug('Rendering Application component into html');
     var Component = app.getComponent();
 
-    var html = React.renderToStaticMarkup(HtmlComponent({
+    var html = ReactDOMServer.renderToStaticMarkup(HtmlComponent({
       state: exposed,
-      markup: React.renderToString(Component({
+      markup: ReactDOMServer.renderToString(Component({
         context: context.getComponentContext(),
       })),
       context: context.getComponentContext(),

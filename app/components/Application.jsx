@@ -27,7 +27,7 @@ var Application = React.createClass({
   },
 
   render: function() {
-    var Handler = this.props.currentRoute.get('handler');
+    var Handler = this.props.currentRoute.handler;
 
    // Wyświetl komunikat flash
     var bar
