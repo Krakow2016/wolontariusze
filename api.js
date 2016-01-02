@@ -9,7 +9,8 @@ var util = require('util')
 var bodyParser = require('body-parser')
 var expressSession = require('express-session')
 
-var config = require('./config.json')
+var env = process.env.NODE_ENV || 'development'
+var config = require('./config.json')[env]
 var oauth2 = require('./oauth/oauth2')
 
 var Volunteer = require('./app/services/'+config.service+'/volonteers')
@@ -20,9 +21,9 @@ var session = [expressSession({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: false
-}), passport.initialize(), passport.session()]
+}), passport.session()]
 
-var server = express();
+var server = module.exports = express();
 
 server.set('view engine', 'ejs');
 server.set('views', process.cwd() + '/oauth/views')
@@ -30,6 +31,7 @@ server.set('views', process.cwd() + '/oauth/views')
 //server.use(express.cookieParser());
 server.use(bodyParser.json())
 server.use(bodyParser.urlencoded({ extended: true }))
+server.use(passport.initialize())
 /*
 server.use(function(req, res, next) {
   console.log('-- session --');
@@ -70,7 +72,32 @@ server.post('/api/v2/dialog/authorize/decision', session, oauth2.decision);
 server.post('/api/v2/oauth/token', oauth2.token);
 
 // Autoryzacja tokenem oAuth
-var bearer = passport.authenticate('bearer', { session: false })
+var bearer = function(req, res, next) {
+  passport.authenticate('bearer', { session: false }, function(err, user, info) {
+    // Wystąpił błąd
+    if (err) {
+      return next(err) // status: 500
+    }
+    // Niezalogowany
+    if (!user) {
+      return res.status(401).send({
+        'status': 'error'
+      })
+    }
+    // Zaloguj
+    req.logIn(user, function(err) {
+      next() // Kontynuuj
+    })
+  })(req, res, next)
+}
+
+// Wiadomość powitalna
+server.get('/api/v2/', bearer, function(req, res) {
+  res.send({
+    "status": "success",
+    "data": {}
+  })
+})
 
 server.get('/api/v2/client', bearer, function(req, res) {
   res.json({
@@ -100,6 +127,23 @@ server.post('/api/v2/volunteers/:id', bearer, function(req, res) {
   })
 })
 
+// Domyślna ścieżka
+server.use(function(req, res, next) {
+  res.status(404).send({
+    status: 'error',
+    type: 'PathNotFound'
+  })
+})
+
+// Obsługa błędów
+server.use(function(err, req, res, next) {
+  console.error(err.stack)
+  res.status(500).send({
+    status: 'error',
+    type: 'UnknownError'
+  })
+})
+
 // Lista zadań
 //server.get('/tasks', bearer, function(req, res) { })
 
@@ -112,4 +156,7 @@ server.post('/api/v2/volunteers/:id', bearer, function(req, res) {
 // Baza noclegowa pielgrzymów
 //server.get('/pilgrims', bearer, function(req, res) { })
 
-server.listen(config.api_port);
+if(__filename === process.argv[1]) {
+  server.listen(config.api_port)
+  console.log('Serwer został uruchomiony i jest dostępny pod adresem: http://127.0.0.1:'+config.api_port+'/.')
+}

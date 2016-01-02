@@ -19,17 +19,23 @@ module.exports = Protect({
         return
       }
 
-      var id = params.user_id
-      if(!id) { return callback("Błąd: Brak parametru `user_id`.") }
+      if(params.id) { // Pobierz krotkę o danym numerze id
+        r.table('APIClients').get(params.id).run(conn, function(err, row){
+          callback(err || !row, row)
+        })
+      } else { // Pobierz listę krotek
+        var id = params.user_id // TODO: użyj tej samej konwencji do indeksów co w serwisie wolontariusza
+        if(!id) { return callback("Błąd: Brak parametru `user_id`.") }
 
-      // Pobierz klientów API stworzonych przez użytkownika
-      r.table("APIClients")
+        // Pobierz klientów API stworzonych przez użytkownika
+        r.table("APIClients")
         .getAll(id, {index: 'user_id'})
         .run(conn, function(err, cursor){
 
-        if(err) { callback(err) }
-        else { cursor.toArray(callback) }
-      })
+          if(err) { callback(err) }
+          else { cursor.toArray(callback) }
+        })
+      }
     })
   },
 
@@ -53,5 +59,4 @@ module.exports = Protect({
       })
     })
   }
-
 })

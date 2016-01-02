@@ -11,10 +11,13 @@
 var r = require('rethinkdb')
 var bcrypt = require('bcrypt')
 
-var conf = require('../../../config.json').rethinkdb
+var env = process.env.NODE_ENV || 'development'
+var conf = require('../../../config.json')[env].rethinkdb
 
 // Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów
 var Protect = require('../../../lib/protect')
+
+var tableName = 'Volonteers' // TODO: literówka do poprawy
 
 module.exports = Protect({
 
@@ -29,18 +32,18 @@ module.exports = Protect({
       }
 
       if(params.id) { // Pobierz krotkę o danym numerze id
-        r.table('Volonteers').get(params.id).run(conn, function(err, row){
+        r.table(tableName).get(params.id).run(conn, function(err, row){
           callback(err || !row, row)
         })
       } else { // Pobierz listę krotek
         if(config.index) { // use index
-          r.table('Volonteers').getAll(params.key, {index: config.index}).run(conn, function(err, cursor) {
+          r.table(tableName).getAll(params.key, {index: config.index}).run(conn, function(err, cursor) {
             if(err) { callback(err) }
             else { cursor.toArray(callback) }
           })
         } else { // Brak identyfikatora
           // Zwróć wszyskich wolontariuszy
-          r.table('Volonteers').limit(50).run(conn, function(err, cursor) {
+          r.table(tableName).limit(50).run(conn, function(err, cursor) {
             if(err) { callback(err) }
             else { cursor.toArray(callback) }
           })
@@ -58,12 +61,12 @@ module.exports = Protect({
       }
 
       // Upewnij się, że podany email nie istnieje jeszcze w bazie danych
-      r.table('Volonteers').getAll(body.email, {index: 'email'}).run(conn, function(err, cursor) {
+      r.table(tableName).getAll(body.email, {index: 'email'}).run(conn, function(err, cursor) {
         if(err) { callback(err) }
         else {
           cursor.next(function(err) {
             // Brak emaila w bazie
-            if (err) { r.table('Volonteers').insert(body).run(conn, callback) }
+            if (err) { r.table(tableName).insert(body).run(conn, callback) }
             else { callback({message: 'Email is already in the database.'}) }
           })
         }
@@ -94,7 +97,7 @@ module.exports = Protect({
       }
 
       // Wykonaj zapytanie do bazy danych
-      r.table('Volonteers').get(id).update(body).run(conn, callback)
+      r.table(tableName).get(id).update(body).run(conn, callback)
     })
   },
 
