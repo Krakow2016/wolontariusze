@@ -6,7 +6,7 @@ var MyTextField = require('./MyTextField.jsx')
 var Basic = React.createClass({
   render: function() {
     return (
-      <ProfileSettings>
+      <ProfileSettings profileId={this.props.profile.id} context={this.props.context}>
         <div className="pure-g">
           <div className="pure-u-1 pure-u-md-1-3">
             <label htmlFor="first_name">Imię</label>

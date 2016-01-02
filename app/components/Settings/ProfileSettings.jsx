@@ -23,6 +23,17 @@ var ProfileSettings = React.createClass({
   },
 
   handleSubmit: function(data) {
+    //sugestia przy dodawaniu wolontariusza do aktywności
+    if (data.first_name) {
+      data.suggest = {
+        input: [data.first_name, data.last_name],
+        output: data.first_name+" "+data.last_name,
+        payload: {
+          id: this.props.profileId,
+          email: data.email
+        }
+      }
+    }
     data.id = this.props.profileId
     this.props.context.executeAction(updateVolonteer, data)
   },
