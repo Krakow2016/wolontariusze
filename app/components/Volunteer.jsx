@@ -1,7 +1,7 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 
-var VolonteerStore = require('../stores/Volonteer')
+var VolunteerStore = require('../stores/Volunteer')
 
 var Tabs = require('material-ui/lib/tabs/tabs')
 var Tab =  require('material-ui/lib/tabs/tab')
@@ -14,23 +14,23 @@ var Invite = require('./Admin/Invite.jsx')
 var actions = require('../actions')
 var showCommentsAction = actions.showComments;
 
-var Volonteer = React.createClass({
+var Volunteer = React.createClass({
 
   getInitialState: function () {
-    return this.props.context.getStore(VolonteerStore).getState().profile
+    return this.props.context.getStore(VolunteerStore).getState().profile
   },
 
   _changeListener: function() {
-    this.setState(this.props.context.getStore(VolonteerStore).getState().profile)
+    this.setState(this.props.context.getStore(VolunteerStore).getState().profile)
   },
 
   componentDidMount: function() {
-    this.props.context.getStore(VolonteerStore)
+    this.props.context.getStore(VolunteerStore)
       .addChangeListener(this._changeListener);
   },
 
   componentWillUnmount: function() {
-    this.props.context.getStore(VolonteerStore)
+    this.props.context.getStore(VolunteerStore)
       .removeChangeListener(this._changeListener);
   },
 
@@ -76,7 +76,7 @@ var ProfileTabs = React.createClass({
   showProfileComments: function (){
     console.log ('show comments');
     this.props.context.executeAction(showCommentsAction, {
-      volonteerId: this.props.id
+      volunteerId: this.props.id
     })
   },
 
@@ -202,7 +202,7 @@ var ProfileTabs = React.createClass({
     if (is_admin) {
       tabs.push(
         <Tab label="Komentarze" key="comments" onActive={this.showProfileComments}>
-          <ProfileComments volonteerId={this.props.id} adminId={user.id} context={this.props.context}></ProfileComments>
+          <ProfileComments adminId={user.id} context={this.props.context}></ProfileComments>
         </Tab>
       )
     }
@@ -228,4 +228,4 @@ var ExtraAttributesVisible = React.createClass({
 })
 
 // Module.exports instead of normal dom mounting
-module.exports = Volonteer
+module.exports = Volunteer

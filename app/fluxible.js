@@ -1,3 +1,5 @@
+'use strict'
+
 var React = require('react'),
     Fluxible = require('fluxible'),
     fetchrPlugin = require('fluxible-plugin-fetchr'),
@@ -5,8 +7,8 @@ var React = require('react'),
 
 var routes = require('./routes')
 var ApplicationStore = require('./stores/ApplicationStore')
-var VolonteerStore = require('./stores/Volonteer')
-var VolonteersStore = require('./stores/Volonteers')
+var VolunteerStore = require('./stores/Volunteer')
+var VolunteersStore = require('./stores/Volunteers')
 var ActivityStore = require('./stores/Activity')
 var ActivitiesStore = require('./stores/Activities')
 var NewCommentStore = require('./stores/NewComment')
@@ -24,8 +26,8 @@ var app = new Fluxible({
   stores: [
     RouteStore.withStaticRoutes(routes),
     ApplicationStore,
-    VolonteerStore,
-    VolonteersStore,
+    VolunteerStore,
+    VolunteersStore,
     NewCommentStore,
     CommentsStore,
     ActivityStore,

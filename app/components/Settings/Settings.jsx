@@ -5,7 +5,7 @@ var Menu = require('material-ui/lib/menus/menu')
 var MenuItem = require('material-ui/lib/menus/menu-item')
 var Paper = require('material-ui/lib/paper')
 
-var VolonteerStore = require('../../stores/Volonteer')
+var VolunteerStore = require('../../stores/Volunteer')
 
 var Settings = React.createClass({
   render: function() {

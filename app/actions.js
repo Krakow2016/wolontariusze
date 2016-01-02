@@ -1,6 +1,6 @@
 'use strict'
 
-var VolonteerStore = require('./stores/Volonteer')
+var VolunteerStore = require('./stores/Volunteer')
 var ActivityStore = require('./stores/Activity')
 var navigateAction = require('fluxible-router').navigateAction;
 var conf = require('../config.json')
@@ -33,51 +33,51 @@ var sendActivityEmailAction = function(context, query) {
   }
 
 module.exports = {
-  showVolonteer: function(context, payload, cb) {
+  showVolunteer: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
-    context.service.read('Volonteers', payload, {},
+    context.service.read('Volunteers', payload, {},
       function (err, data) {
         if (err) { console.log(err) }
-        else { context.dispatch('LOAD_VOLONTEER', data) }
+        else { context.dispatch('LOAD_VOLUNTEER', data) }
         cb()
       }
     )
   },
 
-  loadVolonteers: function(context, payload, cb) {
+  showVolunteers: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
-    context.service.read('Volonteers', payload, {},
+    context.service.read('Volunteers', payload, {},
       function (err, data) {
         if(err) { console.log(err) }
-        else { context.dispatch('LOAD_VOLONTEERS', data) }
+        else { context.dispatch('LOAD_VOLUNTEERS', data) }
         cb()
       }
     )
   },
 
-  createVolonteer: function(context, payload, cb) {
-    var volonteerStore = context.getStore(VolonteerStore)
-    var volonteer = volonteerStore.createVolonteer(payload)
+  createVolunteer: function(context, payload, cb) {
+    var volunteerStore = context.getStore(VolunteerStore)
+    var volunteer = volunteerStore.createVolunteer(payload)
 
-    context.service.create('Volonteers', {}, volonteer, function (err) {
+    context.service.create('Volunteers', {}, volunteer, function (err) {
       if (err) { // Błąd po stronie serwera
-        context.dispatch('VOLONTEER_CREATION_FAILURE', [volonteer])
+        context.dispatch('VOLUNTEER_CREATION_FAILURE', [volunteer])
       } else {
-        context.dispatch('VOLONTEER_CREATION_SUCCESS', [volonteer])
+        context.dispatch('VOLUNTEER_CREATION_SUCCESS', [volunteer])
       }
       cb()
     })
   },
 
-  updateVolonteer: function(context, payload, cb) {
-    var volonteerStore = context.getStore(VolonteerStore)
-    var volonteer = volonteerStore.createVolonteer(payload)
+  updateVolunteer: function(context, payload, cb) {
+    var volunteerStore = context.getStore(VolunteerStore)
+    var volunteer = volunteerStore.createVolunteer(payload)
 
-    context.service.update('Volonteers', {}, volonteer, function (err) {
+    context.service.update('Volunteers', {}, volunteer, function (err) {
       if (err) { // Błąd po stronie serwera
-        context.dispatch('VOLONTEER_UPDATE_FAILURE', [volonteer])
+        context.dispatch('VOLUNTEER_UPDATE_FAILURE', [volunteer])
       } else {
-        context.dispatch('VOLONTEER_UPDATE_SUCCESS', [volonteer])
+        context.dispatch('VOLUNTEER_UPDATE_SUCCESS', [volunteer])
       }
       cb()
     })
@@ -172,7 +172,7 @@ module.exports = {
 
   profileCommentsUpdate: function(context, payload, cb) {
     console.log('profile comment update')
-    context.service.update('Comments', payload, {}, function (err, data) {
+    context.service.update('Comments', payload, {}, function (err) {
       if(err) { console.log(err) }
       else { context.dispatch('COMMENT_UPDATED', payload) }
       cb()
@@ -181,7 +181,7 @@ module.exports = {
 
   profileCommentsDelete: function(context, payload, cb) {
     console.log('profile comment delete')
-    context.service.delete('Comments', payload, {}, function (err, data) {
+    context.service.delete('Comments', payload, {}, function (err) {
       if(err) { console.log(err) }
       else { context.dispatch('COMMENT_DELETED', payload) }
       cb()
@@ -225,8 +225,6 @@ module.exports = {
 
     var age_from = parseInt(state['age-from'])
     var age_to = parseInt(state['age-to'])
-
-    var languages
 
     var filtered = {
       filtered : {
@@ -291,9 +289,9 @@ module.exports = {
     var language_keys = language ? Object.keys(language) : []
     language_keys.forEach(function(key){
       if(language[key]) {
-        var range = {}
-        range['languages.'+key+'.level'] = { gte: 1, lte: 10 }
-        filtered.query.bool.must.push({range: range})
+        var lang_range = {}
+        lang_range['languages.'+key+'.level'] = { gte: 1, lte: 10 }
+        filtered.query.bool.must.push({range: lang_range})
         query.query.function_score.functions.push({
           field_value_factor: {
             "field" : "languages."+key+".level",
@@ -303,11 +301,11 @@ module.exports = {
       }
     })
 
-    if(state['other_val']) {
-      var val = state['other_val']
-      var range = {}
-      range['languages.'+val+'.level'] = { gte: 1, lte: 10 }
-      filtered.query.bool.must.push({range: range})
+    if(state.other_val) {
+      var val = state.other_val
+      var other_lang_range = {}
+      other_lang_range['languages.'+val+'.level'] = { gte: 1, lte: 10 }
+      filtered.query.bool.must.push({range: other_lang_range})
       query.query.function_score.functions.push({
         field_value_factor: {
           "field" : "languages."+val+".level",
@@ -332,20 +330,25 @@ module.exports = {
 
     if(age_from || age_to) {
       var today = new Date()
-      var range = {
+      var age_range = {
         range: {
-          birth_date: {} }}
+          birth_date: {}
+        }
+      }
 
-          if(age_from)
-            range.range.birth_date.lte = new Date(new Date().setMonth(today.getMonth() - 12*(age_from-1)))
-          if(age_to)
-            range.range.birth_date.gte = new Date(new Date().setMonth(today.getMonth() - 12*age_to))
+      if(age_from) {
+        age_range.range.birth_date.lte = new Date(new Date().setMonth(today.getMonth() - 12*(age_from-1)))
+      }
 
-          if(filtered.filter.and) {
-            filtered.filter.and.push(range)
-          } else {
-            filtered.filter.and = [range]
-          }
+      if(age_to) {
+        age_range.range.birth_date.gte = new Date(new Date().setMonth(today.getMonth() - 12*age_to))
+      }
+
+      if(filtered.filter.and) {
+        filtered.filter.and.push(age_range)
+      } else {
+        filtered.filter.and = [age_range]
+      }
     }
 
     var request = new XMLHttpRequest()
@@ -357,11 +360,10 @@ module.exports = {
         var resp = request.responseText;
         var json = JSON.parse(resp)
 
-        console.log(json) // TODO: wyświetl wyniki
-
         context.dispatch('LOAD_RESULTS', json)
-      } else {
-        // We reached our target server, but it returned an error
+        cb()
+      //} else {
+      // We reached our target server, but it returned an error
       }
     }
 
@@ -393,8 +395,8 @@ module.exports = {
         console.log(json) // TODO: wyświetl wyniki
 
         context.dispatch('INVITATION_SEND', json)
-      } else {
-        // We reached our target server, but it returned an error
+      //} else {
+      // We reached our target server, but it returned an error
       }
     }
 

@@ -1,3 +1,4 @@
+'use strict'
 var r = require('rethinkdb')
 var conf = require('../../../config.json').rethinkdb
 

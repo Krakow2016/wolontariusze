@@ -5,7 +5,7 @@ var provideContext = addons.provideContext
 var connectToStores = addons.connectToStores
 
 var ApplicationStore = require('../stores/ApplicationStore')
-var VolonteerStore = require('../stores/Volonteer')
+var VolunteerStore = require('../stores/Volunteer')
 
 var injectTapEventPlugin = require('react-tap-event-plugin');
 //Needed for onTouchTap
@@ -33,10 +33,10 @@ var Application = React.createClass({
   }
 })
 
-Application = connectToStores(Application, [ApplicationStore, VolonteerStore], function (context, props) {
+Application = connectToStores(Application, [ApplicationStore, VolunteerStore], function (context, props) {
   return {
     ApplicationStore: context.getStore(ApplicationStore).getState(),
-    VolonteerStore: context.getStore(VolonteerStore).getState()
+    VolunteerStore: context.getStore(VolunteerStore).getState()
   }
 })
 

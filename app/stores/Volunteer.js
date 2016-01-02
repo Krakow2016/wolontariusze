@@ -1,14 +1,14 @@
 'use strict';
 var createStore  = require('fluxible/addons').createStore
 
-var VolonteerStore = createStore({
-    storeName: 'Volonteers',
+var VolunteerStore = createStore({
+    storeName: 'Volunteers',
     handlers: {
-      'LOAD_VOLONTEER'  : 'load',
-      'VOLONTEER_CREATION_FAILURE': 'onFailure',
-      'VOLONTEER_CREATION_SUCCESS': 'onSuccess',
-      'VOLONTEER_UPDATE_FAILURE': 'onFailure',
-      'VOLONTEER_UPDATE_SUCCESS': 'onSuccess',
+      'LOAD_VOLUNTEER'  : 'load',
+      'VOLUNTEER_CREATION_FAILURE': 'onFailure',
+      'VOLUNTEER_CREATION_SUCCESS': 'onSuccess',
+      'VOLUNTEER_UPDATE_FAILURE': 'onFailure',
+      'VOLUNTEER_UPDATE_SUCCESS': 'onSuccess',
     },
 
     initialize: function () {
@@ -19,8 +19,8 @@ var VolonteerStore = createStore({
       this.emitChange();
     },
 
-    createVolonteer: function(volonteer) {
-      return volonteer
+    createVolunteer: function(volunteer) {
+      return volunteer
     },
 
     onFailure: function() {
@@ -59,7 +59,7 @@ var VolonteerStore = createStore({
 });
 
 // Atrubyty do odczytu przez wszystkich
-VolonteerStore.attributes = function() {
+VolunteerStore.attributes = function() {
   return [
     'id',
     'first_name',
@@ -73,4 +73,4 @@ VolonteerStore.attributes = function() {
   ]
 }
 
-module.exports = VolonteerStore;
+module.exports = VolunteerStore;

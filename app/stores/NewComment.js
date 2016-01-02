@@ -10,7 +10,7 @@ var NewComment = createStore({
 
   handlers: {
     'COMMENT_CREATED': 'reset',
-    'LOAD_VOLONTEER'  : 'update_volonteer'
+    'LOAD_VOLUNTEER'  : 'update_volunteer'
   },
 
   reset: function() {
@@ -19,15 +19,15 @@ var NewComment = createStore({
     this.emitChange()
   },
 
-  update_volonteer: function(volonteer) {
-    this.volonteerId = volonteer.id
+  update_volunteer: function(volunteer) {
+    this.volunteerId = volunteer.id
     this.emitChange()
   },
 
   getState: function() {
     return {
       text: this.text,
-      volonteerId: this.volonteerId
+      volunteerId: this.volunteerId
     }
   },
 
@@ -43,7 +43,7 @@ var NewComment = createStore({
   // rehydrate them to the same state as they were on the server
   rehydrate: function (state) {
     this.text = state.text
-    this.volonteerId = state.volonteerId
+    this.volunteerId = state.volunteerId
   }
 })
 

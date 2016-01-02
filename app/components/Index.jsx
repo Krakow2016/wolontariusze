@@ -2,10 +2,10 @@ var React = require('react')
 var Paper = require('material-ui/lib/paper')
 
 var ApplicationStore = require('../stores/ApplicationStore')
-var VolonteersStore = require('../stores/Volonteers')
+var VolunteersStore = require('../stores/Volunteers')
 
 var NavLink = require('fluxible-router').NavLink
-var VolonteerList = require('./VolonteersList.jsx')
+var VolunteerList = require('./VolunteersList.jsx')
 
 var App = React.createClass({
   contextTypes: {
@@ -13,20 +13,20 @@ var App = React.createClass({
   },
 
   getInitialState: function () {
-    return this.props.context.getStore(VolonteersStore).getAll()
+    return this.props.context.getStore(VolunteersStore).getAll()
   },
 
   _changeListener: function() {
-    this.setState(this.props.context.getStore(VolonteersStore).getAll())
+    this.setState(this.props.context.getStore(VolunteersStore).getAll())
   },
 
   componentDidMount: function() {
-    this.props.context.getStore(VolonteersStore)
+    this.props.context.getStore(VolunteersStore)
       .addChangeListener(this._changeListener)
   },
 
   componentWillUnmount: function() {
-    this.props.context.getStore(VolonteersStore)
+    this.props.context.getStore(VolunteersStore)
       .removeChangeListener(this._changeListener)
   },
 

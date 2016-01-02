@@ -6,7 +6,7 @@ var Snackbar = require('material-ui/lib/snackbar')
 var provideContext = addons.provideContext
 
 var ApplicationStore = require('../stores/ApplicationStore')
-var VolonteerStore = require('../stores/Volonteer')
+var VolunteerStore = require('../stores/Volunteer')
 var ActivityStore = require('../stores/Activity')
 
 var Authentication = require('./Authentication.jsx')

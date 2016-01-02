@@ -3,20 +3,20 @@ var Paper = require('material-ui/lib/paper')
 var navigateAction = require('fluxible-router').navigateAction
 
 var Password = require('./Settings/Password.jsx')
-var updateVolonteer = require('../actions').updateVolonteer
-var VolonteerStore = require('../stores/Volonteer')
+var updateVolunteer = require('../actions').updateVolunteer
+var VolunteerStore = require('../stores/Volunteer')
 
 var Welcome = React.createClass({
 
   getInitialState: function () {
     return {
-      profile: this.props.context.getStore(VolonteerStore).getState().profile,
+      profile: this.props.context.getStore(VolunteerStore).getState().profile,
       canSubmit: false
     }
   },
 
   _changeListener: function() {
-    if(this.props.context.getStore(VolonteerStore).getState().success) {
+    if(this.props.context.getStore(VolunteerStore).getState().success) {
       // Hasło zostało zmienione
       this.props.context.executeAction(navigateAction, {
         type: 'replacestate',
@@ -26,12 +26,12 @@ var Welcome = React.createClass({
   },
 
   componentDidMount: function() {
-    this.props.context.getStore(VolonteerStore).addChangeListener(this._changeListener)
+    this.props.context.getStore(VolunteerStore).addChangeListener(this._changeListener)
   },
 
   componentWillUnmount: function componentWillUnmount() {
     // Usuń funkcję nasłychującą
-    this.props.context.getStore(VolonteerStore)
+    this.props.context.getStore(VolunteerStore)
       .removeChangeListener(this._changeListener)
   },
 
@@ -49,7 +49,7 @@ var Welcome = React.createClass({
 
   handleSubmit: function(data) {
     data.id = this.state.profile.id
-    this.props.context.executeAction(updateVolonteer, data)
+    this.props.context.executeAction(updateVolunteer, data)
   },
 
   render: function() {

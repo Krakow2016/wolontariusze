@@ -4,7 +4,7 @@ var Fluxible = require('fluxible');
 var routes = require('../../app/routes')
 var RouteStore = require('fluxible-router').RouteStore;
 var ApplicationStore = require('../../app/stores/ApplicationStore')
-var VolonteerStore = require('../../app/stores/Volonteer')
+var VolunteerStore = require('../../app/stores/Volunteer')
 
 var passportPlugin = require('../../app/plugins/passportPlugin')
 
@@ -33,7 +33,7 @@ createComponent = function(component, props, children) {
     stores: [
       RouteStore.withStaticRoutes(routes),
       ApplicationStore,
-      VolonteerStore
+      VolunteerStore
     ]
   })
 
@@ -47,7 +47,7 @@ createComponent = function(component, props, children) {
   props.handler = component
   props.context = context.getComponentContext()
 
-  context.getActionContext().dispatch('LOAD_VOLONTEER', {
+  context.getActionContext().dispatch('LOAD_VOLUNTEER', {
       first_name: "Jan",
       last_name: "Kowalski"
   });

@@ -3,10 +3,10 @@ var Formsy = require('formsy-react')
 var Paper = require('material-ui/lib/paper')
 var TextField = require('material-ui/lib/text-field')
 
-var VolonteerStore = require('../stores/Volonteer')
-var createVolonteer = require('../actions').createVolonteer
+var VolunteerStore = require('../stores/Volunteer')
+var createVolunteer = require('../actions').createVolunteer
 
-var BasicSettings = require('./Settings/Basic.jsx')
+var BasicForm = require('./Settings/BasicForm.jsx')
 
 var MyInput = React.createClass({
 
@@ -44,18 +44,18 @@ var Registration = React.createClass({
   componentDidMount: function componentDidMount() {
     // Nasłuchuj zmiań na zasobie wolontariusza. Nastąpi ona po zapisaniu
     // go w bazie danych.
-    this.props.context.getStore(VolonteerStore).addChangeListener(this._onStoreChange)
+    this.props.context.getStore(VolunteerStore).addChangeListener(this._onStoreChange)
   },
 
   componentWillUnmount: function componentWillUnmount() {
     // Usuń funkcję nasłychującą.
-    this.props.context.getStore(VolonteerStore).removeChangeListener(this._onStoreChange)
+    this.props.context.getStore(VolunteerStore).removeChangeListener(this._onStoreChange)
   },
 
   _onStoreChange: function() {
     // Nastąpiła zmiana w stanie zasobu wolontariusza - uaktualij widok.
-    var volonteer = this.props.context.getStore(VolonteerStore).getState()
-    this.setState(volonteer)
+    var volunteer = this.props.context.getStore(VolunteerStore).getState()
+    this.setState(volunteer)
   },
 
   render: function() {
@@ -92,7 +92,7 @@ var RegistrationForm = React.createClass({
   },
 
   handleSubmit: function(data) {
-    this.props.context.executeAction(createVolonteer, data)
+    this.props.context.executeAction(createVolunteer, data)
   },
 
   render: function () {
@@ -105,7 +105,7 @@ var RegistrationForm = React.createClass({
       <Paper className="paper">
         <Formsy.Form className="registrationForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
 
-          <BasicSettings {...this.state} />
+          <BasicForm {...this.state} />
 
           <div className="pure-g">
             <div className="pure-u-1 pure-u-md-1-3"></div>
