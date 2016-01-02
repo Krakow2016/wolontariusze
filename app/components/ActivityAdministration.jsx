@@ -2,7 +2,6 @@ var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 
 var ActivityStore = require('../stores/Activity')
-var VolonteersStore = require('../stores/Volonteers')
 var Authentication = require('./Authentication.jsx')
 var ActivityVolonteersList = require('./ActivityVolonteersList.jsx');
 

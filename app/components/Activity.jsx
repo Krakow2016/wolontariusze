@@ -3,7 +3,6 @@ var NavLink = require('fluxible-router').NavLink
 var ReactMarkdown = require('react-markdown');
 
 var ActivityStore = require('../stores/Activity')
-var VolonteersStore = require('../stores/Volonteers')
 var Authentication = require('./Authentication.jsx')
 var ActivityEdit = require('./ActivityEdit.jsx')
 
