@@ -6,7 +6,7 @@ var TextField = require('material-ui/lib/text-field')
 var VolunteerStore = require('../stores/Volunteer')
 var createVolunteer = require('../actions').createVolunteer
 
-var BasicSettings = require('./Settings/Basic.jsx')
+var BasicForm = require('./Settings/BasicForm.jsx')
 
 var MyInput = React.createClass({
 
@@ -105,7 +105,7 @@ var RegistrationForm = React.createClass({
       <Paper className="paper">
         <Formsy.Form className="registrationForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
 
-          <BasicSettings {...this.state} />
+          <BasicForm {...this.state} />
 
           <div className="pure-g">
             <div className="pure-u-1 pure-u-md-1-3"></div>
