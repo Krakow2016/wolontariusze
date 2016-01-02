@@ -38,6 +38,7 @@ gulp.task('rethinkdb', function (cb) {
                                 clientSecret: "bar",
                                 name: "Testowy klient API"
                               }).run(conn, function(err, resp){
+                                })
                               })
                             })
                           })

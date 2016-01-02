@@ -28,6 +28,7 @@ var app = new Fluxible({
     CommentsStore,
     ActivityStore,
     ActivitiesStore,
+    ResultsStore,
     IntegrationsStore
   ]
 })
