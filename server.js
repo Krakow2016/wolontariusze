@@ -1,3 +1,5 @@
+'use strict'
+
 var express = require('express'),
     handlebars  = require('express-handlebars'),
     path = require('path'),
@@ -28,7 +30,7 @@ var server = module.exports = express()
 // pod lokalną bazę danych.
 var Activity = require('./app/services/'+config.service+'/activities')
 var Comments = require('./app/services/'+config.service+'/comments')
-var Volonteer = require('./app/services/'+config.service+'/volonteers')
+var Volunteer = require('./app/services/'+config.service+'/volonteers')
 var Integration = require('./app/services/'+config.service+'/integrations')
 var APIClient = require('./app/services/'+config.service+'/apiclients')
 
@@ -44,7 +46,7 @@ require('./auth');
 passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
   function(req, apikey, done) {
     // Znajdź konto na które podany token został wygenerowany
-    Volonteer.read({force_admin: true}, 'Volonteers', { key: apikey }, { index: 'token' }, function (err, users) {
+    Volunteer.read({force_admin: true}, 'Volunteers', { key: apikey }, { index: 'token' }, function (err, users) {
       var user = users[0]
       if (err) { return done(err) } // Błąd bazy danych
       if (!user) {
@@ -69,7 +71,7 @@ passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
           return done({message: 'Token expired. You must generate a new one.'})
         } else { // Autoryzacja przebiegła pomyślnie
           token.used = { datetime: new Date(), ip: req.ip, headers: req.headers }
-          Volonteer.update({force_admin: true}, 'Volonteers', {id: user.id}, {
+          Volunteer.update({force_admin: true}, 'Volunteers', {id: user.id}, {
             access_tokens: tokens
           }, {}, function (err) {
             if(err) {
@@ -113,7 +115,7 @@ server.set('view engine', 'handlebars')
 
 if(fetchrPlugin) {
   // Register our messages REST services
-  fetchrPlugin.registerService(Volonteer);
+  fetchrPlugin.registerService(Volunteer);
   fetchrPlugin.registerService(Activity);
   fetchrPlugin.registerService(Comments);
   fetchrPlugin.registerService(Integration);
@@ -159,7 +161,7 @@ server.get('/invitation', passport.authenticate('localapikey', {
 server.post('/invitation', jsonParser, function(req, res) {
   var id = req.body.id
   if(req.user && req.user.is_admin) {
-     Volonteer.read(req, 'Volonteers', {id: id}, {}, function (err, user) {
+     Volunteer.read(req, 'Volunteers', {id: id}, {}, function (err, user) {
 
        // Generuje losowy token dostępu
        crypto.randomBytes(32, function(ex, buf) {
@@ -177,7 +179,7 @@ server.post('/invitation', jsonParser, function(req, res) {
          })
 
          // Zapisz w token w bazie
-         Volonteer.update(req, 'Volonteers', {id: id}, {
+         Volunteer.update(req, 'Volunteers', {id: id}, {
              approved: true,
              access_tokens: tokens
          }, {}, function (err) {

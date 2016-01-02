@@ -1,4 +1,4 @@
-var Volunteer = require('../app/components/Volonteer.jsx')
+var Volunteer = require('../app/components/Volunteer.jsx')
 
 var ReactTestUtils = require('react-addons-test-utils');
 var Fluxible = require('fluxible');

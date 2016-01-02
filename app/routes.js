@@ -1,3 +1,5 @@
+'use strict'
+
 var actions = require('./actions')
 
 module.exports = {
@@ -16,9 +18,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Registration.jsx'),
     action: function (context, payload, done) {
-      //context.executeAction(actions.showVolonteer, { id: volonteerId }, function() {
       done();
-      //})
     }
   },
 
@@ -28,32 +28,32 @@ module.exports = {
     handler: require('./components/Welcome.jsx'),
     action: function (context, payload, done) {
       var user = context.getUser()
-      context.executeAction(actions.showVolonteer, { id: user.id }, function() {
+      context.executeAction(actions.showVolunteer, { id: user.id }, function() {
         done();
       })
     }
   },
 
-  volonteer: {
+  volunteer: {
     path: '/wolontariusz/:id',
     method: 'get',
-    handler: require('./components/Volonteer.jsx'),
+    handler: require('./components/Volunteer.jsx'),
     action: function (context, payload, done) {
-      var volonteerId  = payload.get('params').get('id');
-      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: volonteerId + ' [Dynamic Page] | flux-examples | routing' });
-      context.executeAction(actions.showVolonteer, { id: volonteerId }, function() {
+      var volunteerId  = payload.params.id
+      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: volunteerId + ' [Dynamic Page] | flux-examples | routing' });
+      context.executeAction(actions.showVolunteer, { id: volunteerId }, function() {
         done();
       })
     }
   },
 
-  volonteer_administration: {
+  volunteer_administration: {
     path: '/wolontariusz/:id/admin',
     method: 'get',
-    handler: require('./components/VolonteerAdministration.jsx'),
+    handler: require('./components/VolunteerAdministration.jsx'),
     action: function (context, payload, done) {
-      var volonteerId  = payload.get('params').get('id');
-      context.executeAction(actions.showVolonteer, { id: volonteerId }, function() {
+      var volunteerId  = payload.params.id
+      context.executeAction(actions.showVolunteer, { id: volunteerId }, function() {
         done();
       })
     }
@@ -64,7 +64,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Activity.jsx'),
     action: function (context, payload, done) {
-      var activityId  = payload.get('params').get('id');
+      var activityId  = payload.params.id
       context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: activityId + ' Aktywnosc' });
       context.executeAction(actions.showActivity, { id: activityId }, function() {
         done();
@@ -89,7 +89,7 @@ module.exports = {
     action: function (context, payload, done) {
       var user = context.getUser()
       if(user) {
-        context.executeAction(actions.showVolonteer, { id: user.id }, function() {
+        context.executeAction(actions.showVolunteer, { id: user.id }, function() {
           done()
         })
       } else {
@@ -105,7 +105,7 @@ module.exports = {
     action: function (context, payload, done) {
       var user = context.getUser()
       if(user) {
-        context.executeAction(actions.showVolonteer, { id: user.id }, function() {
+        context.executeAction(actions.showVolunteer, { id: user.id }, function() {
           done()
         })
       } else {

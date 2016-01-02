@@ -1,9 +1,11 @@
+'use strict'
+
 var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy
 var bcrypt = require('bcrypt')
 
 var config = require('./config.json')
-var Volonteer = require('./app/services/'+config.service+'/volonteers')
+var Volunteer = require('./app/services/'+config.service+'/volonteers')
 
 /**
  * LocalStrategy
@@ -15,7 +17,7 @@ var Volonteer = require('./app/services/'+config.service+'/volonteers')
 passport.use(new LocalStrategy(
   function(username, password, done) {
     // Próba logowania
-    Volonteer.read({force_admin: true}, 'Volonteers', { key: username }, { index: 'email' }, function (err, users) {
+    Volunteer.read({force_admin: true}, 'Volunteers', { key: username }, { index: 'email' }, function (err, users) {
       // Wystąpił niespodziewany błąd
       if (err) { return done(err) }
       var user = users[0]
@@ -48,7 +50,7 @@ passport.serializeUser(function(user, done) {
 // Zdefiniuj metodę odtworzenia obiektu użytkownika na podstawie wcześniej
 // zapamiętanej referencji (numeru id w bazie danych).
 passport.deserializeUser(function(id, done) {
-  Volonteer.read({force_admin: true}, 'Volonteers', { id: id }, {}, function (err, user) {
+  Volunteer.read({force_admin: true}, 'Volunteers', { id: id }, {}, function (err, user) {
     done(err, user)
   })
 })

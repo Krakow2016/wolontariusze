@@ -20,10 +20,10 @@ var ApplicationStore = createStore({
         this.flashSuccess = message
         this.emitChange();
     },
-    getFailure: function(message) {
+    getFailure: function() {
         return this.flashFailure
     },
-    getSuccess: function(message) {
+    getSuccess: function() {
         return this.flashSuccess
     },
     updatePageTitle: function (title) {

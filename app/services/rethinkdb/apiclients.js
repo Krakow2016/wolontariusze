@@ -1,7 +1,8 @@
+'use strict'
+
 var r = require('rethinkdb')
 
 var conf = require('../../../config.json').rethinkdb
-var debug = require('debug')('Server')
 
 var utils = require('../../../oauth/utils')
 // Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów

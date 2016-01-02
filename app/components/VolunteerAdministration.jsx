@@ -3,30 +3,30 @@ var Paper = require('material-ui/lib/paper')
 var Button = require('material-ui/lib/raised-button')
 var Dialog = require('material-ui/lib/dialog')
 
-var VolonteerStore = require('../stores/Volonteer')
-var updateVolonteer = require('../actions').updateVolonteer
+var VolunteerStore = require('../stores/Volunteer')
+var updateVolunteer = require('../actions').updateVolunteer
 var Invite = require('./Admin/Invite.jsx')
 
-var VolonteerAdministration = React.createClass({
+var VolunteerAdministration = React.createClass({
   getInitialState: function () {
     return {
-      profile: this.props.context.getStore(VolonteerStore).getState().profile
+      profile: this.props.context.getStore(VolunteerStore).getState().profile
     }
   },
 
   _changeListener: function() {
     this.setState({
-      profile: this.props.context.getStore(VolonteerStore).getState().profile
+      profile: this.props.context.getStore(VolunteerStore).getState().profile
     })
   },
 
   componentDidMount: function() {
-    this.props.context.getStore(VolonteerStore)
+    this.props.context.getStore(VolunteerStore)
       .addChangeListener(this._changeListener)
   },
 
   componentWillUnmount: function() {
-    this.props.context.getStore(VolonteerStore)
+    this.props.context.getStore(VolunteerStore)
       .removeChangeListener(this._changeListener)
   },
 
@@ -39,7 +39,7 @@ var VolonteerAdministration = React.createClass({
   },
 
   _onRejectionDialogSubmit: function() {
-    this.props.context.executeAction(updateVolonteer, {
+    this.props.context.executeAction(updateVolunteer, {
       id: this.state.profile.id,
       approved: false
     })
@@ -47,7 +47,7 @@ var VolonteerAdministration = React.createClass({
   },
 
   _onAdminDialogSubmit: function() {
-    this.props.context.executeAction(updateVolonteer, {
+    this.props.context.executeAction(updateVolunteer, {
       id: this.state.profile.id,
       is_admin: true
     })
@@ -130,4 +130,4 @@ var VolonteerAdministration = React.createClass({
   },
 })
 
-module.exports = VolonteerAdministration
+module.exports = VolunteerAdministration

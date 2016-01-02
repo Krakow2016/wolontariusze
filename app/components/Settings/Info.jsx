@@ -2,27 +2,27 @@ var React = require('react')
 
 var ProfileSettings = require('./ProfileSettings.jsx')
 var MyTextField = require('./MyTextarea.jsx')
-var VolonteerStore = require('../../stores/Volonteer')
+var VolunteerStore = require('../../stores/Volunteer')
 
 var Info = React.createClass({
 
   getInitialState: function () {
     return {
-      profile: this.props.context.getStore(VolonteerStore).getState().profile,
+      profile: this.props.context.getStore(VolunteerStore).getState().profile,
     }
   },
 
   _changeListener: function() {
-    this.setState(this.props.context.getStore(VolonteerStore).getState())
+    this.setState(this.props.context.getStore(VolunteerStore).getState())
   },
 
   componentDidMount: function() {
-    this.props.context.getStore(VolonteerStore).addChangeListener(this._changeListener)
+    this.props.context.getStore(VolunteerStore).addChangeListener(this._changeListener)
   },
 
   componentWillUnmount: function componentWillUnmount() {
     // Usuń funkcję nasłychującą
-    this.props.context.getStore(VolonteerStore)
+    this.props.context.getStore(VolunteerStore)
       .removeChangeListener(this._changeListener)
   },
 

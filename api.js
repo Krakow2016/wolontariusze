@@ -1,3 +1,5 @@
+'use strict'
+
 /**
  * Module dependencies.
  */
@@ -10,7 +12,7 @@ var expressSession = require('express-session')
 var config = require('./config.json')
 var oauth2 = require('./oauth/oauth2')
 
-var Volonteer = require('./app/services/'+config.service+'/volonteers')
+var Volunteer = require('./app/services/'+config.service+'/volonteers')
 
 // Express configuration
 
@@ -79,21 +81,21 @@ server.get('/api/v2/client', bearer, function(req, res) {
 
 // Lista wolontariuszy
 server.get('/api/v2/volunteers', bearer, function(req, res) {
-  Volonteer.read(req, 'Volonteers', {}, req.query, function (err, users) {
+  Volunteer.read(req, 'Volunteers', {}, req.query, function (err, users) {
     res.send(users)
   })
 })
 
 // Szczegóły wolontariusza
 server.get('/api/v2/volunteers/:id', bearer, function(req, res) {
-  Volonteer.read(req, 'Volonteers', {id: req.params.id}, {}, function (err, user) {
+  Volunteer.read(req, 'Volunteers', {id: req.params.id}, {}, function (err, user) {
     res.send(user)
   })
 })
 
 // Aktualizacja wolontariusza
 server.post('/api/v2/volunteers/:id', bearer, function(req, res) {
-  Volonteer.update(req, 'Volonteers', {id: req.params.id}, req.body, {}, function (err, user) {
+  Volunteer.update(req, 'Volunteers', {id: req.params.id}, req.body, {}, function (err, user) {
     res.send(user)
   })
 })

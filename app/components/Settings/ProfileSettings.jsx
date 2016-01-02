@@ -2,7 +2,7 @@ var React = require('react')
 var Snackbar = require('material-ui/lib/snackbar')
 
 var Settings = require('./Settings.jsx')
-var updateVolonteer = require('../../actions').updateVolonteer
+var updateVolunteer = require('../../actions').updateVolunteer
 
 var ProfileSettings = React.createClass({
 
@@ -26,7 +26,7 @@ var ProfileSettings = React.createClass({
 
   handleSubmit: function(data) {
     data.id = this.props.profileId
-    this.props.context.executeAction(updateVolonteer, data)
+    this.props.context.executeAction(updateVolunteer, data)
   },
 
   render: function() {

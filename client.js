@@ -1,3 +1,5 @@
+'use strict'
+
 // Polyfill dla fluxible-router
 Object.assign = require('object.assign/polyfill')()
 

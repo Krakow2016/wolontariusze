@@ -1,3 +1,5 @@
+'use strict'
+
 // The service code that you write is always executed on the server, but can be
 // accessed transparently from actions without any knowledge of whether it's on
 // the server or client. Fetchr provides an appropriate abstraction so that you
