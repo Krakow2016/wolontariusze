@@ -1,0 +1,79 @@
+{
+  "mappings" : {
+    "volunteer" : {
+      "properties" : {
+        "doc": {
+          "type": "nested",
+            "properties" : {
+              "address" : {
+                "type" : "string"
+              },
+              "address2" : {
+                "type" : "string"
+              },
+              "availability" : {
+                "type" : "string"
+              },
+              "birth_date" : {
+                "type" : "date",
+                "format" : "dateOptionalTime"
+              },
+              "consent" : {
+                "type" : "boolean"
+              },
+              "created_at" : {
+                "type" : "string"
+              },
+              "departments" : {
+                "type" : "string"
+              },
+              "education" : {
+                "type" : "string"
+              },
+              "email" : {
+                "type" : "string"
+              },
+              "experience" : {
+                "type" : "string",
+                "analyzer": "polish"
+              },
+              "extra" : {
+                "type" : "string",
+                "analyzer": "polish"
+              },
+              "first_name" : {
+                "type" : "string"
+              },
+              "interests" : {
+                "type" : "string",
+                "analyzer": "polish"
+              },
+              "languages" : {
+                "type":     "object",
+                "dynamic":  true
+              },
+              "last_name" : {
+                "type" : "string"
+              },
+              "mobile" : {
+                "type" : "string"
+              },
+              "parish" : {
+                "type" : "string"
+              },
+              "previous_wyd" : {
+                "type": "object",
+                "dynamic": true
+              },
+              "studies_started_in" : {
+                "type" : "long"
+              },
+              "study_field" : {
+                "type" : "string"
+              }
+            }
+        }
+      }
+    }
+  }
+}

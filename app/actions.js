@@ -35,28 +35,24 @@ var sendActivityEmailAction = function(context, query) {
 module.exports = {
   showVolonteer: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
-    context.service.read('Volonteers', payload, {
-      // Przekaż obiekt zalogowanego użytkownia niezbędy do podjęcia
-      // decyzji o tym jakie dane mają być zwrócone.
-      user: context.getUser()
-    }, function (err, data) {
-      if (err) { console.log(err) }
-      else { context.dispatch('LOAD_VOLONTEER', data) }
-      cb()
-    })
+    context.service.read('Volonteers', payload, {},
+      function (err, data) {
+        if (err) { console.log(err) }
+        else { context.dispatch('LOAD_VOLONTEER', data) }
+        cb()
+      }
+    )
   },
 
   loadVolonteers: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
-    context.service.read('Volonteers', payload, {
-      // Przekaż obiekt zalogowanego użytkownia niezbędy do podjęcia
-      // decyzji o tym jakie dane mają być zwrócone.
-      user: context.getUser()
-    }, function (err, data) {
-      if(err) { console.log(err) }
-      else { context.dispatch('LOAD_VOLONTEERS', data) }
-      cb()
-    })
+    context.service.read('Volonteers', payload, {},
+      function (err, data) {
+        if(err) { console.log(err) }
+        else { context.dispatch('LOAD_VOLONTEERS', data) }
+        cb()
+      }
+    )
   },
 
   createVolonteer: function(context, payload, cb) {
@@ -92,9 +88,6 @@ module.exports = {
     // Pobierz dane aktywności z bazy danych
     context.service.read('Activities', payload, {
       store: 'Activity',
-      // Przekaż obiekt zalogowanego użytkownia niezbędy do podjęcia
-      // decyzji o tym jakie dane mają być zwrócone.
-      user: context.getUser()
     }, function (err, data) {
       if(err) { console.log(err) }
       else { context.dispatch('LOAD_ACTIVITY', data) }
@@ -198,6 +191,17 @@ module.exports = {
     })
   },
 
+  showIntegrations: function(context, payload, cb) {
+    // Pobierz dane wolontariusza z bazy danych
+    context.service.read('Integrations', payload, {},
+      function (err, data) {
+        if (err) { console.log(err) }
+        else { context.dispatch('LOAD_INTEGRATIONS', data) }
+        cb()
+      }
+    )
+  },
+
   showResults: function(context, state, cb) {
 
     var age_from = parseInt(state['age-from'])
@@ -205,40 +209,47 @@ module.exports = {
 
     var languages
 
+    var filtered = {
+      filtered : {
+        query: {
+          bool: {
+            should: [
+              { bool: {
+              should: [
+                { match: { "doc.first_name": state.name } },
+                { match: { "doc.last_name": state.name } },
+              ]
+            }},
+            { match: { "doc.email": state.email } },
+            { match: { "doc.address": state.address } },
+            { match: { "doc.address2": state.address } },
+            { match: { "doc.parish": state.parish } },
+            { match: { "doc.education": state.education } },
+            { match: { "doc.study_field": state.studies } },
+            { match: { "doc.departments": state.departments } },
+            { match: { "doc.comments": state.comments } },
+            { bool: {
+              should: [
+                { match: { "doc.interests": state.interests } },
+                { match: { "doc.experience": state.interests } }
+              ]
+            }}
+            ],
+            must: []
+          },
+        },
+        filter : { },
+      }
+    }
+
     var query = {
       size: 100,
       query : {
         function_score: {
           query : {
-            filtered : {
-              query: {
-                bool: {
-                  should: [
-                    { bool: {
-                    should: [
-                      { match: { first_name: state.name } },
-                      { match: { last_name: state.name } },
-                    ]
-                  }},
-                  { match: { email: state.email } },
-                  { match: { address: state.address } },
-                  { match: { address2: state.address } },
-                  { match: { parish: state.parish } },
-                  { match: { education: state.education } },
-                  { match: { study_field: state.studies } },
-                  { match: { departments: state.departments } },
-                  { match: { comments: state.comments } },
-                  { bool: {
-                    should: [
-                      { match: { interests: state.interests } },
-                      { match: { experience: state.interests } }
-                    ]
-                  }}
-                  ],
-                  must: []
-                },
-              },
-              filter : { },
+            nested: {
+              path: "doc",
+              query : filtered
             }
           },
           functions: [],
@@ -263,7 +274,7 @@ module.exports = {
       if(language[key]) {
         var range = {}
         range['languages.'+key+'.level'] = { gte: 1, lte: 10 }
-        query.query.function_score.query.filtered.query.bool.must.push({range: range})
+        filtered.query.bool.must.push({range: range})
         query.query.function_score.functions.push({
           field_value_factor: {
             "field" : "languages."+key+".level",
@@ -277,7 +288,7 @@ module.exports = {
       var val = state['other_val']
       var range = {}
       range['languages.'+val+'.level'] = { gte: 1, lte: 10 }
-      query.query.function_score.query.filtered.query.bool.must.push({range: range})
+      filtered.query.bool.must.push({range: range})
       query.query.function_score.functions.push({
         field_value_factor: {
           "field" : "languages."+val+".level",
@@ -290,10 +301,10 @@ module.exports = {
     var wyds = state.wyd
     var wyds_keys = wyds ? Object.keys(wyds) : []
     if(wyds_keys.length) {
-      query.query.function_score.query.filtered.filter.and = []
+      filtered.filter.and = []
       wyds_keys.forEach(function(key){
         if(wyds[key]) {
-          query.query.function_score.query.filtered.filter.and.push({
+          filtered.filter.and.push({
             exists: { field: 'previous_wyd.'+key }
           })
         }
@@ -311,10 +322,10 @@ module.exports = {
           if(age_to)
             range.range.birth_date.gte = new Date(new Date().setMonth(today.getMonth() - 12*age_to))
 
-          if(query.query.filtered.filter.and) {
-            query.query.filtered.filter.and.push(range)
+          if(filtered.filter.and) {
+            filtered.filter.and.push(range)
           } else {
-            query.query.filtered.filter.and = [range]
+            filtered.filter.and = [range]
           }
     }
 

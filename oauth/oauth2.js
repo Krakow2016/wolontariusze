@@ -139,7 +139,7 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectURI, do
 // first, and rendering the `dialog` view. 
 
 exports.authorization = [
-  login.ensureLoggedIn(),
+  login.ensureLoggedIn('/api/v2/login'),
   server.authorization(function(clientId, redirectURI, done) {
     r.connect(conf, function(error, conn){
       r.table('APIClients').get(clientId).run(conn, function(err, client){
@@ -165,7 +165,7 @@ exports.authorization = [
 // a response.
 
 exports.decision = [
-  login.ensureLoggedIn(),
+  login.ensureLoggedIn('/api/v2/login'),
   server.decision()
 ]
 
