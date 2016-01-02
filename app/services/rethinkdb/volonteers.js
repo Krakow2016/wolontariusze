@@ -63,7 +63,27 @@ module.exports = Protect({
         else {
           cursor.next(function(err) {
             // Brak emaila w bazie
-            if (err) { r.table('Volonteers').insert(body).run(conn, callback) }
+            if (err) { 
+              r.table('Volonteers').insert(body).run(conn, function (err, data) {
+                var id = data.generated_keys[0];
+                if (id) {
+                  //sugestia przy dodawaniu wolontariusza do aktywności
+                  body.suggest = {
+                    input: [body.first_name, body.last_name],
+                    output: body.first_name+" "+body.last_name,
+                    payload: {
+                      id: id,
+                      email: body.email
+                    }
+                  }
+                  r.table('Volonteers').get(id).update(body).run(conn, callback);
+                } else {
+                  callback({message: 'Object was not created'}) 
+                }
+              }
+              ) 
+              
+            }
             else { callback({message: 'Email is already in the database.'}) }
           })
         }
@@ -91,6 +111,18 @@ module.exports = Protect({
         // Zapisz hash w bazie danych (zawiera w sobie również sól)
         body.password = bcrypt.hashSync(body.password, salt)
         delete body.password_
+      }
+      
+      //sugestia przy dodawaniu wolontariusza do aktywności
+      if (body.first_name) {     
+        body.suggest = {
+          input: [body.first_name, body.last_name],
+          output: body.first_name+" "+body.last_name,
+          payload: {
+            id: id,
+            email: body.email
+          }
+        }
       }
 
       // Wykonaj zapytanie do bazy danych
