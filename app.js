@@ -1,5 +1,3 @@
-// Polyfill dla fluxible-router
-GLOBAL.Object.assign = require('object.assign/polyfill')()
 var gutil = require('gulp-util')
 var server = require('./server')
 var config = require('./config.json')

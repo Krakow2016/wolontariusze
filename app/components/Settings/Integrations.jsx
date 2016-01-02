@@ -1,12 +1,12 @@
 var React = require('react')
+var NavLink = require('fluxible-router').NavLink
 
+var Settings = require('./Settings.jsx')
 var IntegrationsStore = require('../../stores/Integrations')
 
-var Integration = React.createClass({
-  render: function() {
-    return (<li>Aplikacja: <b>{this.props.name}</b></li>)
-  }
-})
+var Integration = function(props) {
+  return (<li>Aplikacja: <b>{props.name}</b></li>)
+}
 
 var Integrations = React.createClass({
 
@@ -29,18 +29,18 @@ var Integrations = React.createClass({
   },
 
   render: function() {
-    var context = this.props.context
     var integrations = this.state.integrations.map(function(integration) {
-      return (<Integration context={context} name={integration.name} key={integration.id} />)
+      return (<Integration name={integration.name} key={integration.id} />)
     })
 
     return (
-      <div>
+      <Settings>
         <p>Lista aplikacji:</p>
         <ul>
           {integrations}
         </ul>
-      </div>
+        <NavLink href="/ustawienia/developer">Dla deweloperów</NavLink>
+      </Settings>
     )
   }
 })

@@ -2,11 +2,38 @@ var React = require('react')
 
 var ProfileSettings = require('./ProfileSettings.jsx')
 var MyTextField = require('./MyTextarea.jsx')
+var VolonteerStore = require('../../stores/Volonteer')
 
 var Info = React.createClass({
+
+  getInitialState: function () {
+    return {
+      profile: this.props.context.getStore(VolonteerStore).getState().profile,
+    }
+  },
+
+  _changeListener: function() {
+    this.setState(this.props.context.getStore(VolonteerStore).getState())
+  },
+
+  componentDidMount: function() {
+    this.props.context.getStore(VolonteerStore).addChangeListener(this._changeListener)
+  },
+
+  componentWillUnmount: function componentWillUnmount() {
+    // Usuń funkcję nasłychującą
+    this.props.context.getStore(VolonteerStore)
+      .removeChangeListener(this._changeListener)
+  },
+
   render: function() {
     return (
-      <ProfileSettings profileId={this.props.profile.id} context={this.props.context}>
+      <ProfileSettings
+        profileId={this.state.profile.id}
+        context={this.props.context}
+        success={this.state.success}
+        error={this.state.error}>
+
         <div className="pure-g">
           <div className="pure-u-1 pure-u-md-1-3">
             <label htmlFor="first_name">Doświadczenie</label>
@@ -16,7 +43,7 @@ var Info = React.createClass({
               id="experience"
               name="experience"
               placeholder="Praktyki w ..."
-              value={this.props.profile.experience} />
+              value={this.state.profile.experience} />
           </div>
         </div>
 
@@ -29,7 +56,7 @@ var Info = React.createClass({
               id="interests"
               name="interests"
               placeholder="Piłka nożna"
-              value={this.props.profile.interests} />
+              value={this.state.profile.interests} />
           </div>
         </div>
 
@@ -42,7 +69,7 @@ var Info = React.createClass({
               id="departments"
               name="departments"
               placeholder="Sekcja tłumaczeń"
-              value={this.props.profile.departments} />
+              value={this.state.profile.departments} />
           </div>
         </div>
       </ProfileSettings>

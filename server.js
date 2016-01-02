@@ -3,6 +3,7 @@ var express = require('express'),
     path = require('path'),
     bodyParser = require('body-parser'),
     React = require('react'),
+    ReactDOMServer = require('react-dom/server'),
     serialize = require('serialize-javascript'),
     navigateAction = require('fluxible-router').navigateAction,
     passport = require('passport'),
@@ -29,6 +30,7 @@ var Activity = require('./app/services/'+config.service+'/activities')
 var Comments = require('./app/services/'+config.service+'/comments')
 var Volonteer = require('./app/services/'+config.service+'/volonteers')
 var Integration = require('./app/services/'+config.service+'/integrations')
+var APIClient = require('./app/services/'+config.service+'/apiclients')
 
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
@@ -115,6 +117,7 @@ if(fetchrPlugin) {
   fetchrPlugin.registerService(Activity);
   fetchrPlugin.registerService(Comments);
   fetchrPlugin.registerService(Integration);
+  fetchrPlugin.registerService(APIClient);
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), jsonParser, fetchrPlugin.getMiddleware());
 }
@@ -234,6 +237,7 @@ server.use(function(req, res, next) {
   // Dołącz obiekt zalogowanego użytkownika do kontekstu (stanu) zapytania,
   // który zostanie przekazay do klienta (przeglądarki).
   var context = app.createContext({
+    req: req,
     user: req.user
   });
 
@@ -266,9 +270,9 @@ server.use(function(req, res, next) {
     debug('Rendering Application component into html');
     var Component = app.getComponent();
 
-    var html = React.renderToStaticMarkup(HtmlComponent({
+    var html = ReactDOMServer.renderToStaticMarkup(HtmlComponent({
       state: exposed,
-      markup: React.renderToString(Component({
+      markup: ReactDOMServer.renderToString(Component({
         context: context.getComponentContext(),
       })),
       context: context.getComponentContext(),

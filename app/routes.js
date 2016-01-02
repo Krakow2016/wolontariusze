@@ -106,11 +106,10 @@ module.exports = {
   account_settings: {
     path: '/ustawienia/konto',
     method: 'get',
-    handler: require('./components/Settings.jsx'),
+    handler: require('./components/Settings/Basic.jsx'),
     action: function (context, payload, done) {
       var user = context.getUser()
       if(user) {
-        context.dispatch('SHOW_ACCOUNT_SETTINGS');
         context.executeAction(actions.showVolonteer, { id: user.id }, function() {
           done()
         })
@@ -123,11 +122,10 @@ module.exports = {
   profil_settings: {
     path: '/ustawienia/profil',
     method: 'get',
-    handler: require('./components/Settings.jsx'),
+    handler: require('./components/Settings/Info.jsx'),
     action: function (context, payload, done) {
       var user = context.getUser()
       if(user) {
-        context.dispatch('SHOW_PROFILE_SETTINGS');
         context.executeAction(actions.showVolonteer, { id: user.id }, function() {
           done()
         })
@@ -140,17 +138,41 @@ module.exports = {
   applications_settings: {
     path: '/ustawienia/aplikacje',
     method: 'get',
-    handler: require('./components/Settings.jsx'),
+    handler: require('./components/Settings/Integrations.jsx'),
     action: function (context, payload, done) {
       var user = context.getUser()
       if(user) {
-        context.dispatch('SHOW_APPLICATIONS_SETTINGS');
         context.executeAction(actions.showIntegrations, { user_id: user.id }, function() {
           done()
         })
       } else {
         done()
       }
+    }
+  },
+
+  developer_settings: {
+    path: '/ustawienia/developer',
+    method: 'get',
+    handler: require('./components/Settings/Developer.jsx'),
+    action: function (context, payload, done) {
+      var user = context.getUser()
+      if(user) {
+        context.executeAction(actions.showAPIClients, { user_id: user.id }, function() {
+          done()
+        })
+      } else {
+        done()
+      }
+    }
+  },
+
+  develop_settings: {
+    path: '/ustawienia/developer/utworz',
+    method: 'get',
+    handler: require('./components/Settings/Develop.jsx'),
+    action: function (context, payload, done) {
+      done()
     }
   },
 
