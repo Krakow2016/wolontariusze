@@ -1,5 +1,6 @@
 'use strict'
 
+var debug = require('debug')('Actions')
 var VolunteerStore = require('./stores/Volunteer')
 
 module.exports = {
@@ -7,7 +8,7 @@ module.exports = {
     // Pobierz dane wolontariusza z bazy danych
     context.service.read('Volunteers', payload, {},
       function (err, data) {
-        if (err) { console.log(err) }
+        if (err) { debug(err) }
         else { context.dispatch('LOAD_VOLUNTEER', data) }
         cb()
       }
@@ -18,7 +19,7 @@ module.exports = {
     // Pobierz dane wolontariusza z bazy danych
     context.service.read('Volunteers', payload, {},
       function (err, data) {
-        if(err) { console.log(err) }
+        if(err) { debug(err) }
         else { context.dispatch('LOAD_VOLUNTEERS', data) }
         cb()
       }
@@ -56,44 +57,44 @@ module.exports = {
   showActivity: function(context, payload, cb) {
     // Pobierz dane aktywności z bazy danych
     context.service.read('Activities', payload, {
-      store: 'Activity',
+      store: 'Activity'
     }, function (err, data) {
-      if(err) { console.log(err) }
+      if(err) { debug(err) }
       else { context.dispatch('LOAD_ACTIVITY', data) }
       cb()
     })
   },
 
   showComments: function(context, payload, cb) {
-    console.log('profile comment read')
+    debug('profile comment read')
     context.service.read('Comments', payload, {}, function (err, data) {
-      context.dispatch('LOAD_COMMENTS', data);
+      context.dispatch('LOAD_COMMENTS', data)
       cb()
     })
   },
 
   createComment: function(context, payload, cb) {
-    console.log('profile comment create')
+    debug('profile comment create')
     context.service.create('Comments', payload, {}, function (err, data) {
-      if(err) { console.log(err) }
+      if(err) { debug(err) }
       else { context.dispatch('COMMENT_CREATED', data) }
       cb()
     })
   },
 
   profileCommentsUpdate: function(context, payload, cb) {
-    console.log('profile comment update')
+    debug('profile comment update')
     context.service.update('Comments', payload, {}, function (err) {
-      if(err) { console.log(err) }
+      if(err) { debug(err) }
       else { context.dispatch('COMMENT_UPDATED', payload) }
       cb()
     })
   },
 
   profileCommentsDelete: function(context, payload, cb) {
-    console.log('profile comment delete')
+    debug('profile comment delete')
     context.service.delete('Comments', payload, {}, function (err) {
-      if(err) { console.log(err) }
+      if(err) { debug(err) }
       else { context.dispatch('COMMENT_DELETED', payload) }
       cb()
     })
@@ -103,7 +104,7 @@ module.exports = {
     // Pobierz dane wolontariusza z bazy danych
     context.service.read('Integrations', payload, {},
       function (err, data) {
-        if (err) { console.log(err) }
+        if (err) { debug(err) }
         else { context.dispatch('LOAD_INTEGRATIONS', data) }
         cb()
       }
@@ -114,7 +115,7 @@ module.exports = {
     // Pobierz dane wolontariusza z bazy danych
     context.service.read('APIClients', payload, {},
       function (err, data) {
-        if (err) { console.log(err) }
+        if (err) { debug(err) }
         else { context.dispatch('LOAD_APICLIENTS', data) }
         cb()
       }
@@ -143,30 +144,31 @@ module.exports = {
           bool: {
             should: [
               { bool: {
-              should: [
-                { match: { "doc.first_name": state.name } },
-                { match: { "doc.last_name": state.name } },
-              ]
-            }},
-            { match: { "doc.email": state.email } },
-            { match: { "doc.address": state.address } },
-            { match: { "doc.address2": state.address } },
-            { match: { "doc.parish": state.parish } },
-            { match: { "doc.education": state.education } },
-            { match: { "doc.study_field": state.studies } },
-            { match: { "doc.departments": state.departments } },
-            { match: { "doc.comments": state.comments } },
+                should: [
+                  { match: { 'doc.first_name': state.name } },
+                  { match: { 'doc.last_name': state.name } }
+                ]
+              }
+            },
+            { match: { 'doc.email': state.email } },
+            { match: { 'doc.address': state.address } },
+            { match: { 'doc.address2': state.address } },
+            { match: { 'doc.parish': state.parish } },
+            { match: { 'doc.education': state.education } },
+            { match: { 'doc.study_field': state.studies } },
+            { match: { 'doc.departments': state.departments } },
+            { match: { 'doc.comments': state.comments } },
             { bool: {
               should: [
-                { match: { "doc.interests": state.interests } },
-                { match: { "doc.experience": state.interests } }
+                { match: { 'doc.interests': state.interests } },
+                { match: { 'doc.experience': state.interests } }
               ]
             }}
             ],
             must: []
-          },
+          }
         },
-        filter : { },
+        filter : { }
       }
     }
 
@@ -176,12 +178,12 @@ module.exports = {
         function_score: {
           query : {
             nested: {
-              path: "doc",
+              path: 'doc',
               query : filtered
             }
           },
           functions: [],
-          score_mode: "avg"
+          score_mode: 'avg'
         }
       },
       //explain: true,
@@ -205,8 +207,8 @@ module.exports = {
         filtered.query.bool.must.push({range: lang_range})
         query.query.function_score.functions.push({
           field_value_factor: {
-            "field" : "languages."+key+".level",
-            "modifier" : "square"
+            'field' : 'languages.'+key+'.level',
+            'modifier' : 'square'
           }
         })
       }
@@ -219,8 +221,8 @@ module.exports = {
       filtered.query.bool.must.push({range: other_lang_range})
       query.query.function_score.functions.push({
         field_value_factor: {
-          "field" : "languages."+val+".level",
-          "modifier" : "square"
+          'field' : 'languages.'+val+'.level',
+          'modifier' : 'square'
         }
       })
     }
@@ -268,7 +270,7 @@ module.exports = {
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
-        var resp = request.responseText;
+        var resp = request.responseText
         var json = JSON.parse(resp)
 
         context.dispatch('LOAD_RESULTS', json)
@@ -285,11 +287,11 @@ module.exports = {
     request.send(JSON.stringify(query))
 
     // Usuń parametry
-    var base = window.location.toString().replace(new RegExp("[?](.*)$"), '')
+    var base = window.location.toString().replace(new RegExp('[?](.*)$'), '')
     var attributes = Object.keys(state).map(function(key) {
-        return key + '=' + state[key];
+      return key + '=' + state[key]
     }).join('&')
-    history.replaceState({}, "", base +'?'+ attributes)
+    history.replaceState({}, '', base +'?'+ attributes)
   },
 
   inviteUser: function(context, user) {
@@ -300,10 +302,8 @@ module.exports = {
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
-        var resp = request.responseText;
+        var resp = request.responseText
         var json = JSON.parse(resp)
-
-        console.log(json) // TODO: wyświetl wyniki
 
         context.dispatch('INVITATION_SEND', json)
       //} else {

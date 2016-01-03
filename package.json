@@ -50,6 +50,7 @@
   "devDependencies": {
     "babel-preset-react": "^6.3.13",
     "babelify": "^7.2.0",
+    "eslint-plugin-react": "^3.13.1",
     "gulp-babel": "*",
     "gulp-sourcemaps": "*",
     "gulp-uglify": "^1.2.0",
