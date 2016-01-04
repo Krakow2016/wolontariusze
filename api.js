@@ -21,7 +21,7 @@ var session = [expressSession({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: false
-}), passport.session()]
+}), passport.initialize(), passport.session()]
 
 // Format każdego poprawnie wykonanego zapytania
 var success = function(data) {
@@ -47,7 +47,6 @@ server.set('views', process.cwd() + '/oauth/views')
 //server.use(express.cookieParser());
 server.use(bodyParser.json())
 server.use(bodyParser.urlencoded({ extended: true }))
-server.use(passport.initialize())
 /*
 server.use(function(req, res, next) {
   console.log('-- session --');
@@ -88,7 +87,7 @@ server.post('/api/v2/dialog/authorize/decision', session, oauth2.decision);
 server.post('/api/v2/oauth/token', oauth2.token);
 
 // Autoryzacja tokenem oAuth
-var bearer = function(req, res, next) {
+var bearer = [passport.initialize(), function(req, res, next) {
   passport.authenticate('bearer', { session: false }, function(err, user, info) {
     // Wystąpił błąd
     if (err) {
@@ -103,7 +102,7 @@ var bearer = function(req, res, next) {
       next() // Kontynuuj
     })
   })(req, res, next)
-}
+}]
 
 // Wiadomość powitalna
 server.get('/api/v2/', bearer, function(req, res) {

@@ -17,7 +17,8 @@ var express = require('express'),
 
 // Wyświetlanie komunikatów kontrolnych
 var debug = require('debug')('Server')
-var config = require('./config.json')
+var env = process.env.NODE_ENV || 'development'
+var config = require('./config.json')[env]
 // Połączenie z sendgrid daje nam możliwość wysyłania emaili
 var sendgrid = require('sendgrid')(config.sendgrid_apikey)
 

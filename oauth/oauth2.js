@@ -9,6 +9,7 @@ var r = require('rethinkdb')
 var utils = require('./utils')
 var env = process.env.NODE_ENV || 'development'
 var config = require('../config.json')[env]
+var conf = config.rethinkdb
 
 var APIClients = require('../app/services/'+config.service+'/apiclients')
 
@@ -84,7 +85,8 @@ server.grant(oauth2orize.grant.token(function(client, user, ares, done) {
     clientId: client.id
   }
 
-  r.connect(conf, function(error, conn){
+  r.connect(conf, function(err, conn){
+    if(err) { return console.log(err) }
     r.table('APITokens').insert(token).run(conn, function(err, result) {
       if (err) { return done(err) }
       done(null, tokenID)
@@ -144,11 +146,14 @@ exports.authorization = [
   server.authorization(function(clientId, redirectURI, done) {
     APIClients.read({force_admin: true}, 'APIClients', { id: clientId }, {}, function (err, client) {
       if (err) { return done(err) }
-      // TODO
+
       // WARNING: For security purposes, it is highly advisable to check that
-      //          redirectURI provided by the client matches one registered with
-      //          the server.  For simplicity, this example does not.  You have
-      //          been warned.
+      // redirectURI provided by the client matches one registered with the
+      // server.
+      if (client.callback_url !== redirectURI) {
+        return done('Callback url mismatch')
+      }
+
       return done(null, client, redirectURI)
     })
   }),

@@ -2,7 +2,8 @@
 
 var gutil = require('gulp-util')
 var server = require('./server')
-var config = require('./config.json')
+var env = process.env.NODE_ENV || 'development'
+var config = require('./config.json')[env]
 
 server.listen(config.port)
 
