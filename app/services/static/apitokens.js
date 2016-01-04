@@ -1,6 +1,9 @@
 var tokens = {
   bearerToken: {
     userId: 1
+  },
+  adminToken: {
+    userId: 2
   }
 }
 

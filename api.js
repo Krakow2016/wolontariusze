@@ -23,6 +23,22 @@ var session = [expressSession({
     saveUninitialized: false
 }), passport.session()]
 
+// Format każdego poprawnie wykonanego zapytania
+var success = function(data) {
+  return {
+    status: 'success',
+    data: data
+  }
+}
+
+// Format każdego niepoprawnie wykonanego zapytania
+var error = function(type) {
+  return {
+    status: 'error',
+    type: type
+  }
+}
+
 var server = module.exports = express();
 
 server.set('view engine', 'ejs');
@@ -80,9 +96,7 @@ var bearer = function(req, res, next) {
     }
     // Niezalogowany
     if (!user) {
-      return res.status(401).send({
-        'status': 'error'
-      })
+      return res.status(401).send(error('Unauthorized'))
     }
     // Zaloguj
     req.logIn(user, function(err) {
@@ -93,10 +107,7 @@ var bearer = function(req, res, next) {
 
 // Wiadomość powitalna
 server.get('/api/v2/', bearer, function(req, res) {
-  res.send({
-    "status": "success",
-    "data": {}
-  })
+  res.send(success())
 })
 
 server.get('/api/v2/client', bearer, function(req, res) {
@@ -106,42 +117,56 @@ server.get('/api/v2/client', bearer, function(req, res) {
   })
 })
 
+// Dodawanie wolontariuszy
+server.post('/api/v2/volunteers/', bearer, function(req, res) {
+  // Sprawdź wymagane uprawnienia administratora
+  if(!req.user || !req.user.is_admin) {
+    return res.status(403).send(error('AdminRequired'))
+  }
+
+  Volunteer.create(req, 'Volunteers', {}, req.body, {}, function (err, volunteer) {
+    if(err) { res.send(500) }
+    else { res.status(201).send(success({volunteer: volunteer})) }
+  })
+})
+
 // Lista wolontariuszy
 server.get('/api/v2/volunteers', bearer, function(req, res) {
-  Volunteer.read(req, 'Volunteers', {}, req.query, function (err, users) {
-    res.send(users)
+  Volunteer.read(req, 'Volunteers', {}, req.query, function (err, volunteers) {
+    res.send(success({volunteers: volunteers}))
   })
 })
 
 // Szczegóły wolontariusza
 server.get('/api/v2/volunteers/:id', bearer, function(req, res) {
-  Volunteer.read(req, 'Volunteers', {id: req.params.id}, {}, function (err, user) {
-    res.send(user)
+  Volunteer.read(req, 'Volunteers', {id: req.params.id}, {}, function (err, volunteer) {
+    res.send(success({volunteer: volunteer}))
   })
 })
 
 // Aktualizacja wolontariusza
 server.post('/api/v2/volunteers/:id', bearer, function(req, res) {
-  Volunteer.update(req, 'Volunteers', {id: req.params.id}, req.body, {}, function (err, user) {
-    res.send(user)
+  var id = req.params.id
+  // Sprawdź wymagane uprawnienia administratora lub właściciela profilu
+  if(!req.user || !(req.user.is_admin || req.user.id === id)) {
+    return res.status(403).send(error('AdminRequired'))
+  }
+
+  Volunteer.update(req, 'Volunteers', {id: id}, req.body, {}, function (err, volunteer) {
+    if(err) { res.send(500) }
+    else { res.status(200).send(success({volunteer: volunteer})) }
   })
 })
 
 // Domyślna ścieżka
 server.use(function(req, res, next) {
-  res.status(404).send({
-    status: 'error',
-    type: 'PathNotFound'
-  })
+  res.status(404).send(error('PathNotFound'))
 })
 
 // Obsługa błędów
 server.use(function(err, req, res, next) {
   console.error(err.stack)
-  res.status(500).send({
-    status: 'error',
-    type: 'UnknownError'
-  })
+  res.status(500).send(error('UnknownError'))
 })
 
 // Lista zadań
