@@ -67,6 +67,7 @@ var ActivityTabs = React.createClass({
       name: this.props.user.first_name+" "+this.props.user.last_name,
       email: this.props.user.email
     })
+    modifiedState.updateEmail = false;
     this.setState(modifiedState);
     this.update();   
   },
@@ -77,6 +78,7 @@ var ActivityTabs = React.createClass({
             modifiedState.activeVolonteers.splice(i,1);
         }         
     }
+    modifiedState.updateEmail = false;
     this.setState(modifiedState);   
     this.update();
   },

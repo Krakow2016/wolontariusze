@@ -5,33 +5,6 @@ var ActivityStore = require('./stores/Activity')
 var navigateAction = require('fluxible-router').navigateAction;
 var conf = require('../config.json')
 
-
-var sendActivityEmailAction = function(context, query) {
-    console.log("Send Activity Email", query);
-    var request = new XMLHttpRequest()
-    request.open('POST', '/activity_email', true)
-    request.setRequestHeader('Content-Type', 'application/json')
-    request.onload = function() {
-      if (request.status >= 200 && request.status < 400) {
-        // Success!
-        var resp = request.responseText;
-        var json = JSON.parse(resp)
-
-        console.log(json) // TODO: wyświetl wyniki
-
-        context.dispatch('ACTIVITY_EMAIL_SEND', json)
-      } else {
-        // We reached our target server, but it returned an error
-      }
-    }
-
-    request.onerror = function() {
-      // There was a connection error of some sort
-    }
-
-    request.send(JSON.stringify(query))
-  }
-
 module.exports = {
   showVolunteer: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
@@ -111,14 +84,10 @@ module.exports = {
         cb()  
     })
   },
-  createActivity: function(context, payload, cb) {
-      
-    var activityData = payload.data;
-    var query = payload.query;
-    
+  createActivity: function(context, payload, cb) { 
     console.log('create activity');
     
-    context.service.create('Activities', activityData, {}, function (err, data) {
+    context.service.create('Activities', payload, {}, function (err, data) {
         if(err) { console.log(err) }
         else { 
             console.log("ACTIVITY DATA", data);
@@ -131,10 +100,6 @@ module.exports = {
             //context.dispatch('ACTIVITY_CREATED', {});
                 
             context.executeAction(navigateAction, {url: "/aktywnosc/"+id});
-            
-            query.text = "Jeśli otrzymujesz tego maila, możesz być dopisany do tej aktywności. Aktualna lista wolontariuszy, którzy"+
-                  " biorą udział znajduje się na stronie http:localhost:7000/aktywnosc/"+id+" .\n"
-            context.executeAction(sendActivityEmailAction, query);
 
         }
         cb()  
@@ -405,7 +370,5 @@ module.exports = {
     }
 
     request.send(JSON.stringify(query))
-  },
-  
-  sendActivityEmail: sendActivityEmailAction
+  }
 }

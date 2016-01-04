@@ -76,7 +76,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/ActivityEdit.jsx'),
     action: function (context, payload, done) {
-      var activityId  = payload.get('params').get('id')+"";  
+      var activityId  = payload.params.id;  
       context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: activityId + ' Edytuj Aktywnosc' });
       context.executeAction(actions.showActivity, { id: activityId }, function() {
         done();

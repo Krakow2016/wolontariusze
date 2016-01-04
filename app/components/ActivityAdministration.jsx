@@ -152,80 +152,10 @@ var ActivityAdministrationBody = React.createClass({
     
     return true;
   },
-  addEmail: function (emails, newEmail) {
-    if (newEmail) {
-      for (var i = 0; i < emails.length; i++) {
-        if (newEmail == emails[i])
-          return;
-      }
-      emails.push(newEmail);
-    }
-  },
-  //zwraca adresy mailowe wolontariuszy, którzy biorą lub brali udział, twórcy aktywności oraz tego, kto ostatnio edytował
-  getUsersEmails: function () {
-    var emails = [];
-    var findEmail = this.findEmail;
-    this.addEmail(emails, (this.state.creator) ? this.state.creator.mail : null );
-    this.addEmail(emails, (this.state.editor) ? this.state.editor.mail : null);
-    this.addEmail(emails, (this.props.user) ? this.props.user.mail : null);
-        
-    var oldVolonteers = this.props.context.getStore(ActivityStore).getState().activeVolonteers;
-    for (var i = 0; i < oldVolonteers.length; i++) {
-      this.addEmail(emails, oldVolonteers[i].email);    
-    }
-    var newVolonteers = this.state.activeVolonteers;
-    for (var i = 0; i < newVolonteers.length; i++) {
-      this.addEmail(emails, newVolonteers[i].email);    
-    }
-    return emails;
-  },
-  getChangeList: function () {
-    var oldState = this.props.context.getStore(ActivityStore).getState();
-    var state = this.state;
-    var changes ="";
-    if (oldState.title != state.title) {
-        changes += "Tytuł \n";
-    }
-    if (oldState.startEventTimestamp != state.startEventTimestamp) {
-        changes += "Czas rozpoczęcia \n";
-    }
-    if (oldState.duration != state.duration) {
-        changes += "Czas trwania \n";
-    }
-    if (oldState.place != state.place) {
-        changes += "Miejsce wydarzenia \n";
-    }
-    if (oldState.is_urgent != state.is_urgent) {
-        changes += "Priorytet \n";
-    }
-    if (oldState.content != state.content) {
-        changes += "Treść aktywności \n";
-    }
-    if (oldState.title != state.title) {
-        changes += "Tytuł \n";
-    }
-    if (oldState.activeVolonteers.length != state.activeVolonteers.length) {
-        changes += "Lista wolontariuszy \n";
-    } else {
-      for (var i = 0; i < oldState.activeVolonteers.length; i++) {
-        if (oldState.activeVolonteers[i].id != state.activeVolonteers[i].id) {
-          changes += "Lista wolontariuszy \n";
-          break;
-        }
-      }
-    }
-    if (oldState.maxVolonteers != state.maxVolonteers) {
-      changes += "Limit wolontariuszy \n";
-    }
-    return changes;
-    
-  },
+  
   update: function () {
     var isInputValid = this.validateInputs();
     if (isInputValid) {
-    
-      var emails = this.getUsersEmails();
-      var changeList = this.getChangeList();
       var modifiedState = this.state;
       modifiedState.editor = {
         id: this.props.user.id,
@@ -233,23 +163,14 @@ var ActivityAdministrationBody = React.createClass({
         email: this.props.user.email
       }
       modifiedState.editionTimestamp = Date.now();
+      modifiedState.updateEmail = true;
       this.props.context.executeAction(updateAction, modifiedState);
-      
-      var query = {
-        users: emails,
-        subject: "Została ZMIENIONA aktywnośc: "+this.state.title,
-        text: "Jeśli otrzymujesz tego maila, możesz być dopisany do tej aktywności. Aktualna lista wolontariuszy, którzy"+
-              " biorą udział znajduje się na stronie http:localhost:7000/aktywnosc/"+this.state.id+" .\n"+
-              "Zmienione zostało: \n"+changeList
-      }
-      this.props.context.executeAction(sendActivityEmailAction, query);
       
     }
   },
   create: function () {
     var isInputValid = this.validateInputs();
     if (isInputValid) {
-      var emails = this.getUsersEmails();
       var modifiedState = this.state;
       var timestamp = Date.now();
       modifiedState.creator = {
@@ -265,32 +186,12 @@ var ActivityAdministrationBody = React.createClass({
       }
       modifiedState.editionTimestamp = timestamp;
       
-      //text będzie dodany później, bo nie znamy id aktywności
-      var actionQuery = {
-        users: emails,
-        subject: "Została UTWORZONA aktywność: "+this.state.title,
-      };
+      this.props.context.executeAction(createAction, modifiedState);
       
-      var actionData = {
-        data: modifiedState,
-        query: actionQuery,
-      };
-      this.props.context.executeAction(createAction, actionData);
-      
-
     }
   },
   remove: function () {
-  
-    var emails = this.getUsersEmails();
     this.props.context.executeAction(deleteAction, {id: this.state.id});
-    
-    var query = {
-      users: emails,
-      subject: "Została USUNIĘTA aktywność: "+this.state.title,
-      text: "Jeśli otrzymujesz tego maila, mogłeś być dopisany do tej aktywności. "
-    }
-    this.props.context.executeAction(sendActivityEmailAction, query);
   },
   render: function() {    
     var startEventDate = new Date(this.state.startEventTimestamp);
