@@ -6,8 +6,12 @@ var passport = require('passport')
 var login = require('connect-ensure-login')
 var r = require('rethinkdb')
 
-var conf = require('../config.json').rethinkdb
 var utils = require('./utils')
+var env = process.env.NODE_ENV || 'development'
+var config = require('../config.json')[env]
+var conf = config.rethinkdb
+
+var APIClients = require('../app/services/'+config.service+'/apiclients')
 
 // create OAuth 2.0 server
 var server = oauth2orize.createServer();
@@ -30,11 +34,9 @@ server.serializeClient(function(client, done) {
 });
 
 server.deserializeClient(function(id, done) {
-  r.connect(conf, function(error, conn){
-    r.table('APIClients').get(id).run(conn, function(err, client){
-      if (err) { return done(err) }
-      return done(null, client)
-    })
+  APIClients.read({force_admin: true}, 'APIClients', { id: id }, {}, function (err, client) {
+    if (err) { return done(err) }
+    return done(null, client)
   })
 })
 
@@ -83,7 +85,8 @@ server.grant(oauth2orize.grant.token(function(client, user, ares, done) {
     clientId: client.id
   }
 
-  r.connect(conf, function(error, conn){
+  r.connect(conf, function(err, conn){
+    if(err) { return console.log(err) }
     r.table('APITokens').insert(token).run(conn, function(err, result) {
       if (err) { return done(err) }
       done(null, tokenID)
@@ -141,15 +144,17 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectURI, do
 exports.authorization = [
   login.ensureLoggedIn('/api/v2/login'),
   server.authorization(function(clientId, redirectURI, done) {
-    r.connect(conf, function(error, conn){
-      r.table('APIClients').get(clientId).run(conn, function(err, client){
-        if (err) { return done(err) }
-        // WARNING: For security purposes, it is highly advisable to check that
-        //          redirectURI provided by the client matches one registered with
-        //          the server.  For simplicity, this example does not.  You have
-        //          been warned.
-        return done(null, client, redirectURI)
-      })
+    APIClients.read({force_admin: true}, 'APIClients', { id: clientId }, {}, function (err, client) {
+      if (err) { return done(err) }
+
+      // WARNING: For security purposes, it is highly advisable to check that
+      // redirectURI provided by the client matches one registered with the
+      // server.
+      if (client.callback_url !== redirectURI) {
+        return done('Callback url mismatch')
+      }
+
+      return done(null, client, redirectURI)
     })
   }),
   function(req, res){

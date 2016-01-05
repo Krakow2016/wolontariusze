@@ -4,7 +4,8 @@ var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy
 var bcrypt = require('bcrypt')
 
-var config = require('./config.json')
+var env = process.env.NODE_ENV || 'development'
+var config = require('./config.json')[env]
 var Volunteer = require('./app/services/'+config.service+'/volonteers')
 
 /**

@@ -2,7 +2,8 @@
 
 var r = require('rethinkdb')
 
-var conf = require('../../../config.json').rethinkdb
+var env = process.env.NODE_ENV || 'development'
+var conf = require('../../../config.json')[env].rethinkdb
 
 // Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów
 var Protect = require('../../../lib/protect')

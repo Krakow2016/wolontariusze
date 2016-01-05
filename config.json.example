@@ -1,9 +1,18 @@
 {
-  "port": 7000,
-  "service": "rethinkdb",
-  "elasticSearch": "http://192.168.1.99:9200/sdm/_search",
+  "development": {
+    "port": 7000,
+    "api_port": 3000,
+    "domain": "localhost",
+    "service": "rethinkdb",
+    "elasticSearch": "http://192.168.1.99:9200/sdm/_search",
   "elasticSearchGetSuggestions": "http://192.168.1.99:9200/sdm/_suggest?pretty",
-  "rethinkdb": {
-    "db": "sdm"
+    "rethinkdb": {
+      "db": "sdm"
+    }
+  },
+  "test": {
+    "port": 7001,
+    "api_port": 3001,
+    "service": "static"
   }
 }

@@ -1,9 +1,13 @@
 'use strict'
 
 var r = require('rethinkdb')
-var conf = require('../../../config.json').rethinkdb
+var env = process.env.NODE_ENV || 'development'
+var conf = require('../../../config.json')[env].rethinkdb
 
-module.exports = {
+// Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów
+var Protect = require('../../../lib/protect')
+
+module.exports = Protect({
   name: 'Comments',
   read: function(req, resource, params, config, callback) {
     // Połącz się z bazą danych `sdm`
@@ -81,4 +85,4 @@ module.exports = {
       r.table(resource).get(params.id).delete().run(conn, callback)
     })
   }
-}
+})

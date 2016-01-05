@@ -15,41 +15,59 @@
 //wolontariuszka4@testowa.pl wolontariuszka
 //wolontariusz5@testowy.pl  wolontariusz
 
-var volonteers = require('./volonteers.json')
+var utils = require('../../../oauth/utils')
 
-module.exports = {
-    name: 'Volonteers',
-    // at least one of the CRUD methods is required
-    read: function(req, resource, params, config, callback) {
+// Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów
+var Protect = require('../../../lib/protect')
 
-      var volonteer
-      if(params.id) {
-        volonteer = volonteers[params.id]
-      } else if(params.key) {
-        id = Object.keys(volonteers).filter(function(id) {
-          el = volonteers[id]
-          return el.email === params.key
-        })[0]
+var volunteers = require('./volonteers.json')
 
-        volonteer = (id) ? [volonteers[id]] : null
-      } else { // Brak identyfikatora
-          // Zwróć wszyskich wolontariuszy
-          var results = Object.keys(volonteers).map(function(key) {
-              return volonteers[key]
-          })
-          callback(null, results)
-          return
-      }
+module.exports = Protect({
+  name: 'Volonteers',
+  // at least one of the CRUD methods is required
+  read: function(req, resource, params, config, callback) {
 
-      if(volonteer) {
-        callback(null, volonteer);
-      } else {
-        callback("404")
-      }
-    },
+    var volunteer
+    if(params.id) {
+      volunteer = volunteers[params.id]
+    } else if(params.email) {
+      id = Object.keys(volunteers).filter(function(id) {
+        el = volunteers[id]
+        return el.email === params.email
+      })[0]
 
-    // create: function(req, resource, params, body, config, callback) {},
-    // update: function(resource, params, body, config, callback) {},
-    // delete: function(resource, params, config, callback) {}
+      volunteer = id ? [volunteers[id]] : null
+    } else { // Brak identyfikatora
+      // Zwróć wszyskich wolontariuszy
+      var results = Object.keys(volunteers).map(function(key) {
+        return volunteers[key]
+      })
+      callback(null, results)
+      return
+    }
 
-};
+    if(volunteer) {
+      callback(null, volunteer);
+    } else {
+      callback("404")
+    }
+  },
+
+  create: function(req, resource, params, body, config, callback) {
+    var id = utils.uid(8)
+    volunteers[id] = body
+
+    var volunteer = body
+    volunteer.id = id
+
+    callback(null, volunteer)
+  },
+
+  update: function(req, resource, params, body, config, callback) {
+    var volunteer = volunteers[params.id]
+    Object.assign(volunteer, body)
+    callback(null, volunteer)
+  },
+
+  // delete: function(req, resource, params, config, callback) {}
+})

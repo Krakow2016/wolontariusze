@@ -140,19 +140,46 @@ innego powodu.
 
 Wolontariusze są użytkownikami systemu. API umożliwia pobieranie i aktualizację
 danych pojedynczych wolontariuszy, jak również listowanie wolontariuszy.
+Przykłady użycia są zawarte w pliku:
+<https://github.com/Krakow2016/wolontariusze/blob/master/spec/api_volunteer_spec.js>.
 
 ### Atrybuty
 
-| Klucz                 | Opis                                                    |
-| ---                   | ---                                                     |
-| `id`                  |                                                         |
-| `email`               | Adres e-mail.                                           |
-| `first_name`          | Imię.                                                   |
-| `last_name`           | Nazwisko.                                               |
-| `phone`               | Numer telefonu kontaktowego.                            |
-| `profile_picture_url` | Adres url do zdjęcia profilowego.                       |
-| `is_admin`            | 'true' jeżeli użytkownik ma uprawnienia administratora. |
-| `is_approved`         | 'true' jeżeli użytkownik może logować się w systemie.   |
+| Klucz                 | Pomijalny | Opis                                                    |
+| ---                   | ---       | ---                                                     |
+| `id`                  | Nie       |                                                         |
+| `email`               | Nie       | Adres e-mail.                                           |
+| `first_name`          | Nie       | Imię.                                                   |
+| `last_name`           | Nie       | Nazwisko.                                               |
+| `is_admin`            | Tak       | 'true' jeżeli użytkownik ma uprawnienia administratora. |
+| `is_approved`         | Tak       | 'true' jeżeli użytkownik może logować się w systemie.   |
+| `phone`               | Tak       | Numer telefonu kontaktowego. Np. `"+48 123456789"`.     |
+| `profile_picture_url` | Tak       | Adres url do zdjęcia profilowego.                       |
+
+### Tworzenie obiektu wolontariusza
+
+Pozwala administratorom na dodawanie nowych użytkowników do systemu.
+
+**Wymagane uprawnienia:**
+
+Ta ścieżka jest dostępna jedynie dla użytkowników którzy są administratorami w
+systemie (flaga `is_admin` jest `true`). Zapytania użytkowników bez
+odpowiednich uprawnień zwrócą błąd `403` (brak dostępu).
+
+**Ścieżka:**  
+```
+POST https://wolontariusze.krakow2016.com/api/v2/volunteers/
+```
+
+**Przykładowe zapytanie:**  
+```
+$ curl https://wolontariusze.krakow2016.com/api/v2/volunteers/
+```
+
+**Przykładowa odpowiedź:**  
+```
+{}
+```
 
 ### Pobieranie obiektu wolontariusza
 
@@ -169,15 +196,17 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/volunteers/e5725fc8-1837-4a32
 **Przykładowa odpowiedź:**  
 ```json
 {
-  status: "success",
-  data: {
-    "id": "e5725fc8-1837-4a32-823c-2f08c7a8b3a1",
-    "email": "faustyna@kowalska.pl",
-    "first_name": "Faustyna",
-    "last_name": "Kowalska",
-    "phone": "+48123456789",
-    "is_admin": true,
-    "is_approved": true
+  "status": "success",
+  "data": {
+    "volunteer": {
+      "id": "e5725fc8-1837-4a32-823c-2f08c7a8b3a1",
+      "email": "faustyna@kowalska.pl",
+      "first_name": "Faustyna",
+      "last_name": "Kowalska",
+      "phone": "+48123456789",
+      "is_admin": true,
+      "is_approved": true
+    }
   }
 }
 ```
