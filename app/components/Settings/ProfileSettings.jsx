@@ -15,13 +15,13 @@ var ProfileSettings = React.createClass({
   enableButton: function () {
     this.setState({
       canSubmit: true
-    });
+    })
   },
 
   disableButton: function () {
     this.setState({
       canSubmit: false
-    });
+    })
   },
 
   handleSubmit: function(data) {
@@ -30,20 +30,6 @@ var ProfileSettings = React.createClass({
   },
 
   render: function() {
-    var snackbar
-
-    if (this.props.success) {
-      snackbar = <Snackbar
-        openOnMount={true}
-        message="Zapisano"
-        autoHideDuration={5000} />
-    } else if (this.state.error ) {
-      snackbar = <Snackbar
-        openOnMount={true}
-        message="Wystąpił błąd"
-        autoHideDuration={5000} />
-    }
-
     return (
       <Settings>
         <Formsy.Form className="settingsForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
@@ -59,7 +45,16 @@ var ProfileSettings = React.createClass({
             </div>
           </div>
         </Formsy.Form>
-        {snackbar}
+        <Snackbar
+          open={!!this.props.success}
+          message="Zapisano"
+          autoHideDuration={5000}
+          onRequestClose={this.props.handleSuccessSnackbarClose} />
+        <Snackbar
+          open={!!this.props.error}
+          message="Wystąpił błąd"
+          autoHideDuration={5000}
+          onRequestClose={this.props.handleErrorSnackbarClose} />
       </Settings>
     )
   }

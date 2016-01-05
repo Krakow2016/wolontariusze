@@ -26,13 +26,27 @@ var Basic = React.createClass({
       .removeChangeListener(this._changeListener)
   },
 
+  handleSuccessSnackbarClose: function() {
+    this.setState({
+      success: false
+    })
+  },
+
+  handleErrorSnackbarClose: function() {
+    this.setState({
+      error: false
+    })
+  },
+
   render: function() {
     return (
       <ProfileSettings
         profileId={this.state.profile.id}
         context={this.props.context}
         success={this.state.success}
-        error={this.state.error}>
+        error={this.state.error}
+        handleSuccessSnackbarClose={this.handleSuccessSnackbarClose}
+        handleErrorSnackbarClose={this.handleErrorSnackbarClose} >
 
         <BasicForm {...this.state.profile} />
       </ProfileSettings>

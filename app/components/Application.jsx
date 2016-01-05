@@ -26,29 +26,43 @@ var Application = React.createClass({
     getUser       : React.PropTypes.func
   },
 
+  getInitialState: function() {
+    // Wyświetl komunikat flash
+    var applicationStore = this.props.context.getStore(ApplicationStore)
+    return {
+      infoSnack: applicationStore.getSuccess(),
+      errorSnack: applicationStore.getFailure()
+    }
+  },
+
+  handleInfoSnackbarRequestClose(){
+    this.setState({
+      infoSnack: false
+    })
+  },
+
+  handleErrorSnackbarRequestClose(){
+    this.setState({
+      errorSnack: false
+    })
+  },
+
   render: function() {
     var Handler = this.props.currentRoute.handler;
-
-   // Wyświetl komunikat flash
-    var bar
-    var successFlash = this.props.context.getStore(ApplicationStore).getSuccess()
-    var failureFlash = this.props.context.getStore(ApplicationStore).getFailure()
-    if(successFlash) { // Komunikat
-      bar = <Snackbar
-        openOnMount={true}
-        message={successFlash}
-        autoHideDuration={5000} />
-    } else if(failureFlash) { // Błąd
-      bar = <Snackbar
-        openOnMount={true}
-        message={failureFlash}
-        autoHideDuration={5000} />
-    }
 
     //render content
     return (
       <div className="container">
-        {bar}
+        <Snackbar
+          open={!!this.state.infoSnack}
+          message={this.state.infoSnack || ""}
+          autoHideDuration={5000}
+          onRequestClose={()=>this.handleInfoSnackbarRequestClose()} />
+        <Snackbar
+          open={!!this.state.errorSnack}
+          message={this.state.errorSnack || ""}
+          autoHideDuration={5000}
+          onRequestClose={()=>this.handleErrorSnackbarRequestClose()} />
         <div className="globalNav navBar">
           <NavLink href="/">
               <img src="/img/logo.png" style={{'height': '100px', 'margin': '25px 0'}} />
