@@ -53,6 +53,33 @@ gulp.task('rethinkdb', function (cb) {
         resolve(conn)
       })
     })
+  }).then(function(conn) {
+    return new Promise(function(resolve) {
+      // Utwórz tabele w bazie danych
+      r.tableCreate("Activities").run(conn, function() {
+        resolve(conn)
+      })
+    })
+  }).then(function(conn) {
+    // Tylko jeżeli nie wystąpił błąd - to znaczy tablica jest pusta
+    return new Promise(function(resolve, reject){
+      r.table("Activities").insert({
+        id: "10",
+        title: "Aktywność 10",
+        content: "Treść aktywności 10",
+        creationTimestamp: 1000,
+        editionTimestamp: 2000,
+        startEventTimestamp: 3000,
+        duration: "3h",
+        place: "Kraków",
+        creator: {id: "", name: "", email: ""},
+        editor: {id: "", name: "", email: ""},
+        maxVolonteers: 2,
+        activeVolonteers: []
+      }).run(conn, function(){
+        resolve(conn)
+      })
+    })
   }).then(function(conn){
     r.tableCreate("Comments").run(conn, function(err, resp) {
       // utwórz indeksy
@@ -73,6 +100,7 @@ gulp.task('rethinkdb', function (cb) {
                       secret: "bar",
                       name: "Testowy klient API"
                     }).run(conn, function(err, resp){
+                      cb()
                     })
                   })
                 })
@@ -84,31 +112,5 @@ gulp.task('rethinkdb', function (cb) {
     })
   }).catch(function(reason){
     console.log('Failed: '+reason)
-                }).run(conn, callback)
-              } 
-            })
-            
-            r.tableCreate("Activities").run(conn, function(err, resp) {
-              if(err) { console.log(err) }
-              var callback = function(err, resp) {
-                cb();
-              }
-              if(err) { 
-                callback(err); }
-              else { // Tylko jeżeli nie wystąpił błąd - to znaczy tablica jest pusta
-                //var vol = r.table("Volonteers").get(
-                r.table("Activities").insert({
-                  id: "10",
-                  title: "Aktywność 10",
-                  content: "Treść aktywności 10",
-                  creationTimestamp: 1000,
-                  editionTimestamp: 2000,
-                  startEventTimestamp: 3000,
-                  duration: "3h",
-                  place: "Kraków",
-                  creator: {id: "", name: "", email: ""},
-                  editor: {id: "", name: "", email: ""},
-                  maxVolonteers: 2,
-                  activeVolonteers: []
   })
 })

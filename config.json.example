@@ -5,7 +5,7 @@
     "domain": "localhost",
     "service": "rethinkdb",
     "elasticSearch": "http://192.168.1.99:9200/sdm/_search",
-  "elasticSearchGetSuggestions": "http://192.168.1.99:9200/sdm/_suggest?pretty",
+    "elasticSearchGetSuggestions": "http://192.168.1.99:9200/sdm/_suggest?pretty",
     "rethinkdb": {
       "db": "sdm"
     }

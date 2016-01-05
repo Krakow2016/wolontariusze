@@ -135,6 +135,7 @@ var ActivityAdministrationBody = React.createClass({
  
   
   loadInitialState: function () {
+    this.state = {};
     this.setState(this.getInitialState());
   },
 

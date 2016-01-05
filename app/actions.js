@@ -4,7 +4,9 @@ var debug = require('debug')('Actions')
 var VolunteerStore = require('./stores/Volunteer')
 var ActivityStore = require('./stores/Activity')
 var navigateAction = require('fluxible-router').navigateAction;
-var conf = require('../config.json')
+
+var env = process.env.NODE_ENV || 'development'
+var conf = require('../config.json')[env]
 
 module.exports = {
   showVolunteer: function(context, payload, cb) {

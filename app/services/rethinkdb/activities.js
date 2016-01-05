@@ -1,6 +1,11 @@
 'use strict'
 var r = require('rethinkdb')
-var confFile = require('../../../config.json')
+
+var env = process.env.NODE_ENV || 'development'
+var configuration = require('../../../config.json')[env]
+var sendgrid_apikey = configuration.sendgrid_apikey
+var dbConf = configuration.rethinkdb
+var tableName = 'Activities'
 
 var getVolonteer = function (id, volData) {
     var result = {id: "", name: "", email: ""};
@@ -146,7 +151,7 @@ var getChangeList = function (oldState, newState) {
 }
 
 // Połączenie z sendgrid daje nam możliwość wysyłania emaili
-var sendgrid = require('sendgrid')(confFile.sendgrid_apikey)
+var sendgrid = require('sendgrid')(sendgrid_apikey)
 
 var sendActivityEmail = function (data, user) {
   console.log("EMAIL", data)
@@ -164,17 +169,17 @@ var sendActivityEmail = function (data, user) {
 }
 
 module.exports = {
-  name: 'Activities',
+  name: tableName,
   read: function(req, resource, params, config, callback) {
      // Połącz się z bazą danych `sdm`
-    r.connect(confFile.rethinkdb, function(error, conn){
+    r.connect(dbConf, function(error, conn){
       if(error) { // Wystąpił błąd przy połączeniu z bazą danych
         callback(error)
         return
       }
 
       if(params.id) { // Pobierz krotkę o danym numerze id
-        r.table('Activities').get(params.id).run(conn, function(err, row){
+        r.table(tableName).get(params.id).run(conn, function(err, row){
           if (err) { 
             console.log(err);
             callback(err)
@@ -205,13 +210,13 @@ module.exports = {
         }); 
       } else { // Pobierz listę krotek
         if(config.index) { // use index
-          r.table('Activities').getAll(params.key, {index: config.index}).run(conn, function(err, cursor) {
+          r.table(tableName).getAll(params.key, {index: config.index}).run(conn, function(err, cursor) {
             if(err) { callback(err) }
             else { cursor.toArray(callback) }
           })
         } else { // Brak identyfikatora
           // Zwróć wszyskich wolontariuszy
-          r.table('Activities').limit(50).run(conn, function(err, cursor) {
+          r.table(tableName).limit(50).run(conn, function(err, cursor) {
             if(err) { callback(err) }
             else { cursor.toArray(callback) }
           })
@@ -222,13 +227,13 @@ module.exports = {
 
   create: function(req, resource, params, body, config, callback) {
      // Połącz się z bazą danych `sdm`
-    r.connect(confFile.rethinkdb, function(err, conn) {
+    r.connect(dbConf, function(err, conn) {
       if(err) {
         callback(err)
         return
       }
 
-      r.table(resource).insert(params).run(conn, function (err, resp) {
+      r.table(tableName).insert(params).run(conn, function (err, resp) {
           if (!err) {
             var user = req.user || config.user
             var id = resp.generated_keys[0];
@@ -255,18 +260,18 @@ module.exports = {
       return
     }
     // Połącz się z bazą danych `sdm`
-    r.connect(confFile.rethinkdb, function(err, conn) {
+    r.connect(dbConf, function(err, conn) {
       if(err) {
         callback(err)
         return
       }
 
       // Wykonaj zapytanie do bazy danych
-      r.table(resource).get(params.id).run(conn, function (err1, resp1) {
+      r.table(tableName).get(params.id).run(conn, function (err1, resp1) {
         if (err1) {
           callback(err1, resp1);
         }
-        r.table(resource).get(params.id).update(params).run(conn, function (err2, resp2) {
+        r.table(tableName).get(params.id).update(params).run(conn, function (err2, resp2) {
           if (!err1 && !err2 && params.updateEmail) {
             var user = req.user || config.user
             var data = {
@@ -286,16 +291,16 @@ module.exports = {
   
   delete: function(req, resource, params, config, callback) {
     // Połącz się z bazą danych `sdm`
-    r.connect(confFile.rethinkdb, function(err, conn) {
+    r.connect(dbConf, function(err, conn) {
       if(err) {
         callback(err)
         return
       }
-      r.table(resource).get(params.id).run(conn, function (err1, resp1) {
+      r.table(tableName).get(params.id).run(conn, function (err1, resp1) {
         if (err1) {
           callback(err1, resp1);
         }
-        r.table(resource).get(params.id).delete().run(conn, function (err2, resp2) {
+        r.table(tableName).get(params.id).delete().run(conn, function (err2, resp2) {
           if (!err1 && !err2) {
             var user = req.user || config.user
             var data = {
