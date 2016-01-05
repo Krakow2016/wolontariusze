@@ -5,7 +5,39 @@ var Settings = require('./Settings.jsx')
 var APIClientsStore = require('../../stores/APIClients')
 
 var APIClient = function(props) {
-  return (<li>Aplikacja: <b>{props.name}</b></li>)
+  return (
+    <li>
+      <p>Aplikacja: <b>{props.name}</b></p>
+      <table className="pure-table">
+        <tbody>
+          <tr>
+            <td>
+              Client ID:
+            </td>
+            <td>
+              {props.id}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Client secret:
+            </td>
+            <td>
+              {props.secret}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Callback url:
+            </td>
+            <td>
+              {props.callback}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </li>
+  )
 }
 
 var Developer = React.createClass({
@@ -30,7 +62,7 @@ var Developer = React.createClass({
 
   render: function() {
     var integrations = this.state.api_clients.map(function(integration) {
-      return (<APIClient name={integration.name} key={integration.id} />)
+      return (<APIClient {...integration} key={integration.id} />)
     })
 
     return (
