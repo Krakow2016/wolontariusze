@@ -16,6 +16,7 @@ APIClients.attributes = function() {
   return [
     'id',
     'name',
+    'callback_url',
     'image'
   ]
 }
