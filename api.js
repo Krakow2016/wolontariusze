@@ -32,11 +32,15 @@ var success = function(data) {
 }
 
 // Format każdego niepoprawnie wykonanego zapytania
-var error = function(type) {
-  return {
+var error = function(type, message) {
+  var result = {
     status: 'error',
     type: type
   }
+  if(message) {
+      result.message = message
+  }
+  return result
 }
 
 var server = module.exports = express();
@@ -165,7 +169,7 @@ server.use(function(req, res, next) {
 // Obsługa błędów
 server.use(function(err, req, res, next) {
   console.error(err.stack)
-  res.status(500).send(error('UnknownError'))
+  res.status(500).send(error('UnknownError', err))
 })
 
 // Lista zadań

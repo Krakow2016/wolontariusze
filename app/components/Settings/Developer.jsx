@@ -31,7 +31,7 @@ var APIClient = function(props) {
               Callback url:
             </td>
             <td>
-              {props.callback}
+              {props.callback_url}
             </td>
           </tr>
         </tbody>
