@@ -35,13 +35,13 @@ var Application = React.createClass({
     }
   },
 
-  handleInfoSnackbarRequestClose(){
+  handleInfoSnackbarRequestClose: function() {
     this.setState({
       infoSnack: false
     })
   },
 
-  handleErrorSnackbarRequestClose(){
+  handleErrorSnackbarRequestClose: function() {
     this.setState({
       errorSnack: false
     })
@@ -57,12 +57,12 @@ var Application = React.createClass({
           open={!!this.state.infoSnack}
           message={this.state.infoSnack || ""}
           autoHideDuration={5000}
-          onRequestClose={()=>this.handleInfoSnackbarRequestClose()} />
+          onRequestClose={this.handleInfoSnackbarRequestClose} />
         <Snackbar
           open={!!this.state.errorSnack}
           message={this.state.errorSnack || ""}
           autoHideDuration={5000}
-          onRequestClose={()=>this.handleErrorSnackbarRequestClose()} />
+          onRequestClose={this.handleErrorSnackbarRequestClose} />
         <div className="globalNav navBar">
           <NavLink href="/">
               <img src="/img/logo.png" style={{'height': '100px', 'margin': '25px 0'}} />
