@@ -114,10 +114,9 @@ server.get('/api/v2/', bearer, function(req, res) {
 })
 
 server.get('/api/v2/client', bearer, function(req, res) {
-  res.json({
-    client_id: req.user.id,
-    scope: req.authInfo.scope
-  })
+  res.json(success({
+    client_id: req.user.id
+  }))
 })
 
 // Dodawanie wolontariuszy

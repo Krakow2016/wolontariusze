@@ -65,10 +65,7 @@ passport.use(new BearerStrategy(
         Volunteer.read({force_admin: true}, 'Volunteers', { id: token.userId }, {}, function (err, user) {
           if (err) { return done(err) }
           if (!user) { return done(null, false) }
-          // to keep this example simple, restricted scopes are not implemented,
-          // and this is just for illustrative purposes
-          var info = { scope: '*' }
-          done(null, user, info)
+          done(null, user)
         })
       } else {
         //The request came from a client only since userId is null
@@ -76,10 +73,7 @@ passport.use(new BearerStrategy(
         APIClients.read({force_admin: true}, 'APIClients', { id: token.clientId }, {}, function (err, client) {
           if(err) { return done(err) }
           if(!client) { return done(null, false) }
-          // to keep this example simple, restricted scopes are not implemented,
-          // and this is just for illustrative purposes
-          var info = { scope: '*' }
-          done(null, client, info)
+          done(null, client)
         })
       }
     })
