@@ -2,6 +2,7 @@
 
 var debug = require('debug')('Actions')
 var VolunteerStore = require('./stores/Volunteer')
+var navigateAction = require('fluxible-router').navigateAction
 
 module.exports = {
   showVolunteer: function(context, payload, cb) {
@@ -127,6 +128,7 @@ module.exports = {
       if (err) { // Błąd po stronie serwera
         context.dispatch('APICLIENT_CREATION_FAILURE', [payload])
       } else {
+        context.executeAction(navigateAction, {url: '/ustawienia/developer'})
         context.dispatch('APICLIENT_CREATION_SUCCESS', [payload])
       }
       cb()
