@@ -12,13 +12,16 @@ var AutoSuggestVolonteer = React.createClass ({
       suggest: {
         text: input,
         completion: {
-          field: "suggest"
+            field: "suggest",
+            fuzzy: {
+                fuzziness: 1
+            }
         }
       }
     }
 
     var request = new XMLHttpRequest()
-    request.open('POST', '/getSuggestions', true)
+    request.open('POST', '/suggest', true)
     request.setRequestHeader('Content-Type', 'application/json')
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {

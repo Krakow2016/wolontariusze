@@ -142,7 +142,7 @@ server.get('/logout', function(req, res){
 
 server.post('/search', function(req, res) {
   if(req.user && req.user.is_admin) {
-    var elasticSearch = config.elasticSearch
+    var elasticSearch = config.elasticSearch +'/_search'
     req.pipe(request(elasticSearch))
       .on('error', function(e){
         res.send(500) // Brak połączenia z bazą
@@ -152,10 +152,10 @@ server.post('/search', function(req, res) {
   }
 })
 
-server.post('/getSuggestions', function(req, res) {
+server.post('/suggest', function(req, res) {
   if(req.user && req.user.is_admin) {
-    var getSuggestions = config.elasticSearchGetSuggestions
-    req.pipe(request(getSuggestions))
+    var elasticSearch = config.elasticSearch +'/_suggest'
+    req.pipe(request(elasticSearch))
       .on('error', function(e){
         res.send(500) // Brak połączenia z bazą
       }).pipe(res)
