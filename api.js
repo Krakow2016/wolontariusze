@@ -32,11 +32,15 @@ var success = function(data) {
 }
 
 // Format każdego niepoprawnie wykonanego zapytania
-var error = function(type) {
-  return {
+var error = function(type, message) {
+  var result = {
     status: 'error',
     type: type
   }
+  if(message) {
+      result.message = message
+  }
+  return result
 }
 
 var server = module.exports = express();
@@ -84,7 +88,7 @@ server.post('/api/v2/dialog/authorize/decision', session, oauth2.decision);
 
 // Końcówka dla klienta oauth chcącego zamienić tymczasowy kod dostępu na
 // token.
-server.post('/api/v2/oauth/token', oauth2.token);
+server.post('/api/v2/oauth/token', passport.initialize(), oauth2.token);
 
 // Autoryzacja tokenem oAuth
 var bearer = [passport.initialize(), function(req, res, next) {
@@ -110,10 +114,9 @@ server.get('/api/v2/', bearer, function(req, res) {
 })
 
 server.get('/api/v2/client', bearer, function(req, res) {
-  res.json({
-    client_id: req.user.id,
-    scope: req.authInfo.scope
-  })
+  res.json(success({
+    client_id: req.user.id
+  }))
 })
 
 // Dodawanie wolontariuszy
@@ -165,7 +168,7 @@ server.use(function(req, res, next) {
 // Obsługa błędów
 server.use(function(err, req, res, next) {
   console.error(err.stack)
-  res.status(500).send(error('UnknownError'))
+  res.status(500).send(error('UnknownError', err))
 })
 
 // Lista zadań

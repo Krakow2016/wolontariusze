@@ -10,6 +10,9 @@ var passportPlugin = require('../../app/plugins/passportPlugin')
 
 var Application = require('../../app/components/TestApplication.jsx')
 
+// material-ui wymaga tej zmiennej globalnej
+GLOBAL.navigator = {userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36'}
+
 // Assing global variable
 createComponent = function(component, props, children) {
 

@@ -17,7 +17,7 @@ Masz pytanie? Nie wiesz jak się zaangażować? Zapraszamy do dyskusji na:
 Naszym celem jest budowa narzędzia, które pomaga pomagać. Serwis będzie pełnił
 3 funkcje:
 
-* **Administracyją** - jako narzędzie dla koordynatorów dające im wgląd w bazę danych wolontariuszy oraz jako warstwa autoryzacji dla aplikacji mobilnej dla wolontariuszy.
+* **Administracyjną** - jako narzędzie dla koordynatorów dające im wgląd w bazę danych wolontariuszy oraz jako warstwa autoryzacji dla aplikacji mobilnej dla wolontariuszy.
 * **Promocyjną** - jako platforma promująca wolontariuszy jako ludzi aktywnych.
 * **Organizacyjną** - jako baza zadań do wykonania przez wolontariuszy w ramach wolontariatu.
 
@@ -78,16 +78,19 @@ Flaga `-g` oznacza, że pakiet zostanie zainstalowany globalnie - dzięki temu
 będziemy mieli do niego dostęp z poziomu komendy systemowej (w naszym wypadku
 `gulp`).
 
+## Baza danych
+
+Zainstaluj bazę danych RethinkDB według [instrukcji](https://www.rethinkdb.com/docs/install/).
+
 ## Serwer www
 
-Przed uruchomieniem serwera www, upewnij się że masz zainstalowane wszystkie
-zależności:
+Przed uruchomieniem serwera www, upewnij się że masz zainstalowane wszystkie zależności. Aby to zrobić wykonaj polecenie:
 
     $ npm install
 
-W kolejnym kroku musisz utworzyć plik konfiguracyjny `config.json` lub po
-prostu skopiować go z `config.json.example`. Możesz w nim zdefiniować mi. adres
-do bazy danych i port na którym ma zostać uruchomiony serwer www.
+W kolejnym kroku musisz utworzyć plik konfiguracyjny `config.json`. Wykorzystaj plik `config.json.example` jako szablon, który zawiera wcześniej zdefiniowane ustawienia dla naszego projektu. 
+
+W pliku konfiguracyjnym możesz zdefiniować m.in. adres do bazy danych i port na którym ma zostać uruchomiony serwer www.
 
 Następnie wykonaj komendę:
 

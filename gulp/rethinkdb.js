@@ -98,7 +98,8 @@ gulp.task('rethinkdb', function (cb) {
                     r.table("APIClients").insert({
                       id: "foo",
                       secret: "bar",
-                      name: "Testowy klient API"
+                      name: "Testowy klient API",
+                      callback_url: "https://developers.google.com/oauthplayground"
                     }).run(conn, function(err, resp){
                       cb()
                     })

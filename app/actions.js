@@ -2,7 +2,6 @@
 
 var debug = require('debug')('Actions')
 var VolunteerStore = require('./stores/Volunteer')
-var ActivityStore = require('./stores/Activity')
 var navigateAction = require('fluxible-router').navigateAction;
 
 var env = process.env.NODE_ENV || 'development'
@@ -95,7 +94,7 @@ module.exports = {
         else { 
             console.log("ACTIVITY DATA", data);
             var id;
-            if(conf.service === 'rethinkdb') {
+            if(conf.service === 'rethinkdb') { // TODO ujednolicić
               id = data.generated_keys[0];
             } else {
               id = data.id;
@@ -183,6 +182,7 @@ module.exports = {
       if (err) { // Błąd po stronie serwera
         context.dispatch('APICLIENT_CREATION_FAILURE', [payload])
       } else {
+        context.executeAction(navigateAction, {url: '/ustawienia/developer'})
         context.dispatch('APICLIENT_CREATION_SUCCESS', [payload])
       }
       cb()
