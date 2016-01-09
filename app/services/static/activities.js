@@ -21,22 +21,26 @@ var public_attrs = [
   'startEventTimestamp',
   'duration',
   'place',
-  'creatorId',
-  'editorId',
+  'creator',
+  'editor',
   'maxVolonteers',
-  'activeVolonteersIds',
+  'activeVolonteers',
 ]
 
 var private_attrs = [
 ]
 
         
-var getName = function (id) {
+var getVolonteer = function (id) {
+    var result = {id: "", name: "", email: ""};
     if (volonteers[id]) {
-        return volonteers[id].first_name+' '+volonteers[id].last_name;
-    } else {
-        return 'error';
-    }        
+        result =  {
+          id: id,
+          name: volonteers[id].first_name+' '+volonteers[id].last_name,
+          email: volonteers[id].email
+        }
+    }
+    return result;
 }
 
 var modifiedActivity = function (activityId, req, config) {
@@ -47,7 +51,8 @@ var modifiedActivity = function (activityId, req, config) {
         // Flaga przywilejów administratora
         var is_admin = user && user.is_admin
         // Flaga właściciela profilu
-        var is_owner = (user && (activity.creatorId == user.id));
+        var creatorId = (activity.creator) ? activity.creator.id : null;
+        var is_owner = (user && (creatorId == user.id));
         
         // Tablica parametrów uprawnionych do odczytu
         var attrs = public_attrs
@@ -55,21 +60,20 @@ var modifiedActivity = function (activityId, req, config) {
         if(is_admin || is_owner) {
             attrs = attrs.concat(private_attrs)
         }
-                
-        //uzupełnij parametry o creatorName and editorName
-        activity['creatorName'] =  getName(activity['creatorId']);
-        activity['editorName']  = getName(activity['editorId']);
         
-        //uzupełnij listę wolontariuszy
-        if(activity['activeVolonteersIds']) {
-            activity['activeVolonteers'] = activity['activeVolonteersIds'].map(function (id) {
-                return {
-                        "id": id,
-                        "name": getName(id)
-                }
-            })
-        }
+        //uzupełnij twórcę i ostatniego edytora o aktualne dane
+        activity['creator'] =  getVolonteer(creatorId);
+        activity['editor']  = getVolonteer(editorId);
         
+        //uzupełnij listę wolontariuszy o aktualne dane
+        activity['activeVolonteers'] = activity['activeVolonteers'].map(function (vol) {
+            return getVolonteer(vol.id);
+        })
+        //usun pustych wolontariuszy
+        activity['activeVolonteers'] = activity['activeVolonteers'].filter (function (vol) {
+          return (vol.id != "")
+        });
+                     
         //uzupełnij limit wolontariuszy
         activity['volonteersLimit'] = 'Brak';
         if (activity['maxVolonteers'] > 0) {
