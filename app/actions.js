@@ -78,6 +78,7 @@ module.exports = {
       cb()
     })
   },
+
   updateActivity: function(context, payload, cb) {
     console.log('update activity');
     context.service.update('Activities', payload, {}, function (err, data) {
@@ -86,6 +87,7 @@ module.exports = {
         cb()  
     })
   },
+
   createActivity: function(context, payload, cb) { 
     console.log('create activity');
     

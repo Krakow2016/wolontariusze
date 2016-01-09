@@ -41,6 +41,16 @@ var ActivityAdministration = React.createClass({
   }
 });
 
+var AddedVolonteer = React.createClass({
+    onClick: function () {
+        this.props.onRemoveButtonClick(this.props.volonteer);
+    },
+    render: function () {
+      return (
+        <div className="addedVolonteer" ><a href={'/wolontariusz/'+this.props.volonteer.id}>{this.props.volonteer.name}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
+      )
+    }
+})
 
 var ActivityAdministrationBody = React.createClass({
 
@@ -116,16 +126,17 @@ var ActivityAdministrationBody = React.createClass({
     }
     this.setState(modifiedState);
   },
+
   removeActiveVolonteer: function (volonteer) {
     var modifiedState = this.state ;
     for (var i = 0; i < modifiedState.activeVolonteers.length; i++) {
       if (modifiedState.activeVolonteers[i].id == volonteer.id) {
         modifiedState.activeVolonteers.splice(i,1);
-      }         
+      }
     }
     this.setState(modifiedState);
   },
-  
+
   handleMaxVolonteersChange: function (evt) {
     var modifiedState = this.state;
     modifiedState.maxVolonteers = evt.target.value;
@@ -216,12 +227,22 @@ var ActivityAdministrationBody = React.createClass({
     if (this.props.creationMode == false) {
       createButton = <input type="button" onClick={this.remove} value="Usuń" />
     }
-    
+
     var showButton = []
     if (this.props.creationMode == false) {
       showButton = <a href={"/aktywnosc/"+this.state.id} ><input type="button" value="Wyświetl" /></a>
     }
-    
+
+    var removeActiveVolonteer = this.removeActiveVolonteer
+    var list = this.state.activeVolonteers.map(function(volunteer) {
+      return (
+        <AddedVolonteer
+          key={volunteer.id}
+          volonteer={volunteer}
+          onRemoveButtonClick={removeActiveVolonteer} />
+      )
+    })
+
     return (
       <div>
         <b>Tytuł</b> 
@@ -256,12 +277,12 @@ var ActivityAdministrationBody = React.createClass({
         <textarea id="activityContentTextarea" name="content" placeholder="Dodaj treść wiadomości" value={this.state.content} onChange={this.handleContentChange} />
         <br></br>
         
-        <b>Wolontariusze, którzy biorą udział:</b> 
+        <b>Wolontariusze, którzy biorą udział:</b>
         <br></br>
-        <ActivityVolonteersList data={this.state.activeVolonteers} 
-                              onAddButtonClick={this.addActiveVolonteer}
-                              onRemoveButtonClick={this.removeActiveVolonteer} />
-        
+        <ActivityVolonteersList addActiveVolonteer={this.addActiveVolonteer} />
+
+        {list}
+
         <b>Limit (maksymalna liczba wolontariuszy, jeśli 0 to brak limitu)</b>
         <br></br>
         <input name="maxVolonteers" value={this.state.maxVolonteers} onChange={this.handleMaxVolonteersChange} />
