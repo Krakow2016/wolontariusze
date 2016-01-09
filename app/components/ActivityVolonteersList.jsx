@@ -35,9 +35,9 @@ var AutoSuggestVolonteer = React.createClass ({
           };
         })
 
-        setTimeout(callback(null, suggestions), 300);
+        callback(null, suggestions);
       } else {
-        console.log('STATUS')
+        console.log('STATUS', request.status)
         // We reached our target server, but it returned an error
       }
     }
