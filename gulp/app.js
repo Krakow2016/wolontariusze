@@ -5,7 +5,8 @@ var gulp       = require('gulp'),
     debug = require('debug'),
     uglify = require('gulp-uglify'),
     sourcemaps = require('gulp-sourcemaps'),
-    babel = require('gulp-babel')
+    babel = require('gulp-babel'),
+    gutil = require('gulp-util')
 
 var bootstrapDebug = debug('Example');
 debug.enable('*');
@@ -34,7 +35,7 @@ gulp.task('app', function () {
 
   if (production) {
     // If this is a production build, minify it
-    stream.pipe(uglify());
+    stream.pipe(uglify().on('error', gutil.log))
   }
 
   stream.pipe(gulp.dest('./public/js'));

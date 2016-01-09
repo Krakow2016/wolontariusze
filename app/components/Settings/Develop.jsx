@@ -52,8 +52,8 @@ var Develop = React.createClass({
             </div>
             <div className="pure-u-1 pure-u-md-2-3">
               <MyTextField required
-                id="callback"
-                name="callback"
+                id="callback_url"
+                name="callback_url"
                 placeholder="http://"
                 validations="minLength:3"
                 validationError="URL jest wymagany" />
