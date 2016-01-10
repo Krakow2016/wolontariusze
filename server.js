@@ -15,6 +15,9 @@ var express = require('express'),
     request = require('request'),
     crypto = require('crypto')
 
+// Służy do zapisywania sesji użytkowników w bazie danych
+var RDBStore = require('session-rethinkdb')(session)
+
 // Wyświetlanie komunikatów kontrolnych
 var debug = require('debug')('Server')
 var env = process.env.NODE_ENV || 'development'
@@ -38,6 +41,11 @@ var APIClient = require('./app/services/'+config.service+'/apiclients')
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
 var fetchrPlugin = app.getPlugin('FetchrPlugin');
+
+// Konfiguracja zapisu danych sesji w bazie danych
+var session_store = {
+  servers: [ config.rethinkdb ]
+}
 
 // Konfiguracja middleware-u Passport definująca metodę weryfikacji poprawności
 // logowania.
@@ -100,7 +108,10 @@ server.use(function(req, res, next){
   next();
 });
 
-server.use(session({ secret: 'secret' }))
+server.use(session({
+  secret: 'secret',
+  store: config.service === 'rethinkdb' ? new RDBStore(session_store) : new session.MemoryStore()
+}))
 // Middleware służący do wyświetlania komunikatów flash
 server.use(flash())
 // Przepujść każde zapytanie przez middleware do autoryzacji Passport.
