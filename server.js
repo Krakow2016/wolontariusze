@@ -29,7 +29,7 @@ var server = module.exports = express()
 // Źródło danych - obiekt udostępniający metody dostępu do danych wolontariuszy
 // (CRUD). Zamień w ścieżkach pliku `static` na `rethinkdb` aby podłączyć się
 // pod lokalną bazę danych.
-var Activity = require('./app/services/'+config.service+'/activities')
+var Activities = require('./app/services/'+config.service+'/activities')
 var Comments = require('./app/services/'+config.service+'/comments')
 var Volunteer = require('./app/services/'+config.service+'/volonteers')
 var Integration = require('./app/services/'+config.service+'/integrations')
@@ -117,7 +117,7 @@ server.set('view engine', 'handlebars')
 if(fetchrPlugin) {
   // Register our messages REST services
   fetchrPlugin.registerService(Volunteer);
-  fetchrPlugin.registerService(Activity);
+  fetchrPlugin.registerService(Activities);
   fetchrPlugin.registerService(Comments);
   fetchrPlugin.registerService(Integration);
   fetchrPlugin.registerService(APIClient);
@@ -170,6 +170,40 @@ server.get('/invitation', passport.authenticate('localapikey', {
   failureFlash: true,
   successFlash: true
 }))
+
+// Dołącz do wydarzenia
+server.post('/aktywnosci/:id/join', function(req, res) {
+  if(!req.user) { return res.send(403) }
+
+  Activities.join({force_admin: true}, 'Activities', {
+    id: req.params.id,
+    user_id: req.user.id
+  }, {}, function(err, resp) {
+    var change = resp.changes[0]
+    if(change) {
+      res.send(change.new_val)
+    } else {
+      res.send(304) // Not modyfied
+    }
+  })
+})
+
+// Wypisz się z wydarzenia
+server.post('/aktywnosci/:id/leave', function(req, res) {
+  if(!req.user) { return res.send(403) }
+
+  Activities.leave({force_admin: true}, 'Activities', {
+    id: req.params.id,
+    user_id: req.user.id
+  }, {}, function(err, resp) {
+    var change = resp.changes[0]
+    if(change) {
+      res.send(change.new_val)
+    } else {
+      res.send(304) // Not modyfied
+    }
+  })
+})
 
 server.post('/invitation', jsonParser, function(req, res) {
   var id = req.body.id

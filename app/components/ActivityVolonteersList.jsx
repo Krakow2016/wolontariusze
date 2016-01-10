@@ -67,13 +67,13 @@ var AutoSuggestVolonteer = React.createClass ({
   },
 
   onSuggestionSelected: function(evt, opts) {
-    this.props.addActiveVolonteer(opts.suggestion)
+    this.props.addActiveVolonteer(opts.suggestion.id)
     this.setState({value: ''})
   },
 
   handleChange: function (evt, opts) {
     this.setState({
-      value: evt.target.value
+      value: evt.target.value || ''
     })
 
     // Zapobiega wywołaniu po zmianie wartości pola przez kliknięcie

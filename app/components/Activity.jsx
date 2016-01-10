@@ -10,7 +10,7 @@ var TimeService = require('../modules/time/TimeService.js')
 var DateTime = require('react-datetime');
 var AutoSuggest = require('react-autosuggest');
 
-var updateAction = require('../actions').updateActivity
+var actions = require('../actions')
 
 var Activity = React.createClass({
 
@@ -33,34 +33,15 @@ var Activity = React.createClass({
   },
 
   update: function() {
-    this.props.context.executeAction(updateAction, this.state)
+    this.props.context.executeAction(actions.updateActivity, this.state.activity)
   },
 
   onAcceptButtonClick: function () {
-    // TODO: nie możemy dać wszystkim możliwości dowolnego edytowania atrybutu
-    // activeVolonteers.
-    var modifiedState = this.state ;
-    modifiedState.activeVolonteers.push( {
-      id: this.props.user.id,
-      name: this.props.user.first_name+" "+this.props.user.last_name,
-      email: this.props.user.email
-    })
-    modifiedState.updateEmail = false;
-    this.setState(modifiedState);
-    this.update()
+    this.props.context.executeAction(actions.joinActivity, {id: this.state.activity.id})
   },
 
   onCancelButtonClick: function () {
-    // TODO j/w
-    var modifiedState = this.state ;
-    for (var i = 0; i < modifiedState.activeVolonteers.length; i++) {
-        if (modifiedState.activeVolonteers[i].id == this.props.user.id) {
-            modifiedState.activeVolonteers.splice(i,1);
-        }         
-    }
-    modifiedState.updateEmail = false;
-    this.setState(modifiedState);   
-    this.update();
+    this.props.context.executeAction(actions.leaveActivity, {id: this.state.activity.id})
   },
 
   user: function() {
@@ -68,78 +49,72 @@ var Activity = React.createClass({
   },
 
   render: function () {
-  
+
     var user = this.user()
     var is_admin = user && user.is_admin;
-    
+    var activity = this.state.activity
+
     var editLink
     if(is_admin) {
       editLink = <div className="adminToolbar">
-        <NavLink href={"/aktywnosc/"+ this.state.id +"/edytuj"}>Edytuj</NavLink>
+        <NavLink href={"/aktywnosc/"+ activity.id +"/edytuj"}>Edytuj</NavLink>
       </div>
     }
-    
+
     var priority;
-    if (this.state.is_urgent && this.state.is_urgent == true) {
+    if (activity.is_urgent) {
       priority = "PILNE"
     } else {
       priority = "NORMALNE"
     }
-    
-    var activeVolonteersList = []
-    var activeVolonteersIds = []
-    if (this.state.activeVolonteers) {
-        activeVolonteersList = this.state.activeVolonteers.map (function (volonteer) {
-            return (
-                <span className="volonteerLabel"><a href={'/wolontariusz/'+volonteer.id}>{volonteer.name}</a></span>
-            )
-        })
-        activeVolonteersIds = this.state.activeVolonteers.map (function (volonteer) {
-          return volonteer.id
-        })
-    }
 
-    
-    var buttons = [];
+    var volunteers = activity.volunteers
+    var has_joined = user && volunteers.indexOf(user.id) > -1
+
+    var activeVolonteersList = volunteers.map(function(volunteer) {
+      return (
+        <span className="volonteerLabel"><a href={'/wolontariusz/'+volunteer}>{volunteer}</a></span>
+      )
+    })
+
+    var buttons = []
+
+    console.log(activity)
     //acceptButton
-    if (user &&
-        ( ( activeVolonteersIds && activeVolonteersIds.length < this.state.maxVolonteers) || 
-            this.state.maxVolonteers == 0) &&
-        activeVolonteersIds.indexOf(user.id) == -1 ) {
-        buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" />)
+    if (!has_joined && volunteers.length < activity.maxVolonteers) {
+      buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" />)
     }
 
     //canceButton
-    if (user &&
-        activeVolonteersIds.indexOf(user.id) !== -1 ) {
-        buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" />)
+    if (has_joined) {
+      buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" />)
     }
 
+    // TODO
+    //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>
+    //<b>Ostatnia edycja:</b> {TimeService.showTime(activity.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.editor.id}>{activity.editor.name}</a></span>
     return (
       <Paper className="paper">
         {editLink}
-        <h2>{this.state.title}</h2>
-        <b>Dodano:</b> {TimeService.showTime(this.state.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+this.state.creator.id}>{this.state.creator.name}</a></span>
+        <h2>{activity.title}</h2>
         <br></br>
-        <b>Ostatnia edycja:</b> {TimeService.showTime(this.state.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+this.state.editor.id}>{this.state.editor.name}</a></span>
         <br></br>
-        <b>Czas rozpoczęcia:</b> {TimeService.showTime(this.state.startEventTimestamp)}  <b>Czas trwania:</b> {this.state.duration}
+        <b>Czas rozpoczęcia:</b> {TimeService.showTime(activity.startEventTimestamp)}  <b>Czas trwania:</b> {activity.duration}
         <br></br>
-        <b>Miejsce wydarzenia:</b> {this.state.place}
+        <b>Miejsce wydarzenia:</b> {activity.place}
         <br></br>
         <b>Prorytet:</b> {priority}
         <br></br>
-        <ReactMarkdown source={this.state.content} />
+        <ReactMarkdown source={activity.content} />
         <br></br>
         <b>Wolontariusze, którzy biorą udział:</b> {activeVolonteersList}
         <br></br>
-        <b>Limit(maksymalna liczba wolontariuszy):</b> {this.state.volonteersLimit}
+        <b>Limit(maksymalna liczba wolontariuszy):</b> {activity.volonteersLimit}
         <br></br>
         {buttons}
       </Paper>
     )
   }
-
 })
 
 /* Module.exports instead of normal dom mounting */

@@ -71,6 +71,7 @@ module.exports = {
       })
     }
   },
+
   activity_edition: {
     path: '/aktywnosc/:id/edytuj',
     method: 'get',
@@ -83,16 +84,18 @@ module.exports = {
       })
     }
   },
+
   activity_creation: {
     path: '/nowa_aktywnosc',
     method: 'get',
     handler: require('./components/ActivityCreate.jsx'),
     action: function (context, payload, done) {
       context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Nowa Aktywnosc' });
-      context.dispatch('NEW_ACTIVITY', {});
+      context.dispatch('LOAD_ACTIVITY', {})
       done();
     }
   },
+
   login: {
     path: '/login',
     method: 'get',
