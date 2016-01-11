@@ -2,7 +2,7 @@
 
 var debug = require('debug')('Actions')
 var VolunteerStore = require('./stores/Volunteer')
-var navigateAction = require('fluxible-router').navigateAction;
+var navigateAction = require('fluxible-router').navigateAction
 
 var env = process.env.NODE_ENV || 'development'
 var conf = require('../config.json')[env]
@@ -59,7 +59,6 @@ module.exports = {
   },
 
   showActivity: function(context, payload, cb) {
-      console.log('show activity');
     // Pobierz dane aktywności z bazy danych
     context.service.read('Activities', payload, {
       store: 'Activity'
@@ -74,18 +73,17 @@ module.exports = {
     // Pobierz dane wolontariusza z bazy danych
     context.service.read('Activities', payload, {
     }, function (err, data) {
-      if(err) { console.log(err) }
+      if(err) { debug(err) }
       else { context.dispatch('LOAD_ACTIVITIES', data) }
       cb()
     })
   },
 
   updateActivity: function(context, payload, cb) {
-    console.log('update activity');
     context.service.update('Activities', {}, payload, function (err, data) {
-        if(err) { console.log(err) }
-        else { context.dispatch('ACTIVITY_UPDATE_SUCCESS', data) }
-        cb()
+      if(err) { debug(err) }
+      else { context.dispatch('ACTIVITY_UPDATE_SUCCESS', data) }
+      cb()
     })
   },
 
@@ -128,36 +126,29 @@ module.exports = {
   },
 
   createActivity: function(context, payload, cb) {
-    console.log('create activity');
-
     context.service.create('Activities', {}, payload, function (err, data) {
-        if(err) { console.log(err) }
-        else { 
-            console.log("ACTIVITY DATA", data);
-            var id;
-            if(conf.service === 'rethinkdb') { // TODO ujednolicić
-              id = data.generated_keys[0];
-            } else {
-              id = data.id;
-            }
-            //context.dispatch('ACTIVITY_CREATED', {});
-                
-            context.executeAction(navigateAction, {url: "/aktywnosc/"+id});
-
+      if(err) { debug(err) }
+      else { 
+        var id
+        if(conf.service === 'rethinkdb') { // TODO ujednolicić
+          id = data.generated_keys[0]
+        } else {
+          id = data.id
         }
-        cb()  
+        //context.dispatch('ACTIVITY_CREATED', {})     
+        context.executeAction(navigateAction, {url: '/aktywnosc/'+id})
+      }
+      cb()  
     })
   },
   deleteActivity: function(context, payload, cb) {
-    console.log('delete activity');
-    context.service.delete('Activities', payload, {
-      user: context.getUser()}, function (err, data) {
-        if(err) { console.log(err) }
-        else { 
-            context.dispatch('ACTIVITY_DELETED', data);
-            context.executeAction(navigateAction, {url: "/"});
-        }
-        cb()  
+    context.service.delete('Activities', payload, {user: context.getUser()}, function (err, data) {
+      if(err) { debug(err) }
+      else { 
+        context.dispatch('ACTIVITY_DELETED', data)
+        context.executeAction(navigateAction, {url: '/'})
+      }
+      cb()  
     })
   },
 

@@ -8,17 +8,17 @@ module.exports = {
     method: 'get',
     handler: require('./components/Index.jsx'),
     action: function (context, payload, done) {
-      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Home | flux-examples | routing' });
-      done();
-      }
-    },
+      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Home | flux-examples | routing' })
+      done()
+    }
+  },
 
   registration: {
     path: '/rejestracja',
     method: 'get',
     handler: require('./components/Registration.jsx'),
     action: function (context, payload, done) {
-      done();
+      done()
     }
   },
 
@@ -29,7 +29,7 @@ module.exports = {
     action: function (context, payload, done) {
       var user = context.getUser()
       context.executeAction(actions.showVolunteer, { id: user.id }, function() {
-        done();
+        done()
       })
     }
   },
@@ -40,9 +40,9 @@ module.exports = {
     handler: require('./components/Volunteer.jsx'),
     action: function (context, payload, done) {
       var volunteerId  = payload.params.id
-      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: volunteerId + ' [Dynamic Page] | flux-examples | routing' });
+      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: volunteerId + ' [Dynamic Page] | flux-examples | routing' })
       context.executeAction(actions.showVolunteer, { id: volunteerId }, function() {
-        done();
+        done()
       })
     }
   },
@@ -54,7 +54,7 @@ module.exports = {
     action: function (context, payload, done) {
       var volunteerId  = payload.params.id
       context.executeAction(actions.showVolunteer, { id: volunteerId }, function() {
-        done();
+        done()
       })
     }
   },
@@ -65,9 +65,9 @@ module.exports = {
     handler: require('./components/Activity.jsx'),
     action: function (context, payload, done) {
       var activityId  = payload.params.id
-      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: activityId + ' Aktywnosc' });
+      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: activityId + ' Aktywnosc' })
       context.executeAction(actions.showActivity, { id: activityId }, function() {
-        done();
+        done()
       })
     }
   },
@@ -77,10 +77,10 @@ module.exports = {
     method: 'get',
     handler: require('./components/ActivityEdit.jsx'),
     action: function (context, payload, done) {
-      var activityId  = payload.params.id;  
-      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: activityId + ' Edytuj Aktywnosc' });
+      var activityId  = payload.params.id
+      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: activityId + ' Edytuj Aktywnosc' })
       context.executeAction(actions.showActivity, { id: activityId }, function() {
-        done();
+        done()
       })
     }
   },
@@ -90,9 +90,9 @@ module.exports = {
     method: 'get',
     handler: require('./components/ActivityCreate.jsx'),
     action: function (context, payload, done) {
-      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Nowa Aktywnosc' });
+      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Nowa Aktywnosc' })
       context.dispatch('LOAD_ACTIVITY', {})
-      done();
+      done()
     }
   },
 
@@ -101,8 +101,8 @@ module.exports = {
     method: 'get',
     handler: require('./components/Login.jsx'),
     action: function (context, payload, done) {
-      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Home | flux-examples | routing' });
-      done();
+      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Home | flux-examples | routing' })
+      done()
     }
   },
 

@@ -1,6 +1,5 @@
 var React = require('react')
-var AutoSuggest = require('react-autosuggest');
-var config = require('../../config.json')
+var AutoSuggest = require('react-autosuggest')
 
 var AutoSuggestVolonteer = React.createClass ({
 
@@ -16,10 +15,10 @@ var AutoSuggestVolonteer = React.createClass ({
       suggest: {
         text: this.state.value,
         completion: {
-            field: "suggest",
-            fuzzy: {
-                fuzziness: 1
-            }
+          field: 'suggest',
+          fuzzy: {
+            fuzziness: 1
+          }
         }
       }
     }
@@ -31,14 +30,14 @@ var AutoSuggestVolonteer = React.createClass ({
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
-        var resp = request.responseText;
+        var resp = request.responseText
         var json = JSON.parse(resp)
 
         var suggestions = json.suggest[0].options.map (function (option) {
           return {
             id: option.payload.id,
             name: option.text
-          };
+          }
         })
 
         that.setState({

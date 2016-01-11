@@ -1,11 +1,8 @@
 var React = require('react')
-var NavLink = require('fluxible-router').NavLink
-
 var ActivityStore = require('../stores/Activity')
-var Authentication = require('./Authentication.jsx')
-var ActivityVolonteersList = require('./ActivityVolonteersList.jsx');
+var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
 
-var DateTime = require('react-datetime');
+var DateTime = require('react-datetime')
 
 var update = require('react-addons-update')
 
@@ -13,17 +10,16 @@ var actions = require('../actions')
 var updateAction = actions.updateActivity
 var createAction = actions.createActivity
 var deleteAction = actions.deleteActivity
-var sendActivityEmailAction = actions.sendActivityEmail;
 
 var AddedVolonteer = React.createClass({
-    onClick: function () {
-        this.props.onRemoveButtonClick(this.props.volonteer);
-    },
-    render: function () {
-      return (
-        <div className="addedVolonteer" ><a href={'/wolontariusz/'+this.props.volonteer}>{this.props.volonteer}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
-      )
-    }
+  onClick: function () {
+    this.props.onRemoveButtonClick(this.props.volonteer)
+  },
+  render: function () {
+    return (
+      <div className="addedVolonteer" ><a href={'/wolontariusz/'+this.props.volonteer}>{this.props.volonteer}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
+    )
+  }
 })
 
 var ActivityAdministration = React.createClass({
@@ -87,40 +83,40 @@ var ActivityAdministration = React.createClass({
 
   validateInputs: function () {
     // TODO: walidacja poprzez Formsy
-    var msg = '';
+    var msg = ''
       
     if (this.state.maxVolonteers > 0 && this.state.activity.volunteers.length > this.state.maxVolonteers) {
-      msg += "\n Liczba zapisanych wolontariuszy nie powinna przekraczać limitu"
+      msg += '\n Liczba zapisanych wolontariuszy nie powinna przekraczać limitu'
     }
     
     if (msg != '') {
       alert(msg)
-      return false;
+      return false
     }
     
-    return true;
+    return true
   },
 
   update: function () {
     var isInputValid = this.validateInputs()
     if (isInputValid) {
-      this.props.context.executeAction(updateAction, this.state.activity);
+      this.props.context.executeAction(updateAction, this.state.activity)
     }
   },
 
   create: function () {
     var isInputValid = this.validateInputs()
     if (isInputValid) {
-      this.props.context.executeAction(createAction, this.state.activity);
+      this.props.context.executeAction(createAction, this.state.activity)
     }
   },
 
   remove: function () {
-    this.props.context.executeAction(deleteAction, {id: this.state.activity.id});
+    this.props.context.executeAction(deleteAction, {id: this.state.activity.id})
   },
 
   render: function() {
-    var startEventDate = new Date(this.state.activity.startEventTimestamp);
+    var startEventDate = new Date(this.state.activity.startEventTimestamp)
     
     var updateButton = []
     if (this.props.creationMode == false) {
@@ -139,7 +135,7 @@ var ActivityAdministration = React.createClass({
 
     var showButton = []
     if (this.props.creationMode == false) {
-      showButton = <a href={"/aktywnosc/"+this.state.activity.id} ><input type="button" value="Wyświetl" /></a>
+      showButton = <a href={'/aktywnosc/'+this.state.activity.id} ><input type="button" value="Wyświetl" /></a>
     }
 
     var removeActiveVolonteer = this.removeActiveVolonteer

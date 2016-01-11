@@ -6,17 +6,15 @@ var Snackbar = require('material-ui/lib/snackbar')
 var provideContext = addons.provideContext
 
 var ApplicationStore = require('../stores/ApplicationStore')
-var VolunteerStore = require('../stores/Volunteer')
-var ActivityStore = require('../stores/Activity')
 
 var Authentication = require('./Authentication.jsx')
 
-var injectTapEventPlugin = require('react-tap-event-plugin');
+var injectTapEventPlugin = require('react-tap-event-plugin')
 //Needed for onTouchTap
 //Can go away when react 1.0 release
 //Check this repo:
 //https://github.com/zilverline/react-tap-event-plugin
-injectTapEventPlugin();
+injectTapEventPlugin()
 
 var Application = React.createClass({
 
@@ -48,7 +46,7 @@ var Application = React.createClass({
   },
 
   render: function() {
-    var Handler = this.props.currentRoute.handler;
+    var Handler = this.props.currentRoute.handler
 
     var newActivityLink
     var user = this.user()
@@ -63,12 +61,12 @@ var Application = React.createClass({
       <div className="container">
         <Snackbar
           open={!!this.state.infoSnack}
-          message={this.state.infoSnack || ""}
+          message={this.state.infoSnack || ''}
           autoHideDuration={5000}
           onRequestClose={this.handleInfoSnackbarRequestClose} />
         <Snackbar
           open={!!this.state.errorSnack}
-          message={this.state.errorSnack || ""}
+          message={this.state.errorSnack || ''}
           autoHideDuration={5000}
           onRequestClose={this.handleErrorSnackbarRequestClose} />
         <div className="globalNav navBar">
@@ -81,7 +79,7 @@ var Application = React.createClass({
         
         <Handler context={this.context} />
       </div>
-    );
+    )
   },
 
   user: function() {
@@ -101,5 +99,5 @@ Application = handleHistory(Application)
 
 // Module.exports instead of normal dom mounting
 module.exports = provideContext(Application, {
-    getUser: React.PropTypes.func.isRequired
+  getUser: React.PropTypes.func.isRequired
 })

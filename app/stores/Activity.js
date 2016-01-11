@@ -1,5 +1,5 @@
-'use strict';
-var createStore  = require('fluxible/addons').createStore;
+'use strict'
+var createStore  = require('fluxible/addons').createStore
 
 var ActivityStore = createStore({
   storeName: 'Activity',
@@ -11,26 +11,23 @@ var ActivityStore = createStore({
 
   initialize: function () {
     this.activity = {
-      content: "",
+      content: '',
       maxVolonteers: 5,
       volunteers: []
     }
   },
 
   load: function(data) {
-    console.log('>>> LOAD ACTIVITY <<<====')
     this.activity = data
     this.emitChange()
   },
 
   update: function(data) {
-    console.log('>>> UPDATE ACTIVITY <<<====')
     this.activity = data
     this.emitChange()
   },
 
   create: function(data) {
-    console.log('>>> CREATE ACTIVITY <<<====')
     // TODO
     //this.rehydrate(data)
     this.emitChange()

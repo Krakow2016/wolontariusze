@@ -1,9 +1,9 @@
 'use strict'
 
 var React = require('react'),
-    Fluxible = require('fluxible'),
-    fetchrPlugin = require('fluxible-plugin-fetchr'),
-    RouteStore = require('fluxible-router').RouteStore
+  Fluxible = require('fluxible'),
+  fetchrPlugin = require('fluxible-plugin-fetchr'),
+  RouteStore = require('fluxible-router').RouteStore
 
 var routes = require('./routes')
 var ApplicationStore = require('./stores/ApplicationStore')

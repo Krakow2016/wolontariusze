@@ -28,14 +28,14 @@ passport.use(new LocalStrategy(
       }
       // Sprawdź poprawność hasła
       bcrypt.compare(password, user.password, function(err, res) {
-          if (!res) {
+        if (!res) {
           return done(null, false, { message: 'Incorrect password.' })
-          } else if (!user.approved) {
+        } else if (!user.approved) {
           return done(null, false, { message: 'You have been banned.' })
-          } else {
+        } else {
           // Zalogowano poprawnie, zwróć obiekt zalogowanego użytkownika
           return done(null, user, { message: 'Welcome!' })
-          }
+        }
       })
     })
   }

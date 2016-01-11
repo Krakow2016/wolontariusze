@@ -1,14 +1,11 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
-var ReactMarkdown = require('react-markdown');
+var ReactMarkdown = require('react-markdown')
 var Paper = require('material-ui/lib/paper')
 
 var ActivityStore = require('../stores/Activity')
 
 var TimeService = require('../modules/time/TimeService.js')
-
-var DateTime = require('react-datetime');
-var AutoSuggest = require('react-autosuggest');
 
 var actions = require('../actions')
 
@@ -51,21 +48,21 @@ var Activity = React.createClass({
   render: function () {
 
     var user = this.user()
-    var is_admin = user && user.is_admin;
+    var is_admin = user && user.is_admin
     var activity = this.state.activity
 
     var editLink
     if(is_admin) {
       editLink = <div className="adminToolbar">
-        <NavLink href={"/aktywnosc/"+ activity.id +"/edytuj"}>Edytuj</NavLink>
+        <NavLink href={'/aktywnosc/'+ activity.id +'/edytuj'}>Edytuj</NavLink>
       </div>
     }
 
-    var priority;
+    var priority
     if (activity.is_urgent) {
-      priority = "PILNE"
+      priority = 'PILNE'
     } else {
-      priority = "NORMALNE"
+      priority = 'NORMALNE'
     }
 
     var volunteers = activity.volunteers
@@ -78,8 +75,7 @@ var Activity = React.createClass({
     })
 
     var buttons = []
-
-    console.log(activity)
+    
     //acceptButton
     if (!has_joined && volunteers.length < activity.maxVolonteers) {
       buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" />)

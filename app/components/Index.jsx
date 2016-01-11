@@ -1,11 +1,7 @@
 var React = require('react')
 var Paper = require('material-ui/lib/paper')
-
-var ApplicationStore = require('../stores/ApplicationStore')
 var VolunteersStore = require('../stores/Volunteers')
-
 var NavLink = require('fluxible-router').NavLink
-var VolunteerList = require('./VolunteersList.jsx')
 
 var App = React.createClass({
   contextTypes: {
@@ -31,7 +27,7 @@ var App = React.createClass({
   },
 
   click: function() {
-    alert("React is working")
+    alert('React is working')
   },
 
   render: function () {
@@ -44,7 +40,7 @@ var App = React.createClass({
 
       </Paper>
     )
-  },
+  }
 })
 
 

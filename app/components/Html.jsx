@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 
-var React = require('react');
+var React = require('react')
 
-var ApplicationStore = require('../stores/ApplicationStore');
+var ApplicationStore = require('../stores/ApplicationStore')
 
 /**
  * React class to handle the rendering of the HTML head section
@@ -37,8 +37,8 @@ var Html = React.createClass({
           <script src="/js/client.js"></script>
         </body>
       </html>
-    );
-  },
-});
+    )
+  }
+})
 
-module.exports = Html;
+module.exports = Html

@@ -31,8 +31,8 @@ module.exports = Protect({
     if(params.id) {
       volunteer = volunteers[params.id]
     } else if(params.email) {
-      id = Object.keys(volunteers).filter(function(id) {
-        el = volunteers[id]
+      var id = Object.keys(volunteers).filter(function(id) {
+        var el = volunteers[id]
         return el.email === params.email
       })[0]
 
@@ -47,9 +47,9 @@ module.exports = Protect({
     }
 
     if(volunteer) {
-      callback(null, volunteer);
+      callback(null, volunteer)
     } else {
-      callback("404")
+      callback('404')
     }
   },
 
@@ -67,7 +67,7 @@ module.exports = Protect({
     var volunteer = volunteers[params.id]
     Object.assign(volunteer, body)
     callback(null, volunteer)
-  },
+  }
 
   // delete: function(req, resource, params, config, callback) {}
 })
