@@ -1,170 +1,120 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var ReactMarkdown = require('react-markdown');
+var Paper = require('material-ui/lib/paper')
 
 var ActivityStore = require('../stores/Activity')
-var Authentication = require('./Authentication.jsx')
-var ActivityEdit = require('./ActivityEdit.jsx')
 
 var TimeService = require('../modules/time/TimeService.js')
 
-var Tabs = require('material-ui/lib/tabs/tabs')
-var Tab =  require('material-ui/lib/tabs/tab')
 var DateTime = require('react-datetime');
 var AutoSuggest = require('react-autosuggest');
 
 var actions = require('../actions')
-var updateAction = actions.updateActivity
 
 var Activity = React.createClass({
-  
-  render: function () {
-    var activityTitle = this.props.context.getStore(ActivityStore).getState().title;
-    var content;
-    if (activityTitle) {
-      content = <ActivityTabs user={this.user()} context={this.props.context} />
-    } else {
-      content = <h1>Ta aktywność nie istnieje</h1>
-    }
-    return ( 
-      <div>
-        {content}
-       </div>
-    )
-  },
-  
-  user: function() {
-    return this.props.context.getUser()
-  },
-  
-  user_name: function() {
-    return this.user() && this.user().first_name
-  }
 
-})
-
-var ActivityTabs = React.createClass({
-    
   getInitialState: function () {
-      return this.props.context.getStore(ActivityStore).getState()
+    return this.props.context.getStore(ActivityStore).getState()
   },
 
   _changeListener: function() {
-    this.setState(this.props.context.getStore(ActivityStore).getState());
+    this.setState(this.props.context.getStore(ActivityStore).getState())
   },
 
   componentDidMount: function() {
-    this.props.context.getStore(ActivityStore).addChangeListener(this._changeListener);
+    this.props.context.getStore(ActivityStore)
+      .addChangeListener(this._changeListener)
   },
-  
+
+  componentWillUnmount: function() {
+    this.props.context.getStore(ActivityStore)
+      .removeChangeListener(this._changeListener)
+  },
+
   update: function() {
-    this.props.context.executeAction(updateAction, this.state)
+    this.props.context.executeAction(actions.updateActivity, this.state.activity)
   },
-  onAcceptButtonClick: function () {   
-    var modifiedState = this.state ;
-    modifiedState.activeVolonteers.push( {
-      id: this.props.user.id,
-      name: this.props.user.first_name+" "+this.props.user.last_name,
-      email: this.props.user.email
-    })
-    modifiedState.updateEmail = false;
-    this.setState(modifiedState);
-    this.update();   
+
+  onAcceptButtonClick: function () {
+    this.props.context.executeAction(actions.joinActivity, {id: this.state.activity.id})
   },
+
   onCancelButtonClick: function () {
-    var modifiedState = this.state ;
-    for (var i = 0; i < modifiedState.activeVolonteers.length; i++) {
-        if (modifiedState.activeVolonteers[i].id == this.props.user.id) {
-            modifiedState.activeVolonteers.splice(i,1);
-        }         
-    }
-    modifiedState.updateEmail = false;
-    this.setState(modifiedState);   
-    this.update();
+    this.props.context.executeAction(actions.leaveActivity, {id: this.state.activity.id})
   },
-  
-    
+
+  user: function() {
+    return this.props.context.getUser()
+  },
+
   render: function () {
-  
-    var user = this.props.user
-    var is_owner = user && user.id === this.state.creatorId
+
+    var user = this.user()
     var is_admin = user && user.is_admin;
-    
+    var activity = this.state.activity
+
     var editLink
     if(is_admin) {
       editLink = <div className="adminToolbar">
-        <NavLink href={"/aktywnosc/"+ this.state.id +"/edytuj"}>Edytuj</NavLink>
+        <NavLink href={"/aktywnosc/"+ activity.id +"/edytuj"}>Edytuj</NavLink>
       </div>
     }
-    
+
     var priority;
-    if (this.state.is_urgent && this.state.is_urgent == true) {
+    if (activity.is_urgent) {
       priority = "PILNE"
     } else {
       priority = "NORMALNE"
     }
-    
-    var activeVolonteersList = []
-    var activeVolonteersIds = []
-    if (this.state.activeVolonteers) {
-        activeVolonteersList = this.state.activeVolonteers.map (function (volonteer) {
-            return (
-                <span className="volonteerLabel"><a href={'/wolontariusz/'+volonteer.id}>{volonteer.name}</a></span>
-            )
-        })
-        activeVolonteersIds = this.state.activeVolonteers.map (function (volonteer) {
-          return volonteer.id
-        })
+
+    var volunteers = activity.volunteers
+    var has_joined = user && volunteers.indexOf(user.id) > -1
+
+    var activeVolonteersList = volunteers.map(function(volunteer) {
+      return (
+        <span className="volonteerLabel"><a href={'/wolontariusz/'+volunteer}>{volunteer}</a></span>
+      )
+    })
+
+    var buttons = []
+
+    console.log(activity)
+    //acceptButton
+    if (!has_joined && volunteers.length < activity.maxVolonteers) {
+      buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" />)
     }
 
-    
-    var buttons = [];
-    //acceptButton
-    if (user &&
-        ( ( activeVolonteersIds && activeVolonteersIds.length < this.state.maxVolonteers) || 
-            this.state.maxVolonteers == 0) &&
-        activeVolonteersIds.indexOf(user.id) == -1 ) {
-        buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" />)
-    }
-    
     //canceButton
-    if (user &&
-        activeVolonteersIds.indexOf(user.id) !== -1 ) {
-        buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" />)
+    if (has_joined) {
+      buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" />)
     }
-    
-    
-    var tabs = [
-        <Tab label="Opis" >
-            {editLink}
-            <h2>{this.state.title}</h2>
-            <b>Dodano:</b> {TimeService.showTime(this.state.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+this.state.creator.id}>{this.state.creator.name}</a></span>
-            <br></br>
-            <b>Ostatnia edycja:</b> {TimeService.showTime(this.state.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+this.state.editor.id}>{this.state.editor.name}</a></span>
-            <br></br>
-            <b>Czas rozpoczęcia:</b> {TimeService.showTime(this.state.startEventTimestamp)}  <b>Czas trwania:</b> {this.state.duration}
-            <br></br>
-            <b>Miejsce wydarzenia:</b> {this.state.place}
-            <br></br>
-            <b>Prorytet:</b> {priority}
-            <br></br>
-            <ReactMarkdown source={this.state.content} />
-            <br></br>
-            <b>Wolontariusze, którzy biorą udział:</b> {activeVolonteersList}
-            <br></br>
-            <b>Limit(maksymalna liczba wolontariuszy):</b> {this.state.volonteersLimit}
-            <br></br>
-            {buttons}
-        </Tab>
-    ]
-    
+
+    // TODO
+    //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>
+    //<b>Ostatnia edycja:</b> {TimeService.showTime(activity.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.editor.id}>{activity.editor.name}</a></span>
     return (
-        <Tabs tabItemContainerStyle={{'backgroundColor': 'rgba(0,0,0,0.1)'}}>
-            {tabs}
-        </Tabs>
+      <Paper className="paper">
+        {editLink}
+        <h2>{activity.title}</h2>
+        <br></br>
+        <br></br>
+        <b>Czas rozpoczęcia:</b> {TimeService.showTime(activity.startEventTimestamp)}  <b>Czas trwania:</b> {activity.duration}
+        <br></br>
+        <b>Miejsce wydarzenia:</b> {activity.place}
+        <br></br>
+        <b>Prorytet:</b> {priority}
+        <br></br>
+        <ReactMarkdown source={activity.content} />
+        <br></br>
+        <b>Wolontariusze, którzy biorą udział:</b> {activeVolonteersList}
+        <br></br>
+        <b>Limit(maksymalna liczba wolontariuszy):</b> {activity.volonteersLimit}
+        <br></br>
+        {buttons}
+      </Paper>
     )
   }
-
 })
 
 /* Module.exports instead of normal dom mounting */

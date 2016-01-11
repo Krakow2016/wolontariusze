@@ -4,8 +4,7 @@
     "api_port": 3000,
     "domain": "localhost",
     "service": "rethinkdb",
-    "elasticSearch": "http://192.168.1.99:9200/sdm/_search",
-    "elasticSearchGetSuggestions": "http://192.168.1.99:9200/sdm/_suggest?pretty",
+    "elasticSearch": "http://192.168.1.99:9200/sdm",
     "rethinkdb": {
       "db": "sdm"
     }

@@ -2,7 +2,6 @@
 
 var debug = require('debug')('Actions')
 var VolunteerStore = require('./stores/Volunteer')
-var ActivityStore = require('./stores/Activity')
 var navigateAction = require('fluxible-router').navigateAction;
 
 var env = process.env.NODE_ENV || 'development'
@@ -70,6 +69,7 @@ module.exports = {
       cb()
     })
   },
+
   loadActivities: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
     context.service.read('Activities', payload, {
@@ -79,23 +79,63 @@ module.exports = {
       cb()
     })
   },
+
   updateActivity: function(context, payload, cb) {
     console.log('update activity');
-    context.service.update('Activities', payload, {}, function (err, data) {
+    context.service.update('Activities', {}, payload, function (err, data) {
         if(err) { console.log(err) }
-        else { context.dispatch('ACTIVITY_UPDATED', data) }
-        cb()  
+        else { context.dispatch('ACTIVITY_UPDATE_SUCCESS', data) }
+        cb()
     })
   },
-  createActivity: function(context, payload, cb) { 
+
+  joinActivity: function(context, payload, cb) {
+    var request = new XMLHttpRequest()
+    request.open('POST', '/aktywnosci/'+ payload.id +'/join', true)
+    request.setRequestHeader('Content-Type', 'application/json')
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        // Success!
+        var resp = request.responseText
+        var json = JSON.parse(resp)
+
+        context.dispatch('ACTIVITY_UPDATED', json)
+        cb()
+      //} else {
+      // We reached our target server, but it returned an error
+      }
+    }
+    request.send()
+  },
+
+  leaveActivity: function(context, payload, cb) {
+    var request = new XMLHttpRequest()
+    request.open('POST', '/aktywnosci/'+ payload.id +'/leave', true)
+    request.setRequestHeader('Content-Type', 'application/json')
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        // Success!
+        var resp = request.responseText
+        var json = JSON.parse(resp)
+
+        context.dispatch('ACTIVITY_UPDATED', json)
+        cb()
+      //} else {
+      // We reached our target server, but it returned an error
+      }
+    }
+    request.send()
+  },
+
+  createActivity: function(context, payload, cb) {
     console.log('create activity');
-    
-    context.service.create('Activities', payload, {}, function (err, data) {
+
+    context.service.create('Activities', {}, payload, function (err, data) {
         if(err) { console.log(err) }
         else { 
             console.log("ACTIVITY DATA", data);
             var id;
-            if(conf.service === 'rethinkdb') {
+            if(conf.service === 'rethinkdb') { // TODO ujednolicić
               id = data.generated_keys[0];
             } else {
               id = data.id;
@@ -183,6 +223,7 @@ module.exports = {
       if (err) { // Błąd po stronie serwera
         context.dispatch('APICLIENT_CREATION_FAILURE', [payload])
       } else {
+        context.executeAction(navigateAction, {url: '/ustawienia/developer'})
         context.dispatch('APICLIENT_CREATION_SUCCESS', [payload])
       }
       cb()

@@ -90,65 +90,65 @@ var addEmail = function (emails, newEmail) {
 }
 
 //zwraca adresy mailowe wolontariuszy, którzy biorą lub brali udział, twórcy aktywności oraz tego, kto ostatnio edytował
-var getUsersEmails = function (oldActivity, newActivity) {
-    var emails = [];
-    addEmail(emails, (oldActivity.creator) ? oldActivity.creator.email : null);
-    addEmail(emails, (oldActivity.editor) ? oldActivity.editor.email : null);
+//var getUsersEmails = function (oldActivity, newActivity) {
+    //var emails = [];
+    //addEmail(emails, (oldActivity.creator) ? oldActivity.creator.email : null);
+    //addEmail(emails, (oldActivity.editor) ? oldActivity.editor.email : null);
         
-    var oldVolonteers = oldActivity.activeVolonteers;
-    for (var i = 0; i < oldVolonteers.length; i++) {
-      addEmail(emails, oldVolonteers[i].email);    
-    }
+    //var oldVolonteers = oldActivity.activeVolonteers;
+    //for (var i = 0; i < oldVolonteers.length; i++) {
+      //addEmail(emails, oldVolonteers[i].email);    
+    //}
     
-    if (newActivity != null) {
-      addEmail(emails, (newActivity.editor) ? newActivity.editor.email : null);
+    //if (newActivity != null) {
+      //addEmail(emails, (newActivity.editor) ? newActivity.editor.email : null);
       
-      var newVolonteers = newActivity.activeVolonteers;
-      for (var i = 0; i < newVolonteers.length; i++) {
-        addEmail(emails, newVolonteers[i].email);    
-      }
-    }
-    return emails;
-}
+      //var newVolonteers = newActivity.activeVolonteers;
+      //for (var i = 0; i < newVolonteers.length; i++) {
+        //addEmail(emails, newVolonteers[i].email);    
+      //}
+    //}
+    //return emails;
+//}
 
-var getChangeList = function (oldState, newState) {
-    var changes ="";
-    if (oldState.title != newState.title) {
-        changes += "Tytuł \n";
-    }
-    if (oldState.startEventTimestamp != newState.startEventTimestamp) {
-        changes += "Czas rozpoczęcia \n";
-    }
-    if (oldState.duration != newState.duration) {
-        changes += "Czas trwania \n";
-    }
-    if (oldState.place != newState.place) {
-        changes += "Miejsce wydarzenia \n";
-    }
-    if (oldState.is_urgent != newState.is_urgent) {
-        changes += "Priorytet \n";
-    }
-    if (oldState.content != newState.content) {
-        changes += "Treść aktywności \n";
-    }
-    if (oldState.title != newState.title) {
-        changes += "Tytuł \n";
-    }
-    if (oldState.activeVolonteers.length != newState.activeVolonteers.length) {
-        changes += "Lista wolontariuszy \n";
-    } else {
-      for (var i = 0; i < newState.activeVolonteers.length; i++) {
-        if (oldState.activeVolonteers[i].id != newState.activeVolonteers[i].id) {
-          changes += "Lista wolontariuszy \n";
-          break;
-        }
-      }
-    }
-    if (oldState.maxVolonteers != newState.maxVolonteers) {
-      changes += "Limit wolontariuszy \n";
-    }
-    return changes;
-}
+//var getChangeList = function (oldState, newState) {
+    //var changes ="";
+    //if (oldState.title != newState.title) {
+        //changes += "Tytuł \n";
+    //}
+    //if (oldState.startEventTimestamp != newState.startEventTimestamp) {
+        //changes += "Czas rozpoczęcia \n";
+    //}
+    //if (oldState.duration != newState.duration) {
+        //changes += "Czas trwania \n";
+    //}
+    //if (oldState.place != newState.place) {
+        //changes += "Miejsce wydarzenia \n";
+    //}
+    //if (oldState.is_urgent != newState.is_urgent) {
+        //changes += "Priorytet \n";
+    //}
+    //if (oldState.content != newState.content) {
+        //changes += "Treść aktywności \n";
+    //}
+    //if (oldState.title != newState.title) {
+        //changes += "Tytuł \n";
+    //}
+    //if (oldState.activeVolonteers.length != newState.activeVolonteers.length) {
+        //changes += "Lista wolontariuszy \n";
+    //} else {
+      //for (var i = 0; i < newState.activeVolonteers.length; i++) {
+        //if (oldState.activeVolonteers[i].id != newState.activeVolonteers[i].id) {
+          //changes += "Lista wolontariuszy \n";
+          //break;
+        //}
+      //}
+    //}
+    //if (oldState.maxVolonteers != newState.maxVolonteers) {
+      //changes += "Limit wolontariuszy \n";
+    //}
+    //return changes;
+//}
 
 // Połączenie z sendgrid daje nam możliwość wysyłania emaili
 var sendgrid = require('sendgrid')(sendgrid_apikey)
@@ -168,7 +168,7 @@ var sendActivityEmail = function (data, user) {
   }
 }
 
-module.exports = {
+var Activities = module.exports = {
   name: tableName,
   read: function(req, resource, params, config, callback) {
      // Połącz się z bazą danych `sdm`
@@ -180,34 +180,34 @@ module.exports = {
 
       if(params.id) { // Pobierz krotkę o danym numerze id
         r.table(tableName).get(params.id).run(conn, function(err, row){
-          if (err) { 
-            console.log(err);
-            callback(err)
-            
-          } else {
-            if (row && getVolonteersIds(row).length > 0) {
-              var volIds = getVolonteersIds(row);
-              r.table('Volonteers').getAll(r.args(volIds)).coerceTo('array')
-              .run(conn, function (error, volonteers) {
-                if (error) {callback(error)} 
-                else {
-                  var volData = volonteers.map(function (vol) {
-                    return {
-                      id: vol.id,
-                      name: vol.first_name+" "+vol.last_name,
-                      email: vol.email
-                    }
-                  })
-                  var modAct = modifiedActivity(row, volData, req, config);
-                  console.log("MODIFIED ACTIVITY ", modAct);
-                  callback(error || !modAct, modAct);
-                }
-              });
-            } else {
-              callback (error || !row, row);
-            }
-          }
-        }); 
+          callback(err || !row, row)
+          //if (err) {
+            //console.log(err);
+            //callback(err)
+          //} else {
+            //if (row && getVolonteersIds(row).length > 0) {
+              //var volIds = getVolonteersIds(row);
+              //r.table('Volonteers').getAll(r.args(volIds)).coerceTo('array')
+              //.run(conn, function (error, volonteers) {
+                //if (error) {callback(error)} 
+                //else {
+                  //var volData = volonteers.map(function (vol) {
+                    //return {
+                      //id: vol.id,
+                      //name: vol.first_name+" "+vol.last_name,
+                      //email: vol.email
+                    //}
+                  //})
+                  //var modAct = modifiedActivity(row, volData, req, config);
+                  //console.log("MODIFIED ACTIVITY ", modAct);
+                  //callback(error || !modAct, modAct);
+                //}
+              //});
+            //} else {
+              //callback (error || !row, row);
+            //}
+          //}
+        })
       } else { // Pobierz listę krotek
         if(config.index) { // use index
           r.table(tableName).getAll(params.key, {index: config.index}).run(conn, function(err, cursor) {
@@ -233,18 +233,18 @@ module.exports = {
         return
       }
 
-      r.table(tableName).insert(params).run(conn, function (err, resp) {
-          if (!err) {
-            var user = req.user || config.user
-            var id = resp.generated_keys[0];
-            var data = {
-              to: getUsersEmails(params, null),
-              subject: "Została UTWORZONA aktywność: "+params.title,
-              text: "Jeśli otrzymujesz tego maila, możesz być dopisany do tej aktywności. Aktualna lista wolontariuszy, którzy"+
-                  " biorą udział znajduje się na stronie http:localhost:7000/aktywnosc/"+id+" .\n"
-            }
-            sendActivityEmail(data, user);
-          }
+      r.table(tableName).insert(body).run(conn, function (err, resp) {
+          //if (!err) {
+            //var user = req.user || config.user
+            //var id = resp.generated_keys[0];
+            //var data = {
+              //to: getUsersEmails(params, null),
+              //subject: "Została UTWORZONA aktywność: "+params.title,
+              //text: "Jeśli otrzymujesz tego maila, możesz być dopisany do tej aktywności. Aktualna lista wolontariuszy, którzy"+
+                  //" biorą udział znajduje się na stronie http:localhost:7000/aktywnosc/"+id+" .\n"
+            //}
+            //sendActivityEmail(data, user);
+          //}
           callback(err, resp);
         }
       ) 
@@ -267,25 +267,25 @@ module.exports = {
       }
 
       // Wykonaj zapytanie do bazy danych
-      r.table(tableName).get(params.id).run(conn, function (err1, resp1) {
-        if (err1) {
-          callback(err1, resp1);
-        }
-        r.table(tableName).get(params.id).update(params).run(conn, function (err2, resp2) {
-          if (!err1 && !err2 && params.updateEmail) {
-            var user = req.user || config.user
-            var data = {
-              to: getUsersEmails(resp1, params),
-              subject: "Została ZMIENIONA aktywnośc: "+params.title,
-              text: "Jeśli otrzymujesz tego maila, możesz być dopisany do tej aktywności. Aktualna lista wolontariuszy, którzy"+
-              " biorą udział znajduje się na stronie http:localhost:7000/aktywnosc/"+params.id+" .\n"+
-              "Zmienione zostało: \n"+getChangeList(resp1,params)
-            }
-            sendActivityEmail(data, user);
-          }
-          callback(err2, resp2);
+      //r.table(tableName).get(params.id).run(conn, function (err1, resp1) {
+        //if (err1) {
+          //callback(err1, resp1);
+        //}
+        r.table(tableName).get(id).update(body, {returnChanges: true}).run(conn, function (err, resp) {
+          //if (!err1 && !err2 && params.updateEmail) {
+            //var user = req.user || config.user
+            //var data = {
+              //to: getUsersEmails(resp1, params),
+              //subject: "Została ZMIENIONA aktywnośc: "+params.title,
+              //text: "Jeśli otrzymujesz tego maila, możesz być dopisany do tej aktywności. Aktualna lista wolontariuszy, którzy"+
+              //" biorą udział znajduje się na stronie http:localhost:7000/aktywnosc/"+params.id+" .\n"+
+              //"Zmienione zostało: \n"+getChangeList(resp1,params)
+            //}
+            //sendActivityEmail(data, user);
+          //}
+          callback(err, resp)
         })
-      })   
+      //})
     })
   },
   
@@ -301,18 +301,32 @@ module.exports = {
           callback(err1, resp1);
         }
         r.table(tableName).get(params.id).delete().run(conn, function (err2, resp2) {
-          if (!err1 && !err2) {
-            var user = req.user || config.user
-            var data = {
-              to: getUsersEmails(resp1, null),
-              subject: "Została USUNIĘTA aktywność: "+resp1.title,
-              text: "Jeśli otrzymujesz tego maila, mogłeś być dopisany do tej aktywności. "
-            }
-            sendActivityEmail(data, user);
-          }
+          //if (!err1 && !err2) {
+            //var user = req.user || config.user
+            //var data = {
+              //to: getUsersEmails(resp1, null),
+              //subject: "Została USUNIĘTA aktywność: "+resp1.title,
+              //text: "Jeśli otrzymujesz tego maila, mogłeś być dopisany do tej aktywności. "
+            //}
+            //sendActivityEmail(data, user);
+          //}
           callback(err2, resp2);
         })
-      })    
+      })
     })
-  }
+  },
+
+  join: function(req, resource, params, config, callback) {
+    var body = {
+      volunteers: r.row('volunteers').default([]).append(params.user_id).distinct()
+    }
+    Activities.update(req, resource, params, body, config, callback)
+  },
+
+  leave: function(req, resource, params, config, callback) {
+    var body = {
+      volunteers: r.row('volunteers').default([]).setDifference([params.user_id])
+    }
+    Activities.update(req, resource, params, body, config, callback)
+  },
 }

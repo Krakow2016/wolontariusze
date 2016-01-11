@@ -2,42 +2,49 @@ var React = require('react')
 var AutoSuggest = require('react-autosuggest');
 var config = require('../../config.json')
 
-
 var AutoSuggestVolonteer = React.createClass ({
+
   getInitialState: function () {
-      return {volonteerId: 0};
+    return {
+      value: '',
+      suggestions: []
+    }
   },
-  getSuggestions: function(input, callback) {
+
+  getSuggestions: function() {
     var query = {
       suggest: {
-        text: input,
+        text: this.state.value,
         completion: {
-          field: "suggest"
+            field: "suggest",
+            fuzzy: {
+                fuzziness: 1
+            }
         }
       }
     }
 
+    var that = this
     var request = new XMLHttpRequest()
-    request.open('POST', '/getSuggestions', true)
+    request.open('POST', '/suggest', true)
     request.setRequestHeader('Content-Type', 'application/json')
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
         var resp = request.responseText;
-        console.log(resp)
         var json = JSON.parse(resp)
-        
+
         var suggestions = json.suggest[0].options.map (function (option) {
           return {
             id: option.payload.id,
-            name: option.text,
-            email: option.payload.email
+            name: option.text
           };
         })
 
-        callback(null, suggestions);
+        that.setState({
+          suggestions: suggestions
+        })
       } else {
-        console.log('STATUS', request.status)
         // We reached our target server, but it returned an error
       }
     }
@@ -46,67 +53,51 @@ var AutoSuggestVolonteer = React.createClass ({
       // There was a connection error of some sort
     }
 
-    request.send(JSON.stringify(query)) 
-    
+    request.send(JSON.stringify(query))
   },
+
   renderSuggestion: function (suggestion, input) {
     return (
-        <span>{suggestion.name}</span>
-    );
-  },
-  getSuggestionValue: function (suggestionObj) {
-    this.setState({volonteer: suggestionObj});
-    return suggestionObj.name;
-  },
-  onClick: function () {
-    this.props.onAddButtonClick(this.state.volonteer);
-  },
-  render: function () {
-    return (
-      <div>
-      <input type="button" onClick={this.onClick} value="Dodaj" />
-      <AutoSuggest
-                  id="activeVolonteers" 
-                  suggestions={this.getSuggestions} 
-                  suggestionRenderer={this.renderSuggestion}
-                  suggestionValue={this.getSuggestionValue}/>
-      </div>
+      <span>{suggestion.name}</span>
     )
-  }
-});
+  },
 
+  getSuggestionValue: function (suggestionObj) {
+    return suggestionObj.name
+  },
 
-var AddedVolonteer = React.createClass({
-    onClick: function () {
-        this.props.onRemoveButtonClick(this.props.volonteer);
-    },
-    render: function () {
-      return (
-        <div className="addedVolonteer" ><a href={'/wolontariusz/'+this.props.volonteer.id}>{this.props.volonteer.name}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
-      )
+  onSuggestionSelected: function(evt, opts) {
+    this.props.addActiveVolonteer(opts.suggestion.id)
+    this.setState({value: ''})
+  },
+
+  handleChange: function (evt, opts) {
+    this.setState({
+      value: evt.target.value || ''
+    })
+
+    // Zapobiega wywołaniu po zmianie wartości pola przez kliknięcie
+    // podpowiedzi.
+    if (opts.method === 'type') {
+      this.getSuggestions()
     }
-})
+  },
 
-var ActivityVolonteersList = React.createClass({
   render: function () {
-    var that = this
-    var list
-    if (this.props.data) {
-        list = this.props.data.map (function (volonteer) {
-        return (
-            <AddedVolonteer volonteer={volonteer}
-                            onRemoveButtonClick={that.props.onRemoveButtonClick}/>                 
-        )
-      })
-    }
     return (
-      <div>
-        <AutoSuggestVolonteer onAddButtonClick={this.props.onAddButtonClick} />
-        {list}
-      </div>
+      <AutoSuggest
+        id="activeVolonteers"
+        inputProps={{
+          value: this.state.value,
+          onChange: this.handleChange
+        }}
+        suggestions={this.state.suggestions}
+        renderSuggestion={this.renderSuggestion}
+        getSuggestionValue={this.getSuggestionValue}
+        onSuggestionSelected={this.onSuggestionSelected} />
     )
   }
 })
 
 /* Module.exports instead of normal dom mounting */
-module.exports = ActivityVolonteersList
+module.exports = AutoSuggestVolonteer

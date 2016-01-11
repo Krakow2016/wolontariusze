@@ -7,6 +7,7 @@ var ActivityVolonteersList = require('./ActivityVolonteersList.jsx');
 
 var DateTime = require('react-datetime');
 
+var update = require('react-addons-update')
 
 var actions = require('../actions')
 var updateAction = actions.updateActivity
@@ -14,135 +15,81 @@ var createAction = actions.createActivity
 var deleteAction = actions.deleteActivity
 var sendActivityEmailAction = actions.sendActivityEmail;
 
+var AddedVolonteer = React.createClass({
+    onClick: function () {
+        this.props.onRemoveButtonClick(this.props.volonteer);
+    },
+    render: function () {
+      return (
+        <div className="addedVolonteer" ><a href={'/wolontariusz/'+this.props.volonteer}>{this.props.volonteer}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
+      )
+    }
+})
+
 var ActivityAdministration = React.createClass({
 
-  render: function () {
-    var user = this.user();
-    var is_admin = user && user.is_admin;
-    var body = {};
-    if (is_admin) {
-      body = <ActivityAdministrationBody {...this.props} user={this.user()}/>
-    } else {
-       body = <h1>Brak dostępu - zaloguj się jako Administrator</h1>
-    }
-    return ( 
-      <div>
-        {body}
-      </div>
-    )
-  },
-  
-  user: function() {
-    return this.props.context.getUser()
-  },
-  
-  user_name: function() {
-    return this.user() && this.user().first_name
-  }
-});
-
-
-var ActivityAdministrationBody = React.createClass({
-
   getInitialState: function () {
-      return this.props.context.getStore(ActivityStore).getState()
+    return this.props.context.getStore(ActivityStore).getState()
   },
 
   _changeListener: function() {
-    if (this.props.creationMode == true) {
-      this.state = {};
-    }
-    this.setState(this.props.context.getStore(ActivityStore).getState());
+    this.setState(this.props.context.getStore(ActivityStore).getState())
   },
 
   componentDidMount: function() {
-    this.props.context.getStore(ActivityStore).addChangeListener(this._changeListener);
+    this.props.context.getStore(ActivityStore)
+      .addChangeListener(this._changeListener)
   },
-  
+
   componentWillUnmount: function() {
-    this.props.context.getStore(ActivityStore).removeChangeListener(this._changeListener);
+    this.props.context.getStore(ActivityStore)
+      .removeChangeListener(this._changeListener)
   },
-  
-  handleTitleChange: function (evt) {
-    var modifiedState = this.state;
-    modifiedState.title = evt.target.value;
-    this.setState(modifiedState);
+
+  user: function() {
+    return this.props.context.getUser()
   },
+
   handleStartEventTimestampChange: function (m) {
     //http://stackoverflow.com/questions/18022534/moment-js-and-unix-epoch-conversion
-    var modifiedState = this.state;
-    modifiedState.startEventTimestamp = m.toDate().getTime();
-    this.setState(modifiedState);
+    this.setState(update(this.state, {
+      activity: {startEventTimestamp: {$set: m.toDate().getTime()}}
+    }))
   },
-  handleDurationChange: function (evt) {
-    var modifiedState = this.state;
-    modifiedState.duration = evt.target.value;
-    this.setState(modifiedState);
+
+  handleChange: function (evt) {
+    var activity = {}
+    var value = evt.target.type === 'checkbox'
+      ? event.target.checked
+      : evt.target.value
+    activity[evt.target.name] = {$set: value}
+    this.setState(update(this.state, {
+      activity: activity
+    }))
   },
-  handlePlaceChange: function (evt) {
-    var modifiedState = this.state;
-    modifiedState.place = evt.target.value;
-    this.setState(modifiedState);
+
+
+  addActiveVolonteer: function (volunteer) {
+    this.setState(update(this.state, {
+      activity: {volunteers: {$push: [volunteer]}}
+    }))
   },
-  handleIsUrgentChange: function (evt) {
-    //https://facebook.github.io/jest/docs/tutorial-react.html
-    var modifiedState = this.state;
-    modifiedState.is_urgent = !modifiedState.is_urgent;
-    this.setState(modifiedState);
-  },
-  handleContentChange: function (evt) {
-    var modifiedState = this.state;
-    modifiedState.content = evt.target.value;
-    this.setState(modifiedState);
-  },
-  addActiveVolonteer: function (volonteer) {
-    console.log('ButtonClicked', volonteer);
-    var modifiedState = this.state;
-    if (volonteer.id == 0) {
-      alert('Wybierz wolontariusza');
-    } else {
-      var isPresent = false;
-      for (var i = 0; i < modifiedState.activeVolonteers.length; i++) {
-        if (modifiedState.activeVolonteers[i].id == volonteer.id) {
-          isPresent = true;
-          break;
-        }
-      }
-      if(isPresent) {
-        alert('Wolontariusz jest już dodany');
-      } else {
-        modifiedState.activeVolonteers.push(volonteer);
-      }
-    }
-    this.setState(modifiedState);
-  },
-  removeActiveVolonteer: function (volonteer) {
-    var modifiedState = this.state ;
-    for (var i = 0; i < modifiedState.activeVolonteers.length; i++) {
-      if (modifiedState.activeVolonteers[i].id == volonteer.id) {
-        modifiedState.activeVolonteers.splice(i,1);
-      }         
-    }
-    this.setState(modifiedState);
-  },
-  
-  handleMaxVolonteersChange: function (evt) {
-    var modifiedState = this.state;
-    modifiedState.maxVolonteers = evt.target.value;
-    this.setState(modifiedState);
-  },
-  
- 
-  
-  loadInitialState: function () {
-    this.state = {};
-    this.setState(this.getInitialState());
+
+  removeActiveVolonteer: function (volunteer) {
+    this.setState(update(this.state, {
+      activity: {volunteers: {$apply: function(arr) {
+        var index = arr.indexOf(volunteer)
+        if(index > -1) { arr.splice(index, 1) }
+        return arr
+      }}}
+    }))
   },
 
   validateInputs: function () {
+    // TODO: walidacja poprzez Formsy
     var msg = '';
       
-    if (this.state.maxVolonteers > 0 && this.state.activeVolonteers.length > this.state.maxVolonteers) {
+    if (this.state.maxVolonteers > 0 && this.state.activity.volunteers.length > this.state.maxVolonteers) {
       msg += "\n Liczba zapisanych wolontariuszy nie powinna przekraczać limitu"
     }
     
@@ -153,54 +100,27 @@ var ActivityAdministrationBody = React.createClass({
     
     return true;
   },
-  
+
   update: function () {
-    var isInputValid = this.validateInputs();
+    var isInputValid = this.validateInputs()
     if (isInputValid) {
-      var modifiedState = this.state;
-      modifiedState.editor = {
-        id: this.props.user.id,
-        name: this.props.user.first_name+" "+this.props.user.last_name,
-        email: this.props.user.email
-      }
-      modifiedState.editionTimestamp = Date.now();
-      modifiedState.updateEmail = true;
-      this.props.context.executeAction(updateAction, modifiedState);
-      
+      this.props.context.executeAction(updateAction, this.state.activity);
     }
   },
+
   create: function () {
-    var isInputValid = this.validateInputs();
+    var isInputValid = this.validateInputs()
     if (isInputValid) {
-      var modifiedState = this.state;
-      var timestamp = Date.now();
-      modifiedState.creator = {
-        id: this.props.user.id,
-        name: this.props.user.first_name+" "+this.props.user.last_name,
-        email: this.props.user.email
-      }
-      modifiedState.creationTimestamp = timestamp;
-      modifiedState.editor = {
-        id: this.props.user.id,
-        name: this.props.user.first_name+" "+this.props.user.last_name,
-        email: this.props.user.email
-      }
-      modifiedState.editionTimestamp = timestamp;
-      
-      this.props.context.executeAction(createAction, modifiedState);
-      
+      this.props.context.executeAction(createAction, this.state.activity);
     }
   },
+
   remove: function () {
-    this.props.context.executeAction(deleteAction, {id: this.state.id});
+    this.props.context.executeAction(deleteAction, {id: this.state.activity.id});
   },
-  render: function() {    
-    var startEventDate = new Date(this.state.startEventTimestamp);
-    
-    var initialStateButton = []
-    if (this.props.creationMode == false) {
-      initialStateButton = <input type="button" onClick={this.loadInitialState} value="Przywróć stan" />
-    }
+
+  render: function() {
+    var startEventDate = new Date(this.state.activity.startEventTimestamp);
     
     var updateButton = []
     if (this.props.creationMode == false) {
@@ -214,19 +134,30 @@ var ActivityAdministrationBody = React.createClass({
     
     var removeButton = [] 
     if (this.props.creationMode == false) {
-      createButton = <input type="button" onClick={this.remove} value="Usuń" />
+      removeButton = <input type="button" onClick={this.remove} value="Usuń" />
     }
-    
+
     var showButton = []
     if (this.props.creationMode == false) {
-      showButton = <a href={"/aktywnosc/"+this.state.id} ><input type="button" value="Wyświetl" /></a>
+      showButton = <a href={"/aktywnosc/"+this.state.activity.id} ><input type="button" value="Wyświetl" /></a>
     }
-    
+
+    var removeActiveVolonteer = this.removeActiveVolonteer
+    var volunteers = this.state.activity.volunteers || []
+    var list = volunteers.map(function(volunteer) {
+      return (
+        <AddedVolonteer
+          key={volunteer.id}
+          volonteer={volunteer}
+          onRemoveButtonClick={removeActiveVolonteer} />
+      )
+    })
+
     return (
       <div>
         <b>Tytuł</b> 
         <br></br>
-        <input name="title" value={this.state.title} onChange={this.handleTitleChange} />
+        <input name="title" value={this.state.activity.title} onChange={this.handleChange} />
         <br></br>
         
         <b>Czas rozpoczęcia</b> <DateTime open={false} 
@@ -237,39 +168,36 @@ var ActivityAdministrationBody = React.createClass({
         
         <b>Czas trwania </b>
         <br></br>
-        <input name="duration" value={this.state.duration} onChange={this.handleDurationChange} />
+        <input name="duration" value={this.state.activity.duration} onChange={this.handleChange} />
         <br></br>
         
         <b>Miejsce wydarzenia</b>
         <br></br>
-        <input name="place" value={this.state.place} onChange={this.handlePlaceChange} />
+        <input name="place" value={this.state.activity.place} onChange={this.handleChange} />
         <br></br>
-        
+
         <b>Zadanie jest PILNE? </b>
         <br></br>
-        <input type="checkbox" checked={this.state.is_urgent} onChange={this.handleIsUrgentChange} />
+        <input type="checkbox" name="is_urgent" checked={this.state.activity.is_urgent} onChange={this.handleChange} />
         <br></br>
-        
-        
+
         <b>Treść </b>
         <br></br>
-        <textarea id="activityContentTextarea" name="content" placeholder="Dodaj treść wiadomości" value={this.state.content} onChange={this.handleContentChange} />
+        <textarea id="activityContentTextarea" name="content" placeholder="Dodaj treść wiadomości" value={this.state.activity.content} onChange={this.handleChange} />
         <br></br>
-        
-        <b>Wolontariusze, którzy biorą udział:</b> 
+
+        <b>Wolontariusze, którzy biorą udział:</b>
         <br></br>
-        <ActivityVolonteersList data={this.state.activeVolonteers} 
-                              onAddButtonClick={this.addActiveVolonteer}
-                              onRemoveButtonClick={this.removeActiveVolonteer} />
-        
+        <ActivityVolonteersList addActiveVolonteer={this.addActiveVolonteer} />
+
+        {list}
+
         <b>Limit (maksymalna liczba wolontariuszy, jeśli 0 to brak limitu)</b>
         <br></br>
-        <input name="maxVolonteers" value={this.state.maxVolonteers} onChange={this.handleMaxVolonteersChange} />
+        <input name="maxVolonteers" value={this.state.activity.maxVolonteers} onChange={this.handleChange} />
         <br></br>
-        
-        
+
         <div id="activityEditToolbar">
-            {initialStateButton}
             <a href="https://guides.github.com/features/mastering-markdown/">
                 <input type="button" value="Markdown" />
             </a>

@@ -57,6 +57,7 @@ var Application = React.createClass({
             <NavLink href="/nowa_aktywnosc">Nowa aktywność</NavLink>
         </div>
     }
+
     //render content
     return (
       <div className="container">

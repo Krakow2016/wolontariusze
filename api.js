@@ -88,7 +88,7 @@ server.post('/api/v2/dialog/authorize/decision', session, oauth2.decision);
 
 // Końcówka dla klienta oauth chcącego zamienić tymczasowy kod dostępu na
 // token.
-server.post('/api/v2/oauth/token', oauth2.token);
+server.post('/api/v2/oauth/token', passport.initialize(), oauth2.token);
 
 // Autoryzacja tokenem oAuth
 var bearer = [passport.initialize(), function(req, res, next) {
