@@ -23,8 +23,8 @@ var public_attrs = [
   'place',
   'creator',
   'editor',
-  'maxVolonteers',
-  'activeVolonteers'
+  'maxVolunteers',
+  'volunteers'
 ]
 
 var private_attrs = [

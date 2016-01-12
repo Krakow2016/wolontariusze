@@ -56,7 +56,7 @@ var ActivityAdministration = React.createClass({
   handleChange: function (evt) {
     var activity = {}
     var value = evt.target.type === 'checkbox'
-      ? event.target.checked
+      ? evt.target.checked
       : evt.target.value
     activity[evt.target.name] = {$set: value}
     this.setState(update(this.state, {
@@ -85,7 +85,7 @@ var ActivityAdministration = React.createClass({
     // TODO: walidacja poprzez Formsy
     var msg = ''
       
-    if (this.state.maxVolonteers > 0 && this.state.activity.volunteers.length > this.state.maxVolonteers) {
+    if (this.state.activity.maxVolunteers > 0 && this.state.activity.volunteers.length > this.state.activity.maxVolunteers) {
       msg += '\n Liczba zapisanych wolontariuszy nie powinna przekraczać limitu'
     }
     
@@ -190,7 +190,7 @@ var ActivityAdministration = React.createClass({
 
         <b>Limit (maksymalna liczba wolontariuszy, jeśli 0 to brak limitu)</b>
         <br></br>
-        <input name="maxVolonteers" value={this.state.activity.maxVolonteers} onChange={this.handleChange} />
+        <input name="maxVolunteers" value={this.state.activity.maxVolunteers} onChange={this.handleChange} />
         <br></br>
 
         <div id="activityEditToolbar">

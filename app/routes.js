@@ -91,7 +91,7 @@ module.exports = {
     handler: require('./components/ActivityCreate.jsx'),
     action: function (context, payload, done) {
       context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Nowa Aktywnosc' })
-      context.dispatch('LOAD_ACTIVITY', {})
+      context.dispatch('PRECREATE_ACTIVITY', {})
       done()
     }
   },

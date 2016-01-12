@@ -58,13 +58,8 @@ var Activity = React.createClass({
       </div>
     }
 
-    var priority
-    if (activity.is_urgent) {
-      priority = 'PILNE'
-    } else {
-      priority = 'NORMALNE'
-    }
-
+    var priority = (activity.is_urgent) ? 'PILNE' : 'NORMALNE' 
+    
     var volunteers = activity.volunteers
     var has_joined = user && volunteers.indexOf(user.id) > -1
 
@@ -77,7 +72,7 @@ var Activity = React.createClass({
     var buttons = []
     
     //acceptButton
-    if (!has_joined && volunteers.length < activity.maxVolonteers) {
+    if (!has_joined && volunteers.length < activity.maxVolunteers) {
       buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" />)
     }
 
@@ -86,6 +81,8 @@ var Activity = React.createClass({
       buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" />)
     }
 
+    var volonteersLimit = (activity.maxVolunteers == 0) ? 'Brak' : activity.maxVolunteers
+    
     // TODO
     //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>
     //<b>Ostatnia edycja:</b> {TimeService.showTime(activity.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.editor.id}>{activity.editor.name}</a></span>
@@ -105,7 +102,7 @@ var Activity = React.createClass({
         <br></br>
         <b>Wolontariusze, którzy biorą udział:</b> {activeVolonteersList}
         <br></br>
-        <b>Limit(maksymalna liczba wolontariuszy):</b> {activity.volonteersLimit}
+        <b>Limit(maksymalna liczba wolontariuszy):</b> {volonteersLimit}
         <br></br>
         {buttons}
       </Paper>

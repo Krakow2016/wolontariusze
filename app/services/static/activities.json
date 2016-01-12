@@ -11,8 +11,8 @@
         "is_urgent": true,
         "creator": {"id": "1" , "name": "Faustyna Kowalska", "email": "faustyna@kowalska.pl"},
         "editor": {"id": "1" , "name": "Faustyna Kowalska", "email": "faustyna@kowalska.pl"},
-        "maxVolonteers": 5,
-        "activeVolonteers": [{"id": "1" , "name": "Faustyna Kowalska", "email": "faustyna@kowalska.pl"},{"id": "2" , "name": "Karol Wojtyła", "email": "karol@wojtyla.pl"}]
+        "maxVolunteers": 5,
+        "volunteers": [{"id": "1" , "name": "Faustyna Kowalska", "email": "faustyna@kowalska.pl"},{"id": "2" , "name": "Karol Wojtyła", "email": "karol@wojtyla.pl"}]
      },
      
     "2": {
@@ -27,8 +27,8 @@
         "is_urgent": false,
         "creator": {"id": "2" , "name": "Karol Wojtyła", "email": "karol@wojtyla.pl"},
         "editor": {"id": "1" , "name": "Faustyna Kowalska", "email": "faustyna@kowalska.pl"},
-        "maxVolonteers": 1,
-        "activeVolonteers": [{"id": "2" , "name": "Karol Wojtyła", "email": "karol@wojtyla.pl"}]
+        "maxVolunteers": 1,
+        "volunteers": [{"id": "2" , "name": "Karol Wojtyła", "email": "karol@wojtyla.pl"}]
      },
 
     "3": {     
@@ -43,7 +43,7 @@
         "is_urgent": false,
         "creator": {"id": "1" , "name": "Faustyna Kowalska", "email": "faustyna@kowalska.pl"},
         "editor": {"id": "2" , "name": "Karol Wojtyła", "email": "karol@wojtyla.pl"},
-        "maxVolonteers": 10,
-        "activeVolonteers": []
+        "maxVolunteers": 10,
+        "volunteers": []
      }
 }

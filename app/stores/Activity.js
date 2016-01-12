@@ -5,6 +5,7 @@ var ActivityStore = createStore({
   storeName: 'Activity',
   handlers: {
     'LOAD_ACTIVITY': 'load',
+    'PRECREATE_ACTIVITY': 'precreate',
     'ACTIVITY_UPDATED': 'update',
     'ACTIVITY_CREATED': 'create'
   },
@@ -12,13 +13,18 @@ var ActivityStore = createStore({
   initialize: function () {
     this.activity = {
       content: '',
-      maxVolonteers: 5,
+      maxVolunteers: 5,
       volunteers: []
     }
   },
 
   load: function(data) {
     this.activity = data
+    this.emitChange()
+  },
+  
+  precreate: function() {
+    this.initialize();
     this.emitChange()
   },
 
@@ -62,9 +68,8 @@ ActivityStore.attributes = function() {
     'is_urgent',
     'creator',
     'editor',
-    'maxVolonteers',
-    'activeVolonteers',
-    'volonteersLimit'
+    'maxVolunteers',
+    'volunteers',
   ]
 }
 
