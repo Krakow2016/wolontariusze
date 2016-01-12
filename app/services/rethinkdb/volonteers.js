@@ -115,18 +115,6 @@ module.exports = Protect({
         body.password = bcrypt.hashSync(body.password, salt)
         delete body.password_
       }
-      
-      //sugestia przy dodawaniu wolontariusza do aktywności
-      if (body.first_name) {     
-        body.suggest = {
-          input: [body.first_name, body.last_name],
-          output: body.first_name+" "+body.last_name,
-          payload: {
-            id: id,
-            email: body.email
-          }
-        }
-      }
 
       // Wykonaj zapytanie do bazy danych
       r.table(tableName).get(id).update(body).run(conn, callback)

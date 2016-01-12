@@ -37,6 +37,7 @@ var Comments = require('./app/services/'+config.service+'/comments')
 var Volunteer = require('./app/services/'+config.service+'/volonteers')
 var Integration = require('./app/services/'+config.service+'/integrations')
 var APIClient = require('./app/services/'+config.service+'/apiclients')
+var Joints = require('./app/services/'+config.service+'/joints')
 
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
@@ -127,11 +128,12 @@ server.set('view engine', 'handlebars')
 
 if(fetchrPlugin) {
   // Register our messages REST services
-  fetchrPlugin.registerService(Volunteer);
-  fetchrPlugin.registerService(Activities);
-  fetchrPlugin.registerService(Comments);
-  fetchrPlugin.registerService(Integration);
-  fetchrPlugin.registerService(APIClient);
+  fetchrPlugin.registerService(Volunteer)
+  fetchrPlugin.registerService(Activities)
+  fetchrPlugin.registerService(Comments)
+  fetchrPlugin.registerService(Integration)
+  fetchrPlugin.registerService(APIClient)
+  fetchrPlugin.registerService(Joints)
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), jsonParser, fetchrPlugin.getMiddleware());
 }
@@ -181,40 +183,6 @@ server.get('/invitation', passport.authenticate('localapikey', {
   failureFlash: true,
   successFlash: true
 }))
-
-// Dołącz do wydarzenia
-server.post('/aktywnosci/:id/join', function(req, res) {
-  if(!req.user) { return res.send(403) }
-
-  Activities.join({force_admin: true}, 'Activities', {
-    id: req.params.id,
-    user_id: req.user.id
-  }, {}, function(err, resp) {
-    var change = resp.changes[0]
-    if(change) {
-      res.send(change.new_val)
-    } else {
-      res.send(304) // Not modyfied
-    }
-  })
-})
-
-// Wypisz się z wydarzenia
-server.post('/aktywnosci/:id/leave', function(req, res) {
-  if(!req.user) { return res.send(403) }
-
-  Activities.leave({force_admin: true}, 'Activities', {
-    id: req.params.id,
-    user_id: req.user.id
-  }, {}, function(err, resp) {
-    var change = resp.changes[0]
-    if(change) {
-      res.send(change.new_val)
-    } else {
-      res.send(304) // Not modyfied
-    }
-  })
-})
 
 server.post('/invitation', jsonParser, function(req, res) {
   var id = req.body.id

@@ -38,7 +38,7 @@ var AutoSuggestVolonteer = React.createClass ({
           return {
             id: option.payload.id,
             name: option.text
-          };
+          }
         })
 
         that.setState({

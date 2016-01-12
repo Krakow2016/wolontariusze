@@ -6,20 +6,33 @@ var ActivityStore = createStore({
   handlers: {
     'LOAD_ACTIVITY': 'load',
     'ACTIVITY_UPDATED': 'update',
-    'ACTIVITY_CREATED': 'create'
+    'JOINT_CREATED': 'join',
+    'JOINT_DELETED': 'leave',
   },
 
   initialize: function () {
-    this.activity = {
-      content: "",
-      maxVolonteers: 5,
-      volunteers: []
-    }
+    this.activity = {}
+    this.volunteers = []
   },
 
   load: function(data) {
     console.log('>>> LOAD ACTIVITY <<<====')
+    var volunteers = data.volunteers
+    delete data.volunteers
     this.activity = data
+    this.volunteers = volunteers
+    this.emitChange()
+  },
+
+  join: function(joint) {
+    this.volunteers.push(joint)
+    this.emitChange()
+  },
+
+  leave: function(id) {
+    this.volunteers = this.volunteers.filter(function(volunteer) {
+      return volunteer.id !== id
+    })
     this.emitChange()
   },
 
@@ -29,16 +42,10 @@ var ActivityStore = createStore({
     this.emitChange()
   },
 
-  create: function(data) {
-    console.log('>>> CREATE ACTIVITY <<<====')
-    // TODO
-    //this.rehydrate(data)
-    this.emitChange()
-  },
-
   getState: function () {
     return {
-      activity: this.activity
+      activity: this.activity,
+      volunteers: this.volunteers
     }
   },
 
@@ -48,6 +55,7 @@ var ActivityStore = createStore({
 
   rehydrate: function (state) {
     this.activity = state.activity
+    this.volunteers = state.volunteers
   }
 
 })
