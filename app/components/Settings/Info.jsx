@@ -8,7 +8,7 @@ var Info = React.createClass({
 
   getInitialState: function () {
     return {
-      profile: this.props.context.getStore(VolunteerStore).getState().profile,
+      profile: this.props.context.getStore(VolunteerStore).getState().profile
     }
   },
 

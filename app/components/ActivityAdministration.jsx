@@ -7,7 +7,7 @@ var MyTextField = require('./Formsy/MyTextField.jsx')
 var MyTextarea = require('./Formsy/MyTextarea.jsx')
 var Snackbar = require('material-ui/lib/snackbar')
 var DateTime = require('react-datetime')
-var moment = require('moment');
+var moment = require('moment')
 
 var update = require('react-addons-update')
 
@@ -78,7 +78,6 @@ var ActivityAdministration = React.createClass({
   },
 
   handleChange: function (evt) {
-    console.log(evt);
     var activity = {}
     var target = evt.target != null
       ? evt.target
@@ -110,25 +109,25 @@ var ActivityAdministration = React.createClass({
   },
   
 
-  isValidDate: function (currentDate, selectedDate) {
+  isValidDate: function (currentDate) {
     var now = moment()
-    var isDateFromFuture = currentDate.isAfter(now);
-    var taskMode = this.props.taskMode;
+    var isDateFromFuture = currentDate.isAfter(now)
+    var taskMode = this.props.taskMode
     if (taskMode) {
-      return true; 
+      return true
       //Czy warto dawać walidację czasu, jeśli okaże się, że zadanie rozpocznie się w innym terminie
       //i koordynator będzie chciał zaktualizować?
     } else {
-      return !isDateFromFuture;
+      return !isDateFromFuture
     }
   },
   
   onValidSubmit: function () {
-      if (this.props.creationMode == false) {
-        this.update()
-      } else {
-        this.create()
-      }
+    if (this.props.creationMode == false) {
+      this.update()
+    } else {
+      this.create()
+    }
   },
   
   onInvalidSubmit: function () {
@@ -144,11 +143,11 @@ var ActivityAdministration = React.createClass({
   },
   
   update: function () {
-      this.props.context.executeAction(updateAction, this.state.activity)
+    this.props.context.executeAction(updateAction, this.state.activity)
   },
 
   create: function () {
-      this.props.context.executeAction(createAction, this.state.activity)
+    this.props.context.executeAction(createAction, this.state.activity)
   },
 
   remove: function () {

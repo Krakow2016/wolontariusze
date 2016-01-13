@@ -11,8 +11,7 @@ var MyTextField = React.createClass({
   // setValue() will set the value of the component, which in
   // turn will validate it and the rest of the form
   changeValue: function (event) {
-    console.log('EVENT 2', event)
-    if (typeof(this.props.onChange) == "function") {
+    if (typeof(this.props.onChange) == 'function') {
       if(this.props.name) {
         event.currentTarget.name = this.props.name
       }
@@ -28,11 +27,11 @@ var MyTextField = React.createClass({
     // when the value is empty and the required prop is
     // passed to the input. showError() is true when the
     // value typed is invalid
-    var className = this.showRequired() ? 'required' : this.showError() ? 'error' : null;
+    var className = this.showRequired() ? 'required' : this.showError() ? 'error' : null
 
     // An error message is returned ONLY if the component is invalid
     // or the server has returned an error message
-    var errorMessage = this.getErrorMessage();
+    var errorMessage = this.getErrorMessage()
 
     return (
       <TextField
