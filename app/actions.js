@@ -118,22 +118,29 @@ module.exports = {
   createActivity: function(context, payload, cb) {
     console.log('create activity');
 
-    context.service.create('Activities', {}, payload, function (err, data) {
-        if(err) { console.log(err) }
-        else { 
-            console.log("ACTIVITY DATA", data);
-            var id;
-            if(conf.service === 'rethinkdb') { // TODO ujednolicić
-              id = data.generated_keys[0];
-            } else {
-              id = data.id;
-            }
-            //context.dispatch('ACTIVITY_CREATED', {});
-                
-            context.executeAction(navigateAction, {url: "/aktywnosc/"+id});
-
+    context.service.create('Activities', {}, payload.activity, function (err, data) {
+      if(err) {
+        console.log(err)
+      } else {
+        console.log("ACTIVITY DATA", data);
+        var id;
+        if(conf.service === 'rethinkdb') { // TODO ujednolicić
+          id = data.generated_keys[0];
+        } else {
+          id = data.id;
         }
-        cb()  
+
+        var joints = payload.volunteers.map(function(volunteer){
+          return {
+            activity_id: id,
+            user_id: volunteer.user_id
+          }
+        })
+        context.service.create('Joints', {}, joints, function(){
+          context.executeAction(navigateAction, {url: "/aktywnosc/"+id})
+        })
+      }
+      cb()
     })
   },
   deleteActivity: function(context, payload, cb) {

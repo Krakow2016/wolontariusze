@@ -20,10 +20,18 @@ var Joints = module.exports = {
         return
       }
 
-      // Dopisz Id usera
-      body.user_id = req.user.id
+      // Tworzymy wiele obiektów
+      if(body.length) {
+        // Opcja tylko dla adminów
+        if(!req.user.is_admin) { return callback(403) }
+      } else {
+        // Dopisz Id usera jeżeli pole jest puste
+        if(!body.user_id) {
+          body.user_id = req.user.id
+        }
+      }
 
-      r.table('Joints').insert(body, {returnChanges: true}).run(conn, function (err, resp) {
+      r.table('Joints').insert(body, config).run(conn, function (err, resp) {
         callback(err, resp)
       })
     })

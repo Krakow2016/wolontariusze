@@ -17,7 +17,7 @@ var ActivityStore = createStore({
 
   load: function(data) {
     console.log('>>> LOAD ACTIVITY <<<====')
-    var volunteers = data.volunteers
+    var volunteers = data.volunteers || []
     delete data.volunteers
     this.activity = data
     this.volunteers = volunteers
@@ -25,11 +25,13 @@ var ActivityStore = createStore({
   },
 
   join: function(joint) {
+    // Dodaj obiekt połączenia
     this.volunteers.push(joint)
     this.emitChange()
   },
 
   leave: function(id) {
+    // Usuń obiekt połączenia
     this.volunteers = this.volunteers.filter(function(volunteer) {
       return volunteer.id !== id
     })

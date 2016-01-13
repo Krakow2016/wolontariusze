@@ -17,11 +17,15 @@ var sendActivityEmailAction = actions.sendActivityEmail;
 
 var AddedVolonteer = React.createClass({
     onClick: function () {
-        this.props.onRemoveButtonClick(this.props.volonteer);
+        this.props.onRemoveButtonClick(this.props.volunteer);
+    },
+    name: function() {
+      var v = this.props.volunteer
+      return v.display_name || (v.first_name +' '+ v.last_name)
     },
     render: function () {
       return (
-        <div className="addedVolonteer" ><a href={'/wolontariusz/'+this.props.volonteer}>{this.props.volonteer}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
+        <div className="addedVolonteer" ><a href={'/wolontariusz/'+this.props.volunteer.user_id}>{this.name()}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
       )
     }
 })
@@ -68,20 +72,20 @@ var ActivityAdministration = React.createClass({
     }))
   },
 
-
   addActiveVolonteer: function (volunteer) {
+    console.log(volunteer)
     this.setState(update(this.state, {
-      activity: {volunteers: {$push: [volunteer]}}
+      volunteers: {$push: [volunteer]}
     }))
   },
 
   removeActiveVolonteer: function (volunteer) {
     this.setState(update(this.state, {
-      activity: {volunteers: {$apply: function(arr) {
+      volunteers: {$apply: function(arr) {
         var index = arr.indexOf(volunteer)
         if(index > -1) { arr.splice(index, 1) }
         return arr
-      }}}
+      }}
     }))
   },
 
@@ -89,7 +93,7 @@ var ActivityAdministration = React.createClass({
     // TODO: walidacja poprzez Formsy
     var msg = '';
       
-    if (this.state.maxVolonteers > 0 && this.state.activity.volunteers.length > this.state.maxVolonteers) {
+    if (this.state.maxVolonteers > 0 && this.state.volunteers.length > this.state.maxVolonteers) {
       msg += "\n Liczba zapisanych wolontariuszy nie powinna przekraczać limitu"
     }
     
@@ -111,7 +115,7 @@ var ActivityAdministration = React.createClass({
   create: function () {
     var isInputValid = this.validateInputs()
     if (isInputValid) {
-      this.props.context.executeAction(createAction, this.state.activity);
+      this.props.context.executeAction(createAction, this.state);
     }
   },
 
@@ -143,12 +147,12 @@ var ActivityAdministration = React.createClass({
     }
 
     var removeActiveVolonteer = this.removeActiveVolonteer
-    var volunteers = this.state.activity.volunteers || []
+    var volunteers = this.state.volunteers || []
     var list = volunteers.map(function(volunteer) {
       return (
         <AddedVolonteer
-          key={volunteer.id}
-          volonteer={volunteer}
+          key={volunteer.user_id}
+          volunteer={volunteer}
           onRemoveButtonClick={removeActiveVolonteer} />
       )
     })

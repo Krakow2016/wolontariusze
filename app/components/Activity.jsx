@@ -83,25 +83,26 @@ var Activity = React.createClass({
     }
 
     var volunteers = this.state.volunteers
-    var has_joined = user && volunteers.some(function(el) { return el.user_id === user.id })
+    var has_joined = !!this.mine()
 
     var activeVolonteersList = volunteers.map(function(volunteer) {
       return (
-        <span className="volonteerLabel"><NavLink href={'/wolontariusz/'+volunteer.user_id}>{volunteer.first_name} {volunteer.last_name}</NavLink></span>
+        <span className="volonteerLabel" key={volunteer.id}>
+          <NavLink href={'/wolontariusz/'+volunteer.user_id}>{volunteer.first_name} {volunteer.last_name}</NavLink>
+        </span>
       )
     })
 
     var buttons = []
 
-    console.log(activity)
     //acceptButton
     if (!has_joined && volunteers.length < activity.maxVolonteers) {
-      buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" />)
+      buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" key="join" />)
     }
 
     //canceButton
     if (has_joined) {
-      buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" />)
+      buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" key="leave" />)
     }
 
     // TODO
@@ -123,7 +124,7 @@ var Activity = React.createClass({
         <br></br>
         <b>Wolontariusze, którzy biorą udział:</b> {activeVolonteersList}
         <br></br>
-        <b>Limit(maksymalna liczba wolontariuszy):</b> {activity.volonteersLimit}
+        <b>Limit(maksymalna liczba wolontariuszy):</b> {activity.maxVolonteers}
         <br></br>
         {buttons}
       </Paper>
