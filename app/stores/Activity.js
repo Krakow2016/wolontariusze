@@ -12,10 +12,15 @@ var ActivityStore = createStore({
 
   initialize: function () {
     this.activity = {
+      title: '',
+      startEventTimestamp: '',
+      duration: '',
+      place: '',
       content: '',
       maxVolunteers: 5,
       volunteers: []
-    }
+    },
+    this.invalidSnackBar = false
   },
 
   load: function(data) {
@@ -41,7 +46,8 @@ var ActivityStore = createStore({
 
   getState: function () {
     return {
-      activity: this.activity
+      activity: this.activity,
+      invalidSnackBar: this.invalidSnackBar
     }
   },
 
@@ -51,6 +57,7 @@ var ActivityStore = createStore({
 
   rehydrate: function (state) {
     this.activity = state.activity
+    this.invalidSnackBar = state.invalidSnackBar
   }
 
 })

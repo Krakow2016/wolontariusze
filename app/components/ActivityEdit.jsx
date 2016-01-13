@@ -7,7 +7,7 @@ var ActivityEdit = React.createClass({
   render: function () {
     return ( 
       <Paper className="paper">
-        <ActivityAdministration context={this.props.context} creationMode={false} />
+        <ActivityAdministration context={this.props.context} creationMode={false} taskMode={true} />
       </Paper>
     )
   }

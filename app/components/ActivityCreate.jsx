@@ -7,7 +7,7 @@ var ActivityCreate = React.createClass({
   render: function () {
     return (
       <Paper className="paper">
-        <ActivityAdministration context={this.props.context} creationMode={true} />
+        <ActivityAdministration context={this.props.context} creationMode={true} taskMode={true}/>
       </Paper>
     )
   }

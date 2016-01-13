@@ -1,7 +1,7 @@
 var React = require('react')
 
 var ProfileSettings = require('./ProfileSettings.jsx')
-var MyTextField = require('./MyTextarea.jsx')
+var MyTextField = require('./../Formsy/MyTextField.jsx')
 var VolunteerStore = require('../../stores/Volunteer')
 
 var Info = React.createClass({

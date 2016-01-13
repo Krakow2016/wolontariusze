@@ -1,5 +1,5 @@
 var React = require('react')
-var MyTextField = require('./MyTextField.jsx')
+var MyTextField = require('./../Formsy/MyTextField.jsx')
 var BasicForm = function(props) {
   return (
     <div>
