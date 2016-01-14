@@ -10,7 +10,6 @@
 
 
 var activities = require('./activities.json')
-var volonteers = require('./volonteers.json')
 
 var public_attrs = [
   'id',
@@ -30,18 +29,6 @@ var public_attrs = [
 var private_attrs = [
 ]
 
-        
-var getVolonteer = function (id) {
-  var result = {id: '', name: '', email: ''}
-  if (volonteers[id]) {
-    result =  {
-      id: id,
-      name: volonteers[id].first_name+' '+volonteers[id].last_name,
-      email: volonteers[id].email
-    }
-  }
-  return result
-}
 
 var modifiedActivity = function (activityId, req, config) {
   var activity = activities[activityId]
@@ -51,34 +38,13 @@ var modifiedActivity = function (activityId, req, config) {
     // Flaga przywilejów administratora
     var is_admin = user && user.is_admin
     // Flaga właściciela profilu
-    var creatorId = (activity.creator) ? activity.creator.id : null
-    var editorId = (activity.editor) ? activity.editor.id : null
-    var is_owner = (user && (creatorId == user.id))
+    var is_owner = (user && (activity.creator == user.id))
     
     // Tablica parametrów uprawnionych do odczytu
     var attrs = public_attrs
 
     if(is_admin || is_owner) {
       attrs = attrs.concat(private_attrs)
-    }
-    
-    //uzupełnij twórcę i ostatniego edytora o aktualne dane
-    activity['creator'] =  getVolonteer(creatorId)
-    activity['editor']  = getVolonteer(editorId)
-    
-    //uzupełnij listę wolontariuszy o aktualne dane
-    activity['activeVolonteers'] = activity['activeVolonteers'].map(function (vol) {
-      return getVolonteer(vol.id)
-    })
-    //usun pustych wolontariuszy
-    activity['activeVolonteers'] = activity['activeVolonteers'].filter (function (vol) {
-      return (vol.id != '')
-    })
-                  
-    //uzupełnij limit wolontariuszy
-    activity['volonteersLimit'] = 'Brak'
-    if (activity['maxVolonteers'] > 0) {
-      activity['volonteersLimit'] = activity['maxVolonteers']
     }
     
     return activity
@@ -120,9 +86,9 @@ module.exports = {
       id = lastId+1 //ostatnie id + 1
     }
     
-    params.id = id+''
-    activities[id] = params
-    var activity = modifiedActivity(params.id, req, config)
+    body.id = id+''
+    activities[id] = body
+    var activity = modifiedActivity(body.id, req, config)
     if(activity != null) {
       callback(null, activity)
     } else {
@@ -132,10 +98,14 @@ module.exports = {
   },
   
   update: function(req, resource, params, body, config, callback) {
-    activities[params.id] = params
-    var activity = modifiedActivity(params.id, req, config)
+    var id = body.id || params.id
+    for (var key in body) {
+      activities[id][key] = body[key]
+    }
+    var activity = modifiedActivity(id, req, config)
     if(activity != null) {
-      callback(null, activity)
+      var resp = { changes: [{new_val: activity}]}
+      callback(null, resp)
     } else {
       callback('404')
     }  
@@ -144,6 +114,25 @@ module.exports = {
   delete: function(req, resource, params, config, callback) {
     delete activities[params.id]
     callback(null, activities)
+  },
+  
+  join: function(req, resource, params, config, callback) {
+    var volunteers = activities[params.id].volunteers
+    volunteers.push(params.user_id)
+    var body = {
+      volunteers: volunteers
+    }
+    this.update(req, resource, params, body, config, callback)
+  },
+
+  leave: function(req, resource, params, config, callback) {
+    var volunteers = activities[params.id].volunteers
+    var index = volunteers.indexOf(params.user_id)
+    if(index > -1) { volunteers.splice(index, 1) }
+    var body = {
+      volunteers: volunteers
+    }
+    this.update(req, resource, params, body, config, callback)
   }
 
 }

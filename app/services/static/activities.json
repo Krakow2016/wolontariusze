@@ -9,10 +9,10 @@
         "duration": "1h",
         "place": "Kraków",
         "is_urgent": true,
-        "creator": {"id": "1" , "name": "Faustyna Kowalska", "email": "faustyna@kowalska.pl"},
-        "editor": {"id": "1" , "name": "Faustyna Kowalska", "email": "faustyna@kowalska.pl"},
+        "creator": "1",
+        "editor": "1",
         "maxVolunteers": 5,
-        "volunteers": [{"id": "1" , "name": "Faustyna Kowalska", "email": "faustyna@kowalska.pl"},{"id": "2" , "name": "Karol Wojtyła", "email": "karol@wojtyla.pl"}]
+        "volunteers": ["1", "2"]
      },
      
     "2": {
@@ -25,10 +25,10 @@
         "duration": "2h",
         "place": "Dobczyce",
         "is_urgent": false,
-        "creator": {"id": "2" , "name": "Karol Wojtyła", "email": "karol@wojtyla.pl"},
-        "editor": {"id": "1" , "name": "Faustyna Kowalska", "email": "faustyna@kowalska.pl"},
+        "creator": "2",
+        "editor": "1",
         "maxVolunteers": 1,
-        "volunteers": [{"id": "2" , "name": "Karol Wojtyła", "email": "karol@wojtyla.pl"}]
+        "volunteers": ["2"]
      },
 
     "3": {     
@@ -41,8 +41,8 @@
         "duration": "1d",
         "place": "Myślenice",
         "is_urgent": false,
-        "creator": {"id": "1" , "name": "Faustyna Kowalska", "email": "faustyna@kowalska.pl"},
-        "editor": {"id": "2" , "name": "Karol Wojtyła", "email": "karol@wojtyla.pl"},
+        "creator": "1",
+        "editor": "2",
         "maxVolunteers": 10,
         "volunteers": []
      }

@@ -41,7 +41,7 @@ var AddedVolonteer = React.createClass({
   },
   render: function () {
     return (
-      <div className="addedVolonteer" ><a href={'/wolontariusz/'+this.props.volonteer}>{this.props.volonteer}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
+      <div data-reactid=".0" data-react-checksum="0" className="addedVolonteer" ><a href={'/wolontariusz/'+this.props.volonteer}>{this.props.volonteer}</a><input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
     )
   }
 })
@@ -188,7 +188,7 @@ var ActivityAdministration = React.createClass({
     var list = volunteers.map(function(volunteer) {
       return (
         <AddedVolonteer
-          key={volunteer.id}
+          key={volunteer}
           volonteer={volunteer}
           onRemoveButtonClick={removeActiveVolonteer} />
       )
@@ -277,10 +277,10 @@ var ActivityAdministration = React.createClass({
           <b>Wolontariusze, którzy biorą udział:</b>
           <br></br>
           <ActivityVolonteersList addActiveVolonteer={this.addActiveVolonteer} />
-
-          {list}
-
-          
+          <div>
+            {list}
+          </div>
+          <br></br>
           <div className="pure-u-1 pure-u-md-1-3">
             <b>Limit wolontariuszy</b>
           </div>

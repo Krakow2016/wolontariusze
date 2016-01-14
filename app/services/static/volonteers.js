@@ -26,14 +26,13 @@ module.exports = Protect({
   name: 'Volonteers',
   // at least one of the CRUD methods is required
   read: function(req, resource, params, config, callback) {
-
     var volunteer
     if(params.id) {
       volunteer = volunteers[params.id]
-    } else if(params.email) {
+    } else if(config.index == 'email') {
       var id = Object.keys(volunteers).filter(function(id) {
         var el = volunteers[id]
-        return el.email === params.email
+        return el.email === params.key
       })[0]
 
       volunteer = id ? [volunteers[id]] : null
