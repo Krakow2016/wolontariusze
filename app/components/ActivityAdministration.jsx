@@ -41,7 +41,7 @@ var AddedVolonteer = React.createClass({
   },
   render: function () {
     return (
-      <div data-reactid=".0" data-react-checksum="0" className="addedVolonteer" ><a href={'/wolontariusz/'+this.props.volonteer}>{this.props.volonteer}</a><input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
+      <div className="addedVolonteer" ><a href={'/wolontariusz/'+this.props.volonteer}>{this.props.volonteer}</a><input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
     )
   }
 })
@@ -188,7 +188,7 @@ var ActivityAdministration = React.createClass({
     var list = volunteers.map(function(volunteer) {
       return (
         <AddedVolonteer
-          key={volunteer}
+          key={volunteer.id}
           volonteer={volunteer}
           onRemoveButtonClick={removeActiveVolonteer} />
       )

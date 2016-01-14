@@ -27,9 +27,10 @@ var Html = React.createClass({
           <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
           <link rel="stylesheet" href="/css/pure-min.css" />
           <link rel="stylesheet" href="/css/grids-responsive-min.css" />
+          <link rel="stylesheet" href="/css/react-datetime.css" />
           <link rel="stylesheet" href="/css/main.css" />
           <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,300,500" />
-          <link rel="stylesheet" type="text/css" href="https://rawgit.com/arqex/react-datetime/master/css/react-datetime.css" />
+
         </head>
         <body>
           <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
