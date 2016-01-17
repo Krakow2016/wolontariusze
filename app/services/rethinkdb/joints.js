@@ -45,9 +45,11 @@ var Joints = module.exports = {
         return
       }
 
-      var id = body.id
-
-      r.table('Joints').get(id).update(body).run(conn, callback)
+      var ids = body.length ? body.map(function(x){ return x.id }) : [body.id]
+      var table = r.table('Joints')
+      table.getAll.apply(table, ids).update({
+        is_canceled: true
+      }).run(conn, callback)
     })
   }
 }

@@ -1,8 +1,7 @@
 var React = require('react')
 var AutoSuggest = require('react-autosuggest');
-var config = require('../../config.json')
 
-var AutoSuggestVolonteer = React.createClass ({
+var ActivityVolonteersList = React.createClass ({
 
   getInitialState: function () {
     return {
@@ -100,4 +99,4 @@ var AutoSuggestVolonteer = React.createClass ({
 })
 
 /* Module.exports instead of normal dom mounting */
-module.exports = AutoSuggestVolonteer
+module.exports = ActivityVolonteersList

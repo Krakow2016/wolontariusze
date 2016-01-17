@@ -83,9 +83,9 @@ module.exports = {
   updateActivity: function(context, payload, cb) {
     console.log('update activity');
     context.service.update('Activities', {}, payload, function (err, data) {
-        if(err) { console.log(err) }
-        else { context.dispatch('ACTIVITY_UPDATE_SUCCESS', data) }
-        cb()
+      if(err) { console.log(err) }
+      else { context.dispatch('ACTIVITY_UPDATE_SUCCESS', data) }
+      cb()
     })
   },
 

@@ -11,9 +11,10 @@ var update = require('react-addons-update')
 
 var actions = require('../actions')
 var updateAction = actions.updateActivity
+var joinActivityAction = actions.joinActivity
+var leaveActivityAction = actions.leaveActivity
 var createAction = actions.createActivity
 var deleteAction = actions.deleteActivity
-var sendActivityEmailAction = actions.sendActivityEmail;
 
 var AddedVolonteer = React.createClass({
     onClick: function () {
@@ -33,7 +34,11 @@ var AddedVolonteer = React.createClass({
 var ActivityAdministration = React.createClass({
 
   getInitialState: function () {
-    return this.props.context.getStore(ActivityStore).getState()
+    var state = this.props.context.getStore(ActivityStore).getState()
+    // Tworzy kopię tablicy volontariuszy po to żeby później stwierdzić jakie
+    // zaszły wn niej zmiany.
+    state._volunteers = Object.assign({}, state).volunteers
+    return state
   },
 
   _changeListener: function() {
@@ -73,9 +78,12 @@ var ActivityAdministration = React.createClass({
   },
 
   addActiveVolonteer: function (volunteer) {
-    console.log(volunteer)
+   var joint = {
+     user_id: volunteer.user_id,
+     activity_id: this.state.activity.id
+    }
     this.setState(update(this.state, {
-      volunteers: {$push: [volunteer]}
+      volunteers: {$push: [joint]}
     }))
   },
 
@@ -108,7 +116,29 @@ var ActivityAdministration = React.createClass({
   update: function () {
     var isInputValid = this.validateInputs()
     if (isInputValid) {
-      this.props.context.executeAction(updateAction, this.state.activity);
+      var state = this.state
+      var context = this.props.context
+      // Aktualizuje parametry aktywności
+      context.executeAction(updateAction, state.activity)
+
+      // Usuwa wolontariuszy z aktywności
+      var removed = state._volunteers.filter(function(i) {
+        return state.volunteers.indexOf(i) < 0
+      }).map(function(joint) {
+        joint.is_canceled = true
+        return joint
+      })
+      if(removed.length) {
+        context.executeAction(leaveActivityAction, removed)
+      }
+
+      // Dodaje nowych wolontariuszy do aktywności
+      var added = state.volunteers.filter(function(i) {
+        return state._volunteers.indexOf(i) < 0
+      })
+      if(added.length) {
+        context.executeAction(joinActivityAction, added)
+      }
     }
   },
 
