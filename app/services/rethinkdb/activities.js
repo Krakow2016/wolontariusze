@@ -190,6 +190,7 @@ var Activities = module.exports = {
             .pluck({'left': ['id'], 'right': ['user_id', 'first_name', 'last_name']})
             .zip()
             .run(conn, function(err, cursor){
+              if (err) { console.log(err) }
               cursor.toArray(function(err, volunteers) {
                 console.log(err, volunteers)
                 activity.volunteers = volunteers || []

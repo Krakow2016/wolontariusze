@@ -39,11 +39,11 @@ Formsy.addValidationRule('isMoreOrGreaterIntThanZero', function (values, value) 
 
 var AddedVolonteer = React.createClass({
   onClick: function () {
-        this.props.onRemoveButtonClick(this.props.volunteer);
-    },
-    name: function() {
-      var v = this.props.volunteer
-      return v.display_name || (v.first_name +' '+ v.last_name)
+    this.props.onRemoveButtonClick(this.props.volunteer)
+  },
+  name: function() {
+    var v = this.props.volunteer
+    return v.display_name || (v.first_name +' '+ v.last_name)
   },
   render: function () {
     return (
@@ -182,7 +182,7 @@ var ActivityAdministration = React.createClass({
   },
 
   create: function () {
-    this.props.context.executeAction(createAction, this.state.activity)
+    this.props.context.executeAction(createAction, this.state)
   },
 
   remove: function () {
@@ -285,7 +285,7 @@ var ActivityAdministration = React.createClass({
             <b>Miejsce</b>
           </div>
           <div className="pure-u-1 pure-u-md-2-3">
-            <MyTextField required
+            <MyTextField
               id='place'
               name='place'
               placeholder=''
@@ -335,14 +335,13 @@ var ActivityAdministration = React.createClass({
           <br></br>
           <br></br>
           <div id="activityEditToolbar">
-              <a href="https://guides.github.com/features/mastering-markdown/">
-                  <input type="button" value="Markdown" />
-              </a>
-              {removeButton}
-              {updateButton}
-              {createButton}
-              {showButton}
-              
+            <a href="https://guides.github.com/features/mastering-markdown/">
+                <input type="button" value="Markdown" />
+            </a>
+            {removeButton}
+            {updateButton}
+            {createButton}
+            {showButton}          
           </div>
           <br></br>
         </Formsy.Form> 
@@ -350,7 +349,7 @@ var ActivityAdministration = React.createClass({
           
           <Snackbar
           open={!!this.state.invalidSnackBar}
-          message="Potrzeba wypełnić Tytuł, Czas Rozpoczęcia, Miejsce, Limit Wolontariuszy"
+          message="Potrzeba wypełnić Tytuł, Czas Rozpoczęcia, Limit Wolontariuszy"
           autoHideDuration={5000}
           onRequestClose={this.handleInvalidSnackbarClose} />
       </div>

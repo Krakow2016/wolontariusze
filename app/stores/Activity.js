@@ -18,7 +18,8 @@ var ActivityStore = createStore({
       duration: '',
       place: '',
       content: '',
-      maxVolunteers: 5}
+      maxVolunteers: 5
+    }
     this.volunteers = []
     this.invalidSnackBar = false
   },
@@ -39,6 +40,7 @@ var ActivityStore = createStore({
   join: function(joint) {
     // Dodaj obiekt połączenia
     this.volunteers.push(joint)
+    this.emitChange()
   },
 
   leave: function(id) {
@@ -57,7 +59,6 @@ var ActivityStore = createStore({
 
 
   update: function(data) {
-    console.log('>>> UPDATE ACTIVITY <<<====')
     this.activity = data
     this.emitChange()
   },
@@ -65,7 +66,7 @@ var ActivityStore = createStore({
   getState: function () {
     return {
       activity: this.activity,
-      volunteers: this.volunteers
+      volunteers: this.volunteers,
       invalidSnackBar: this.invalidSnackBar
     }
   },
@@ -95,7 +96,7 @@ ActivityStore.attributes = function() {
     'is_urgent',
     'creator',
     'editor',
-    'maxVolunteers'
+    'maxVolunteers',
   ]
 }
 

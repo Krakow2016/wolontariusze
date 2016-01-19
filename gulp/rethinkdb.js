@@ -80,6 +80,16 @@ gulp.task('rethinkdb', function (cb) {
         resolve(conn)
       })
     })
+  }).then(function(conn) {
+    return new Promise(function(resolve) {
+      // Utwórz tabele w bazie danych
+      r.tableCreate('Joints').run(conn, function(err, resp) {
+        // Utwórz indeks w bazie danych
+        r.table('Joints').indexCreate('activity_id').run(conn, function() {
+          resolve(conn)
+        })
+      })
+    })
   }).then(function(conn){
     r.tableCreate('Comments').run(conn, function(err, resp) {
       // utwórz indeksy
