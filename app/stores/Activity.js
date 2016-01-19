@@ -7,7 +7,8 @@ var ActivityStore = createStore({
     'LOAD_ACTIVITY': 'load',
     'PRECREATE_ACTIVITY': 'precreate',
     'ACTIVITY_UPDATED': 'update',
-    'ACTIVITY_CREATED': 'create'
+    'JOINT_CREATED': 'join',
+    'JOINT_DELETED': 'leave',
   },
 
   initialize: function () {
@@ -17,36 +18,54 @@ var ActivityStore = createStore({
       duration: '',
       place: '',
       content: '',
-      maxVolunteers: 5,
-      volunteers: []
-    },
+      maxVolunteers: 5}
+    this.volunteers = []
     this.invalidSnackBar = false
   },
 
   load: function(data) {
+    var volunteers = data.volunteers || []
+    delete data.volunteers
     this.activity = data
+    this.volunteers = volunteers
     this.emitChange()
   },
   
   precreate: function() {
-    this.initialize();
+    this.initialize()
     this.emitChange()
   },
-
-  update: function(data) {
-    this.activity = data
-    this.emitChange()
+  
+  join: function(joint) {
+    // Dodaj obiekt połączenia
+    this.volunteers.push(joint)
   },
 
-  create: function(data) {
+  leave: function(id) {
+    // Usuń obiekt połączenia
+    this.volunteers = this.volunteers.filter(function(volunteer) {
+      return volunteer.id !== id
+    })
+    this.emitChange()
+  },
+  
+ create: function(data) {
     // TODO
     //this.rehydrate(data)
+    this.emitChange()
+  },
+
+
+  update: function(data) {
+    console.log('>>> UPDATE ACTIVITY <<<====')
+    this.activity = data
     this.emitChange()
   },
 
   getState: function () {
     return {
       activity: this.activity,
+      volunteers: this.volunteers
       invalidSnackBar: this.invalidSnackBar
     }
   },
@@ -57,6 +76,7 @@ var ActivityStore = createStore({
 
   rehydrate: function (state) {
     this.activity = state.activity
+    this.volunteers = state.volunteers
     this.invalidSnackBar = state.invalidSnackBar
   }
 
@@ -75,8 +95,7 @@ ActivityStore.attributes = function() {
     'is_urgent',
     'creator',
     'editor',
-    'maxVolunteers',
-    'volunteers',
+    'maxVolunteers'
   ]
 }
 

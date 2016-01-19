@@ -173,8 +173,30 @@ var Activities = module.exports = {
       }
 
       if(params.id) { // Pobierz krotkę o danym numerze id
-        r.table(tableName).get(params.id).run(conn, function(err, row){
-          callback(err || !row, row)
+        r.table(tableName).get(params.id).run(conn, function(err, activity){
+
+          r.table('Joints')
+            .getAll(params.id, {index: 'activity_id'})
+            .filter(function(x){
+               return x.hasFields('is_canceled').not()
+            }, {default: true})
+            .eqJoin('user_id', r.table('Volonteers'))
+            .map(
+              function(doc){
+              return doc.merge(function(){
+                return {'right': {'user_id': doc('right')('id')}}
+              })
+            })
+            .pluck({'left': ['id'], 'right': ['user_id', 'first_name', 'last_name']})
+            .zip()
+            .run(conn, function(err, cursor){
+              cursor.toArray(function(err, volunteers) {
+                console.log(err, volunteers)
+                activity.volunteers = volunteers || []
+                callback(null, activity)
+              })
+          })
+
           //if (err) {
             //console.log(err);
             //callback(err)
@@ -202,19 +224,6 @@ var Activities = module.exports = {
             //}
           //}
         })
-      } else { // Pobierz listę krotek
-        if(config.index) { // use index
-          r.table(tableName).getAll(params.key, {index: config.index}).run(conn, function(err, cursor) {
-            if(err) { callback(err) }
-            else { cursor.toArray(callback) }
-          })
-        } else { // Brak identyfikatora
-          // Zwróć wszyskich wolontariuszy
-          r.table(tableName).limit(50).run(conn, function(err, cursor) {
-            if(err) { callback(err) }
-            else { cursor.toArray(callback) }
-          })
-        }
       }
     })
   },
@@ -259,10 +268,6 @@ var Activities = module.exports = {
       }
 
       // Wykonaj zapytanie do bazy danych
-      //r.table(tableName).get(params.id).run(conn, function (err1, resp1) {
-        //if (err1) {
-          //callback(err1, resp1);
-        //}
       r.table(tableName).get(id).update(body, {returnChanges: true}).run(conn, function (err, resp) {
           //if (!err1 && !err2 && params.updateEmail) {
             //var user = req.user || config.user
@@ -277,7 +282,6 @@ var Activities = module.exports = {
           //}
         callback(err, resp)
       })
-      //})
     })
   },
   

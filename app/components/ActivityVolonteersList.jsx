@@ -1,7 +1,7 @@
 var React = require('react')
 var AutoSuggest = require('react-autosuggest')
 
-var AutoSuggestVolonteer = React.createClass ({
+var ActivityVolonteersList = React.createClass ({
 
   getInitialState: function () {
     return {
@@ -35,8 +35,8 @@ var AutoSuggestVolonteer = React.createClass ({
 
         var suggestions = json.suggest[0].options.map (function (option) {
           return {
-            id: option.payload.id,
-            name: option.text
+            display_name: option.text,
+            user_id: option.payload.id
           }
         })
 
@@ -57,16 +57,16 @@ var AutoSuggestVolonteer = React.createClass ({
 
   renderSuggestion: function (suggestion, input) {
     return (
-      <span>{suggestion.name}</span>
+      <span>{suggestion.display_name}</span>
     )
   },
 
   getSuggestionValue: function (suggestionObj) {
-    return suggestionObj.name
+    return suggestionObj.display_name
   },
 
   onSuggestionSelected: function(evt, opts) {
-    this.props.addActiveVolonteer(opts.suggestion.id)
+    this.props.addActiveVolonteer(opts.suggestion)
     this.setState({value: ''})
   },
 
@@ -99,4 +99,4 @@ var AutoSuggestVolonteer = React.createClass ({
 })
 
 /* Module.exports instead of normal dom mounting */
-module.exports = AutoSuggestVolonteer
+module.exports = ActivityVolonteersList

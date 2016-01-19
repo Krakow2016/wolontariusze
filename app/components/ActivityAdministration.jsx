@@ -13,6 +13,8 @@ var update = require('react-addons-update')
 
 var actions = require('../actions')
 var updateAction = actions.updateActivity
+var joinActivityAction = actions.joinActivity
+var leaveActivityAction = actions.leaveActivity
 var createAction = actions.createActivity
 var deleteAction = actions.deleteActivity
 
@@ -37,11 +39,15 @@ Formsy.addValidationRule('isMoreOrGreaterIntThanZero', function (values, value) 
 
 var AddedVolonteer = React.createClass({
   onClick: function () {
-    this.props.onRemoveButtonClick(this.props.volonteer)
+        this.props.onRemoveButtonClick(this.props.volunteer);
+    },
+    name: function() {
+      var v = this.props.volunteer
+      return v.display_name || (v.first_name +' '+ v.last_name)
   },
   render: function () {
     return (
-      <div className="addedVolonteer" ><a href={'/wolontariusz/'+this.props.volonteer}>{this.props.volonteer}</a><input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
+        <div className="addedVolonteer" ><a href={'/wolontariusz/'+this.props.volunteer.user_id}>{this.name()}</a> <input type="button" className="addedVolonteerRemoveButton" onClick={this.onClick} value="Usuń"/></div>
     )
   }
 })
@@ -49,7 +55,11 @@ var AddedVolonteer = React.createClass({
 var ActivityAdministration = React.createClass({
 
   getInitialState: function () {
-    return this.props.context.getStore(ActivityStore).getState()
+    var state = this.props.context.getStore(ActivityStore).getState()
+    // Tworzy kopię tablicy volontariuszy po to żeby później stwierdzić jakie
+    // zaszły wn niej zmiany.
+    state._volunteers = Object.assign({}, state).volunteers
+    return state
   },
 
   _changeListener: function() {
@@ -91,20 +101,23 @@ var ActivityAdministration = React.createClass({
     }))
   },
 
-
   addActiveVolonteer: function (volunteer) {
+   var joint = {
+     user_id: volunteer.user_id,
+     activity_id: this.state.activity.id
+    }
     this.setState(update(this.state, {
-      activity: {volunteers: {$push: [volunteer]}}
+      volunteers: {$push: [joint]}
     }))
   },
 
   removeActiveVolonteer: function (volunteer) {
     this.setState(update(this.state, {
-      activity: {volunteers: {$apply: function(arr) {
+      volunteers: {$apply: function(arr) {
         var index = arr.indexOf(volunteer)
         if(index > -1) { arr.splice(index, 1) }
         return arr
-      }}}
+      }}
     }))
   },
   
@@ -143,7 +156,29 @@ var ActivityAdministration = React.createClass({
   },
   
   update: function () {
-    this.props.context.executeAction(updateAction, this.state.activity)
+      var state = this.state
+      var context = this.props.context
+      // Aktualizuje parametry aktywności
+      context.executeAction(updateAction, state.activity)
+
+      // Usuwa wolontariuszy z aktywności
+      var removed = state._volunteers.filter(function(i) {
+        return state.volunteers.indexOf(i) < 0
+      }).map(function(joint) {
+        joint.is_canceled = true
+        return joint
+      })
+      if(removed.length) {
+        context.executeAction(leaveActivityAction, removed)
+      }
+
+      // Dodaje nowych wolontariuszy do aktywności
+      var added = state.volunteers.filter(function(i) {
+        return state._volunteers.indexOf(i) < 0
+      })
+      if(added.length) {
+        context.executeAction(joinActivityAction, added)
+      }
   },
 
   create: function () {
@@ -184,12 +219,12 @@ var ActivityAdministration = React.createClass({
     }
     
     var removeActiveVolonteer = this.removeActiveVolonteer
-    var volunteers = this.state.activity.volunteers || []
+    var volunteers = this.state.volunteers || []
     var list = volunteers.map(function(volunteer) {
       return (
         <AddedVolonteer
-          key={volunteer.id}
-          volonteer={volunteer}
+          key={volunteer.user_id}
+          volunteer={volunteer}
           onRemoveButtonClick={removeActiveVolonteer} />
       )
     })

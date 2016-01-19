@@ -34,11 +34,25 @@ var Activity = React.createClass({
   },
 
   onAcceptButtonClick: function () {
-    this.props.context.executeAction(actions.joinActivity, {id: this.state.activity.id})
+    this.props.context.executeAction(actions.joinActivity, {
+      activity_id: this.state.activity.id
+    })
   },
 
   onCancelButtonClick: function () {
-    this.props.context.executeAction(actions.leaveActivity, {id: this.state.activity.id})
+    this.props.context.executeAction(actions.leaveActivity, {
+      id: this.mine().id,
+      is_canceled: true
+    })
+  },
+
+  mine: function() {
+    var user = this.user()
+    var user_id = user && user.id
+    if(!user_id) { return }
+    return this.state.volunteers.find(function(volunteer) {
+      return volunteer.user_id === user_id
+    })
   },
 
   user: function() {
@@ -60,12 +74,14 @@ var Activity = React.createClass({
 
     var priority = (activity.is_urgent) ? 'PILNE' : 'NORMALNE' 
     
-    var volunteers = activity.volunteers
-    var has_joined = user && volunteers.indexOf(user.id) > -1
+    var volunteers = this.state.volunteers
+    var has_joined = !!this.mine()
 
     var activeVolonteersList = volunteers.map(function(volunteer) {
       return (
-        <span className="volonteerLabel"><a href={'/wolontariusz/'+volunteer}>{volunteer}</a></span>
+        <span className="volonteerLabel" key={volunteer.id}>
+          <NavLink href={'/wolontariusz/'+volunteer.user_id}>{volunteer.first_name} {volunteer.last_name}</NavLink>
+        </span>
       )
     })
 
@@ -73,12 +89,12 @@ var Activity = React.createClass({
     
     //acceptButton
     if (!has_joined && volunteers.length < activity.maxVolunteers) {
-      buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" />)
+      buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" key="join" />)
     }
 
     //canceButton
     if (has_joined) {
-      buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" />)
+      buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" key="leave" />)
     }
 
     var volonteersLimit = (activity.maxVolunteers == 0) ? 'Brak' : activity.maxVolunteers

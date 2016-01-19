@@ -137,10 +137,6 @@ body {
   margin-top: 15px;
 }
 
-.adminToolbar, .adminToolbar a {
-  color: #fff;
-}
-
 .registrationForm .pure-g > div:first-child {
   padding-top: 17px;
 }

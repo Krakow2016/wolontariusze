@@ -95,7 +95,7 @@ module.exports = Protect({
         body.password = bcrypt.hashSync(body.password, salt)
         delete body.password_
       }
-      
+
       // Wykonaj zapytanie do bazy danych
       r.table(tableName).get(id).update(body).run(conn, callback)
     })

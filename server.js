@@ -15,6 +15,9 @@ var express = require('express'),
   request = require('request'),
   crypto = require('crypto')
 
+// Służy do zapisywania sesji użytkowników w bazie danych
+var RDBStore = require('session-rethinkdb')(session)
+
 // Wyświetlanie komunikatów kontrolnych
 var debug = require('debug')('Server')
 var env = process.env.NODE_ENV || 'development'
@@ -34,10 +37,16 @@ var Comments = require('./app/services/'+config.service+'/comments')
 var Volunteer = require('./app/services/'+config.service+'/volonteers')
 var Integration = require('./app/services/'+config.service+'/integrations')
 var APIClient = require('./app/services/'+config.service+'/apiclients')
+var Joints = require('./app/services/'+config.service+'/joints')
 
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
 var fetchrPlugin = app.getPlugin('FetchrPlugin')
+
+// Konfiguracja zapisu danych sesji w bazie danych
+var session_store = {
+  servers: [ config.rethinkdb ]
+}
 
 // Konfiguracja middleware-u Passport definująca metodę weryfikacji poprawności
 // logowania.
@@ -100,7 +109,10 @@ server.use(function(req, res, next){
   next()
 })
 
-server.use(session({ secret: 'secret' }))
+server.use(session({
+  secret: 'secret',
+  store: config.service === 'rethinkdb' ? new RDBStore(session_store) : new session.MemoryStore()
+}))
 // Middleware służący do wyświetlania komunikatów flash
 server.use(flash())
 // Przepujść każde zapytanie przez middleware do autoryzacji Passport.
@@ -121,6 +133,7 @@ if(fetchrPlugin) {
   fetchrPlugin.registerService(Comments)
   fetchrPlugin.registerService(Integration)
   fetchrPlugin.registerService(APIClient)
+  fetchrPlugin.registerService(Joints)
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), jsonParser, fetchrPlugin.getMiddleware())
 }
@@ -170,40 +183,6 @@ server.get('/invitation', passport.authenticate('localapikey', {
   failureFlash: true,
   successFlash: true
 }))
-
-// Dołącz do wydarzenia
-server.post('/aktywnosci/:id/join', function(req, res) {
-  if(!req.user) { return res.send(403) }
-
-  Activities.join({force_admin: true}, 'Activities', {
-    id: req.params.id,
-    user_id: req.user.id
-  }, {}, function(err, resp) {
-    var change = resp.changes[0]
-    if(change) {
-      res.send(change.new_val)
-    } else {
-      res.send(304) // Not modyfied
-    }
-  })
-})
-
-// Wypisz się z wydarzenia
-server.post('/aktywnosci/:id/leave', function(req, res) {
-  if(!req.user) { return res.send(403) }
-
-  Activities.leave({force_admin: true}, 'Activities', {
-    id: req.params.id,
-    user_id: req.user.id
-  }, {}, function(err, resp) {
-    var change = resp.changes[0]
-    if(change) {
-      res.send(change.new_val)
-    } else {
-      res.send(304) // Not modyfied
-    }
-  })
-})
 
 server.post('/invitation', jsonParser, function(req, res) {
   var id = req.body.id

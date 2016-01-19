@@ -88,45 +88,33 @@ module.exports = {
   },
 
   joinActivity: function(context, payload, cb) {
-    var request = new XMLHttpRequest()
-    request.open('POST', '/aktywnosci/'+ payload.id +'/join', true)
-    request.setRequestHeader('Content-Type', 'application/json')
-    request.onload = function() {
-      if (request.status >= 200 && request.status < 400) {
-        // Success!
-        var resp = request.responseText
-        var json = JSON.parse(resp)
-
-        context.dispatch('ACTIVITY_UPDATED', json)
-        cb()
-      //} else {
-      // We reached our target server, but it returned an error
+    context.service.create('Joints', {}, payload, function (err, data) {
+      if (err) { // Błąd po stronie serwera
+        //context.dispatch('JOINT_CREATED_FAILURE', [])
+      } else {
+        var user = context.getUser()
+        context.dispatch('JOINT_CREATED', Object.assign({}, user, {
+          id: data.generated_keys[0],
+          user_id: user.id
+        }))
       }
-    }
-    request.send()
+      cb()
+    })
   },
 
   leaveActivity: function(context, payload, cb) {
-    var request = new XMLHttpRequest()
-    request.open('POST', '/aktywnosci/'+ payload.id +'/leave', true)
-    request.setRequestHeader('Content-Type', 'application/json')
-    request.onload = function() {
-      if (request.status >= 200 && request.status < 400) {
-        // Success!
-        var resp = request.responseText
-        var json = JSON.parse(resp)
-
-        context.dispatch('ACTIVITY_UPDATED', json)
-        cb()
-      //} else {
-      // We reached our target server, but it returned an error
+    context.service.update('Joints', {}, payload, function (err, data) {
+      if (err) { // Błąd po stronie serwera
+        //context.dispatch('JOINT_UPDATE_FAILURE', [])
+      } else {
+        context.dispatch('JOINT_DELETED', payload.id)
       }
-    }
-    request.send()
+      cb()
+    })
   },
 
   createActivity: function(context, payload, cb) {
-    context.service.create('Activities', {}, payload, function (err, data) {
+    context.service.create('Activities', {}, payload.activity, function (err, data) {
       if(err) { debug(err) }
       else { 
         var id
@@ -135,10 +123,17 @@ module.exports = {
         } else {
           id = data.id
         }
-        //context.dispatch('ACTIVITY_CREATED', {})     
-        context.executeAction(navigateAction, {url: '/aktywnosc/'+id})
+        var joints = payload.volunteers.map(function(volunteer){
+          return {
+            activity_id: id,
+            user_id: volunteer.user_id
+          }
+        })
+        context.service.create('Joints', {}, joints, function(){
+          context.executeAction(navigateAction, {url: "/aktywnosc/"+id})
+        })
       }
-      cb()  
+      cb()
     })
   },
   deleteActivity: function(context, payload, cb) {
