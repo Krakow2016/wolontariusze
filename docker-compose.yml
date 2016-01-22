@@ -1,0 +1,21 @@
+rethinkdb:
+  image: rethinkdb:2.2
+  container_name: rethinkdb
+
+es:
+  image: elasticsearch:2.1
+  container_name: es
+
+logstash:
+  image: logstash:2.1
+  command: logstash -f /config-dir/logstash.conf
+  volumes:
+    - ./config/rethinkdb_logstash.conf:/config-dir/logstash.conf
+
+wolontariusze:
+  image: krakow2016/wolontariusze
+  container_name: wolontariusze
+  environment:
+    - NODE_ENV=production
+  ports:
+    - "8000:80"

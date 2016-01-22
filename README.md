@@ -47,7 +47,24 @@ od razu zostać zaakceptowana lub odrzucona.
 Zgłaszanie, dyskusja i rozwiązywanie błędów w aplikacji odbywa się przez
 stronę [Issues](https://github.com/Krakow2016/wolontariusze/issues).
 
-# Uruchomienie
+# Uruchomienie (zalecane)
+
+Jedyne wymaganie to zainstalowany
+[Docker](https://docs.docker.com/engine/installation/) i [Docker
+Compose](https://docs.docker.com/compose/install/). Następnie należy pobrać
+plik konfiguracyjny
+[docker-compose.yml](https://raw.githubusercontent.com/Krakow2016/wolontariusze/master/docker-compose.yml).
+Uruchomienie (i wcześniejsze pobranie w przypadku gdy ich brak w systemie)
+wszystkich serwisów (kontenerów Dockera) odbywa się za pomocą komendy:
+
+```
+docker-compose --x-networking -f docker-compose.yml up
+```
+
+Po wykonaniu wszystkich czynności strona www będzie dostępna na hoście
+`localhost` na porcie `8000`.
+
+# Uruchomienie (zaawansowane)
 
 ## Pierwszy raz
 
