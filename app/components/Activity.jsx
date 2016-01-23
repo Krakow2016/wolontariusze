@@ -34,8 +34,13 @@ var Activity = React.createClass({
   },
 
   onAcceptButtonClick: function () {
+    var user = this.user()
+    var user_id = user && user.id
+    var user_firstName = user && user.first_name
+    var user_lastName = user && user.last_name
     this.props.context.executeAction(actions.joinActivity, {
-      activity_id: this.state.activity.id
+      activity_id: this.state.activity.id,
+      user_id: user_id
     })
   },
 

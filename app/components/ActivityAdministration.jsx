@@ -168,16 +168,34 @@ var ActivityAdministration = React.createClass({
         joint.is_canceled = true
         return joint
       })
+      console.log('Removed', removed)
       if(removed.length) {
-        context.executeAction(leaveActivityAction, removed)
+        for (var i = 0; i < removed.length; i++) {
+          context.executeAction(leaveActivityAction, removed[i])
+        }
+
       }
 
       // Dodaje nowych wolontariuszy do aktywności
       var added = state.volunteers.filter(function(i) {
         return state._volunteers.indexOf(i) < 0
+      }).map(function (vol) {
+        return {
+          activity_id: this.state.activity.id,
+          user_id: vol.id
+        }
       })
+      
+      /*Dla testów
+      added = [{activity_id: "3", user_id: "1"},
+               {activity_id: "3", user_id: "2"},
+               {activity_id: "3", user_id: "3"},
+               {activity_id: "3", user_id: "4"}]
+      */
       if(added.length) {
-        context.executeAction(joinActivityAction, added)
+        for (var i = 0; i < added.length; i++) {
+          context.executeAction(joinActivityAction, added[i])
+        }
       }
   },
 

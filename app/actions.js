@@ -82,21 +82,34 @@ module.exports = {
   updateActivity: function(context, payload, cb) {
     context.service.update('Activities', {}, payload, function (err, data) {
       if(err) { debug(err) }
-      else { context.dispatch('ACTIVITY_UPDATE_SUCCESS', data) }
+      else { 
+        var change = data.changes[0]
+        if(change) {
+          context.dispatch('ACTIVITY_UPDATED', change.new_val)
+        }
+      }
       cb()
     })
   },
 
   joinActivity: function(context, payload, cb) {
-    context.service.create('Joints', {}, payload, function (err, data) {
-      if (err) { // Błąd po stronie serwera
+    context.service.create('Joints', {}, payload, function (errJoint, dataJoint) {
+      if (errJoint) { // Błąd po stronie serwera
         //context.dispatch('JOINT_CREATED_FAILURE', [])
       } else {
-        var user = context.getUser()
-        context.dispatch('JOINT_CREATED', Object.assign({}, user, {
-          id: data.generated_keys[0],
-          user_id: user.id
-        }))
+        context.service.read('Volonteers', {id: payload.user_id}, {}, function (errVol, dataVol) {
+          if (errVol) {
+          } else {
+            var user = {
+              user_id: dataVol.id,
+              first_name: dataVol.first_name,
+              last_name: dataVol.last_name
+            }
+            context.dispatch('JOINT_CREATED', Object.assign({}, user, {
+              id: dataJoint.generated_keys[0]
+            }))
+          }
+        })
       }
       cb()
     })

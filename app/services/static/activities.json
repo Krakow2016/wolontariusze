@@ -11,8 +11,7 @@
         "is_urgent": true,
         "creator": "1",
         "editor": "1",
-        "maxVolunteers": 5,
-        "volunteers": ["1", "2"]
+        "maxVolunteers": 5
      },
      
     "2": {
@@ -27,8 +26,7 @@
         "is_urgent": false,
         "creator": "2",
         "editor": "1",
-        "maxVolunteers": 1,
-        "volunteers": ["2"]
+        "maxVolunteers": 1
      },
 
     "3": {     
@@ -43,7 +41,6 @@
         "is_urgent": false,
         "creator": "1",
         "editor": "2",
-        "maxVolunteers": 10,
-        "volunteers": []
+        "maxVolunteers": 10
      }
 }

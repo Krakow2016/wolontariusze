@@ -1,3 +1,4 @@
+
 'use strict'
 var createStore  = require('fluxible/addons').createStore
 

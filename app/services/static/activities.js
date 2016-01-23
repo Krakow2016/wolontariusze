@@ -10,6 +10,8 @@
 
 
 var activities = require('./activities.json')
+var joints = require('./joints.json')
+var volunteers = require('./volonteers.json')
 
 var public_attrs = [
   'id',
@@ -22,8 +24,7 @@ var public_attrs = [
   'place',
   'creator',
   'editor',
-  'maxVolunteers',
-  'volunteers'
+  'maxVolunteers'
 ]
 
 var private_attrs = [
@@ -55,6 +56,22 @@ var modifiedActivity = function (activityId, req, config) {
 }
 
 
+var getActivityVolunteers = function (activityId) {
+  var vols = []
+  for (var i in joints) {
+    if (joints[i].activity_id == activityId && joints[i].is_canceled != true) {
+      var vol = volunteers[joints[i].user_id]
+      vols.push( {
+        id: joints[i].id,
+        user_id: vol.id,
+        first_name: vol.first_name,
+        last_name: vol.last_name
+      })
+    }
+  }
+  return vols
+}
+
 module.exports = {
   name: 'Activities',
   // at least one of the CRUD methods is required
@@ -62,6 +79,9 @@ module.exports = {
     if(params.id) {
       var activity = modifiedActivity(params.id, req, config)
       if(activity != null) {
+        
+        var vols = getActivityVolunteers(activity.id);
+        activity.volunteers = vols || [];
         callback(null, activity)
       } else {
         callback('404')
