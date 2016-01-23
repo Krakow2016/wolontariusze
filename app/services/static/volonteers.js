@@ -23,7 +23,7 @@ var Protect = require('../../../lib/protect')
 var volunteers = require('./volonteers.json')
 
 module.exports = Protect({
-  name: 'Volonteers',
+  name: 'Volunteers',
   // at least one of the CRUD methods is required
   read: function(req, resource, params, config, callback) {
     var volunteer

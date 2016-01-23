@@ -22,7 +22,7 @@ var ActivityStore = createStore({
       maxVolunteers: 5
     }
     this.volunteers = []
-    this.invalidSnackBar = false
+    this.invalidSnackBar = ''
   },
 
   load: function(data) {
@@ -40,6 +40,10 @@ var ActivityStore = createStore({
   
   join: function(joint) {
     // Dodaj obiekt połączenia
+    for (var i = 0; i < this.volunteers.length; i++) {
+      if (this.volunteers[i].user_id == joint.user_id)
+        return
+    }
     this.volunteers.push(joint)
     this.emitChange()
   },

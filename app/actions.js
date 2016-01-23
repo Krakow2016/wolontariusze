@@ -97,8 +97,9 @@ module.exports = {
       if (errJoint) { // Błąd po stronie serwera
         //context.dispatch('JOINT_CREATED_FAILURE', [])
       } else {
-        context.service.read('Volonteers', {id: payload.user_id}, {}, function (errVol, dataVol) {
+        context.service.read('Volunteers', {id: payload.user_id}, {}, function (errVol, dataVol) {
           if (errVol) {
+            console.log(errVol)
           } else {
             var user = {
               user_id: dataVol.id,

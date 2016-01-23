@@ -106,6 +106,23 @@ var ActivityAdministration = React.createClass({
      user_id: volunteer.user_id,
      activity_id: this.state.activity.id
     }
+    
+    if (this.state.volunteers.length == this.state.activity.maxVolunteers) {
+      this.setState(update(this.state, {
+        invalidSnackBar: {$set: 'Osiągnięto limit wolontariuszy'}
+      }))
+      return
+    }
+    
+    for (var i=0; i<this.state.volunteers.length; i++) {
+      if (this.state.volunteers[i].user_id == volunteer.user_id) {
+        this.setState(update(this.state, {
+          invalidSnackBar: {$set: 'Wolontariusz jest już dodany'}
+        }))
+      return
+      }
+    }
+    
     this.setState(update(this.state, {
       volunteers: {$push: [joint]}
     }))
@@ -136,6 +153,14 @@ var ActivityAdministration = React.createClass({
   },
   
   onValidSubmit: function () {
+  
+    if (this.state.volunteers.length > this.state.activity.maxVolunteers) {
+      this.setState(update(this.state, {
+        invalidSnackBar: {$set: 'Ustaw większy limit wolontariuszy'}
+      }))
+      return
+    }
+  
     if (this.props.creationMode == false) {
       this.update()
     } else {
@@ -145,17 +170,18 @@ var ActivityAdministration = React.createClass({
   
   onInvalidSubmit: function () {
     this.setState(update(this.state, {
-      invalidSnackBar: {$set: true}
+      invalidSnackBar: {$set: 'Potrzeba wypełnić Tytuł, Czas Rozpoczęcia, Limit Wolontariuszy'}
     }))
   },
   
   handleInvalidSnackbarClose: function () {
     this.setState(update(this.state, {
-      invalidSnackBar: {$set: false}
+      invalidSnackBar: {$set: ''}
     }))
   },
   
   update: function () {
+      console.log("STATE", this.state)
       var state = this.state
       var context = this.props.context
       // Aktualizuje parametry aktywności
@@ -181,8 +207,8 @@ var ActivityAdministration = React.createClass({
         return state._volunteers.indexOf(i) < 0
       }).map(function (vol) {
         return {
-          activity_id: this.state.activity.id,
-          user_id: vol.id
+          activity_id: state.activity.id,
+          user_id: vol.user_id
         }
       })
       
@@ -367,7 +393,7 @@ var ActivityAdministration = React.createClass({
           
           <Snackbar
           open={!!this.state.invalidSnackBar}
-          message="Potrzeba wypełnić Tytuł, Czas Rozpoczęcia, Limit Wolontariuszy"
+          message={this.state.invalidSnackBar}
           autoHideDuration={5000}
           onRequestClose={this.handleInvalidSnackbarClose} />
       </div>
