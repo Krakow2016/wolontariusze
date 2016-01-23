@@ -175,6 +175,10 @@ var Activities = module.exports = {
       if(params.id) { // Pobierz krotkę o danym numerze id
         r.table(tableName).get(params.id).run(conn, function(err, activity){
 
+          if(err || !activity) {
+            return callback(err || 404)
+          }
+
           r.table('Joints')
             .getAll(params.id, {index: 'activity_id'})
             .filter(function(x){
@@ -192,38 +196,10 @@ var Activities = module.exports = {
             .run(conn, function(err, cursor){
               if (err) { console.log(err) }
               cursor.toArray(function(err, volunteers) {
-                console.log(err, volunteers)
                 activity.volunteers = volunteers || []
                 callback(null, activity)
               })
           })
-
-          //if (err) {
-            //console.log(err);
-            //callback(err)
-          //} else {
-            //if (row && getVolonteersIds(row).length > 0) {
-              //var volIds = getVolonteersIds(row);
-              //r.table('Volonteers').getAll(r.args(volIds)).coerceTo('array')
-              //.run(conn, function (error, volonteers) {
-                //if (error) {callback(error)} 
-                //else {
-                  //var volData = volonteers.map(function (vol) {
-                    //return {
-                      //id: vol.id,
-                      //name: vol.first_name+" "+vol.last_name,
-                      //email: vol.email
-                    //}
-                  //})
-                  //var modAct = modifiedActivity(row, volData, req, config);
-                  //console.log("MODIFIED ACTIVITY ", modAct);
-                  //callback(error || !modAct, modAct);
-                //}
-              //});
-            //} else {
-              //callback (error || !row, row);
-            //}
-          //}
         })
       }
     })

@@ -102,18 +102,17 @@ var ActivityAdministration = React.createClass({
   },
 
   addActiveVolonteer: function (volunteer) {
-   var joint = {
-     user_id: volunteer.user_id,
-     activity_id: this.state.activity.id
-    }
-    
+    var joint = Object.assign({
+      activity_id: this.state.activity.id
+    }, volunteer)
+
     if (this.state.volunteers.length == this.state.activity.maxVolunteers) {
       this.setState(update(this.state, {
         invalidSnackBar: {$set: 'Osiągnięto limit wolontariuszy'}
       }))
       return
     }
-    
+
     for (var i=0; i<this.state.volunteers.length; i++) {
       if (this.state.volunteers[i].user_id == volunteer.user_id) {
         this.setState(update(this.state, {
@@ -122,7 +121,7 @@ var ActivityAdministration = React.createClass({
       return
       }
     }
-    
+
     this.setState(update(this.state, {
       volunteers: {$push: [joint]}
     }))
