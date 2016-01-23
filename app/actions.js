@@ -131,12 +131,7 @@ module.exports = {
     context.service.create('Activities', {}, payload.activity, function (err, data) {
       if(err) { debug(err) }
       else { 
-        var id
-        if(conf.service === 'rethinkdb') { // TODO ujednolicić
-          id = data.generated_keys[0]
-        } else {
-          id = data.id
-        }
+        var id = data.generated_keys[0]
         var joints = payload.volunteers.map(function(volunteer){
           return {
             activity_id: id,

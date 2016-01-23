@@ -226,6 +226,9 @@ var ActivityAdministration = React.createClass({
   },
 
   create: function () {
+    /*Dla testów
+    this.state.volunteers = [ {user_id: '1'}, {user_id: '2'}]
+    */
     this.props.context.executeAction(createAction, this.state)
   },
 

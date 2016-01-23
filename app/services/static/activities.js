@@ -110,7 +110,7 @@ module.exports = {
     activities[id] = body
     var activity = modifiedActivity(body.id, req, config)
     if(activity != null) {
-      callback(null, activity)
+      callback(null, {generated_keys: [activity.id]})
     } else {
       callback('404')
     }  
