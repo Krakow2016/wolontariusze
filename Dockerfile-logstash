@@ -1,0 +1,7 @@
+FROM logstash:2.1
+
+RUN plugin install logstash-input-rethinkdb
+
+COPY ./config/rethinkdb_logstash.conf /config-dir/logstash.conf
+
+CMD ["logstash", "-f", "/config-dir/logstash.conf"]

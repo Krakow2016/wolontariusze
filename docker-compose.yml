@@ -7,10 +7,7 @@ es:
   container_name: es
 
 logstash:
-  image: logstash:2.1
-  command: logstash -f /config-dir/logstash.conf
-  volumes:
-    - ./config/rethinkdb_logstash.conf:/config-dir/logstash.conf
+  image: krakow2016/logstash
 
 wolontariusze:
   image: krakow2016/wolontariusze
