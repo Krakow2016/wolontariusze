@@ -106,16 +106,7 @@ var ActivityAdministration = React.createClass({
      user_id: volunteer.user_id,
      activity_id: this.state.activity.id
     }
-    
-    for (var i=0; i<this.state.volunteers.length; i++) {
-      if (this.state.volunteers[i].user_id == volunteer.user_id) {
-        this.setState(update(this.state, {
-          invalidSnackBar: {$set: 'Wolontariusz jest już dodany'}
-        }))
-      return
-      }
-    }
-    
+        
     this.setState(update(this.state, {
       volunteers: {$push: [joint]}
     }))
@@ -261,7 +252,8 @@ var ActivityAdministration = React.createClass({
     var removeActiveVolonteer = this.removeActiveVolonteer
     var addVolonteer
     if (this.state.volunteers.length < this.state.activity.maxVolunteers) {
-      addVolonteer = <ActivityVolonteersList addActiveVolonteer={this.addActiveVolonteer} />
+      addVolonteer = <ActivityVolonteersList addActiveVolonteer={this.addActiveVolonteer} 
+                                             excludedVolunteers={this.state.volunteers}/>
     }
     var volunteers = this.state.volunteers || []
     var list = volunteers.map(function(volunteer) {
