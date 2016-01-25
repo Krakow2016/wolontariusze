@@ -130,7 +130,7 @@ module.exports = {
   createActivity: function(context, payload, cb) {
     context.service.create('Activities', {}, payload.activity, function (err, data) {
       if(err) { debug(err) }
-      else { 
+      else {
         var id = data.generated_keys[0]
         var joints = payload.volunteers.map(function(volunteer){
           return {

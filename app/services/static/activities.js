@@ -16,7 +16,7 @@ var volunteers = require('./volonteers.json')
 var public_attrs = [
   'id',
   'title',
-  'content',
+  'description',
   'creationTimestamp',
   'editionTimestamp',
   'startEventTimestamp',
@@ -79,7 +79,6 @@ module.exports = {
     if(params.id) {
       var activity = modifiedActivity(params.id, req, config)
       if(activity != null) {
-        
         var vols = getActivityVolunteers(activity.id);
         activity.volunteers = vols || [];
         callback(null, activity)
@@ -105,18 +104,17 @@ module.exports = {
     } else {
       id = lastId+1 //ostatnie id + 1
     }
-    
+
     body.id = id+''
     activities[id] = body
-    var activity = modifiedActivity(body.id, req, config)
-    if(activity != null) {
-      callback(null, {generated_keys: [activity.id]})
-    } else {
-      callback('404')
-    }  
-      
+    callback(null, {
+      generated_keys: [id],
+      changes: [
+        { new_val: body }
+      ]
+    })
   },
-  
+
   update: function(req, resource, params, body, config, callback) {
     var id = body.id || params.id
     for (var key in body) {

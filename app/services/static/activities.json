@@ -2,7 +2,7 @@
     "1": {
         "id": "1",
         "title": "Pierwsza Aktywność",
-        "content": "Treść pierwszej aktywności",
+        "description": "Treść pierwszej aktywności",
         "creationTimestamp": 120000,
         "editionTimestamp": 120000,
         "startEventTimestamp": 1200200,
@@ -17,7 +17,7 @@
     "2": {
         "id": "2",
         "title": "Druga Aktywność",
-        "content": "Treść drugiej aktywności",
+        "description": "Treść drugiej aktywności",
         "creationTimestamp": 220000,
         "editionTimestamp": 1220000,
         "startEventTimestamp": 2200200,
@@ -32,7 +32,7 @@
     "3": {     
         "id": "3",
         "title": "Trzecia Aktywność",
-        "content": "Treść trzeciej aktywności",
+        "description": "Treść trzeciej aktywności",
         "creationTimestamp": 320000,
         "editionTimestamp": 1320000,
         "startEventTimestamp": 3200200,

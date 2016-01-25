@@ -352,7 +352,7 @@ var ActivityAdministration = React.createClass({
           <b>Treść </b>
           <br></br>
           
-          <MyTextarea id="activityContentTextarea" name="content" placeholder="Dodaj treść wiadomości" value={this.state.activity.content} onChange={this.handleChange} />
+          <MyTextarea id="activityContentTextarea" name="description" placeholder="Dodaj treść wiadomości" value={this.state.activity.description} onChange={this.handleChange} />
           <br></br>
 
           <b>Wolontariusze, którzy biorą udział:</b>

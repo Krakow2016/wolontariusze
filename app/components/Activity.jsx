@@ -119,7 +119,7 @@ var Activity = React.createClass({
         <br></br>
         <b>Prorytet:</b> {priority}
         <br></br>
-        <ReactMarkdown source={activity.content} />
+        <ReactMarkdown source={activity.description} />
         <br></br>
         <b>Wolontariusze, którzy biorą udział:</b> {activeVolonteersList}
         <br></br>

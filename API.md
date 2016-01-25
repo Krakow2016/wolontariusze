@@ -251,17 +251,17 @@ Zadania są dodatkową pracą której wolontariusze będą mogli się podjąć i
 się do niej. API umożliwia tworzenie, usuwanie i aktualizację zadań oraz
 pobieranie pojedynczych zadań jak i ich całej listy.
 
-| Klucz         | Opis                                                    |
-| ---           | ---                                                     |
-| `id`          |                                                         |
-| `datetime`    | Data i czas rozpoczęcia zadania.                        |
-| `description` | Opis zadania.                                           |
-| `is_urgent`   | Flaga dla zadań oznaczonych jako pilne.                 |
-| `lat_lon`     | Współrzędne geograficzne miejsca wykonywania zadania.   |
-| `limit`       | Limit osób które mogą zgłosić się do zadania.           |
-| `name`        | Nazwa zadania.                                          |
-| `place`       | Opis miejsca wykonywania zadania.                       |
-| `volunteers`  | Tablica wolontariuszy zgłoszonych do wykonania zadania. |
+| Klucz         | Pomijalny | Opis                                                                     |
+| ---           | ---       | ---                                                                      |
+| `id`          | Nie       |                                                                          |
+| `description` | Nie       | Opis zadania.                                                            |
+| `name`        | Nie       | Nazwa zadania.                                                           |
+| `volunteers`  | Nie       | Tablica wolontariuszy zgłoszonych do wykonania zadania.                  |
+| `datetime`    | Tak       | Data i czas rozpoczęcia zadania.                                         |
+| `is_urgent`   | Tak       | `true` dla zadań oznaczonych jako pilne.                                 |
+| `lat_lon`     | Tak       | Współrzędne geograficzne miejsca wykonywania zadania. Np. `[0.0, 0.0]`.  |
+| `limit`       | Tak       | Limit osób które mogą zgłosić się do zadania. Np. `10`.                  |
+| `place`       | Tak       | Opis miejsca wykonywania zadania. Np. `"Sankruarium św. Jana Pawła II"`. |
 
 ### Tworzenie obiektu zadania
 

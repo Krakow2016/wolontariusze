@@ -18,7 +18,7 @@ var ActivityStore = createStore({
       startEventTimestamp: '',
       duration: '',
       place: '',
-      content: '',
+      description: '',
       maxVolunteers: 5
     }
     this.volunteers = []
@@ -92,7 +92,7 @@ ActivityStore.attributes = function() {
   return [
     'id',
     'title',
-    'content',
+    'description',
     'creationTimestamp',
     'editionTimestamp',
     'startEventTimestamp',

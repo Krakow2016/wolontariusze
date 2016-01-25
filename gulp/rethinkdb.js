@@ -66,7 +66,7 @@ gulp.task('rethinkdb', function (cb) {
       r.table('Activities').insert({
         id: '10',
         title: 'Aktywność 10',
-        content: 'Treść aktywności 10',
+        description: 'Treść aktywności 10',
         creationTimestamp: 1000,
         editionTimestamp: 2000,
         startEventTimestamp: 3000,
