@@ -109,7 +109,8 @@ describe('Activity API', function() {
 
           var json = parse_json()
           expect(json.status).toEqual('success')
-          // TODO
+          expect(json.data.activity.volunteers.length).toEqual(1)
+          expect(json.data.activity.volunteers[0].user_id).toEqual('1')
           done()
         })
       })
@@ -143,7 +144,7 @@ describe('Activity API', function() {
 
           var json = parse_json()
           expect(json.status).toEqual('success')
-          // TODO
+          expect(json.data.activity.volunteers.length).toEqual(0)
           done()
         })
       })
@@ -157,7 +158,11 @@ describe('Activity API', function() {
       }
       apiRequest(function(r, cb){
         r.admin_post('/joints', body, function(err, resp, json){
-          // TODO
+          expect(err).toBeNull()
+          expect(resp.statusCode).toEqual(201)
+          expect(resp.headers['content-type']).toContain('application/json')
+
+          expect(json.data.joint.user_id).toEqual(1)
           done()
         })
       })
@@ -167,11 +172,16 @@ describe('Activity API', function() {
   describe('post /joints/:id', function() {
     it('should unlink any volunter from activity', function(done) {
       var body = {
-        user_id: 1
+        id: 1,
+        user_id: 2
       }
       apiRequest(function(r, cb){
         r.admin_post('/joints/1', body, function(err, resp, json){
-          // TODO
+          expect(err).toBeNull()
+          expect(resp.statusCode).toEqual(200)
+          expect(resp.headers['content-type']).toContain('application/json')
+
+          expect(json.data.joint.user_id).toEqual('2')
           done()
         })
       })

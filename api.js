@@ -230,8 +230,48 @@ server.post('/api/v2/activities/:id/leave', bearer, function(req, res) {
   })
 })
 
+// Zgłoszenie do aktywności
+server.post('/api/v2/joints', bearer, function(req, res) {
+  // Sprawdź wymagane uprawnienia administratora
+  if(!req.user || !req.user.is_admin) {
+    return res.status(403).send(error('AdminRequired'))
+  }
+
+  Joints.create(req, 'Joints', {}, req.body, {}, function (err, result) {
+    if(err) {
+      res.status(500).send(error('DBError', err))
+    } else {
+      var joint = result.changes[0].new_val
+      res.status(201).send(success({joint: joint}))
+    }
+  })
+})
+
+// Szczegóły zgłoszenia do aktywności
+server.get('/api/v2/joints/:id', bearer, function(req, res) {
+  Joints.read(req, 'Joints', {id: req.params.id}, {}, function (err, joint) {
+    if(err) {
+      res.status(500).send(error('DBError', err))
+    } else {
+      res.send(success({joint: joint}))
+    }
+  })
+})
+
+// Aktualizacja zgłoszenia do aktywności
 server.post('/api/v2/joints/:id', bearer, function(req, res) {
-  Joints.read(req, 'Joints', {id: req.params.id}, {}, function (err, activity) {
+  // Sprawdź wymagane uprawnienia administratora
+  if(!req.user || !req.user.is_admin) {
+    return res.status(403).send(error('AdminRequired'))
+  }
+
+  Joints.update(req, 'Joints', {id: req.params.id}, req.body, {}, function (err, result) {
+    if(err) {
+      res.status(500).send(error('DBError', err))
+    } else {
+      var joint = result.changes[0].new_val
+      res.send(success({joint: joint}))
+    }
   })
 })
 
@@ -244,9 +284,6 @@ server.use(function(req, res, next) {
 server.use(function(err, req, res, next) {
   res.status(500).send(error('UnknownError', err))
 })
-
-// Zgłoszenie do zadania
-//server.post('/activities/:id/join', bearer, function(req, res) { })
 
 // Baza noclegowa pielgrzymów
 //server.get('/pilgrims', bearer, function(req, res) { })

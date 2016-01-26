@@ -46,7 +46,7 @@ module.exports = {
       joints[id] = body
       callback(null, {
         generated_keys: [id],
-        changes: [ body ]
+        changes: [ {new_val: body} ]
       })
     }
   },
@@ -59,8 +59,9 @@ module.exports = {
     var changes = []
     for (var i = 0; i < ids.length; i++) {
       var id = ids[i]
+      // TODO
       joints[id].is_canceled = true
-      changes.push(joints[id])
+      changes.push({new_val: joints[id]})
     }
     callback (null, {
       changes: changes

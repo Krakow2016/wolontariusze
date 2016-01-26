@@ -245,7 +245,7 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/volunteers
 {}
 ```
 
-## Zadania
+## Aktywności i zadania
 
 Zadania są dodatkową pracą której wolontariusze będą mogli się podjąć i zgłosić
 się do niej. API umożliwia tworzenie, usuwanie i aktualizację zadań oraz

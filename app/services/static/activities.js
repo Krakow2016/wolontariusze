@@ -126,31 +126,12 @@ module.exports = {
       callback(null, resp)
     } else {
       callback('404')
-    }  
+    }
   },
 
   delete: function(req, resource, params, config, callback) {
     delete activities[params.id]
     callback(null, activities)
   },
-  
-  join: function(req, resource, params, config, callback) {
-    var volunteers = activities[params.id].volunteers
-    volunteers.push(params.user_id)
-    var body = {
-      volunteers: volunteers
-    }
-    this.update(req, resource, params, body, config, callback)
-  },
-
-  leave: function(req, resource, params, config, callback) {
-    var volunteers = activities[params.id].volunteers
-    var index = volunteers.indexOf(params.user_id)
-    if(index > -1) { volunteers.splice(index, 1) }
-    var body = {
-      volunteers: volunteers
-    }
-    this.update(req, resource, params, body, config, callback)
-  }
 
 }
