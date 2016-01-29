@@ -39,7 +39,7 @@ Formsy.addValidationRule('isMoreOrGreaterIntThanZero', function (values, value) 
 
 var AddedVolonteer = React.createClass({
   onClick: function () {
-    this.props.onRemoveButtonClick(this.props.volunteer)
+    this.props.onRemoveButtonClick(this.props.volunteer.id)
   },
   name: function() {
     var v = this.props.volunteer
@@ -63,7 +63,11 @@ var ActivityAdministration = React.createClass({
   },
 
   _changeListener: function() {
-    this.setState(this.props.context.getStore(ActivityStore).getState())
+    // Interesują nas tylko zmiany w obiekcie activity. Aktualizacją obiektu
+    // volunteers zajmujemy się sami.
+    this.setState({
+      activity: this.props.context.getStore(ActivityStore).getState().activity
+    })
   },
 
   componentDidMount: function() {
@@ -113,10 +117,12 @@ var ActivityAdministration = React.createClass({
     }))
   },
 
-  removeActiveVolonteer: function (volunteer) {
+  removeActiveVolonteer: function (id) {
     this.setState(update(this.state, {
       volunteers: {$apply: function(arr) {
-        var index = arr.indexOf(volunteer)
+        var index = arr.findIndex(function(volunteer){
+          return volunteer.id === id
+        })
         if(index > -1) { arr.splice(index, 1) }
         return arr
       }}

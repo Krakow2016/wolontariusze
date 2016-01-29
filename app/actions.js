@@ -93,24 +93,15 @@ module.exports = {
   },
 
   joinActivity: function(context, payload, cb) {
-    context.service.create('Joints', {}, payload, function (errJoint, dataJoint) {
-      if (errJoint) { // Błąd po stronie serwera
+    context.service.create('Joints', {}, payload, function (err, data) {
+      if (err) { // Błąd po stronie serwera
         //context.dispatch('JOINT_CREATED_FAILURE', [])
       } else {
-        context.service.read('Volunteers', {id: payload.user_id}, {}, function (errVol, dataVol) {
-          if (errVol) {
-            console.log(errVol)
-          } else {
-            var user = {
-              user_id: dataVol.id,
-              first_name: dataVol.first_name,
-              last_name: dataVol.last_name
-            }
-            context.dispatch('JOINT_CREATED', Object.assign({}, user, {
-              id: dataJoint.generated_keys[0]
-            }))
-          }
-        })
+        var user = context.getUser()
+        context.dispatch('JOINT_CREATED', Object.assign({}, user, {
+          id: data.generated_keys[0],
+          user_id: user.id
+        }))
       }
       cb()
     })
