@@ -38,6 +38,14 @@ var ActivityVolonteersList = React.createClass ({
             display_name: option.text,
             user_id: option.payload.id
           }
+        }).filter(function (volunteer) {
+          var excludedVolunteers = that.props.excludedVolunteers
+          for (var i = 0; i < excludedVolunteers.length; i++) {
+            if (volunteer.user_id == excludedVolunteers[i].user_id) {
+              return false
+            }
+          }
+          return true
         })
 
         that.setState({

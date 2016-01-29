@@ -102,24 +102,10 @@ var ActivityAdministration = React.createClass({
   },
 
   addActiveVolonteer: function (volunteer) {
-    var joint = Object.assign({
-      activity_id: this.state.activity.id
-    }, volunteer)
-
-    if (this.state.volunteers.length == this.state.activity.maxVolunteers) {
-      this.setState(update(this.state, {
-        invalidSnackBar: {$set: 'Osiągnięto limit wolontariuszy'}
-      }))
-      return
-    }
-
-    for (var i=0; i<this.state.volunteers.length; i++) {
-      if (this.state.volunteers[i].user_id == volunteer.user_id) {
-        this.setState(update(this.state, {
-          invalidSnackBar: {$set: 'Wolontariusz jest już dodany'}
-        }))
-      return
-      }
+   var joint = {
+     activity_id: this.state.activity.id,
+     user_id: volunteer.user_id,
+     display_name: volunteer.display_name
     }
 
     this.setState(update(this.state, {
@@ -265,6 +251,11 @@ var ActivityAdministration = React.createClass({
     }
     
     var removeActiveVolonteer = this.removeActiveVolonteer
+    var addVolonteer
+    if (this.state.volunteers.length < this.state.activity.maxVolunteers) {
+      addVolonteer = <ActivityVolonteersList addActiveVolonteer={this.addActiveVolonteer} 
+                                             excludedVolunteers={this.state.volunteers}/>
+    }
     var volunteers = this.state.volunteers || []
     var list = volunteers.map(function(volunteer) {
       return (
@@ -357,7 +348,7 @@ var ActivityAdministration = React.createClass({
 
           <b>Wolontariusze, którzy biorą udział:</b>
           <br></br>
-          <ActivityVolonteersList addActiveVolonteer={this.addActiveVolonteer} />
+          {addVolonteer}
           <div>
             {list}
           </div>
