@@ -68,6 +68,12 @@ var ActivityAdministration = React.createClass({
     this.setState({
       activity: this.props.context.getStore(ActivityStore).getState().activity
     })
+    if(this.props.creationMode == true) {
+      //Bez tego kodu, po kliknięciu "Nowa aktywność", dodaniu wolontariusza, kliknięciu "Utwórz", a następnie ponownym kliknięciu "
+      //"Nowa aktywność" w panelu tworzenia aktywności pojawiał się uprzednio dodany wolontariusz
+      this.state._volunteers = []
+      this.state.volunteers = []
+    }
   },
 
   componentDidMount: function() {
@@ -172,7 +178,6 @@ var ActivityAdministration = React.createClass({
   },
   
   update: function () {
-      console.log("STATE", this.state)
       var state = this.state
       var context = this.props.context
       // Aktualizuje parametry aktywności
@@ -185,35 +190,13 @@ var ActivityAdministration = React.createClass({
         joint.is_canceled = true
         return joint
       })
-      console.log('Removed', removed)
-      if(removed.length) {
-        for (var i = 0; i < removed.length; i++) {
-          context.executeAction(leaveActivityAction, removed[i])
-        }
-
-      }
+      context.executeAction(leaveActivityAction, removed)
 
       // Dodaje nowych wolontariuszy do aktywności
       var added = state.volunteers.filter(function(i) {
         return state._volunteers.indexOf(i) < 0
-      }).map(function (vol) {
-        return {
-          activity_id: state.activity.id,
-          user_id: vol.user_id
-        }
-      })
-      
-      /*Dla testów
-      added = [{activity_id: "3", user_id: "1"},
-               {activity_id: "3", user_id: "2"},
-               {activity_id: "3", user_id: "3"},
-               {activity_id: "3", user_id: "4"}]
-      */
-      if(added.length) {
-        for (var i = 0; i < added.length; i++) {
-          context.executeAction(joinActivityAction, added[i])
-        }
-      }
+      }) 
+      context.executeAction(joinActivityAction, added)
   },
 
   create: function () {

@@ -45,12 +45,19 @@ var Joints = module.exports = {
         return
       }
 
-      var ids = body.length ? body.map(function(x){ return x.id }) : [body.id]
+      var ids = []
+      if (body.length) {
+        ids = body.map(function(x){ return x.id })
+      } else if (typeof (body.id) != 'undefined') {
+        ids = [body.id]
+      } 
+      
       var table = r.table('Joints')
       // TODO
       table.getAll.apply(table, ids).update({
         is_canceled: true
-      }).run(conn, callback)
+        }).run(conn, callback)
+
     })
   }
 }

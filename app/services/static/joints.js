@@ -34,7 +34,9 @@ module.exports = {
         ids.push(id)
         id++
       }
-      callback(null, ids)
+      callback(null, {
+        generated_keys: ids
+      })
       
     } else {
       // Dopisz Id usera jeżeli pole jest puste
@@ -52,10 +54,15 @@ module.exports = {
   },
 
   update: function(req, resource, params, body, config, callback) {
-    var ids = body.length ? body.map(function(x){ return x.id }) : [body.id]
-    //console.log("body", body);
-    //console.log("Joints", joints)
-    //console.log("Ids", ids)
+    var ids = []
+    if (body.length) {
+      ids = body.map(function(x){ return x.id })
+    } else if (typeof (body.id) != 'undefined') {
+      ids = [body.id]
+    } 
+    console.log("body", body);
+    console.log("Joints", joints)
+    console.log("Ids", ids)
     var changes = []
     for (var i = 0; i < ids.length; i++) {
       var id = ids[i]
