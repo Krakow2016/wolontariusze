@@ -108,7 +108,8 @@ module.exports = {
   },
 
   leaveActivity: function(context, payload, cb) {
-    context.service.update('Joints', {}, payload, function (err, data) {
+    var params = {id: payload.id, ids: payload.ids}
+    context.service.update('Joints', params, payload.body, function (err, data) {
       if (err) { // Błąd po stronie serwera
         //context.dispatch('JOINT_UPDATE_FAILURE', [])
       } else {

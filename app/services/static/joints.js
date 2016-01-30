@@ -54,24 +54,17 @@ module.exports = {
   },
 
   update: function(req, resource, params, body, config, callback) {
-    var ids = []
-    if (body.length) {
-      ids = body.map(function(x){ return x.id })
-    } else if (typeof (body.id) != 'undefined') {
-      ids = [body.id]
-    } 
-    console.log("body", body);
-    console.log("Joints", joints)
-    console.log("Ids", ids)
+    var ids = params.ids ? params.ids : [params.id]
     var changes = []
+
     for (var i = 0; i < ids.length; i++) {
       var id = ids[i]
-      // TODO
-      joints[id].is_canceled = true
+      Object.assign(joints[id], body)
       changes.push({new_val: joints[id]})
     }
+
     callback (null, {
       changes: changes
-    });
+    })
   }
 }

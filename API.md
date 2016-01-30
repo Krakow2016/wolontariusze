@@ -27,7 +27,7 @@ błędnie wprowadzonymi danymi (np. brak wymaganego parametru), a kody z zakresu
 
 | Identyfikator | Opis                                   |
 | ---           | ---                                    |
-| `status`      | Zawsze "error".                        |
+| `status`      | Zawsze `"error"`.                      |
 | `type`        | Typ błędu. Np. `authentication_error`. |
 | `message`     | Słowny opis błędu.                     |
 
@@ -248,31 +248,35 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/volunteers
 ## Aktywności i zadania
 
 Zadania są dodatkową pracą której wolontariusze będą mogli się podjąć i zgłosić
-się do niej. API umożliwia tworzenie, usuwanie i aktualizację zadań oraz
-pobieranie pojedynczych zadań jak i ich całej listy.
+się do niej. Aktywność jest klasą, od której wywodzą się zadania oraz inne
+zdarzenia które wolontariusz będzie mógł samodzielnie zalogować w systemie. API
+umożliwia tworzenie, usuwanie i aktualizację aktywności oraz pobieranie
+pojedynczych aktywności jak i całej listy aktywności.
+Przykłady użycia są zawarte w pliku:
+<https://github.com/Krakow2016/wolontariusze/blob/master/spec/api_activity_spec.js>.
 
-| Klucz         | Pomijalny | Opis                                                                     |
-| ---           | ---       | ---                                                                      |
-| `id`          | Nie       |                                                                          |
-| `description` | Nie       | Opis zadania.                                                            |
-| `name`        | Nie       | Nazwa zadania.                                                           |
-| `volunteers`  | Nie       | Tablica wolontariuszy zgłoszonych do wykonania zadania.                  |
-| `datetime`    | Tak       | Data i czas rozpoczęcia zadania.                                         |
-| `is_urgent`   | Tak       | `true` dla zadań oznaczonych jako pilne.                                 |
-| `lat_lon`     | Tak       | Współrzędne geograficzne miejsca wykonywania zadania. Np. `[0.0, 0.0]`.  |
-| `limit`       | Tak       | Limit osób które mogą zgłosić się do zadania. Np. `10`.                  |
-| `place`       | Tak       | Opis miejsca wykonywania zadania. Np. `"Sankruarium św. Jana Pawła II"`. |
+| Klucz         | Pomijalny | Opis                                                                       |
+| ---           | ---       | ---                                                                        |
+| `id`          | Nie       |                                                                            |
+| `description` | Nie       | Opis aktywności.                                                           |
+| `name`        | Nie       | Nazwa aktywności.                                                          |
+| `volunteers`  | Nie       | Tablica wolontariuszy zgłoszonych do wykonania zadania.                    |
+| `datetime`    | Tak       | Data i czas rozpoczęcia zadania.                                           |
+| `is_urgent`   | Tak       | `true` dla zadań oznaczonych jako pilne.                                   |
+| `lat_lon`     | Tak       | Współrzędne geograficzne miejsca wykonywania aktywności. Np. `[0.0, 0.0]`. |
+| `limit`       | Tak       | Limit osób które mogą zgłosić się do zadania. Np. `10`.                    |
+| `place`       | Tak       | Opis miejsca wykonywania zadania. Np. `"Sankruarium św. Jana Pawła II"`.   |
 
-### Tworzenie obiektu zadania
+### Tworzenie obiektu aktywności
 
 **Ścieżka:**  
 ```
-POST https://wolontariusze.krakow2016.com/api/v2/tasks
+POST https://wolontariusze.krakow2016.com/api/v2/activities
 ```
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/tasks
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities
 ```
 
 **Przykładowa odpowiedź:**  
@@ -280,16 +284,16 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/tasks
 {}
 ```
 
-### Pobieranie obiektu zadania
+### Pobieranie obiektu aktywności
 
 **Ścieżka:**  
 ```
-GET https://wolontariusze.krakow2016.com/api/v2/tasks/:id
+GET https://wolontariusze.krakow2016.com/api/v2/activities/:id
 ```
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/tasks/123
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities/123
 ```
 
 **Przykładowa odpowiedź:**  
@@ -297,16 +301,16 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/tasks/123
 {}
 ```
 
-### Aktualizacja obiektu zadania
+### Aktualizacja obiektu aktywności
 
 **Ścieżka:**  
 ```
-POST https://wolontariusze.krakow2016.com/api/v2/tasks/:id
+POST https://wolontariusze.krakow2016.com/api/v2/activities/:id
 ```
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/tasks/123
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities/123
 ```
 
 **Przykładowa odpowiedź:**  
@@ -314,16 +318,16 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/tasks/123
 {}
 ```
 
-### Wysłanie zgłoszenia do zadania
+### Listowanie aktywności
 
 **Ścieżka:**  
 ```
-POST https://wolontariusze.krakow2016.com/api/v2/tasks/:id/join
+GET https://wolontariusze.krakow2016.com/api/v2/activities
 ```
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/tasks/123/join
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities
 ```
 
 **Przykładowa odpowiedź:**  
@@ -331,16 +335,16 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/tasks/123/join
 {}
 ```
 
-### Usunięcie obiektu zadania
+### Wysłanie zgłoszenia do aktywności
 
 **Ścieżka:**  
 ```
-DELETE https://wolontariusze.krakow2016.com/api/v2/tasks/:id
+POST https://wolontariusze.krakow2016.com/api/v2/activities/:id/join
 ```
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/tasks/123
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities/123/join
 ```
 
 **Przykładowa odpowiedź:**  
@@ -348,16 +352,16 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/tasks/123
 {}
 ```
 
-### Listowanie zadań
+### Usunięcie obiektu aktywności
 
 **Ścieżka:**  
 ```
-GET https://wolontariusze.krakow2016.com/api/v2/tasks
+DELETE https://wolontariusze.krakow2016.com/api/v2/activities/:id
 ```
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/tasks
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities/123
 ```
 
 **Przykładowa odpowiedź:**  

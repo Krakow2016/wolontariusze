@@ -45,7 +45,9 @@ var Activity = React.createClass({
   onCancelButtonClick: function () {
     this.props.context.executeAction(actions.leaveActivity, {
       id: this.mine().id,
-      is_canceled: true
+      body: {
+        is_canceled: true
+      }
     })
   },
 

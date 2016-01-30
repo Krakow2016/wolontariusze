@@ -82,6 +82,13 @@ describe('Activity API', function() {
     })
   })
 
+  describe('delete /activities/:id', function() {
+    it('should delete a activity object', function(done) {
+        // TODO
+        done()
+    })
+  })
+
   describe('post /activities/:activity_id/join', function() {
     it('should link logged-in volunter to activity', function(done) {
       var body = { }
@@ -154,7 +161,7 @@ describe('Activity API', function() {
   describe('post /joints', function() {
     it('should link any volunter to activity', function(done) {
       var body = {
-        user_id: 1
+        user_id: '1'
       }
       apiRequest(function(r, cb){
         r.admin_post('/joints', body, function(err, resp, json){
@@ -162,7 +169,7 @@ describe('Activity API', function() {
           expect(resp.statusCode).toEqual(201)
           expect(resp.headers['content-type']).toContain('application/json')
 
-          expect(json.data.joint.user_id).toEqual(1)
+          expect(json.data.joint.user_id).toEqual('1')
           done()
         })
       })
@@ -172,8 +179,8 @@ describe('Activity API', function() {
   describe('post /joints/:id', function() {
     it('should unlink any volunter from activity', function(done) {
       var body = {
-        id: 1,
-        user_id: 2
+        id: '1',
+        user_id: '2'
       }
       apiRequest(function(r, cb){
         r.admin_post('/joints/1', body, function(err, resp, json){

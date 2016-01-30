@@ -186,17 +186,27 @@ var ActivityAdministration = React.createClass({
       // Usuwa wolontariuszy z aktywności
       var removed = state._volunteers.filter(function(i) {
         return state.volunteers.indexOf(i) < 0
-      }).map(function(joint) {
-        joint.is_canceled = true
-        return joint
-      })
-      context.executeAction(leaveActivityAction, removed)
+      }).reduce(function(sum, joint) {
+        return sum.concat([joint.id])
+      }, [])
+
+      if(removed.length) {
+        var payload = {
+          ids: removed,
+          body: {
+            is_canceled: true
+          }
+        }
+        context.executeAction(leaveActivityAction, payload)
+      }
 
       // Dodaje nowych wolontariuszy do aktywności
       var added = state.volunteers.filter(function(i) {
         return state._volunteers.indexOf(i) < 0
-      }) 
-      context.executeAction(joinActivityAction, added)
+      })
+      if(added.length) {
+        context.executeAction(joinActivityAction, added)
+      }
   },
 
   create: function () {

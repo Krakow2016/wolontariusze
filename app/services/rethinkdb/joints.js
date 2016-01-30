@@ -45,19 +45,9 @@ var Joints = module.exports = {
         return
       }
 
-      var ids = []
-      if (body.length) {
-        ids = body.map(function(x){ return x.id })
-      } else if (typeof (body.id) != 'undefined') {
-        ids = [body.id]
-      } 
-      
+      var ids = params.ids ? params.ids : [params.id]
       var table = r.table('Joints')
-      // TODO
-      table.getAll.apply(table, ids).update({
-        is_canceled: true
-        }).run(conn, callback)
-
+      table.getAll.apply(table, ids).update(body).run(conn, callback)
     })
   }
 }

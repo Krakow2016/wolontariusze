@@ -220,10 +220,9 @@ server.post('/api/v2/activities/:id/leave', bearer, function(req, res) {
     })
     if(!joint) { return res.status(400).send(error('NotJoined')) }
     var body = {
-     id: joint.id,
      is_canceled: true
     }
-    Joints.update(req, 'Joints', {}, body, {}, function (err, result) {
+    Joints.update(req, 'Joints', {id: joint.id}, body, {}, function (err, result) {
       var joint = result.changes[0].new_val
       res.send(success({joint: joint}))
     })
