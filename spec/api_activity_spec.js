@@ -145,6 +145,7 @@ describe('Activity API', function() {
           expect(resp.headers['content-type']).toContain('application/json')
 
           expect(json.status).toEqual('success')
+          expect(json.data.joint.created_at).toBeDefined()
           done()
         })
       })
@@ -180,6 +181,7 @@ describe('Activity API', function() {
           expect(resp.headers['content-type']).toContain('application/json')
 
           expect(json.status).toEqual('success')
+          expect(json.data.joint.updated_at).toBeDefined()
           done()
         })
       })

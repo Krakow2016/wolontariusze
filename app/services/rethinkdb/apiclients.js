@@ -6,10 +6,8 @@ var env = process.env.NODE_ENV || 'development'
 var conf = require('../../../config.json')[env].rethinkdb
 
 var utils = require('../../../oauth/utils')
-// Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów
-var Protect = require('../../../lib/protect')
 
-module.exports = Protect({
+module.exports = {
 
   name: 'APIClients',
 
@@ -60,4 +58,4 @@ module.exports = Protect({
       })
     })
   }
-})
+}

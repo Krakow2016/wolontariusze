@@ -88,8 +88,8 @@ ActivityStore.attributes = function() {
     'id',
     'title',
     'description',
-    'creationTimestamp',
-    'editionTimestamp',
+    'created_at',
+    'updated_at',
     'startEventTimestamp',
     'duration',
     'place',
@@ -97,6 +97,7 @@ ActivityStore.attributes = function() {
     'creator',
     'editor',
     'maxVolunteers',
+    'volunteers'
   ]
 }
 

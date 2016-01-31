@@ -32,7 +32,7 @@ var server = module.exports = express()
 // Źródło danych - obiekt udostępniający metody dostępu do danych wolontariuszy
 // (CRUD). Zamień w ścieżkach pliku `static` na `rethinkdb` aby podłączyć się
 // pod lokalną bazę danych.
-var Activities = require('./app/services/'+config.service+'/activities')
+var Activities = require('./app/services/activities')(config.service)
 var Comments = require('./app/services/'+config.service+'/comments')
 var Volunteer = require('./app/services/'+config.service+'/volonteers')
 var Integration = require('./app/services/'+config.service+'/integrations')

@@ -14,12 +14,9 @@ var bcrypt = require('bcrypt')
 var env = process.env.NODE_ENV || 'development'
 var conf = require('../../../config.json')[env].rethinkdb
 
-// Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów
-var Protect = require('../../../lib/protect')
-
 var tableName = 'Volonteers' // TODO: literówka do poprawy
 
-module.exports = Protect({
+module.exports = {
 
   name: 'Volunteers',
 
@@ -103,4 +100,4 @@ module.exports = Protect({
 
   // delete: function(resource, params, config, callback) {}
 
-})
+}

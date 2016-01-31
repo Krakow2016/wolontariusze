@@ -14,8 +14,8 @@ var config = require('./config.json')[env]
 var oauth2 = require('./oauth/oauth2')
 
 var Volunteers = require('./app/services/'+config.service+'/volonteers')
-var Activities = require('./app/services/'+config.service+'/activities')
-var Joints = require('./app/services/'+config.service+'/joints')
+var Activities = require('./app/services/activities')(config.service)
+var Joints = require('./app/services/joints')(config.service)
 
 // Express configuration
 
@@ -39,7 +39,7 @@ var error = function(type, message) {
     status: 'error',
     type: type
   }
-  if(message && Object.keys({}).length) {
+  if(message && Object.keys(message).length) {
       result.message = message
   }
   return result

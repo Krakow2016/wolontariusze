@@ -136,6 +136,6 @@ module.exports = {
   delete: function(req, resource, params, config, callback) {
     delete activities[params.id]
     callback(null, activities)
-  },
+  }
 
 }

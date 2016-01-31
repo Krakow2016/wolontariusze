@@ -1,3 +1,5 @@
+// Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów
+
 'use strict'
 
 var util = require('util')
@@ -41,7 +43,7 @@ module.exports = function(service) {
         } else { // Ograniczamy dostęp do niektórych atrybutów
 
           var storeName = resource
-          var store = require('../app/stores/'+ storeName)
+          var store = require('../../stores/'+ storeName)
           var attrs = store.model.attributes && store.model.attributes()
 
           // Sprawdź czy którykolwiek z atrybutów jest do odczytu
@@ -69,7 +71,7 @@ module.exports = function(service) {
     // Flaga przywilejów administratora
     var is_admin = user && user.is_admin
     // Obiekt definiujący przechowywanie pojedynczego zasobu
-    var store = require('../app/stores/'+ resource).model
+    var store = require('../../stores/'+ resource).model
 
     var attributes = store.attributes()
     if(is_admin) {
@@ -109,5 +111,6 @@ module.exports = function(service) {
       return callback('403') // Brak uprawnień
     }
   }
+
   return service
 }
