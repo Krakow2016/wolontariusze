@@ -187,7 +187,7 @@ server.get('/api/v2/activities', bearer, function(req, res) {
 })
 
 // Szczegóły zadania
-server.get('/api/v2/activities/:id', function(req, res) {
+server.get('/api/v2/activities/:id', bearer, function(req, res) {
   Activities.read(req, 'Activities', {id: req.params.id}, {}, function (err, activity) {
     if(err) {
       res.status(404).send(error('NotFound'))
