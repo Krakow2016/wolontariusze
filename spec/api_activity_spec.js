@@ -83,9 +83,55 @@ describe('Activity API', function() {
   })
 
   describe('delete /activities/:id', function() {
-    it('should delete a activity object', function(done) {
-        // TODO
-        done()
+    it('should not delete a activity object without permissions', function(done) {
+      apiRequest(function(r, cb){
+        r.del('/activities/3', function(err, resp, body) {
+          expect(err).toBeNull()
+          expect(resp.statusCode).toEqual(403)
+          expect(resp.headers['content-type']).toContain('application/json')
+
+          var parse_json = function() { return JSON.parse(body) }
+          expect(parse_json).not.toThrow()
+
+          var json = parse_json()
+          expect(json.status).toEqual('error')
+          done()
+        })
+      })
+    })
+
+    it('should allow admin deletion of activity object', function(done) {
+      apiRequest(function(r, cb){
+        r.admin_del('/activities/3', function(err, resp, body) {
+          expect(err).toBeNull()
+          expect(resp.statusCode).toEqual(200)
+          expect(resp.headers['content-type']).toContain('application/json')
+
+          var parse_json = function() { return JSON.parse(body) }
+          expect(parse_json).not.toThrow()
+
+          var json = parse_json()
+          expect(json.status).toEqual('success')
+          done()
+        })
+      })
+    })
+
+    it('should delete requested activity object', function(done) {
+      apiRequest(function(r, cb){
+        r.get('/activities/3', function(err, resp, body) {
+          expect(err).toBeNull()
+          expect(resp.statusCode).toEqual(404)
+          expect(resp.headers['content-type']).toContain('application/json')
+
+          var parse_json = function() { return JSON.parse(body) }
+          expect(parse_json).not.toThrow()
+
+          var json = parse_json()
+          expect(json.status).toEqual('error')
+          done()
+        })
+      })
     })
   })
 

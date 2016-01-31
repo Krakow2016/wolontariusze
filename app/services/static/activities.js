@@ -89,7 +89,11 @@ module.exports = {
       var results = Object.keys(activities).map(function(key) {
         return activities[key]
       })
-      callback(null, results)
+      if(results) {
+        callback(null, results)
+      } else {
+        callback(404)
+      }
       return
     }
   },

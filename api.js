@@ -110,6 +110,17 @@ var bearer = [passport.initialize(), function(req, res, next) {
   })(req, res, next)
 }]
 
+var is_admin = bearer.concat([
+  function(req, res, next) {
+    // Sprawdź wymagane uprawnienia administratora
+    if(!req.user || !req.user.is_admin) {
+      res.status(403).send(error('AdminRequired'))
+    } else {
+      next()
+    }
+  }
+])
+
 // Wiadomość powitalna
 server.get('/api/v2/', bearer, function(req, res) {
   res.send(success())
@@ -122,12 +133,7 @@ server.get('/api/v2/client', bearer, function(req, res) {
 })
 
 // Dodawanie wolontariuszy
-server.post('/api/v2/volunteers/', bearer, function(req, res) {
-  // Sprawdź wymagane uprawnienia administratora
-  if(!req.user || !req.user.is_admin) {
-    return res.status(403).send(error('AdminRequired'))
-  }
-
+server.post('/api/v2/volunteers/', is_admin, function(req, res) {
   Volunteers.create(req, 'Volunteers', {}, req.body, {}, function (err, volunteer) {
     if(err) { res.send(500) }
     else { res.status(201).send(success({volunteer: volunteer})) }
@@ -181,9 +187,13 @@ server.get('/api/v2/activities', bearer, function(req, res) {
 })
 
 // Szczegóły zadania
-server.get('/api/v2/activities/:id', bearer, function(req, res) {
+server.get('/api/v2/activities/:id', function(req, res) {
   Activities.read(req, 'Activities', {id: req.params.id}, {}, function (err, activity) {
-    res.send(success({activity: activity}))
+    if(err) {
+      res.status(404).send(error('NotFound'))
+    } else {
+      res.send(success({activity: activity}))
+    }
   })
 })
 
@@ -196,6 +206,16 @@ server.post('/api/v2/activities/:id', bearer, function(req, res) {
     else {
       var activity = result.changes[0].new_val
       res.status(200).send(success({activity: activity})) }
+  })
+})
+
+// Usuwanie aktywności
+server.delete('/api/v2/activities/:id', is_admin, function(req, res) {
+  Activities.delete(req, 'Activities', {id: req.params.id}, {}, function (err, result) {
+    if(err) { res.send(500) }
+    else {
+      res.send(success({}))
+    }
   })
 })
 
@@ -230,12 +250,7 @@ server.post('/api/v2/activities/:id/leave', bearer, function(req, res) {
 })
 
 // Zgłoszenie do aktywności
-server.post('/api/v2/joints', bearer, function(req, res) {
-  // Sprawdź wymagane uprawnienia administratora
-  if(!req.user || !req.user.is_admin) {
-    return res.status(403).send(error('AdminRequired'))
-  }
-
+server.post('/api/v2/joints', is_admin, function(req, res) {
   Joints.create(req, 'Joints', {}, req.body, {}, function (err, result) {
     if(err) {
       res.status(500).send(error('DBError', err))
@@ -258,12 +273,7 @@ server.get('/api/v2/joints/:id', bearer, function(req, res) {
 })
 
 // Aktualizacja zgłoszenia do aktywności
-server.post('/api/v2/joints/:id', bearer, function(req, res) {
-  // Sprawdź wymagane uprawnienia administratora
-  if(!req.user || !req.user.is_admin) {
-    return res.status(403).send(error('AdminRequired'))
-  }
-
+server.post('/api/v2/joints/:id', is_admin, function(req, res) {
   Joints.update(req, 'Joints', {id: req.params.id}, req.body, {}, function (err, result) {
     if(err) {
       res.status(500).send(error('DBError', err))
