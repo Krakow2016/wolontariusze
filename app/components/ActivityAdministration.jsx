@@ -13,7 +13,6 @@ var update = require('react-addons-update')
 
 var actions = require('../actions')
 var updateAction = actions.updateActivity
-var joinActivityAction = actions.joinActivity
 var leaveActivityAction = actions.leaveActivity
 var createAction = actions.createActivity
 var deleteAction = actions.deleteActivity
@@ -65,15 +64,7 @@ var ActivityAdministration = React.createClass({
   _changeListener: function() {
     // Interesują nas tylko zmiany w obiekcie activity. Aktualizacją obiektu
     // volunteers zajmujemy się sami.
-    this.setState({
-      activity: this.props.context.getStore(ActivityStore).getState().activity
-    })
-    if(this.props.creationMode == true) {
-      //Bez tego kodu, po kliknięciu "Nowa aktywność", dodaniu wolontariusza, kliknięciu "Utwórz", a następnie ponownym kliknięciu "
-      //"Nowa aktywność" w panelu tworzenia aktywności pojawiał się uprzednio dodany wolontariusz
-      this.state._volunteers = []
-      this.state.volunteers = []
-    }
+    this.setState(this.props.context.getStore(ActivityStore).getState())
   },
 
   componentDidMount: function() {
@@ -205,7 +196,7 @@ var ActivityAdministration = React.createClass({
         return state._volunteers.indexOf(i) < 0
       })
       if(added.length) {
-        context.executeAction(joinActivityAction, added)
+        context.executeAction(actions.assignActivity, added)
       }
   },
 

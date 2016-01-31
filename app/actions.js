@@ -107,13 +107,27 @@ module.exports = {
     })
   },
 
+  assignActivity: function(context, payload, cb) {
+    context.service.create('Joints', {}, payload, function (err, data) {
+      if (err) { // Błąd po stronie serwera
+        //context.dispatch('JOINT_CREATED_FAILURE', [])
+      } else {
+        // Nie musimy nic robić - interface został już zaktualizowany
+        cb()
+      }
+    })
+  },
+
   leaveActivity: function(context, payload, cb) {
     var params = {id: payload.id, ids: payload.ids}
     context.service.update('Joints', params, payload.body, function (err, data) {
       if (err) { // Błąd po stronie serwera
         //context.dispatch('JOINT_UPDATE_FAILURE', [])
       } else {
-        context.dispatch('JOINT_DELETED', payload.id)
+        var ids = params.ids || [params.id]
+        ids.forEach(function(id) {
+          context.dispatch('JOINT_DELETED', id)
+        })
       }
       cb()
     })
