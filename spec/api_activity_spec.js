@@ -16,6 +16,7 @@ describe('Activity API', function() {
           expect(json.data.activity.id).toBeDefined()
           expect(json.data.activity.name).toBe("Nazwa zadania")
           expect(json.data.activity.description).toBe("Opis zadania")
+          expect(json.data.activity.user_id).toBe("2")
           done()
         })
       })
