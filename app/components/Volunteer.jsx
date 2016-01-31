@@ -12,7 +12,7 @@ var ProfileComments = require('./ProfileComments.jsx')
 var Invite = require('./Admin/Invite.jsx')
 
 var actions = require('../actions')
-var showCommentsAction = actions.showComments;
+var showCommentsAction = actions.showComments
 
 var Volunteer = React.createClass({
 
@@ -26,19 +26,19 @@ var Volunteer = React.createClass({
 
   componentDidMount: function() {
     this.props.context.getStore(VolunteerStore)
-      .addChangeListener(this._changeListener);
+      .addChangeListener(this._changeListener)
   },
 
   componentWillUnmount: function() {
     this.props.context.getStore(VolunteerStore)
-      .removeChangeListener(this._changeListener);
+      .removeChangeListener(this._changeListener)
   },
 
   render: function () {
     var editLink
     var user = this.user()
     if(user && user.is_admin) {
-      editLink = <NavLink href={"/wolontariusz/"+ this.state.id +"/admin"}>Edytuj</NavLink>
+      editLink = <NavLink href={'/wolontariusz/'+ this.state.id +'/admin'}>Edytuj</NavLink>
     }
 
     return (
@@ -61,7 +61,7 @@ var Volunteer = React.createClass({
   },
 
   name: function() {
-    return this.state.first_name +" "+ this.state.last_name
+    return this.state.first_name +' '+ this.state.last_name
   },
 
   user: function() {
@@ -74,7 +74,7 @@ var Volunteer = React.createClass({
 var ProfileTabs = React.createClass({
 
   showProfileComments: function (){
-    console.log ('show comments');
+    console.log ('show comments')
     this.props.context.executeAction(showCommentsAction, {
       volunteerId: this.props.id
     })
@@ -85,7 +85,7 @@ var ProfileTabs = React.createClass({
     var extra
     var user = this.user()
     var is_owner = user && user.id === this.props.id
-    var is_admin = user && user.is_admin;
+    var is_admin = user && user.is_admin
     if (is_admin || is_owner) {
       extra = <ExtraAttributesVisible {...this.props} />
     } else {
@@ -93,12 +93,12 @@ var ProfileTabs = React.createClass({
     }
 
     var stars = {
-        0: '☆☆☆☆☆',
-        2: '★☆☆☆☆',
-        4: '★★☆☆☆',
-        6: '★★★☆☆',
-        8: '★★★★☆',
-        10:'★★★★★' }
+      0: '☆☆☆☆☆',
+      2: '★☆☆☆☆',
+      4: '★★☆☆☆',
+      6: '★★★☆☆',
+      8: '★★★★☆',
+      10:'★★★★★' }
 
     var languages = this.props.languages || {}
     var langs = Object.keys(languages).map(function(lang) {

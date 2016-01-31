@@ -82,7 +82,7 @@ module.exports = {
   updateActivity: function(context, payload, cb) {
     context.service.update('Activities', {}, payload, function (err, data) {
       if(err) { debug(err) }
-      else { 
+      else {
         var change = data.changes[0]
         if(change) {
           context.dispatch('ACTIVITY_UPDATED', change.new_val)
@@ -145,7 +145,7 @@ module.exports = {
           }
         })
         context.service.create('Joints', {}, joints, function(){
-          context.executeAction(navigateAction, {url: "/aktywnosc/"+id})
+          context.executeAction(navigateAction, {url: '/aktywnosc/'+id})
         })
       }
       cb()
@@ -154,11 +154,11 @@ module.exports = {
   deleteActivity: function(context, payload, cb) {
     context.service.delete('Activities', payload, {user: context.getUser()}, function (err, data) {
       if(err) { debug(err) }
-      else { 
+      else {
         context.dispatch('ACTIVITY_DELETED', data)
         context.executeAction(navigateAction, {url: '/'})
       }
-      cb()  
+      cb()
     })
   },
 

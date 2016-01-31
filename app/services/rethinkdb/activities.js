@@ -3,103 +3,103 @@ var r = require('rethinkdb')
 
 var env = process.env.NODE_ENV || 'development'
 var configuration = require('../../../config.json')[env]
-var sendgrid_apikey = configuration.sendgrid_apikey
+//var sendgrid_apikey = configuration.sendgrid_apikey
 var dbConf = configuration.rethinkdb
 var tableName = 'Activities'
 
-var getVolonteer = function (id, volData) {
-  var result = {id: '', name: '', email: ''}
-  if (id) {
-    for (var i = 0 ; i<volData.length; i++) {
-      if (volData[i].id == id) {
-        result = volData[i]
-        break
-      }
-    }
-  }
-  return result
-}
+//var getVolonteer = function (id, volData) {
+  //var result = {id: '', name: '', email: ''}
+  //if (id) {
+    //for (var i = 0 ; i<volData.length; i++) {
+      //if (volData[i].id == id) {
+        //result = volData[i]
+        //break
+      //}
+    //}
+  //}
+  //return result
+//}
 
 
-var modifiedActivity = function (activity, volData) {
-  if (activity != null) { 
-    //uzupełnij twórcę i ostatniego edytora o aktualne dane
-    var creatorId = (activity.creator) ? activity.creator.id : null
-    var editorId = (activity.editor) ? activity.editor.id : null  
-    activity['creator'] =  getVolonteer(creatorId, volData)
-    activity['editor']  = getVolonteer(editorId, volData)
-        
-    //uzupełnij listę wolontariuszy o aktualne dane
-    activity['activeVolonteers'] = activity['activeVolonteers'].map(function (vol) {
-      return getVolonteer(vol.id, volData)
-    })
-    //usun pustych wolontariuszy
-    activity['activeVolonteers'] = activity['activeVolonteers'].filter (function (vol) {
-      return (vol.id != '')
-    })
-        
-    //uzupełnij limit wolontariuszy
-    activity['volonteersLimit'] = 'Brak'
-    if (activity['maxVolonteers'] > 0) {
-      activity['volonteersLimit'] = activity['maxVolonteers']
-    }
-    return activity  
-  } else {
-    return null
-  }  
-}
+//var modifiedActivity = function (activity, volData) {
+  //if (activity != null) {
+    ////uzupełnij twórcę i ostatniego edytora o aktualne dane
+    //var creatorId = (activity.creator) ? activity.creator.id : null
+    //var editorId = (activity.editor) ? activity.editor.id : null
+    //activity['creator'] =  getVolonteer(creatorId, volData)
+    //activity['editor']  = getVolonteer(editorId, volData)
 
-var getVolonteersIds = function (activity) {
-  var ids = []
-  var creatorId = (activity.creator == null) ? '' : activity.creator.id 
-  var editorId = (activity.editor == null) ? '' : activity.editor.id 
-  var activeVolonteersIds = activity.activeVolonteers.map (function (vol) {
-    return vol.id 
-  })
-  if (creatorId != '') {
-    ids.push(creatorId)
-  }
-  if (editorId != '' && editorId != creatorId) {
-    ids.push(editorId)
-  }
-  for (var i = 0; i < activeVolonteersIds.length; i++) {
-    var volId = (activeVolonteersIds[i] == null) ? '' : activeVolonteersIds[i]
-    if (volId != '' && volId != creatorId && volId != editorId) {
-      ids.push(volId)
-    }
-  }
-  return ids
-}
+    ////uzupełnij listę wolontariuszy o aktualne dane
+    //activity['activeVolonteers'] = activity['activeVolonteers'].map(function (vol) {
+      //return getVolonteer(vol.id, volData)
+    //})
+    ////usun pustych wolontariuszy
+    //activity['activeVolonteers'] = activity['activeVolonteers'].filter (function (vol) {
+      //return (vol.id != '')
+    //})
+
+    ////uzupełnij limit wolontariuszy
+    //activity['volonteersLimit'] = 'Brak'
+    //if (activity['maxVolonteers'] > 0) {
+      //activity['volonteersLimit'] = activity['maxVolonteers']
+    //}
+    //return activity
+  //} else {
+    //return null
+  //}
+//}
+
+//var getVolonteersIds = function (activity) {
+  //var ids = []
+  //var creatorId = (activity.creator == null) ? '' : activity.creator.id
+  //var editorId = (activity.editor == null) ? '' : activity.editor.id
+  //var activeVolonteersIds = activity.activeVolonteers.map (function (vol) {
+    //return vol.id
+  //})
+  //if (creatorId != '') {
+    //ids.push(creatorId)
+  //}
+  //if (editorId != '' && editorId != creatorId) {
+    //ids.push(editorId)
+  //}
+  //for (var i = 0; i < activeVolonteersIds.length; i++) {
+    //var volId = (activeVolonteersIds[i] == null) ? '' : activeVolonteersIds[i]
+    //if (volId != '' && volId != creatorId && volId != editorId) {
+      //ids.push(volId)
+    //}
+  //}
+  //return ids
+//}
 
 
-var addEmail = function (emails, newEmail) {
-  if (newEmail) {
-    for (var i = 0; i < emails.length; i++) {
-      if (newEmail == emails[i]) {
-        return
-      }
-    }
-    emails.push(newEmail)
-  }
-}
+//var addEmail = function (emails, newEmail) {
+  //if (newEmail) {
+    //for (var i = 0; i < emails.length; i++) {
+      //if (newEmail == emails[i]) {
+        //return
+      //}
+    //}
+    //emails.push(newEmail)
+  //}
+//}
 
 //zwraca adresy mailowe wolontariuszy, którzy biorą lub brali udział, twórcy aktywności oraz tego, kto ostatnio edytował
 //var getUsersEmails = function (oldActivity, newActivity) {
     //var emails = []
     //addEmail(emails, (oldActivity.creator) ? oldActivity.creator.email : null)
     //addEmail(emails, (oldActivity.editor) ? oldActivity.editor.email : null)
-        
+
     //var oldVolonteers = oldActivity.activeVolonteers
     //for (var i = 0; i < oldVolonteers.length; i++) {
-      //addEmail(emails, oldVolonteers[i].email)    
+      //addEmail(emails, oldVolonteers[i].email)
     //}
-    
+
     //if (newActivity != null) {
       //addEmail(emails, (newActivity.editor) ? newActivity.editor.email : null)
-      
+
       //var newVolonteers = newActivity.activeVolonteers
       //for (var i = 0; i < newVolonteers.length; i++) {
-        //addEmail(emails, newVolonteers[i].email)   
+        //addEmail(emails, newVolonteers[i].email)
       //}
     //}
     //return emails
@@ -145,22 +145,22 @@ var addEmail = function (emails, newEmail) {
 //}
 
 // Połączenie z sendgrid daje nam możliwość wysyłania emaili
-var sendgrid = require('sendgrid')(sendgrid_apikey)
+//var sendgrid = require('sendgrid')(sendgrid_apikey)
 
-var sendActivityEmail = function (data, user) {
-  //console.log("EMAIL", data)
-  if(user && user.is_admin) {
-    var email = new sendgrid.Email({
-      to:       data.to,
-      from:     'wolontariat@krakow2016.com',
-      subject:  data.subject,
-      text:     data.text
-    })
-    sendgrid.send(email, function(err, json) {
-      //console.log('sendgrid:', err, json)
-    })
-  }
-}
+//var sendActivityEmail = function (data, user) {
+  ////console.log("EMAIL", data)
+  //if(user && user.is_admin) {
+    //var email = new sendgrid.Email({
+      //to:       data.to,
+      //from:     'wolontariat@krakow2016.com',
+      //subject:  data.subject,
+      //text:     data.text
+    //})
+    //sendgrid.send(email, function(err, json) {
+      ////console.log('sendgrid:', err, json)
+    //})
+  //}
+//}
 
 var Activities = module.exports = {
   name: tableName,
@@ -182,15 +182,15 @@ var Activities = module.exports = {
           r.table('Joints')
             .getAll(params.id, {index: 'activity_id'})
             .filter(function(x){
-               return x.hasFields('is_canceled').not()
+              return x.hasFields('is_canceled').not()
             }, {default: true})
             .eqJoin('user_id', r.table('Volonteers'))
             .map(
               function(doc){
-              return doc.merge(function(){
-                return {'right': {'user_id': doc('right')('id')}}
+                return doc.merge(function(){
+                  return {'right': {'user_id': doc('right')('id')}}
+                })
               })
-            })
             .pluck({'left': ['id'], 'right': ['user_id', 'first_name', 'last_name']})
             .zip()
             .run(conn, function(err, cursor){
@@ -199,7 +199,7 @@ var Activities = module.exports = {
                 activity.volunteers = volunteers || []
                 callback(null, activity)
               })
-          })
+            })
         })
       }
     })
@@ -226,10 +226,10 @@ var Activities = module.exports = {
             //sendActivityEmail(data, user);
           //}
         callback(err, resp)
-      }) 
+      })
     })
   },
-  
+
   update: function(req, resource, params, body, config, callback) {
     var id = body.id || params.id
     // Błąd gdy brak id
@@ -261,7 +261,7 @@ var Activities = module.exports = {
       })
     })
   },
-  
+
   delete: function(req, resource, params, config, callback) {
     // Połącz się z bazą danych `sdm`
     r.connect(dbConf, function(err, conn) {

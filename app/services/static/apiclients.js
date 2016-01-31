@@ -1,6 +1,6 @@
 var clients = {
   foo: {
-    client_id: "bar"
+    client_id: 'bar'
   }
 }
 

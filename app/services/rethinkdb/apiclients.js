@@ -24,10 +24,10 @@ module.exports = {
         })
       } else { // Pobierz listę krotek
         var id = params.user_id // TODO: użyj tej samej konwencji do indeksów co w serwisie wolontariusza
-        if(!id) { return callback("Błąd: Brak parametru `user_id`.") }
+        if(!id) { return callback('Błąd: Brak parametru `user_id`.') }
 
         // Pobierz klientów API stworzonych przez użytkownika
-        r.table("APIClients")
+        r.table('APIClients')
         .getAll(id, {index: 'user_id'})
         .run(conn, function(err, cursor){
 

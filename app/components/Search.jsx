@@ -25,7 +25,7 @@ var Search = React.createClass({
   },
 
   _onStoreChange: function() {
-     this.setState(this.props.context.getStore(ResultsStore).getState())
+    this.setState(this.props.context.getStore(ResultsStore).getState())
   },
 
   render: function() {

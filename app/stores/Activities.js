@@ -13,7 +13,7 @@ var ActivitiesStore = createStore({
     this.all = data
     this.emitChange()
   },
-  
+
   delete: function (data) {
     this.all =  data
     this.emitChange()

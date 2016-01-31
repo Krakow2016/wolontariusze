@@ -40,19 +40,19 @@ var modifiedActivity = function (activityId, req, config) {
     var is_admin = user && user.is_admin
     // Flaga właściciela profilu
     var is_owner = (user && (activity.creator == user.id))
-    
+
     // Tablica parametrów uprawnionych do odczytu
     var attrs = public_attrs
 
     if(is_admin || is_owner) {
       attrs = attrs.concat(private_attrs)
     }
-    
+
     return activity
   } else {
     return null
   }
-  
+
 }
 
 
@@ -79,8 +79,8 @@ module.exports = {
     if(params.id) {
       var activity = modifiedActivity(params.id, req, config)
       if(activity != null) {
-        var vols = getActivityVolunteers(activity.id);
-        activity.volunteers = vols || [];
+        var vols = getActivityVolunteers(activity.id)
+        activity.volunteers = vols || []
         callback(null, activity)
       } else {
         callback('404')
@@ -97,7 +97,7 @@ module.exports = {
       return
     }
   },
-  
+
   create: function(req, resource, params, body, config, callback) {
     var ids = Object.keys(activities)
     var len = ids.length

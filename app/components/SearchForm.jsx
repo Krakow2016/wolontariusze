@@ -16,15 +16,15 @@ var SearchForm = React.createClass({
     }
 
     return {
-      name: "",
-      email: "",
-      address: "",
-      parish: "",
-      education: "",
-      studies: "",
-      departments: "",
-      comments: "",
-      interests: ""
+      name: '',
+      email: '',
+      address: '',
+      parish: '',
+      education: '',
+      studies: '',
+      departments: '',
+      comments: '',
+      interests: ''
     }
   },
 
@@ -117,7 +117,7 @@ var SearchForm = React.createClass({
             <input id="rus" name="language" type="checkbox" value="rosyjski" onChange={this.handleCheckboxChange} /><label htmlFor="rus">Rosyjski</label>
             <input id="ukr" name="language" type="checkbox" value="ukraiński" onChange={this.handleCheckboxChange} /><label htmlFor="ukr">Ukraiński</label>
             <input id="ita" name="language" type="checkbox" value="włoski" onChange={this.handleCheckboxChange} /><label htmlFor="ita">Włoski</label>
-            <input type="checkbox" /><label htmlFor="other"><input name="other_val" name="language" placeholder="inny, jaki?" style={{"width": "100px"}} /></label>
+            <input type="checkbox" /><label htmlFor="other"><input name="other_val" name="language" placeholder="inny, jaki?" style={{'width': '100px'}} /></label>
           </div>
         </div>
         <div className="pure-g">

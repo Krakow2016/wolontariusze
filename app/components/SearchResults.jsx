@@ -5,7 +5,7 @@ var SearchResult = React.createClass({
   render: function() {
     return (
       <div>
-        <NavLink href={"/wolontariusz/"+this.props.id}>
+        <NavLink href={'/wolontariusz/'+this.props.id}>
           {this.props.first_name} {this.props.last_name}
         </NavLink>
       </div>

@@ -9,7 +9,7 @@ var ActivityStore = createStore({
     'PRECREATE_ACTIVITY': 'precreate',
     'ACTIVITY_UPDATED': 'update',
     'JOINT_CREATED': 'join',
-    'JOINT_DELETED': 'leave',
+    'JOINT_DELETED': 'leave'
   },
 
   initialize: function () {
@@ -32,12 +32,12 @@ var ActivityStore = createStore({
     this.volunteers = volunteers
     this.emitChange()
   },
-  
+
   precreate: function() {
     this.initialize()
     this.emitChange()
   },
-  
+
   join: function(joint) {
     this.volunteers.push(joint)
     this.emitChange()
@@ -50,8 +50,8 @@ var ActivityStore = createStore({
     })
     this.emitChange()
   },
-  
- create: function(data) {
+
+  create: function(data) {
     // TODO
     //this.rehydrate(data)
     this.emitChange()

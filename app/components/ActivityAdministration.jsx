@@ -103,10 +103,10 @@ var ActivityAdministration = React.createClass({
   },
 
   addActiveVolonteer: function (volunteer) {
-   var joint = {
-     activity_id: this.state.activity.id,
-     user_id: volunteer.user_id,
-     display_name: volunteer.display_name
+    var joint = {
+      activity_id: this.state.activity.id,
+      user_id: volunteer.user_id,
+      display_name: volunteer.display_name
     }
 
     this.setState(update(this.state, {
@@ -125,7 +125,7 @@ var ActivityAdministration = React.createClass({
       }}
     }))
   },
-  
+
 
   isValidDate: function (currentDate) {
     var now = moment()
@@ -139,65 +139,65 @@ var ActivityAdministration = React.createClass({
       return !isDateFromFuture
     }
   },
-  
+
   onValidSubmit: function () {
-  
+
     if (this.state.volunteers.length > this.state.activity.maxVolunteers) {
       this.setState(update(this.state, {
         invalidSnackBar: {$set: 'Ustaw większy limit wolontariuszy'}
       }))
       return
     }
-  
+
     if (this.props.creationMode == false) {
       this.update()
     } else {
       this.create()
     }
   },
-  
+
   onInvalidSubmit: function () {
     this.setState(update(this.state, {
       invalidSnackBar: {$set: 'Potrzeba wypełnić Tytuł, Czas Rozpoczęcia, Limit Wolontariuszy'}
     }))
   },
-  
+
   handleInvalidSnackbarClose: function () {
     this.setState(update(this.state, {
       invalidSnackBar: {$set: ''}
     }))
   },
-  
+
   update: function () {
-      var state = this.state
-      var context = this.props.context
+    var state = this.state
+    var context = this.props.context
       // Aktualizuje parametry aktywności
-      context.executeAction(updateAction, state.activity)
+    context.executeAction(updateAction, state.activity)
 
       // Usuwa wolontariuszy z aktywności
-      var removed = state._volunteers.filter(function(i) {
-        return state.volunteers.indexOf(i) < 0
-      }).reduce(function(sum, joint) {
-        return sum.concat([joint.id])
-      }, [])
+    var removed = state._volunteers.filter(function(i) {
+      return state.volunteers.indexOf(i) < 0
+    }).reduce(function(sum, joint) {
+      return sum.concat([joint.id])
+    }, [])
 
-      if(removed.length) {
-        var payload = {
-          ids: removed,
-          body: {
-            is_canceled: true
-          }
+    if(removed.length) {
+      var payload = {
+        ids: removed,
+        body: {
+          is_canceled: true
         }
-        context.executeAction(leaveActivityAction, payload)
       }
+      context.executeAction(leaveActivityAction, payload)
+    }
 
       // Dodaje nowych wolontariuszy do aktywności
-      var added = state.volunteers.filter(function(i) {
-        return state._volunteers.indexOf(i) < 0
-      })
-      if(added.length) {
-        context.executeAction(actions.assignActivity, added)
-      }
+    var added = state.volunteers.filter(function(i) {
+      return state._volunteers.indexOf(i) < 0
+    })
+    if(added.length) {
+      context.executeAction(actions.assignActivity, added)
+    }
   },
 
   create: function () {
@@ -219,18 +219,18 @@ var ActivityAdministration = React.createClass({
     } else {
       startEventDateHint = <span> Dla aktywności data powinna być w przeszłości </span>
     }
-    
+
     var updateButton = []
     if (this.props.creationMode == false) {
       updateButton = <input type="submit" value="Zapisz" />
     }
-    
-    var createButton = [] 
+
+    var createButton = []
     if (this.props.creationMode == true) {
       createButton = <input type="submit" value="Utwórz" />
     }
-    
-    var removeButton = [] 
+
+    var removeButton = []
     if (this.props.creationMode == false) {
       removeButton = <input type="button" onClick={this.remove} value="Usuń" />
     }
@@ -239,11 +239,11 @@ var ActivityAdministration = React.createClass({
     if (this.props.creationMode == false) {
       showButton = <a href={'/aktywnosc/'+this.state.activity.id} ><input type="button" value="Wyświetl" /></a>
     }
-    
+
     var removeActiveVolonteer = this.removeActiveVolonteer
     var addVolonteer
     if (this.state.volunteers.length < this.state.activity.maxVolunteers) {
-      addVolonteer = <ActivityVolonteersList addActiveVolonteer={this.addActiveVolonteer} 
+      addVolonteer = <ActivityVolonteersList addActiveVolonteer={this.addActiveVolonteer}
                                              excludedVolunteers={this.state.volunteers}/>
     }
     var volunteers = this.state.volunteers || []
@@ -255,13 +255,13 @@ var ActivityAdministration = React.createClass({
           onRemoveButtonClick={removeActiveVolonteer} />
       )
     })
-    
+
     return (
       <div>
-        <Formsy.Form className="settingsForm" 
-                     onValidSubmit={this.onValidSubmit} 
+        <Formsy.Form className="settingsForm"
+                     onValidSubmit={this.onValidSubmit}
                      onInvalidSubmit={this.onInvalidSubmit}>
-        
+
           <div className="pure-u-1 pure-u-md-1-3">
             <b>Tytuł</b>
           </div>
@@ -273,16 +273,16 @@ var ActivityAdministration = React.createClass({
               validations='minLength:3'
               validationError='Tytuł jest wymagany'
               disabled={false}
-              value={this.state.activity.title} 
+              value={this.state.activity.title}
               onChange={this.handleChange} />
           </div>
-          
-          
+
+
           <div className="pure-u-1 pure-u-md-1-3">
             <b>Czas rozpoczęcia</b>
           </div>
           <div className="pure-u-1 pure-u-md-2-3">
-              <DateTime open={false} 
+              <DateTime open={false}
                 dateFormat={'YYYY/M/D'}
                 timeFormat={'HH:mm'}
                 isValidDate={this.isValidDate}
@@ -304,7 +304,7 @@ var ActivityAdministration = React.createClass({
               validations='isDuration'
               validationError='Format to np. pusty string, "1d 3h 30m", "15m"'
               disabled={false}
-              value={this.state.activity.duration} 
+              value={this.state.activity.duration}
               onChange={this.handleChange} />
           </div>
 
@@ -319,20 +319,20 @@ var ActivityAdministration = React.createClass({
               validations='minLength:3'
               validationError='Miejsce jest wymagane'
               disabled={false}
-              value={this.state.activity.place} 
+              value={this.state.activity.place}
               onChange={this.handleChange} />
           </div>
-          
+
           <br></br>
           <b>Zadanie jest PILNE? </b>
           <br></br>
           <input type="checkbox" name="is_urgent" checked={this.state.activity.is_urgent} changeValue={this.handleChange} />
           <br></br>
-          
+
           <br></br>
           <b>Treść </b>
           <br></br>
-          
+
           <MyTextarea id="activityContentTextarea" name="description" placeholder="Dodaj treść wiadomości" value={this.state.activity.description} onChange={this.handleChange} />
           <br></br>
 
@@ -354,10 +354,10 @@ var ActivityAdministration = React.createClass({
               validations='isMoreOrGreaterIntThanZero'
               validationError='Ustaw maksymalną liczbę wolontariuszy lub 0 (brak limitu)'
               disabled={false}
-              value={this.state.activity.maxVolunteers} 
+              value={this.state.activity.maxVolunteers}
               onChange={this.handleChange} />
           </div>
-          
+
           <br></br>
           <br></br>
           <br></br>
@@ -368,12 +368,12 @@ var ActivityAdministration = React.createClass({
             {removeButton}
             {updateButton}
             {createButton}
-            {showButton}          
+            {showButton}
           </div>
           <br></br>
-        </Formsy.Form> 
+        </Formsy.Form>
 
-          
+
           <Snackbar
           open={!!this.state.invalidSnackBar}
           message={this.state.invalidSnackBar}

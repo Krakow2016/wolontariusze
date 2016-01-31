@@ -126,7 +126,7 @@ var VolunteerAdministration = React.createClass({
   },
 
   name: function() {
-    return this.state.profile.first_name +" "+ this.state.profile.last_name
+    return this.state.profile.first_name +' '+ this.state.profile.last_name
   },
 })
 

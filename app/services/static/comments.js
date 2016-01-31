@@ -78,12 +78,12 @@ module.exports = {
     var adminId = user.id
     var text = params.text
     var timestamp = Date.now()
-    
+
     var volonteerComments = filteredComments(volonteerId)
     var commentId = 1 //default value for first comment
     var length = volonteerComments.length
     if (length > 0) {
-      commentId = volonteerComments[length-1].id+1 
+      commentId = volonteerComments[length-1].id+1
     }
     var comment = {
       volonteerId: volonteerId,
@@ -110,7 +110,7 @@ module.exports = {
           volonteerId: volonteerId,
           id: commentId,
           adminId: adminId,
-          text: text, 
+          text: text,
           creationTimestamp: timestamp})
         break
       }

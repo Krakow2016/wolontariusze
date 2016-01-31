@@ -76,7 +76,7 @@ var Application = React.createClass({
           <Authentication user_id={this.user_id()} user_name={this.user_name()} />
           {newActivityLink}
         </div>
-        
+
         <Handler context={this.context} />
       </div>
     )

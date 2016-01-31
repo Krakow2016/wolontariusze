@@ -1,13 +1,13 @@
 var React = require('react')
-var ReactMarkdown = require('react-markdown');
+var ReactMarkdown = require('react-markdown')
 
-var TimeService = require('../modules/time/TimeService.js');
+var TimeService = require('../modules/time/TimeService.js')
 
 var CommentsStore = require('../stores/Comments')
 
 var actions = require('../actions')
-var updateAction = actions.profileCommentsUpdate;
-var deleteAction = actions.profileCommentsDelete;
+var updateAction = actions.profileCommentsUpdate
+var deleteAction = actions.profileCommentsDelete
 
 var NewComment = require('./NewComment.jsx')
 
@@ -19,7 +19,7 @@ var EditedProfileComment = React.createClass({
   handleChange: function (evt) {
     this.setState({
       text: evt.target.value
-    });
+    })
   },
 
   update: function() {
@@ -106,7 +106,7 @@ var ProfileComment = React.createClass ({
 var ProfileComments = React.createClass({
 
   getInitialState: function () {
-     return this.props.context.getStore(CommentsStore).getState();
+    return this.props.context.getStore(CommentsStore).getState()
   },
 
   componentDidMount: function componentDidMount() {
@@ -121,7 +121,7 @@ var ProfileComments = React.createClass({
   },
 
   _onStoreChange: function() {
-     this.setState(this.props.context.getStore(CommentsStore).getState())
+    this.setState(this.props.context.getStore(CommentsStore).getState())
   },
 
   render: function (){

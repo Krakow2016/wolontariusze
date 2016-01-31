@@ -1,5 +1,5 @@
-'use strict';
-var createStore  = require('fluxible/addons').createStore;
+'use strict'
+var createStore  = require('fluxible/addons').createStore
 
 var NewComment = createStore({
   storeName: 'NewComment',

@@ -23,7 +23,7 @@ module.exports = Protect({
         .eqJoin('adminId', r.table('Volonteers'))
         .pluck({ // Ogranicz do tylko wybranych atrybutów
           left: true, // Wszystkie parametry z tabeli komentarzy
-          right: ["first_name", "last_name"] // Tylko imię i nwzwisko autora
+          right: ['first_name', 'last_name'] // Tylko imię i nwzwisko autora
         })
         .zip()
         .limit(50)

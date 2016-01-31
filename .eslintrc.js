@@ -15,6 +15,9 @@ module.exports = {
         "semi": [
             2,
             "never"
+        ],
+        "no-trailing-spaces": [
+            2
         ]
     },
     "env": {

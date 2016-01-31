@@ -1,5 +1,5 @@
-'use strict';
-var createStore  = require('fluxible/addons').createStore;
+'use strict'
+var createStore  = require('fluxible/addons').createStore
 var NewComment = require('./NewComment')
 
 var Comments = createStore({
@@ -63,7 +63,7 @@ var Comments = createStore({
   rehydrate: function (state) {
     this.comments = state
   }
-});
+})
 
 Comments.model = NewComment
 
