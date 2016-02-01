@@ -11,7 +11,7 @@
 
 var activities = require('./activities.json')
 var joints = require('./joints.json')
-var volunteers = require('./volonteers.json')
+var volunteers = require('./volunteers.json')
 
 var public_attrs = [
   'id',

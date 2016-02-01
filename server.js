@@ -34,7 +34,7 @@ var server = module.exports = express()
 // pod lokalną bazę danych.
 var Activities = require('./app/services/activities')(config.service)
 var Comments = require('./app/services/'+config.service+'/comments')
-var Volunteer = require('./app/services/'+config.service+'/volonteers')
+var Volunteers = require('./app/services/volunteers')(config.service)
 var Integration = require('./app/services/'+config.service+'/integrations')
 var APIClient = require('./app/services/'+config.service+'/apiclients')
 var Joints = require('./app/services/'+config.service+'/joints')
@@ -56,7 +56,7 @@ require('./auth')
 passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
   function(req, apikey, done) {
     // Znajdź konto na które podany token został wygenerowany
-    Volunteer.read({force_admin: true}, 'Volunteers', { key: apikey }, { index: 'token' }, function (err, users) {
+    Volunteers.read({force_admin: true}, 'Volunteers', { key: apikey }, { index: 'token' }, function (err, users) {
       var user = users[0]
       if (err) { return done(err) } // Błąd bazy danych
       if (!user) {
@@ -81,7 +81,7 @@ passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
           return done({message: 'Token expired. You must generate a new one.'})
         } else { // Autoryzacja przebiegła pomyślnie
           token.used = { datetime: new Date(), ip: req.ip, headers: req.headers }
-          Volunteer.update({force_admin: true}, 'Volunteers', {id: user.id}, {
+          Volunteers.update({force_admin: true}, 'Volunteers', {id: user.id}, {
             access_tokens: tokens
           }, {}, function (err) {
             if(err) {
@@ -128,7 +128,7 @@ server.set('view engine', 'handlebars')
 
 if(fetchrPlugin) {
   // Register our messages REST services
-  fetchrPlugin.registerService(Volunteer)
+  fetchrPlugin.registerService(Volunteers)
   fetchrPlugin.registerService(Activities)
   fetchrPlugin.registerService(Comments)
   fetchrPlugin.registerService(Integration)
@@ -187,7 +187,7 @@ server.get('/invitation', passport.authenticate('localapikey', {
 server.post('/invitation', jsonParser, function(req, res) {
   var id = req.body.id
   if(req.user && req.user.is_admin) {
-    Volunteer.read(req, 'Volunteers', {id: id}, {}, function (err, user) {
+    Volunteers.read(req, 'Volunteers', {id: id}, {}, function (err, user) {
       // Generuje losowy token dostępu
       crypto.randomBytes(32, function(ex, buf) {
         var tokens = [] //user.access_tokens || []
@@ -204,7 +204,7 @@ server.post('/invitation', jsonParser, function(req, res) {
         })
 
         // Zapisz w token w bazie
-        Volunteer.update(req, 'Volunteers', {id: id}, {
+        Volunteers.update(req, 'Volunteers', {id: id}, {
           approved: true,
           access_tokens: tokens
         }, {}, function (err) {

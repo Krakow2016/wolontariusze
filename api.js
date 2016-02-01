@@ -13,7 +13,7 @@ var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
 var oauth2 = require('./oauth/oauth2')
 
-var Volunteers = require('./app/services/'+config.service+'/volonteers')
+var Volunteers = require('./app/services/volunteers')(config.service)
 var Activities = require('./app/services/activities')(config.service)
 var Joints = require('./app/services/joints')(config.service)
 

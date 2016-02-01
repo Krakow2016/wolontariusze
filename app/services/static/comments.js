@@ -7,7 +7,7 @@
 // on server and client side.
 //
 // Więcej: http://fluxible.io/guides/data-services.html
-var volonteers = require('./volonteers.json')
+var volunteers = require('./volunteers.json')
 var comments = [
   {
     volonteerId: 1,
@@ -48,7 +48,7 @@ var comments = [
 
 var getAdminName = function (adminId) {
   var id = adminId+''
-  return volonteers[id].first_name
+  return volunteers[id].first_name
 }
 
 //https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/filter

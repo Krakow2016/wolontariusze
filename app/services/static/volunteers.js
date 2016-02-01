@@ -17,7 +17,7 @@
 
 var utils = require('../../../oauth/utils')
 
-var volunteers = require('./volonteers.json')
+var volunteers = require('./volunteers.json')
 
 module.exports = {
   name: 'Volunteers',
