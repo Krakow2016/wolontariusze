@@ -276,12 +276,23 @@ POST https://wolontariusze.krakow2016.com/api/v2/activities
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/activities
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities -d '{"name": "nazwa", "description": "opis"}'
 ```
 
 **Przykładowa odpowiedź:**  
 ```
-{}
+{
+    "status": "success",
+    "data": {
+        "activity": {
+            "created_at": "2016-02-01T22:50:08.906Z",
+            "description": "opis",
+            "id": "0565ea98-86bf-4d5f-a3da-3236c8c3a876",
+            "name": "nazwa",
+            "user_id": "1"
+        }
+    }
+}
 ```
 
 ### Pobieranie obiektu aktywności
@@ -293,12 +304,23 @@ GET https://wolontariusze.krakow2016.com/api/v2/activities/:id
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/activities/123
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f-a3da-3236c8c3a876
 ```
 
 **Przykładowa odpowiedź:**  
 ```
-{}
+{
+    "status": "success",
+    "data": {
+        "activity": {
+            "id": "0565ea98-86bf-4d5f-a3da-3236c8c3a876",
+            "name": "nazwa",
+            "description": "opis",
+            "created_at": "2016-02-01T22:50:08.906Z",
+            "volunteers": []
+        }
+    }
+}
 ```
 
 ### Aktualizacja obiektu aktywności

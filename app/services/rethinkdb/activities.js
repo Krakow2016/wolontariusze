@@ -201,6 +201,11 @@ var Activities = module.exports = {
               })
             })
         })
+      } else {
+        r.table(tableName).limit(50).run(conn, function(err, cursor) {
+          if(err) { callback(err) }
+          else { cursor.toArray(callback) }
+        })
       }
     })
   },
@@ -213,7 +218,7 @@ var Activities = module.exports = {
         return
       }
 
-      r.table(tableName).insert(body).run(conn, function (err, resp) {
+      r.table(tableName).insert(body, {returnChanges: true}).run(conn, function (err, resp) {
           //if (!err) {
             //var user = req.user || config.user
             //var id = resp.generated_keys[0];
