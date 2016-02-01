@@ -20,7 +20,7 @@ module.exports = Protect({
       r.table('Comments')
         .filter({volonteerId: params.volunteerId})
         // Dołącz imię i nazwisko autora z tabeli wolontariuszy
-        .eqJoin('adminId', r.table('Volonteers'))
+        .eqJoin('adminId', r.table('Volunteers'))
         .pluck({ // Ogranicz do tylko wybranych atrybutów
           left: true, // Wszystkie parametry z tabeli komentarzy
           right: ['first_name', 'last_name'] // Tylko imię i nwzwisko autora

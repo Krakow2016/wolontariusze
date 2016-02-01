@@ -184,7 +184,7 @@ var Activities = module.exports = {
             .filter(function(x){
               return x.hasFields('is_canceled').not()
             }, {default: true})
-            .eqJoin('user_id', r.table('Volonteers'))
+            .eqJoin('user_id', r.table('Volunteers'))
             .map(
               function(doc){
                 return doc.merge(function(){

@@ -14,7 +14,7 @@ var bcrypt = require('bcrypt')
 var env = process.env.NODE_ENV || 'development'
 var conf = require('../../../config.json')[env].rethinkdb
 
-var tableName = 'Volonteers' // TODO: literówka do poprawy
+var tableName = 'Volunteers'
 
 module.exports = {
 
@@ -29,7 +29,7 @@ module.exports = {
       }
 
       if(params.id) { // Pobierz krotkę o danym numerze id
-        r.table(tableName).get(params.id).run(conn, function(err, row){
+        r.table(tableName).get(params.id.toString()).run(conn, function(err, row){
           callback(err || !row, row)
         })
       } else { // Pobierz listę krotek

@@ -4,10 +4,7 @@ var gulp = require('gulp');
 
 require('./gulp/app')
 require('./gulp/watch')
-require('./gulp/rethinkdb')
 
-gulp.task('build', [ 'app' ]);
-
-gulp.task('default', ['rethinkdb', 'build'], function() {
+gulp.task('default', ['app'], function() {
   return gulp.start('serve', 'watch');
 });
