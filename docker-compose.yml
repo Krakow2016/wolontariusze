@@ -1,0 +1,18 @@
+rethinkdb:
+  image: rethinkdb:2.2
+  container_name: rethinkdb
+
+es:
+  image: elasticsearch:2.1
+  container_name: es
+
+logstash:
+  image: krakow2016/logstash
+
+wolontariusze:
+  image: krakow2016/wolontariusze
+  container_name: wolontariusze
+  environment:
+    - NODE_ENV=production
+  ports:
+    - "8000:80"

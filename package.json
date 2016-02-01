@@ -4,6 +4,7 @@
   "description": "Oficjalny serwis wolontariuszy ŚDM 2016",
   "private": true,
   "dependencies": {
+    "async": "1.5.2",
     "babelify": "*",
     "bcrypt": "*",
     "body-parser": "^1.12.0",

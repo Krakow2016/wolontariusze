@@ -2,6 +2,7 @@
 
 var gulp = require('gulp')
 var r = require('rethinkdb')
+var async = require('async')
 
 var env = process.env.NODE_ENV || 'development'
 var conf = require('../config.json')[env]
@@ -13,13 +14,15 @@ gulp.task('rethinkdb', function (cb) {
     return
   }
 
-  new Promise(function(resolve, reject) {
+  async.retry({times: 5, interval: 1000}, function(cb) {
     // Połącz się z testową bazą
-    r.connect({}, function(err, conn) {
-      if(err) { reject(err) }
-      else { resolve(conn) }
-    })
-  }).then(function(conn) {
+    r.connect({host: conf.rethinkdb.host}, cb)
+  }, function(err, conn) {
+    if(err) {
+      console.log('Błąd: brak połączenia z bazą RethinkDB')
+      return
+    }
+
     // Stwórz nową bazę danych
     return new Promise(function(resolve) {
       r.dbCreate(conf.rethinkdb.db).run(conn, function(){
@@ -112,6 +115,7 @@ gulp.task('rethinkdb', function (cb) {
                       callback_url: 'https://developers.google.com/oauthplayground'
                     }).run(conn, function(err, resp){
                       cb()
+                      //process.exit(0)
                     })
                   })
                 })
@@ -120,8 +124,8 @@ gulp.task('rethinkdb', function (cb) {
           })
         })
       })
+    }).catch(function(reason){
+      console.log('Failed: '+reason)
     })
-  }).catch(function(reason){
-    console.log('Failed: '+reason)
   })
 })
