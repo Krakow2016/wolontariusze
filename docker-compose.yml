@@ -3,7 +3,7 @@ rethinkdb:
   container_name: rethinkdb
 
 es:
-  image: elasticsearch:2.1
+  image: krakow2016/elasticsearch
   container_name: es
 
 logstash:

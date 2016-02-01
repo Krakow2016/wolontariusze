@@ -1,0 +1,5 @@
+FROM elasticsearch:2.1
+
+RUN plugin install analysis-stempel
+
+CMD ["elasticsearch"]

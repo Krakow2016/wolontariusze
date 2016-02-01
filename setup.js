@@ -18,20 +18,43 @@ var tables = {
 
 // Sprawdź czy środowisko korzysta z bazy RethinkDB
 if(conf.service !== 'rethinkdb') {
-  return
+  return process.exit(0)
 }
 
 // Połącz się z testową bazą
 r.connect({host: conf.rethinkdb.host}, function(err, conn) {
   if(err) {
     console.log('Błąd: brak połączenia z bazą RethinkDB')
-    return 1
+    return process.exit(1)
   }
 
-  // Stwórz nową bazę danych
   return new Promise(function(resolve) {
-    r.dbCreate(conf.rethinkdb.db).run(conn, function(){
-      resolve()
+    // ElasticSearch index
+    request({
+      method: 'PUT',
+      uri: conf.elasticSearch
+    }, function(err) {
+      if(err) { return process.exit(1) }
+      resolve(conn)
+    })
+  }).then(function(conn) {
+    return new Promise(function(resolve) {
+      // ElasticSearch mappings
+      request({
+        method: 'PUT',
+        uri: conf.elasticSearch +'/volunteer/_mapping',
+        body: fs.readFileSync('./config/elasticsearch_mappings.json', 'utf8')
+      }, function(err, resp, json){
+        if(err) { return process.exit(1) }
+        resolve(conn)
+      })
+    })
+  }).then(function(conn) {
+    // Stwórz nową bazę danych
+    return new Promise(function(resolve) {
+      r.dbCreate(conf.rethinkdb.db).run(conn, function(){
+        resolve()
+      })
     })
   }).then(function() {
     // Utwórz połączenie z nową bazą danych
@@ -104,17 +127,6 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
       Object.keys(data).forEach(function(key) { arr.push(data[key]) })
       r.table('APIClients').insert(arr).run(conn, function(err) {
         resolve(conn)
-      })
-    })
-  }).then(function(conn) {
-    return new Promise(function(resolve) {
-      // ElasticSearch mappings
-      request({
-        method: 'PUT',
-        uri: conf.elasticSearch,
-        json: fs.readFileSync('./config/elasticsearch_mappings.json')
-      }, function(err, resp, json){
-        resolve()
       })
     })
   }).then(function() {
