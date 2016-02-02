@@ -25,6 +25,7 @@
     "gulp-live-server": "0.0.29",
     "gulp-rename": "*",
     "gulp-util": "*",
+    "map-the-tiles": "1.2.1",
     "material-ui": "0.14.0",
     "moment": ">=2.8.1",
     "node-jsx": "0.13.3",
@@ -51,6 +52,7 @@
     "sendgrid": "2.0.0",
     "serialize-javascript": "^1.0.0",
     "session-rethinkdb": "^1.0.8",
+    "sphericalmercator": "^1.0.3",
     "through2": "*"
   },
   "devDependencies": {

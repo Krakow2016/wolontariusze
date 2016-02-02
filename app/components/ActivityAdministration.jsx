@@ -1,6 +1,7 @@
 var React = require('react')
 var ActivityStore = require('../stores/Activity')
 var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
+var GeoMap = require('./GeoMap.jsx')
 
 var Formsy = require('formsy-react')
 var MyTextField = require('./Formsy/MyTextField.jsx')
@@ -99,6 +100,12 @@ var ActivityAdministration = React.createClass({
     activity[target.name] = {$set: value}
     this.setState(update(this.state, {
       activity: activity
+    }))
+  },
+  
+  handlePositionChange: function(position) {
+    this.setState(update(this.state, {
+      activity: {lat_lon: {$set: position}}
     }))
   },
 
@@ -220,6 +227,8 @@ var ActivityAdministration = React.createClass({
       startEventDateHint = <span> Dla aktywności data powinna być w przeszłości </span>
     }
 
+    var position = this.state.activity.lat_lon || [0, 0]
+    
     var updateButton = []
     if (this.props.creationMode == false) {
       updateButton = <input type="submit" value="Zapisz" />
@@ -322,6 +331,9 @@ var ActivityAdministration = React.createClass({
               value={this.state.activity.place}
               onChange={this.handleChange} />
           </div>
+          <GeoMap editionMode={true}
+                  saveFunction={this.handlePositionChange}
+                  initialPosition={position}/>
 
           <br></br>
           <b>Zadanie jest PILNE? </b>

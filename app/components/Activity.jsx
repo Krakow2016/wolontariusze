@@ -6,6 +6,7 @@ var Paper = require('material-ui/lib/paper')
 var ActivityStore = require('../stores/Activity')
 
 var TimeService = require('../modules/time/TimeService.js')
+var GeoMap = require('./GeoMap.jsx')
 
 var actions = require('../actions')
 
@@ -77,6 +78,8 @@ var Activity = React.createClass({
       </div>
     }
 
+    var position = this.state.activity.lat_lon || [0, 0]
+    
     var priority = (activity.is_urgent) ? 'PILNE' : 'NORMALNE'
 
     var volunteers = this.state.volunteers
@@ -117,6 +120,9 @@ var Activity = React.createClass({
         <br></br>
         <b>Miejsce wydarzenia:</b> {activity.place}
         <br></br>
+        <GeoMap editionMode={false} 
+                initialPosition={position}/>
+        
         <b>Prorytet:</b> {priority}
         <br></br>
         <ReactMarkdown source={activity.description} />
