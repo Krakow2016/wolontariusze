@@ -147,6 +147,8 @@ describe('Activity API', function() {
 
           expect(json.status).toEqual('success')
           expect(json.data.joint.created_at).toBeDefined()
+          expect(json.data.joint.activity_id).toBe('2')
+          expect(json.data.joint.user_id).toBe('1')
           done()
         })
       })
@@ -164,7 +166,7 @@ describe('Activity API', function() {
 
           var json = parse_json()
           expect(json.status).toEqual('success')
-          expect(json.data.activity.volunteers.length).toEqual(1)
+          expect(json.data.activity.volunteers.length).toEqual(2)
           expect(json.data.activity.volunteers[0].user_id).toEqual('1')
           done()
         })
@@ -200,7 +202,7 @@ describe('Activity API', function() {
 
           var json = parse_json()
           expect(json.status).toEqual('success')
-          expect(json.data.activity.volunteers.length).toEqual(0)
+          expect(json.data.activity.volunteers.length).toEqual(1)
           done()
         })
       })

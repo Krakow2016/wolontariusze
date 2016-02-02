@@ -31,6 +31,8 @@ var Joints = module.exports = {
         }
       }
 
+      config.returnChanges = true
+
       r.table('Joints').insert(body, config).run(conn, function (err, resp) {
         callback(err, resp)
       })
@@ -45,9 +47,11 @@ var Joints = module.exports = {
         return
       }
 
+      config.returnChanges = true
+
       var ids = params.ids ? params.ids : [params.id]
       var table = r.table('Joints')
-      table.getAll.apply(table, ids).update(body).run(conn, callback)
+      table.getAll.apply(table, ids).update(body, config).run(conn, callback)
     })
   }
 }

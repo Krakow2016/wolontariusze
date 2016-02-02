@@ -97,7 +97,7 @@ var bearer = [passport.initialize(), function(req, res, next) {
   passport.authenticate('bearer', { session: false }, function(err, user, info) {
     // Wystąpił błąd
     if (err) {
-      return next(err) // status: 500
+      return res.status(401).send(error('TokenNotFound'))
     }
     // Niezalogowany
     if (!user) {
@@ -202,7 +202,7 @@ server.post('/api/v2/activities/:id', bearer, function(req, res) {
   var id = req.params.id
 
   Activities.update(req, 'Activities', {id: id}, req.body, {}, function (err, result) {
-    if(err) { res.send(500) }
+    if(err) { res.status(500).send(error(err)) }
     else {
       var activity = result.changes[0].new_val
       res.status(200).send(success({activity: activity})) }
@@ -223,7 +223,10 @@ server.delete('/api/v2/activities/:id', is_admin, function(req, res) {
 server.post('/api/v2/activities/:id/join', bearer, function(req, res) {
   Activities.read(req, 'Activities', {id: req.params.id}, {}, function (err, activity) {
     if(err) { return res.send(err) }
-    var body = { user_id: req.user.id }
+    var body = {
+      user_id: req.user.id,
+      activity_id: req.params.id
+    }
     Joints.create(req, 'Joints', {}, body, {}, function (err, result) {
       var joint = result.changes[0].new_val
       res.send(success({joint: joint}))

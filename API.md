@@ -129,12 +129,16 @@ API serwisu wolontariuszy wymaga aby token dostępu był wysłany w nagłówku
 Używając narzędzia cURL, przykładowe zapytanie będzie wyglądało w następujący sposób:
 
 ```
-curl -H "Authorization: Bearer ACCESS_TOKEN" https://wolontariusze.krakow2016.com/api/v2/volunteers/e5725fc8-1837-4a32-823c-2f08c7a8b3a1
+curl -H "Authorization: Bearer ACCESS_TOKEN" -H "Content-Type: application/json" https://wolontariusze.krakow2016.com/api/v2/volunteers/e5725fc8-1837-4a32-823c-2f08c7a8b3a1
 ```
 
 API zwróci kod HTTP 401 (Brak autoryzacji) jeżeli przesłane zapytanie będzie
 zawierać nieprawidłowy albo wygały token dostępu lub będzie nieuprawnione z
 innego powodu.
+
+W kolejnych przykładach, dla większej przejrzystości, pomijamy nagłówki
+`Authorization` i `Content-Type`, aczkolwiek należy pamiętać o tym że były one
+obecne przy wysyłaniu przytoczonych poniżej przykładnowych zapytań.
 
 ## Wolontariusze
 
@@ -280,7 +284,7 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/activities -d '{"name": "nazw
 ```
 
 **Przykładowa odpowiedź:**  
-```
+```json
 {
     "status": "success",
     "data": {
@@ -308,7 +312,7 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f
 ```
 
 **Przykładowa odpowiedź:**  
-```
+```json
 {
     "status": "success",
     "data": {
@@ -325,6 +329,8 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f
 
 ### Aktualizacja obiektu aktywności
 
+*Wymagane uprawnienia:* administrator.
+
 **Ścieżka:**  
 ```
 POST https://wolontariusze.krakow2016.com/api/v2/activities/:id
@@ -332,12 +338,24 @@ POST https://wolontariusze.krakow2016.com/api/v2/activities/:id
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/activities/123
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f-a3da-3236c8c3a876 -d '{"name": "nazwa", "description": "zmieniony opis"}'
 ```
 
 **Przykładowa odpowiedź:**  
-```
-{}
+```json
+{
+    "status": "success",
+    "data": {
+        "activity": {
+            "created_at": "2016-02-01T22:50:08.906Z",
+            "description": "zmieniony opis",
+            "id": "0565ea98-86bf-4d5f-a3da-3236c8c3a876",
+            "name": "nazwa",
+            "updated_at": "2016-02-02T11:47:28.162Z",
+            "user_id": "1"
+        }
+    }
+}
 ```
 
 ### Listowanie aktywności
@@ -366,15 +384,56 @@ POST https://wolontariusze.krakow2016.com/api/v2/activities/:id/join
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/activities/123/join
+$ curl -X POST https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f-a3da-3236c8c3a876/join
 ```
 
 **Przykładowa odpowiedź:**  
+```json
+{
+    "status": "success",
+    "data": {
+        "joint": {
+            "activity_id": "0565ea98-86bf-4d5f-a3da-3236c8c3a876",
+            "created_at": "2016-02-02T13:05:35.413Z",
+            "id": "91186ae2-27f6-4f3b-aadf-4d9570557187",
+            "user_id": "1"
+        }
+    }
+}
 ```
-{}
+
+### Cofanie zgłoszenia do aktywności
+
+**Ścieżka:**  
+```
+POST https://wolontariusze.krakow2016.com/api/v2/activities/:id/leave
+```
+
+**Przykładowe zapytanie:**  
+```
+$ curl -X POST https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f-a3da-3236c8c3a876/leave
+```
+
+**Przykładowa odpowiedź:**  
+```json
+{
+    "status": "success",
+    "data": {
+        "joint": {
+            "activity_id": "0565ea98-86bf-4d5f-a3da-3236c8c3a876",
+            "created_at": "2016-02-02T13:05:35.413Z",
+            "id": "91186ae2-27f6-4f3b-aadf-4d9570557187",
+            "is_canceled": true,
+            "updated_at": "2016-02-02T13:06:24.705Z",
+            "user_id": "1"
+        }
+    }
+}
 ```
 
 ### Usunięcie obiektu aktywności
+
+*Wymagane uprawnienia:* administrator.
 
 **Ścieżka:**  
 ```
@@ -383,12 +442,15 @@ DELETE https://wolontariusze.krakow2016.com/api/v2/activities/:id
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/activities/123
+$ curl -X DELETE https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f-a3da-3236c8c3a876
 ```
 
 **Przykładowa odpowiedź:**  
 ```
-{}
+{
+    "status": "success",
+    "data": {}
+}
 ```
 
 ## Baza noclegowa
