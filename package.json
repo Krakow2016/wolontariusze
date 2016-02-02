@@ -26,7 +26,7 @@
     "gulp-rename": "*",
     "gulp-util": "*",
     "material-ui": "0.14.0",
-    "moment": ">=2.8.1",
+    "moment": "2.11.1",
     "node-jsx": "0.13.3",
     "oauth2orize": "^1.2.0",
     "object.assign": "*",
@@ -50,7 +50,7 @@
     "rethinkdb": "*",
     "sendgrid": "2.0.0",
     "serialize-javascript": "^1.0.0",
-    "session-rethinkdb": "^1.0.8",
+    "session-rethinkdb": "1.0.10",
     "through2": "*"
   },
   "devDependencies": {
