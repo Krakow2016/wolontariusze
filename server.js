@@ -13,7 +13,10 @@ var express = require('express'),
   session = require('express-session'),
   flash = require('connect-flash'),
   request = require('request'),
-  crypto = require('crypto')
+  crypto = require('crypto'),
+  multipart = require('connect-multiparty'),
+  excelParser = require('excel-parser'),
+  r = require('rethinkdb')
 
 // Służy do zapisywania sesji użytkowników w bazie danych
 var RDBStore = require('session-rethinkdb')(session)
@@ -228,6 +231,81 @@ server.post('/invitation', jsonParser, function(req, res) {
     })
   } else {
     res.send(403)
+  }
+})
+
+var multipartMiddleware = multipart()
+server.post('/import', multipartMiddleware, function(req, res) {
+  if(req.user && req.user.is_admin) {
+    // Parsuje plik xml do formatu json
+    excelParser.parse({
+      inFile: req.files.image.path, // TODO: co jeżeli > 1?
+      worksheet: 'Volontari'
+    }, function(err, records){
+      if(err) { console.error(err) }
+
+      // Dokumenty do zapisu w bazie ElasticSearch
+      var docs = []
+      // Dokumenty do zapisu w bazie RethinkDB
+      var volunteers = {}
+      // Tablica emaili niezbędna do wykluczenia powtarzających się adresów
+      // email
+      var emails = []
+      // Pierwszy wiersz jest tablicą atrybutów
+      var keys = records.shift()
+
+      records.forEach(function(record){
+        var map = {}
+        // Na potrzeby wyszukiwarki indeksujemy w ElasticSearch wszystkie
+        // informacje które posiadamy.
+        keys.forEach(function(key, i) {
+          map[key.toLowerCase()] = record[i]
+        })
+        docs.push(map)
+        emails.push(map['rg_email'])
+        // W bazie zapisujemy tylko ustalone wcześniej podstawowe informacje
+        volunteers[map['rg_email']] = {
+          email: map['rg_email'],
+          first_name: map['rg_firstname'],
+          last_name: map['rg_lastname'],
+          nationality: map['rg_nationality']
+        } // TODO: języki!
+      })
+
+      r.connect({ db: 'sdm' }, function(err, conn) {
+        // Dane do ElasticSearcha najpierw lądują w tabeli `Imports` żeby
+        // później zostać automatycznie przeniesione i zcalone z odpowiadającym
+        // im dokumentem wolontariusza poprzez narzędzie LogStash.
+        r.table('Imports').insert(docs).run(conn, function(err, imports) {
+          var table = r.table('Volunteers')
+          emails.push({index: 'email'})
+          // Pobierz wszystkie duplikaty
+          table.getAll.apply(table, emails).run(conn, function(err, cursor) {
+            if(err) {
+              return res.send(500)
+            } else {
+              cursor.toArray(function(err, result) {
+                var docs = []
+                // Usuń duplikaty
+                result.forEach(function(volunteer) {
+                  delete volunteers[volunteer.email]
+                })
+                // Przekonwertuj obiekt na tablicę
+                Object.keys(volunteers).forEach(function(key) {
+                  docs.push(volunteers[key])
+                })
+                // Zapisz nieistniejących wolontariuszy w bazie danych
+                r.table('Volunteers').insert(docs).run(conn, function(err, result) {
+                  res.send(result)
+                  conn.close()
+                })
+              })
+            }
+          })
+        })
+      })
+
+    })
   }
 })
 

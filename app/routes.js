@@ -186,5 +186,14 @@ module.exports = {
     action: function(context, payload, done) {
       done()
     }
+  },
+
+  import: {
+    path: '/import',
+    method: 'get',
+    handler: require('./components/Import.jsx'),
+    action: function(context, payload, done) {
+      done()
+    }
   }
 }

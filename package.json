@@ -11,8 +11,10 @@
     "browserify": "12.0.1",
     "connect-ensure-login": "^0.1.1",
     "connect-flash": "^0.1.1",
+    "connect-multiparty": "^2.0.0",
     "debug": "*",
     "ejs": "^2.3.1",
+    "excel-parser": "^0.2.2",
     "express": "^4.11.2",
     "express-handlebars": "2.0.1",
     "express-session": "*",
@@ -51,6 +53,7 @@
     "sendgrid": "2.0.0",
     "serialize-javascript": "^1.0.0",
     "session-rethinkdb": "1.0.10",
+    "superagent": "^1.7.2",
     "through2": "*"
   },
   "devDependencies": {
