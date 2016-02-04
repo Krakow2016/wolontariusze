@@ -1,7 +1,20 @@
 var MyTextField = require('./../Formsy/MyTextField.jsx')
+var ProfileImageChange = require('./ProfileImageChange.jsx')
 var BasicForm = function(props) {
   return (
     <div>
+      <div className="pure-g">
+        <div className="pure-u-1 pure-u-md-1-3">
+          <label>Avatar</label>
+        </div>
+        <div className="pure-u-1 pure-u-md-2-3">
+             <ProfileImageChange
+              id={props.id}  
+              srcMini={props.profile_img_mini}
+              srcMidi={props.profile_img_midi}
+              size="mini" />
+        </div>
+      </div> 
       <div className="pure-g">
         <div className="pure-u-1 pure-u-md-1-3">
           <label htmlFor="first_name">Imię</label>
