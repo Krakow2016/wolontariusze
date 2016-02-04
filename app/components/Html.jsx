@@ -20,16 +20,13 @@ var Html = React.createClass({
    */
   render: function() {
     return (
-      <html>
+      <html lang="pl">
         <head>
-          <meta charSet="utf-8" />
-          <title>{this.props.context.getStore(ApplicationStore).getPageTitle()}</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-          <link rel="stylesheet" href="/css/pure-min.css" />
-          <link rel="stylesheet" href="/css/grids-responsive-min.css" />
-          <link rel="stylesheet" href="/css/react-datetime.css" />
+          <title>Góra Dobra - Portal wolontariuszy Światowych Dni Młodzieży w Krakowie w 2016r. - {this.props.context.getStore(ApplicationStore).getPageTitle()}</title>
+          <meta charSet="UTF-8" />
+          <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600&subset=latin-ext' rel='stylesheet' type='text/css' />
           <link rel="stylesheet" href="/css/main.css" />
-          <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,300,500" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         </head>
         <body>

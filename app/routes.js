@@ -8,7 +8,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Index.jsx'),
     action: function (context, payload, done) {
-      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Home | flux-examples | routing' })
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Strona główna' })
       done()
     }
   },
@@ -37,10 +37,36 @@ module.exports = {
   volunteer: {
     path: '/wolontariusz/:id',
     method: 'get',
-    handler: require('./components/Volunteer.jsx'),
+    handler: require('./components/Volunteer/Profile.jsx'),
     action: function (context, payload, done) {
       var volunteerId  = payload.params.id
-      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: volunteerId + ' [Dynamic Page] | flux-examples | routing' })
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Profil wolontariusza' })
+      context.executeAction(actions.showVolunteer, { id: volunteerId }, function() {
+        done()
+      })
+    }
+  },
+
+  volunteer_activities: {
+    path: '/wolontariusz/:id/aktywnosci',
+    method: 'get',
+    handler: require('./components/Volunteer/Activities.jsx'),
+    action: function (context, payload, done) {
+      var volunteerId  = payload.params.id
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Aktywności wolontariusza' })
+      context.executeAction(actions.showVolunteer, { id: volunteerId }, function() {
+        done()
+      })
+    }
+  },
+
+  volunteer_calendar: {
+    path: '/wolontariusz/:id/kalendarz',
+    method: 'get',
+    handler: require('./components/Volunteer/Calendar.jsx'),
+    action: function (context, payload, done) {
+      var volunteerId  = payload.params.id
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Kalendarz wolontariusza' })
       context.executeAction(actions.showVolunteer, { id: volunteerId }, function() {
         done()
       })
@@ -50,9 +76,10 @@ module.exports = {
   volunteer_administration: {
     path: '/wolontariusz/:id/admin',
     method: 'get',
-    handler: require('./components/VolunteerAdministration.jsx'),
+    handler: require('./components/Volunteer/Administration.jsx'),
     action: function (context, payload, done) {
       var volunteerId  = payload.params.id
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Szczegóły wolontariusza' })
       context.executeAction(actions.showVolunteer, { id: volunteerId }, function() {
         done()
       })
@@ -65,7 +92,7 @@ module.exports = {
     handler: require('./components/Activity.jsx'),
     action: function (context, payload, done) {
       var activityId  = payload.params.id
-      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: activityId + ' Aktywnosc' })
+      context.dispatch('UPDATE_PAGE_TITLE', { title: activityId + ' Aktywnosc' })
       context.executeAction(actions.showActivity, { id: activityId }, function() {
         done()
       })
@@ -78,7 +105,7 @@ module.exports = {
     handler: require('./components/ActivityEdit.jsx'),
     action: function (context, payload, done) {
       var activityId  = payload.params.id
-      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: activityId + ' Edytuj Aktywnosc' })
+      context.dispatch('UPDATE_PAGE_TITLE', { title: activityId + ' Edytuj Aktywnosc' })
       context.executeAction(actions.showActivity, { id: activityId }, function() {
         done()
       })
@@ -86,11 +113,11 @@ module.exports = {
   },
 
   activity_creation: {
-    path: '/nowa_aktywnosc',
+    path: '/aktywnosci/nowa',
     method: 'get',
     handler: require('./components/ActivityCreate.jsx'),
     action: function (context, payload, done) {
-      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Nowa Aktywnosc' })
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Nowa Aktywnosc' })
       context.dispatch('PRECREATE_ACTIVITY', {})
       done()
     }
@@ -101,7 +128,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Login.jsx'),
     action: function (context, payload, done) {
-      context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Home | flux-examples | routing' })
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Zaloguj się' })
       done()
     }
   },
@@ -111,6 +138,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Settings/Basic.jsx'),
     action: function (context, payload, done) {
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Ustawienia' })
       var user = context.getUser()
       if(user) {
         context.executeAction(actions.showVolunteer, { id: user.id }, function() {
@@ -184,6 +212,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Search.jsx'),
     action: function(context, payload, done) {
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Wyszukiwarka' })
       done()
     }
   },
@@ -193,6 +222,17 @@ module.exports = {
     method: 'get',
     handler: require('./components/Import.jsx'),
     action: function(context, payload, done) {
+      done()
+    }
+  },
+
+  tasks: {
+    path: '/zadania',
+    method: 'get',
+    handler: require('./components/Tasks.jsx'),
+    action: function(context, payload, done) {
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy' })
+      // TODO: wczytaj zadania
       done()
     }
   }

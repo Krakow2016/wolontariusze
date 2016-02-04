@@ -1,14 +1,13 @@
 var React = require('react')
-var Paper = require('material-ui/lib/paper')
 
 var ActivityAdministration = require('./ActivityAdministration.jsx')
 
 var ActivityCreate = React.createClass({
   render: function () {
     return (
-      <Paper className="paper">
+      <div>
         <ActivityAdministration context={this.props.context} creationMode={true} taskMode={true}/>
-      </Paper>
+      </div>
     )
   }
 })
