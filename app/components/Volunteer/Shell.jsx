@@ -1,0 +1,255 @@
+var React = require('react')
+var NavLink = require('fluxible-router').NavLink
+
+var VolunteerStore = require('../../stores/Volunteer')
+
+//var ProfileComments = require('./ProfileComments.jsx')
+//var Invite = require('./Admin/Invite.jsx')
+
+var actions = require('../../actions')
+var showCommentsAction = actions.showComments
+
+var Volunteer = React.createClass({
+
+  getInitialState: function () {
+    return this.props.context.getStore(VolunteerStore).getState().profile
+  },
+
+  _changeListener: function() {
+    this.setState(this.props.context.getStore(VolunteerStore).getState().profile)
+  },
+
+  componentDidMount: function() {
+    this.props.context.getStore(VolunteerStore)
+      .addChangeListener(this._changeListener)
+  },
+
+  componentWillUnmount: function() {
+    this.props.context.getStore(VolunteerStore)
+      .removeChangeListener(this._changeListener)
+  },
+
+  render: function () {
+    var editLink
+    var user = this.user()
+    if(user && user.is_admin) {
+      editLink = <NavLink href={'/wolontariusz/'+ this.state.id +'/admin'}>Edytuj</NavLink>
+    }
+
+    return (
+      <div className="volonteer">
+        <div className="section group">
+          <div className="col span_2_of_4">
+            <img src="/img/profile/face.svg" id="prolife-photo" />
+          </div>
+          <div className="col span_2_of_4">
+            <h1 className="profile-name">{this.name()}</h1>
+            <h2><b>Kraj:</b> <span>Polska</span></h2>
+          </div>
+          <div className="col span_1_of_4">
+            <p id="profile-grow-title"><b>Lorem sprawił/a, że Góra Dobra urosła o</b></p>
+          </div>
+          <div className="col span_1_of_4" id="profile-stone-box">
+            <img src="/img/profile/stone.svg" id="prolife-stone-img" />
+            <p id="profile-stone-tasks">
+              <b id="profile-stone-tasks-nr">100</b><br />
+              <b>zadań</b>
+            </p>
+          </div>
+          <div className="col span_2_of_4">
+            <img src="/img/profile/phone.svg" id="prolife-contant-ico"/>
+            <div>
+              <h2 id="prolife-contant-data">0048 777 888 999</h2>
+            </div>
+          </div>
+        </div>
+
+        <div className="section group">
+          <div className="col span_4_of_4 profile-ribon">
+            <NavLink href={"/wolontariusz/" + this.state.id} className="profile-ribon-cell">
+              <b id="profile-ribon-txt">Profil</b>
+            </NavLink>
+            <NavLink href={"/wolontariusz/" + this.state.id +'/aktywnosci'} className="profile-ribon-cell">
+              <b id="profile-ribon-txt">Aktywności</b>
+            </NavLink>
+            <NavLink href={"/wolontariusz/" + this.state.id +'/kalendarz'} className="profile-ribon-cell">
+              <b id="profile-ribon-txt">Kalendarz</b>
+            </NavLink>
+            <NavLink href={"/wolontariusz/" + this.state.id +'/admin'} className="profile-ribon-cell">
+              <b id="profile-ribon-txt">Szczegóły</b>
+            </NavLink>
+          </div>
+        </div>
+
+        {this.props.children}
+      </div>
+    )
+  },
+
+  name: function() {
+    return this.state.first_name +' '+ this.state.last_name
+  },
+
+  user: function() {
+    return this.props.context.getUser()
+  }
+})
+
+
+
+//var ProfileTabs = React.createClass({
+
+  ////showProfileComments: function (){
+    ////console.log ('show comments')
+    ////this.props.context.executeAction(showCommentsAction, {
+      ////volunteerId: this.props.id
+    ////})
+  ////},
+
+  //render: function() {
+
+    ////var extra
+    ////var user = this.user()
+    ////var is_owner = user && user.id === this.props.id
+    ////var is_admin = user && user.is_admin
+    ////if (is_admin || is_owner) {
+      ////extra = <ExtraAttributesVisible {...this.props} />
+    ////} else {
+      ////extra = <div />
+    ////}
+
+    ////var stars = {
+      ////0: '☆☆☆☆☆',
+      ////2: '★☆☆☆☆',
+      ////4: '★★☆☆☆',
+      ////6: '★★★☆☆',
+      ////8: '★★★★☆',
+      ////10:'★★★★★' }
+
+    ////var languages = this.props.languages || {}
+    ////var langs = Object.keys(languages).map(function(lang) {
+      ////var level = languages[ lang ]
+      ////return (
+        ////<p key={lang}>
+          ////{lang}: {stars[level.level]}
+        ////</p>
+      ////)
+    ////})
+
+    ////var profile_papers = [
+      ////<Paper className="paper" key="details">
+        ////<div className="profileDetails">
+
+          ////<span>{this.props.city}</span>
+
+          ////<div className="profileBio">
+
+      ////<h4>Dane osobowe</h4>
+
+      ////<p>
+        ////Data urodzenia:
+        ////{this.props.birth_date || 'n/a'}
+      ////</p>
+
+      ////<p>
+        ////Telefon:
+        ////{this.props.phone || 'n/a'}
+      ////</p>
+
+      ////<p>
+        ////Parafia:
+        ////{this.props.parish || 'n/a'}
+      ////</p>
+
+      ////<h4>Edukacja</h4>
+
+      ////<p>
+        ////Wykształcenie
+        ////{this.props.eduction || 'n/a'}
+      ////</p>
+
+      ////<p>
+        ////Kierunek
+        ////{this.props.study_field || 'n/a'}
+      ////</p>
+
+      ////<h4>Doświadczenie</h4>
+      ////<p>{this.props.experience || 'n/a'}</p>
+
+      ////<h4>Zainteresowania</h4>
+      ////<p>{this.props.interests || 'n/a'}</p>
+
+      ////<h4>Gdzie chcę się zaangażować</h4>
+      ////<p>{this.props.departments || 'n/a'}</p>
+
+      ////<h4>Dostępność</h4>
+      ////<p>{this.props.avalibitity || 'n/a'}</p>
+
+          ////</div>
+        ////</div>
+      ////</Paper>,
+
+      ////<Paper className="paper" key="langs">
+        ////<h1>Języki</h1>
+        ////{langs}
+      ////</Paper>,
+
+      ////<Paper className="paper" key="instagram">
+        ////<h1>#sdm2016</h1>
+        ////instagram
+      ////</Paper>
+    ////]
+
+    ////if (is_admin && !this.props.password) {
+      ////profile_papers.unshift(
+        ////<Invite id={this.props.id} context={this.props.context} />
+      ////)
+    ////}
+
+    ////var tabs = [
+      ////<Tab label="Profil" key="profile" >
+        ////{profile_papers}
+      ////</Tab>,
+      ////<Tab label="Aktywność" key="activity" >
+        ////<Paper className="paper">
+          ////<div className="profileActivity">
+            ////<h3 style={{display: is_owner ? 'block' : 'none'}}>Jesteś właścicielem tego profilu ☺</h3>
+            ////<div style={{'display': 'inline-block'}}>
+              ////<h3>Ostatnia aktywność:</h3>
+            ////</div>
+            ////<div className="activity"></div>
+            ////<div className="activity"></div>
+            ////<div className="activity"></div>
+          ////</div>
+        ////</Paper>
+      ////</Tab>
+    ////]
+
+    ////if (is_admin) {
+      ////tabs.push(
+        ////<Tab label="Komentarze" key="comments" onActive={this.showProfileComments}>
+          ////<ProfileComments adminId={user.id} context={this.props.context}></ProfileComments>
+        ////</Tab>
+      ////)
+    ////}
+
+    //return (
+    //)
+  //},
+
+  //user: function() {
+    //return this.props.context.getUser()
+  //}
+//})
+
+var ExtraAttributesVisible = React.createClass({
+  render: function() {
+    return(
+      <p style={{color: 'red'}}><b>Doświadczenie </b>{this.props.experience}</p>
+    )
+  }
+})
+
+// Module.exports instead of normal dom mounting
+module.exports = Volunteer
+

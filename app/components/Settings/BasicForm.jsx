@@ -1,3 +1,4 @@
+var React = require('react')
 var MyTextField = require('./../Formsy/MyTextField.jsx')
 var ProfileImageChange = require('./ProfileImageChange.jsx')
 var BasicForm = function(props) {

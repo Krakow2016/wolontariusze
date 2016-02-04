@@ -1,11 +1,13 @@
 var React = require('react')
-var Paper = require('material-ui/lib/paper')
+var VolunteerShell = require('./Shell.jsx')
+var Comments = require('./Comments.jsx')
+
 var Button = require('material-ui/lib/raised-button')
 var Dialog = require('material-ui/lib/dialog')
 
-var VolunteerStore = require('../stores/Volunteer')
-var updateVolunteer = require('../actions').updateVolunteer
-var Invite = require('./Admin/Invite.jsx')
+var VolunteerStore = require('../../stores/Volunteer')
+var updateVolunteer = require('../../actions').updateVolunteer
+var Invite = require('./Invite.jsx')
 
 var VolunteerAdministration = React.createClass({
   getInitialState: function () {
@@ -63,22 +65,22 @@ var VolunteerAdministration = React.createClass({
 
   render: function() {
     var papers = [
-      <Paper className="paper" key="info">
+      <div className="paper" key="info">
         <h1>{this.name()}</h1>
         <p>
           E-mail: {this.state.profile.email}
         </p>
-      </Paper>
+      </div>
     ]
 
     if(this.state.profile.approved) {
       papers.push(
-        <Paper className="paper" key="rejection">
+        <div className="paper" key="rejection">
           <p>Profil jest aktywny</p>
           <div style={{textAlign: 'center'}}>
             <Button label="Zablokuj profil" secondary={true} onClick={this.showRejectionDialog} />
           </div>
-        </Paper>
+        </div>
       )
     } else {
       papers.push(
@@ -89,17 +91,17 @@ var VolunteerAdministration = React.createClass({
     if(this.state.profile.is_admin) {
     } else {
       papers.push(
-        <Paper className="paper" key="admin">
+        <div className="paper" key="admin">
           <p>Użytkownik nie posiada przywilejów administratora</p>
           <div style={{textAlign: 'center'}}>
             <Button label="Awansuj do rangi administratora" primary={true} onClick={this.showAdminDialog} />
           </div>
-        </Paper>
+        </div>
       )
     }
 
     return (
-      <div>
+      <VolunteerShell context={this.props.context}>
         {papers}
 
         <Dialog
@@ -121,7 +123,9 @@ var VolunteerAdministration = React.createClass({
           onRequestClose={this._handleRequestClose} >
           Czy jesteś pewnien aby to zrobić?
         </Dialog>
-      </div>
+
+        <Comments context={this.props.context} />
+      </VolunteerShell>
     )
   },
 
