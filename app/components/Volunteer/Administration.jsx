@@ -6,13 +6,41 @@ var Button = require('material-ui/lib/raised-button')
 var Dialog = require('material-ui/lib/dialog')
 
 var VolunteerStore = require('../../stores/Volunteer')
+var XlsStore = require('../../stores/Xls')
 var updateVolunteer = require('../../actions').updateVolunteer
 var Invite = require('./Invite.jsx')
+
+var Details = React.createClass({
+
+  render: function() {
+
+  var props = this.props
+  var rows = Object.keys(this.props).map(function(key){
+    return (
+      <tr key={key}>
+        <td>{key}</td>
+        <td>{props[key]}</td>
+      </tr>
+    )
+  })
+
+    return (
+      <table className="details">
+        <tr>
+          <th>Klucz</th>
+          <th>Wartość</th>
+        </tr>
+        {rows}
+      </table>
+    )
+  }
+})
 
 var VolunteerAdministration = React.createClass({
   getInitialState: function () {
     return {
-      profile: this.props.context.getStore(VolunteerStore).getState().profile
+      profile: this.props.context.getStore(VolunteerStore).getState().profile,
+      details: this.props.context.getStore(XlsStore).data
     }
   },
 
@@ -22,14 +50,26 @@ var VolunteerAdministration = React.createClass({
     })
   },
 
+  _changeListener2: function() {
+    this.setState({
+      details: this.props.context.getStore(XlsStore).data
+    })
+  },
+
   componentDidMount: function() {
     this.props.context.getStore(VolunteerStore)
       .addChangeListener(this._changeListener)
+
+    this.props.context.getStore(XlsStore)
+      .addChangeListener(this._changeListener2)
   },
 
   componentWillUnmount: function() {
     this.props.context.getStore(VolunteerStore)
       .removeChangeListener(this._changeListener)
+
+    this.props.context.getStore(XlsStore)
+      .removeChangeListener(this._changeListener2)
   },
 
   showRejectionDialog: function() {
@@ -64,14 +104,7 @@ var VolunteerAdministration = React.createClass({
   },
 
   render: function() {
-    var papers = [
-      <div className="paper" key="info">
-        <h1>{this.name()}</h1>
-        <p>
-          E-mail: {this.state.profile.email}
-        </p>
-      </div>
-    ]
+    var papers = []
 
     if(this.state.profile.approved) {
       papers.push(
@@ -124,14 +157,12 @@ var VolunteerAdministration = React.createClass({
           Czy jesteś pewnien aby to zrobić?
         </Dialog>
 
+        <Details {...this.state.details} />
+
         <Comments context={this.props.context} />
       </VolunteerShell>
     )
-  },
-
-  name: function() {
-    return this.state.profile.first_name +' '+ this.state.profile.last_name
-  },
+  }
 })
 
 module.exports = VolunteerAdministration

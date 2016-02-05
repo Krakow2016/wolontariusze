@@ -7,13 +7,15 @@ var env = process.env.NODE_ENV || 'development'
 var conf = require('./config.json')[env]
 
 var tables = {
+  // Tabela    : indeksy
   'APIClients' : ['user_id'],
   'APICodes'   : [],
   'APITokens'  : ['userId'],
   'Activities' : [],
   'Comments'   : [],
   'Joints'     : ['activity_id'],
-  'Volunteers' : ['email']
+  'Volunteers' : ['email'],
+  'Imports'    : ['rg_email']
 }
 
 // Sprawdź czy środowisko korzysta z bazy RethinkDB
@@ -91,6 +93,7 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
     })
   }).then(function(conn) {
     return new Promise(function(resolve) {
+      // TODO: sprawdź czy są jakieś dane w tabeli
       // Dane dla tabeli wolontariuszy
       var arr = []
       var data = require('./app/services/static/volunteers.json')

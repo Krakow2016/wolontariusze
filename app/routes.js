@@ -80,8 +80,10 @@ module.exports = {
     action: function (context, payload, done) {
       var volunteerId  = payload.params.id
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Szczegóły wolontariusza' })
-      context.executeAction(actions.showVolunteer, { id: volunteerId }, function() {
-        done()
+      context.executeAction(actions.showVolunteer, { id: volunteerId }, function(data) {
+        context.executeAction(actions.showXls, { email: data.email }, function() {
+          done()
+        })
       })
     }
   },

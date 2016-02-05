@@ -1,5 +1,4 @@
 var React = require('react')
-var Paper = require('material-ui/lib/paper')
 var Button = require('material-ui/lib/raised-button')
 var Dialog = require('material-ui/lib/dialog')
 
@@ -26,7 +25,7 @@ var Invite = React.createClass({
 
   render: function() {
     return (
-      <Paper className="paper" key="admin">
+      <div>
         <p>Profil jest nieaktywny do czasu, aż wolontariusz nie zostanie zaproszony do serwisu.</p>
         <div style={{textAlign: 'center'}}>
           <Button label="Wyślij zaproszenie" secondary={true} onClick={this.showDialog} />
@@ -41,7 +40,7 @@ var Invite = React.createClass({
           onRequestClose={this._handleRequestClose} >
           Czy jesteś pewnien aby to zrobić?
         </Dialog>
-      </Paper>
+      </div>
     )
   }
 })

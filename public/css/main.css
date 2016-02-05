@@ -451,3 +451,12 @@ footer {
 .search a:after {
   content: '';
 }
+
+table.details {
+  margin: 50px
+}
+
+table.details tr > * {
+  padding: 5px;
+  border: 1px gray solid
+}
