@@ -1,12 +1,10 @@
 rethinkdb:
   image: rethinkdb:2.2
   container_name: rethinkdb
-  ports: ["8080:8080", "28015:28015"]
 
 es:
   image: krakow2016/elasticsearch
   container_name: es
-  ports: ["9200:9200"]
 
 logstash:
   image: krakow2016/logstash

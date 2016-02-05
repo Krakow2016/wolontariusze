@@ -16,7 +16,10 @@ var express = require('express'),
   crypto = require('crypto'),
   multipart = require('connect-multiparty'),
   excelParser = require('excel-parser'),
-  r = require('rethinkdb')
+  r = require('rethinkdb'),
+  AWS = require('aws-sdk'),
+  async = require('async'),
+  sharp = require('sharp')
 
 // Służy do zapisywania sesji użytkowników w bazie danych
 var RDBStore = require('session-rethinkdb')(session)
@@ -304,8 +307,76 @@ server.post('/import', multipartMiddleware, function(req, res) {
           })
         })
       })
-
     })
+  }
+})
+
+AWS.config.update({region: 'eu-central-1'})
+server.post('/upload', multipartMiddleware, function(req, res) {
+  if(req.user) {
+    async.parallel([
+      function(cb){
+        // Zdjęcie profilowe @x2 - przytnij i wyślij do S3
+        sharp(req.files.avatar.path)
+          .resize(750, 750)
+          .quality(90)
+          .toBuffer(function(err, buffer) {
+            if(err) { return cb(err) }
+            var s3obj = new AWS.S3({
+              params: {
+                Bucket: 'krakow2016',
+                Key: req.user.id +'/avatar@x2' }
+            })
+            // pipe to s3
+            s3obj.upload({Body: buffer})
+              .send(cb)
+        })
+    }, function(cb){
+        // Zdjęcie profilowe - przytnij i wyślij do S3
+        sharp(req.files.avatar.path)
+          .resize(375, 375)
+          .quality(90)
+          .toBuffer(function(err, buffer) {
+            if(err) { return cb(err) }
+            var s3obj = new AWS.S3({
+              params: {
+                Bucket: 'krakow2016',
+                Key: req.user.id +'/avatar' }
+            })
+            // pipe to s3
+            s3obj.upload({Body: buffer})
+              .send(cb)
+        })
+    }, function(cb) {
+        // Miniaturka - przytnij i wyślij do S3
+        sharp(req.files.avatar.path)
+          .resize(100, 100)
+          .quality(75)
+          .toBuffer(function(err, buffer) {
+            if(err) { return cb(err) }
+            var s3obj = new AWS.S3({
+              params: {
+                Bucket: 'krakow2016',
+                Key: req.user.id +'/thumb' }
+            })
+            s3obj.upload({Body: buffer})
+              .send(cb)
+        })
+    }], function(err, data) {
+      if(err) {
+        res.status(500).send(err)
+      } else {
+        var changes = {
+          profile_picture_url: data[0].Location +'?'+ data[0].ETag.replace('\"', ''),
+          thumb_picture_url: data[1].Location +'?'+ data[1].ETag.replace('\"', '')
+        }
+        Volunteers.update({force_admin: true}, 'Volunteers', {id: req.user.id}, changes, {returnChanges: true}, function(err, result) {
+          res.status(201).send(result.changes[0].new_val)
+        })
+      }
+    })
+  } else {
+    res.send(403)
   }
 })
 

@@ -94,7 +94,7 @@ module.exports = {
       }
 
       // Wykonaj zapytanie do bazy danych
-      r.table(tableName).get(id).update(body).run(conn, callback)
+      r.table(tableName).get(id).update(body, config).run(conn, callback)
     })
   }
 

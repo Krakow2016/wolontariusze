@@ -66,7 +66,8 @@ VolunteerStore.attributes = function() {
     'last_name',
     'email',
     'city',
-    'profile_picture',
+    'profile_picture_url',
+    'thumb_picture_url',
     'interests',
     'departments',
     'my_dream'

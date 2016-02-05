@@ -1,9 +1,0 @@
-{
-    "cred" : {
-        "accessKeyId": "AKIAJQTXPHKKXPOPGCCA", 
-        "secretAccessKey": "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"
-    }, 
-    "region": "eu-central-1",
-    "bucketName" : "sdm-wolontariusze",
-    "catalogAvatars" : "avatars"
-}

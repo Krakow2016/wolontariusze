@@ -451,3 +451,7 @@ footer {
 .search a:after {
   content: '';
 }
+
+.avatar-img {
+  width: 375px
+}

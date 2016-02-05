@@ -48,7 +48,7 @@ var Basic = React.createClass({
         handleSuccessSnackbarClose={this.handleSuccessSnackbarClose}
         handleErrorSnackbarClose={this.handleErrorSnackbarClose} >
 
-        <BasicForm {...this.state.profile} />
+        <BasicForm {...this.state.profile} context={this.props.context} />
       </ProfileSettings>
     )
   }

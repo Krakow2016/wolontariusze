@@ -3,6 +3,7 @@
 var debug = require('debug')('Actions')
 var VolunteerStore = require('./stores/Volunteer')
 var navigateAction = require('fluxible-router').navigateAction
+var request = require('superagent')
 
 var env = process.env.NODE_ENV || 'development'
 var conf = require('../config.json')[env]
@@ -54,6 +55,18 @@ module.exports = {
       } else {
         context.dispatch('VOLUNTEER_UPDATE_SUCCESS', [volunteer])
       }
+      cb()
+    })
+  },
+
+  updateProfilePicture: function(context, payload, cb) {
+    var r = request.post('/upload')
+
+    r.attach('avatar', payload[0])
+    r.end(function(err, resp){
+      console.log(resp)
+      context.dispatch('LOAD_VOLUNTEER', resp.body)
+      context.dispatch('VOLUNTEER_UPDATE_SUCCESS')
       cb()
     })
   },
