@@ -98,11 +98,11 @@ module.exports = {
   },
 
   update: function(req, resource, params, body, config, callback) {
-    var volonteerId = params.volonteerId
-    var commentId = params.commentId
+    var volonteerId = body.volonteerId
+    var commentId = body.commentId
     var user = req.user || config.user
     var adminId = user.id
-    var text = params.text
+    var text = body.text
     var timestamp = Date.now()
     for (var i = 0 ; i < comments.length; i++) {
       if (comments[i].volonteerId == volonteerId && comments[i].id == commentId) {

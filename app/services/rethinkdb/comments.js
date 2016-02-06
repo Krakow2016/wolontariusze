@@ -70,7 +70,10 @@ module.exports = Protect({
         return
       }
 
-      r.table(resource).update({text: params.text}).run(conn, callback)
+      r.table(resource)
+        .get(body.id)
+        .update({text: body.text})
+        .run(conn, callback)
     })
   },
 

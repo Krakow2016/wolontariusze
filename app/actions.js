@@ -184,7 +184,7 @@ module.exports = {
 
   profileCommentsUpdate: function(context, payload, cb) {
     debug('profile comment update')
-    context.service.update('Comments', payload, {}, function (err) {
+    context.service.update('Comments', {}, payload, function (err) {
       if(err) { debug(err) }
       else { context.dispatch('COMMENT_UPDATED', payload) }
       cb()
