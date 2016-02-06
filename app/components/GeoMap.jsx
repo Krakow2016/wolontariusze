@@ -21,14 +21,20 @@ var GeoMap = React.createClass({
   },
 
   onSearchInputChange: function (event) {
-    var modifiedState = this.state;
-    modifiedState.searchValue = event.currentTarget.value;
-    this.setState(modifiedState);
+    var value = event.currentTarget.value
+    this.setState(update(this.state, {
+      searchValue: {$set: value}
+    }))
   },
 
+  /*
+   * Pomocne linki:
+   * //https://pl.wikipedia.org/wiki/Znaki_diakrytyczne
+   * //http://wiki.openstreetmap.org/wiki/Nominatim
+   */
   onSearchButtonClick: function () {
     var input = this.state.searchValue;     //np. "Kraków Kanonicza 14"
-    //https://pl.wikipedia.org/wiki/Znaki_diakrytyczne
+    
     output =  input.toLowerCase()
                     .trim()
                     .replace("ą", "a")
@@ -41,7 +47,7 @@ var GeoMap = React.createClass({
                     .replace("ź", "z")
                     .replace("ż", "z");
     
-    //http://wiki.openstreetmap.org/wiki/Nominatim
+    
     var query = output;
     var searchBaseUrl = 'http://nominatim.openstreetmap.org/search.php?q=';
     var searchParams='&format=json'
@@ -52,22 +58,20 @@ var GeoMap = React.createClass({
     request.open('GET', searchUrl, true)
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
-        // Success!
         var resp = request.responseText;
         console.log(resp);
         var json = JSON.parse(resp)
+        
+        that.setState(update(that.state, {
+          lon: {$set: json[0].lon},
+          lat: {$set: json[0].lat}
+        }))
 
-        var modifiedState = that.state;
-        modifiedState.lat = json[0].lat;
-        modifiedState.lon = json[0].lon;
-        that.setState(modifiedState);
       } else {
-        // We reached our target server, but it returned an error
       }
     }
 
     request.onerror = function() {
-      // There was a connection error of some sort
     }
 
     request.send();
@@ -82,74 +86,73 @@ var GeoMap = React.createClass({
   },
   
   onZoomInButtonClick: function () {
-    var modifiedState = this.state;
-    if (modifiedState.zoomValue < 20) {
-      modifiedState.zoomValue++;
+    var zoom = this.state.zoomValue;
+    if (zoom < 19) {
+      zoom++
     }
-    this.setState(modifiedState);
+    this.setState(update(this.state, {
+      zoomValue: {$set: zoom},
+    }))
   },
   
   onZoomOutButtonClick: function () {
-    var modifiedState = this.state;
-    if (modifiedState.zoomValue > 0) {
-      modifiedState.zoomValue--;
+    var zoom = this.state.zoomValue;
+    if (zoom > 0) {
+      zoom--
     }
-    this.setState(modifiedState);
+    this.setState(update(this.state, {
+      zoomValue: {$set: zoom},
+    }))
   },
   
   onLeftClick: function () {
-    var merc = new SphericalMercator({size: 256});
-    var delta = merc.ll( [this.state.movePixel, 0], this.state.zoomValue);
-    console.log('Delta', delta);
-    var modifiedState = this.state;
-    modifiedState.lon = Number(modifiedState.lon)
-    modifiedState.lon -= (180+delta[0]);
-    this.setState(modifiedState);
-    
+    var merc = new SphericalMercator({size: 256})
+    var delta = merc.ll( [this.state.movePixel, 0], this.state.zoomValue)
+    var lon = Number(this.state.lon)
+    lon -= (180+delta[0])
+    this.setState(update(this.state, {
+      lon: {$set: lon},
+    }))
   },
   
   onRightClick: function () {
-    var merc = new SphericalMercator({size: 256});
-    var delta = merc.ll( [this.state.movePixel, 0], this.state.zoomValue);
-    console.log('Delta', delta);
-    var modifiedState = this.state;
-    modifiedState.lon = Number(modifiedState.lon)
-    modifiedState.lon += (180+delta[0]);
-    this.setState(modifiedState);
-    
-  },
-  
-  onUpClick: function () {
-    var merc = new SphericalMercator({size: 256});
-    var delta = merc.ll( [this.state.movePixel, 0], this.state.zoomValue);
-    console.log('Delta', delta);
-    var modifiedState = this.state;
-    modifiedState.lat = Number(modifiedState.lat)
-    modifiedState.lat += 180+delta[0];
-    this.setState(modifiedState);
-    
+    var merc = new SphericalMercator({size: 256})
+    var delta = merc.ll( [this.state.movePixel, 0], this.state.zoomValue)
+    var lon = Number(this.state.lon)
+    lon += (180+delta[0])
+    this.setState(update(this.state, {
+      lon: {$set: lon},
+    }))    
   },
   
   onDownClick: function () {
-    var merc = new SphericalMercator({size: 256});
-    var delta = merc.ll( [this.state.movePixel, 0], this.state.zoomValue);
-    console.log('Delta', delta);
-    var modifiedState = this.state;
-    modifiedState.lat = Number(modifiedState.lat)
-    modifiedState.lat -= (180+delta[0]);
-    this.setState(modifiedState);
-    
+    var merc = new SphericalMercator({size: 256})
+    var delta = merc.ll( [this.state.movePixel, 0], this.state.zoomValue)
+    var lat = Number(this.state.lat)
+    lat -= (180+delta[0])
+    this.setState(update(this.state, {
+      lat: {$set: lat},
+    }))
   },
   
+  onUpClick: function () {
+    var merc = new SphericalMercator({size: 256})
+    var delta = merc.ll( [this.state.movePixel, 0], this.state.zoomValue)
+    var lat = Number(this.state.lat)
+    lat += (180+delta[0])
+    this.setState(update(this.state, {
+      lat: {$set: lat},
+    }))
+  },
+  
+
+  
   render: function () {
-    console.log('RENDER LAT', this.state.lat)
-    console.log('RENDER LON', this.state.lon)
-    
-    var tiler = new MapTheTiles({width: 500, height: 500});
-    var merc = new SphericalMercator({size: 256});
-    var mercCenter = merc.forward([this.state.lon, this.state.lat ]);
-    var tiles = tiler.getTiles(mercCenter, this.state.zoomValue);
-    var tilesImgs;
+    var tiler = new MapTheTiles({width: 500, height: 500})
+    var merc = new SphericalMercator({size: 256})
+    var mercCenter = merc.forward([this.state.lon, this.state.lat ])
+    var tiles = tiler.getTiles(mercCenter, this.state.zoomValue)
+    var tilesImgs
     var baseUrl = 'http://tile.openstreetmap.org';
     if (tiles) {
         tilesImgs = tiles.map (function (tile) {
@@ -221,9 +224,9 @@ var GeoMap = React.createClass({
     
     var position
     if (this.props.editionMode) {
-      var formattedLon = parseFloat(Math.round(this.state.savedLon*100)/100).toFixed(2);
-      var formattedLat = parseFloat(Math.round(this.state.savedLat*100)/100).toFixed(2);
-      position = <span>Sz:{formattedLat}, Dł:{formattedLon} </span>
+      var formattedLon = parseFloat(Math.round(this.state.savedLon*10000)/10000).toFixed(4);
+      var formattedLat = parseFloat(Math.round(this.state.savedLat*10000)/10000).toFixed(4);
+      position = <span id="geoMapPosition" >Zapisana pozycja: Sz:{formattedLat}, Dł:{formattedLon} </span>
     }
     
     return ( 
@@ -231,8 +234,8 @@ var GeoMap = React.createClass({
         {searchInput}
         {searchButton}
         {saveButton}
-        {position}
         <div id="mapArea">
+            {position}
             {zoomOutButton}
             {zoomInButton}
             {navigationTable}
