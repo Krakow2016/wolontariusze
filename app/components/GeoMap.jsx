@@ -207,6 +207,7 @@ var GeoMap = React.createClass({
 
     var position
     if (this.props.editionMode) {
+      //http://stackoverflow.com/questions/6134039/format-number-to-always-show-2-decimal-places
       var formattedLon = parseFloat(this.state.savedLon).toFixed(4)
       var formattedLat = parseFloat(this.state.savedLat).toFixed(4)
       position = <span id="geoMapPosition" >Zapisana pozycja: Sz:{formattedLat}, Dł:{formattedLon} </span>

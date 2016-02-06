@@ -104,13 +104,14 @@ var ActivityAdministration = React.createClass({
   },
   
   handleAddPositionChange: function(evt) {
-    console.log("evt", evt)
+
+    //https://facebook.github.io/react/docs/update.html
+    //https://facebook.github.io/react/docs/forms.html
     var value = evt.target.checked
-    
-    
-    var activity = this.state.activity;
+      
+    var activity = this.state.activity
     if (!value) {
-      delete activity.lat_lon;
+      delete activity.lat_lon
     } else {
       activity.lat_lon = [0, 0]
     }
