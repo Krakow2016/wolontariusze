@@ -461,13 +461,13 @@ table.details tr > * {
   border: 1px gray solid
 }
 
-#mapArea {
+#geoMap{
   width: 500px;
   height: 500px;
   overflow: hidden;
   position: relative;
 }
-#tilesContainer {
+#tiles {
   position: relative;
   width: 500px;
   height: 500px;
@@ -475,19 +475,34 @@ table.details tr > * {
   cursor: pointer;
 }
 #geoMapMarker {
-  font-size: 20px;
+  z-index: 3;
   cursor: pointer;
-  color: Magenta;
-  position: relative;
-  top: -260px;
+  position: absolute;
+  top: 235px;
   left: 240px;
+  font-size: 20px;
+  color: magenta;
 }
+
 #geoMapCopyright{
   color: black;
   position: relative;
   top: -50px;
   left: 5px;
 }
+
+#geoMapCopyright{
+  color: black;
+  font-size: 12px;
+  position: relative;
+  top: -20px;
+  left: 5px;
+}
+
+#geoMapCopyright a, #geoMapCopyright span  {
+  font-size: 1.0rem;
+}
+
 
 #geoMapPosition{
   position: relative;
@@ -501,7 +516,7 @@ table.details tr > * {
 #geoMapNavigationTable{
   position: absolute;
   z-index: 2;
-  top: 30px;
+  top: 10px;
   left: 10px;
 }
 
@@ -513,7 +528,7 @@ table.details tr > * {
 #geoMapZoomOutButton{
   position: absolute;
   z-index: 2;
-  top: 30px;
+  top: 10px;
   left: 450px;
   width: 20px;
   height: 20px;
@@ -522,7 +537,7 @@ table.details tr > * {
 #geoMapZoomInButton{
   position: absolute;
   z-index: 2;
-  top: 30px;
+  top: 10px;
   left: 470px;
   width: 20px;
   height: 20px;

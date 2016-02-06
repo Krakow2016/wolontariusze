@@ -103,6 +103,23 @@ var ActivityAdministration = React.createClass({
     }))
   },
   
+  handleAddPositionChange: function(evt) {
+    console.log("evt", evt)
+    var value = evt.target.checked
+    
+    
+    var activity = this.state.activity;
+    if (!value) {
+      delete activity.lat_lon;
+    } else {
+      activity.lat_lon = [0, 0]
+    }
+    
+    this.setState(update(this.state, {
+        activity: {$set: activity}
+    }))
+  },
+  
   handlePositionChange: function(position) {
     this.setState(update(this.state, {
       activity: {lat_lon: {$set: position}}
@@ -227,7 +244,13 @@ var ActivityAdministration = React.createClass({
       startEventDateHint = <span> Dla aktywności data powinna być w przeszłości </span>
     }
 
-    var position = this.state.activity.lat_lon || [0, 0]
+    var position = this.state.activity.lat_lon
+    var geomap
+    if (typeof (position) != 'undefined') {
+      geomap = <GeoMap editionMode={true}
+                  saveFunction={this.handlePositionChange}
+                  initialPosition={position}/>
+    }
     
     var updateButton = []
     if (this.props.creationMode == false) {
@@ -331,14 +354,19 @@ var ActivityAdministration = React.createClass({
               value={this.state.activity.place}
               onChange={this.handleChange} />
           </div>
-          <GeoMap editionMode={true}
-                  saveFunction={this.handlePositionChange}
-                  initialPosition={position}/>
+          <br></br>
+            <br></br>
+            <b>Współrzędne geograficzne:  </b>
+            <br></br>
+            <input type="checkbox" name="addPosition" checked={!!this.state.activity.lat_lon} onChange={this.handleAddPositionChange} />
+            {geomap}
+          <br></br>
+          
 
           <br></br>
           <b>Zadanie jest PILNE? </b>
           <br></br>
-          <input type="checkbox" name="is_urgent" checked={this.state.activity.is_urgent} changeValue={this.handleChange} />
+          <input type="checkbox" name="is_urgent" checked={this.state.activity.is_urgent} onChange={this.handleChange} />
           <br></br>
 
           <br></br>

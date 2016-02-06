@@ -1,4 +1,4 @@
-//http://maps-on-blackboard.com/articles/osm-tiles-map-with-rotation/
+//Inspiracja z http://maps-on-blackboard.com/articles/osm-tiles-map-with-rotation/
 var React = require('react')
 var MapTheTiles = require('map-the-tiles')
 var SphericalMercator = require('sphericalmercator')
@@ -14,7 +14,7 @@ var GeoMap = React.createClass({
       lat: that.props.initialPosition[0],
       savedLon: that.props.initialPosition[1],
       savedLat: that.props.initialPosition[0],
-      searchValue: 'Kraków Kanonicza 14',
+      searchValue: '',
       zoomValue: 18,
       movePixel: 5
     }
@@ -207,8 +207,8 @@ var GeoMap = React.createClass({
 
     var position
     if (this.props.editionMode) {
-      var formattedLon = parseFloat(Math.round(this.state.savedLon*10000)/10000).toFixed(4)
-      var formattedLat = parseFloat(Math.round(this.state.savedLat*10000)/10000).toFixed(4)
+      var formattedLon = parseFloat(this.state.savedLon).toFixed(4)
+      var formattedLat = parseFloat(this.state.savedLat).toFixed(4)
       position = <span id="geoMapPosition" >Zapisana pozycja: Sz:{formattedLat}, Dł:{formattedLon} </span>
     }
 
@@ -217,17 +217,18 @@ var GeoMap = React.createClass({
         {searchInput}
         {searchButton}
         {saveButton}
-        <div id="mapArea">
-            {position}
+        <br></br>
+        {position}
+        <div id="geoMap">
             {zoomOutButton}
             {zoomInButton}
             {navigationTable}
-            <div id="tilesContainer">
+            {marker}
+            <div id="tiles">
               {tilesImgs}
             </div>
-            {marker}
-            {copyrightInfo}
         </div>
+        {copyrightInfo}
       </div>
     )
   }

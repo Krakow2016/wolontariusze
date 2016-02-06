@@ -77,7 +77,12 @@ var Activity = React.createClass({
       </div>
     }
 
-    var position = this.state.activity.lat_lon || [0, 0]
+    var position = this.state.activity.lat_lon
+    var geomap
+    if (typeof (position) != 'undefined') {
+      geomap = <GeoMap editionMode={false} 
+                initialPosition={position}/>
+    }
     
     var priority = (activity.is_urgent) ? 'PILNE' : 'NORMALNE'
 
@@ -119,9 +124,7 @@ var Activity = React.createClass({
         <br></br>
         <b>Miejsce wydarzenia:</b> {activity.place}
         <br></br>
-        <GeoMap editionMode={false} 
-                initialPosition={position}/>
-        
+        {geomap}
         <b>Prorytet:</b> {priority}
         <br></br>
         <ReactMarkdown source={activity.description} />
