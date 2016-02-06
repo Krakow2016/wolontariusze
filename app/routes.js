@@ -82,7 +82,10 @@ module.exports = {
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Szczegóły wolontariusza' })
       context.executeAction(actions.showVolunteer, { id: volunteerId }, function(data) {
         context.executeAction(actions.showXls, { email: data.email }, function() {
-          done()
+          context.service.read('Comments', {volunteerId: volunteerId}, {}, function (err, data) {
+            context.dispatch('LOAD_COMMENTS', data)
+            done()
+          })
         })
       })
     }

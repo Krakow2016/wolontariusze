@@ -14,15 +14,23 @@ var Details = React.createClass({
 
   render: function() {
 
-  var props = this.props
-  var rows = Object.keys(this.props).map(function(key){
-    return (
-      <tr key={key}>
-        <td>{key}</td>
-        <td>{props[key]}</td>
-      </tr>
-    )
-  })
+    if(!this.props.id) {
+      return (
+        <div>
+          Brak informacji o zgłoszeniu do wolontariatu krótkoterminowego.
+        </div>
+      )
+    }
+
+    var props = this.props
+    var rows = Object.keys(this.props).map(function(key){
+      return (
+        <tr key={key}>
+          <td>{key}</td>
+          <td>{props[key]}</td>
+        </tr>
+      )
+    })
 
     return (
       <table className="details">

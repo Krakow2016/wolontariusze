@@ -18,7 +18,7 @@ module.exports = Protect({
       }
 
       r.table('Comments')
-        .filter({volonteerId: params.volunteerId})
+        .filter({volunteerId: params.volunteerId})
         // Dołącz imię i nazwisko autora z tabeli wolontariuszy
         .eqJoin('adminId', r.table('Volunteers'))
         .pluck({ // Ogranicz do tylko wybranych atrybutów
@@ -27,7 +27,7 @@ module.exports = Protect({
         })
         .zip()
         .limit(50)
-        .orderBy('creationTimestamp') // Sortowanie
+        .orderBy(r.desc('creationTimestamp')) // Sortowanie
         .run(conn, function(err, cursor) {
           if(err) { callback(err) }
           else { cursor.toArray(callback) }

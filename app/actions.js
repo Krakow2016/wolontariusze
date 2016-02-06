@@ -173,14 +173,6 @@ module.exports = {
     })
   },
 
-  showComments: function(context, payload, cb) {
-    debug('profile comment read')
-    context.service.read('Comments', payload, {}, function (err, data) {
-      context.dispatch('LOAD_COMMENTS', data)
-      cb()
-    })
-  },
-
   createComment: function(context, payload, cb) {
     debug('profile comment create')
     context.service.create('Comments', payload, {}, function (err, data) {

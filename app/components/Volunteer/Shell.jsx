@@ -3,11 +3,7 @@ var NavLink = require('fluxible-router').NavLink
 
 var VolunteerStore = require('../../stores/Volunteer')
 
-//var ProfileComments = require('./ProfileComments.jsx')
-//var Invite = require('./Admin/Invite.jsx')
-
 var actions = require('../../actions')
-var showCommentsAction = actions.showComments
 
 var Volunteer = React.createClass({
 
@@ -98,13 +94,6 @@ var Volunteer = React.createClass({
 
 
 //var ProfileTabs = React.createClass({
-
-  ////showProfileComments: function (){
-    ////console.log ('show comments')
-    ////this.props.context.executeAction(showCommentsAction, {
-      ////volunteerId: this.props.id
-    ////})
-  ////},
 
   //render: function() {
 
@@ -200,46 +189,6 @@ var Volunteer = React.createClass({
       ////</Paper>
     ////]
 
-    ////if (is_admin && !this.props.password) {
-      ////profile_papers.unshift(
-        ////<Invite id={this.props.id} context={this.props.context} />
-      ////)
-    ////}
-
-    ////var tabs = [
-      ////<Tab label="Profil" key="profile" >
-        ////{profile_papers}
-      ////</Tab>,
-      ////<Tab label="Aktywność" key="activity" >
-        ////<Paper className="paper">
-          ////<div className="profileActivity">
-            ////<h3 style={{display: is_owner ? 'block' : 'none'}}>Jesteś właścicielem tego profilu ☺</h3>
-            ////<div style={{'display': 'inline-block'}}>
-              ////<h3>Ostatnia aktywność:</h3>
-            ////</div>
-            ////<div className="activity"></div>
-            ////<div className="activity"></div>
-            ////<div className="activity"></div>
-          ////</div>
-        ////</Paper>
-      ////</Tab>
-    ////]
-
-    ////if (is_admin) {
-      ////tabs.push(
-        ////<Tab label="Komentarze" key="comments" onActive={this.showProfileComments}>
-          ////<ProfileComments adminId={user.id} context={this.props.context}></ProfileComments>
-        ////</Tab>
-      ////)
-    ////}
-
-    //return (
-    //)
-  //},
-
-  //user: function() {
-    //return this.props.context.getUser()
-  //}
 //})
 
 var ExtraAttributesVisible = React.createClass({

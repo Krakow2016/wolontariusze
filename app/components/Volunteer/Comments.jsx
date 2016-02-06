@@ -1,5 +1,6 @@
 var React = require('react')
 var ReactMarkdown = require('react-markdown')
+var NavLink = require('fluxible-router').NavLink
 
 var TimeService = require('../../modules/time/TimeService.js')
 
@@ -86,9 +87,9 @@ var ProfileComment = React.createClass ({
           </td>
           <td>{TimeService.showTime(this.props.comment.creationTimestamp)}</td>
           <td>
-            <a href={'/wolontariusz/'+this.props.comment.adminId}>
+            <NavLink href={'/wolontariusz/'+this.props.comment.adminId}>
               {this.full_name()}
-            </a>
+            </NavLink>
             <br></br>
             <input type="button" onClick={this.editComment} value="Edytuj" />
             <input type="button" onClick={this.deleteComment} value="Usuń" />
