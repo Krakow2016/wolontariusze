@@ -108,12 +108,6 @@ var RegistrationForm = React.createClass({
         <div className="pure-g">
           <div className="pure-u-1 pure-u-md-1-3"></div>
           <div className="pure-u-1 pure-u-md-2-3">
-            <p>
-              <label htmlFor="cb" className="pure-checkbox">
-                <MyInput required id="cb" name="agreement" type="checkbox" />
-                Zgadzam się na przetwarzanie danych osobowych
-              </label>
-            </p>
             {message}
             <button type="submit" className="pure-button pure-button-primary" disabled={!this.state.canSubmit}>
               Wyślij

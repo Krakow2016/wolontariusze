@@ -4,6 +4,8 @@ module.exports = function(service) {
   service.read = function(req, resource, params, config, callback) {
     if(req.user && req.user.is_admin) {
       read(req, resource, params, config, callback)
+    } else {
+      callback(403)
     }
   }
 }

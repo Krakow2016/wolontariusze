@@ -452,11 +452,11 @@ footer {
   content: '';
 }
 
-table.details {
+table {
   margin: 50px
 }
 
-table.details tr > * {
+table tr > * {
   padding: 5px;
   border: 1px gray solid
 }

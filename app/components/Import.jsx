@@ -1,5 +1,4 @@
 var React = require('react')
-var Paper = require('material-ui/lib/paper')
 
 var request = require('superagent')
 
@@ -30,7 +29,7 @@ var Search = React.createClass({
 
   render: function() {
     return (
-      <Paper className="paper">
+      <div>
           <p>
               Wgraj plik xml
           </p>
@@ -40,7 +39,7 @@ var Search = React.createClass({
           </form>
 
           <textarea value={this.state.result} />
-      </Paper>
+      </div>
     )
   }
 })

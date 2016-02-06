@@ -61,12 +61,12 @@ module.exports = {
   },
 
   volunteer_calendar: {
-    path: '/wolontariusz/:id/kalendarz',
+    path: '/wolontariusz/:id/grafik',
     method: 'get',
     handler: require('./components/Volunteer/Calendar.jsx'),
     action: function (context, payload, done) {
       var volunteerId  = payload.params.id
-      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Kalendarz wolontariusza' })
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Grafik wolontariusza' })
       context.executeAction(actions.showVolunteer, { id: volunteerId }, function() {
         done()
       })

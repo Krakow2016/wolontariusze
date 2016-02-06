@@ -6,7 +6,7 @@ var VolunteerStore = createStore({
   handlers: {
     'LOAD_VOLUNTEER'  : 'load',
     'VOLUNTEER_CREATION_FAILURE': 'onFailure',
-    'VOLUNTEER_CREATION_SUCCESS': 'onSuccess',
+    //'VOLUNTEER_CREATION_SUCCESS': 'onSuccess',
     'VOLUNTEER_UPDATE_FAILURE': 'onFailure',
     'VOLUNTEER_UPDATE_SUCCESS': 'onSuccess'
   },

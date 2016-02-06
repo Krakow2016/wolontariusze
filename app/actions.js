@@ -34,11 +34,13 @@ module.exports = {
     var volunteerStore = context.getStore(VolunteerStore)
     var volunteer = volunteerStore.createVolunteer(payload)
 
-    context.service.create('Volunteers', {}, volunteer, function (err) {
+    context.service.create('Volunteers', {}, volunteer, function (err, resp) {
       if (err) { // Błąd po stronie serwera
         context.dispatch('VOLUNTEER_CREATION_FAILURE', [volunteer])
       } else {
-        context.dispatch('VOLUNTEER_CREATION_SUCCESS', [volunteer])
+        context.executeAction(navigateAction, {
+          url: '/wolontariusz/'+ resp.generated_keys[0] +'/admin'
+        })
       }
       cb()
     })

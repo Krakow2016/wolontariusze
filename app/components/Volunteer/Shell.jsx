@@ -68,8 +68,8 @@ var Volunteer = React.createClass({
             <NavLink href={"/wolontariusz/" + this.state.id +'/aktywnosci'} className="profile-ribon-cell">
               <b id="profile-ribon-txt">Aktywności</b>
             </NavLink>
-            <NavLink href={"/wolontariusz/" + this.state.id +'/kalendarz'} className="profile-ribon-cell">
-              <b id="profile-ribon-txt">Kalendarz</b>
+            <NavLink href={"/wolontariusz/" + this.state.id +'/grafik'} className="profile-ribon-cell">
+              <b id="profile-ribon-txt">Grafik</b>
             </NavLink>
             <NavLink href={"/wolontariusz/" + this.state.id +'/admin'} className="profile-ribon-cell">
               <b id="profile-ribon-txt">Szczegóły</b>
