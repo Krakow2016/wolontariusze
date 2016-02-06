@@ -1,16 +1,19 @@
 var React = require('react')
-var Paper = require('material-ui/lib/paper')
 
 var App = React.createClass({
   render: function () {
     return (
-      <Paper className='paper'>
-        <form action="/login" method="POST">
-          <input name="username" placeholder="email@example.com" />
-          <input type="password" name="password" placeholder="hasło" />
-          <input type="submit" value="Zaloguj" />
-        </form>
-      </Paper>
+      <div className="section group">
+        <div className="col span_2_of_4">
+          <form action="/login" method="POST">
+            <label htmlFor="login" className="label">Login</label>
+            <input type="text" name="username" className="form login" /><br />
+            <label htmlFor="pass" className="label">Hasło</label>
+            <input type="password" name="password" className="form login" /><br />
+            <input type="submit" value="Wejdź" className="submit" />
+          </form>
+        </div>
+      </div>
     )
   }
 })

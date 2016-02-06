@@ -1,16 +1,46 @@
 var React = require('react')
-var Paper = require('material-ui/lib/paper')
+var VolunteerShell = require('./Shell.jsx')
+var Comments = require('./Comments.jsx')
+
 var Button = require('material-ui/lib/raised-button')
 var Dialog = require('material-ui/lib/dialog')
 
-var VolunteerStore = require('../stores/Volunteer')
-var updateVolunteer = require('../actions').updateVolunteer
-var Invite = require('./Admin/Invite.jsx')
+var VolunteerStore = require('../../stores/Volunteer')
+var XlsStore = require('../../stores/Xls')
+var updateVolunteer = require('../../actions').updateVolunteer
+var Invite = require('./Invite.jsx')
+
+var Details = React.createClass({
+
+  render: function() {
+
+  var props = this.props
+  var rows = Object.keys(this.props).map(function(key){
+    return (
+      <tr key={key}>
+        <td>{key}</td>
+        <td>{props[key]}</td>
+      </tr>
+    )
+  })
+
+    return (
+      <table className="details">
+        <tr>
+          <th>Klucz</th>
+          <th>Wartość</th>
+        </tr>
+        {rows}
+      </table>
+    )
+  }
+})
 
 var VolunteerAdministration = React.createClass({
   getInitialState: function () {
     return {
-      profile: this.props.context.getStore(VolunteerStore).getState().profile
+      profile: this.props.context.getStore(VolunteerStore).getState().profile,
+      details: this.props.context.getStore(XlsStore).data
     }
   },
 
@@ -20,14 +50,26 @@ var VolunteerAdministration = React.createClass({
     })
   },
 
+  _changeListener2: function() {
+    this.setState({
+      details: this.props.context.getStore(XlsStore).data
+    })
+  },
+
   componentDidMount: function() {
     this.props.context.getStore(VolunteerStore)
       .addChangeListener(this._changeListener)
+
+    this.props.context.getStore(XlsStore)
+      .addChangeListener(this._changeListener2)
   },
 
   componentWillUnmount: function() {
     this.props.context.getStore(VolunteerStore)
       .removeChangeListener(this._changeListener)
+
+    this.props.context.getStore(XlsStore)
+      .removeChangeListener(this._changeListener2)
   },
 
   showRejectionDialog: function() {
@@ -62,23 +104,16 @@ var VolunteerAdministration = React.createClass({
   },
 
   render: function() {
-    var papers = [
-      <Paper className="paper" key="info">
-        <h1>{this.name()}</h1>
-        <p>
-          E-mail: {this.state.profile.email}
-        </p>
-      </Paper>
-    ]
+    var papers = []
 
     if(this.state.profile.approved) {
       papers.push(
-        <Paper className="paper" key="rejection">
+        <div className="paper" key="rejection">
           <p>Profil jest aktywny</p>
           <div style={{textAlign: 'center'}}>
             <Button label="Zablokuj profil" secondary={true} onClick={this.showRejectionDialog} />
           </div>
-        </Paper>
+        </div>
       )
     } else {
       papers.push(
@@ -89,17 +124,17 @@ var VolunteerAdministration = React.createClass({
     if(this.state.profile.is_admin) {
     } else {
       papers.push(
-        <Paper className="paper" key="admin">
+        <div className="paper" key="admin">
           <p>Użytkownik nie posiada przywilejów administratora</p>
           <div style={{textAlign: 'center'}}>
             <Button label="Awansuj do rangi administratora" primary={true} onClick={this.showAdminDialog} />
           </div>
-        </Paper>
+        </div>
       )
     }
 
     return (
-      <div>
+      <VolunteerShell context={this.props.context}>
         {papers}
 
         <Dialog
@@ -121,13 +156,13 @@ var VolunteerAdministration = React.createClass({
           onRequestClose={this._handleRequestClose} >
           Czy jesteś pewnien aby to zrobić?
         </Dialog>
-      </div>
-    )
-  },
 
-  name: function() {
-    return this.state.profile.first_name +' '+ this.state.profile.last_name
-  },
+        <Details {...this.state.details} />
+
+        <Comments context={this.props.context} />
+      </VolunteerShell>
+    )
+  }
 })
 
 module.exports = VolunteerAdministration

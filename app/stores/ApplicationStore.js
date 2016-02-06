@@ -10,7 +10,7 @@ var ApplicationStore = createStore({
     'SAVE_FLASH_FAILURE'   : 'saveFailure'
   },
   initialize: function () {
-    this.pageTitle = ''
+    this.title = ''
   },
   saveFailure: function(message) {
     this.flashFailure = message
@@ -27,11 +27,11 @@ var ApplicationStore = createStore({
     return this.flashSuccess
   },
   updatePageTitle: function (title) {
-    this.pageTitle = title.pageTitle
+    this.title = title.title
     this.emitChange()
   },
   getPageTitle: function () {
-    return this.pageTitle
+    return this.title
   },
   getState: function () {
     return {
@@ -39,7 +39,7 @@ var ApplicationStore = createStore({
       currentPage: this.currentPage,
       pages: this.pages,
       route: this.currentRoute,
-      pageTitle: this.pageTitle,
+      title: this.title,
       flashSuccess: this.flashSuccess,
       flashFailure: this.flashFailure
     }
@@ -52,7 +52,7 @@ var ApplicationStore = createStore({
     this.currentPage = state.currentPage
     this.pages = state.pages
     this.currentRoute = state.route
-    this.pageTitle = state.pageTitle
+    this.title = state.title
     this.flashSuccess = state.flashSuccess
     this.flashFailure = state.flashFailure
   }

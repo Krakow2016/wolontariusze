@@ -1,15 +1,15 @@
 var React = require('react')
 var ReactMarkdown = require('react-markdown')
 
-var TimeService = require('../modules/time/TimeService.js')
+var TimeService = require('../../modules/time/TimeService.js')
 
-var CommentsStore = require('../stores/Comments')
+var CommentsStore = require('../../stores/Comments')
 
-var actions = require('../actions')
+var actions = require('../../actions')
 var updateAction = actions.profileCommentsUpdate
 var deleteAction = actions.profileCommentsDelete
 
-var NewComment = require('./NewComment.jsx')
+var NewComment = require('../NewComment.jsx')
 
 var EditedProfileComment = React.createClass({
   getInitialState: function() {

@@ -13,9 +13,9 @@ var Authentication = React.createClass({
     }
 
     return (
-      <div className="loginBar">
+      <span className="loginBar">
         {loginButton}
-      </div>
+      </span>
     )
   },
 })
@@ -24,7 +24,8 @@ var LoginButton = React.createClass({
   render: function() {
     return (
       <span>
-        <NavLink href="/login">Zaloguj się</NavLink> | <NavLink href="/rejestracja">Zarejestruj się!</NavLink>
+        <NavLink href="/login">Zaloguj się</NavLink>
+        <NavLink href="/rejestracja">Zarejestruj się!</NavLink>
       </span>
     )
   }
@@ -34,7 +35,9 @@ var LogoutButton = React.createClass({
   render: function() {
     return (
       <span>
-        Witaj <b><NavLink href={'/wolontariusz/'+this.props.user_id}>{this.props.user_name}</NavLink></b>! <NavLink href="/ustawienia/konto">Ustawienia</NavLink> | <a href="/logout">Wyloguj się</a>
+        <NavLink href={'/wolontariusz/'+this.props.user_id}>Witaj {this.props.user_name}!</NavLink>
+        <NavLink href="/ustawienia/konto">Ustawienia</NavLink>
+        <a href="/logout">Wyloguj się</a>
       </span>
     )
   }

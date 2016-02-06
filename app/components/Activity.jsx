@@ -1,7 +1,6 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var ReactMarkdown = require('react-markdown')
-var Paper = require('material-ui/lib/paper')
 
 var ActivityStore = require('../stores/Activity')
 
@@ -111,7 +110,7 @@ var Activity = React.createClass({
     //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>
     //<b>Ostatnia edycja:</b> {TimeService.showTime(activity.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.editor.id}>{activity.editor.name}</a></span>
     return (
-      <Paper className="paper">
+      <div>
         {editLink}
         <h2>{activity.title}</h2>
         <br></br>
@@ -132,7 +131,7 @@ var Activity = React.createClass({
         <b>Limit(maksymalna liczba wolontariuszy):</b> {volonteersLimit}
         <br></br>
         {buttons}
-      </Paper>
+      </div>
     )
   }
 })

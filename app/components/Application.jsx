@@ -29,8 +29,23 @@ var Application = React.createClass({
     var applicationStore = this.props.context.getStore(ApplicationStore)
     return {
       infoSnack: applicationStore.getSuccess(),
-      errorSnack: applicationStore.getFailure()
+      errorSnack: applicationStore.getFailure(),
+      title: applicationStore.getPageTitle()
     }
+  },
+
+  _changeListener: function() {
+    this.setState(this.props.context.getStore(ApplicationStore).getState())
+  },
+
+  componentDidMount: function() {
+    this.props.context.getStore(ApplicationStore)
+      .addChangeListener(this._changeListener)
+  },
+
+  componentWillUnmount: function() {
+    this.props.context.getStore(ApplicationStore)
+      .removeChangeListener(this._changeListener)
   },
 
   handleInfoSnackbarRequestClose: function() {
@@ -48,39 +63,57 @@ var Application = React.createClass({
   render: function() {
     var Handler = this.props.currentRoute.handler
 
-    var newActivityLink
-    var user = this.user()
-    if(user && user.is_admin) {
-      newActivityLink = <div className="adminToolbar">
-            <NavLink href="/nowa_aktywnosc">Nowa aktywność</NavLink>
-        </div>
-    }
-
     //render content
     return (
-      <div className="container">
-        <Snackbar
-          open={!!this.state.infoSnack}
-          message={this.state.infoSnack || ''}
-          autoHideDuration={5000}
-          onRequestClose={this.handleInfoSnackbarRequestClose} />
-        <Snackbar
-          open={!!this.state.errorSnack}
-          message={this.state.errorSnack || ''}
-          autoHideDuration={5000}
-          onRequestClose={this.handleErrorSnackbarRequestClose} />
-        <div className="globalNav navBar">
-          <NavLink href="/">
-              <img src="/img/logo.png" style={{'height': '100px', 'margin': '25px 0'}} />
-          </NavLink>
-          <Authentication user_id={this.user_id()} user_name={this.user_name()} />
-          {newActivityLink}
-        </div>
-
-        <Handler context={this.context} />
+      <div>
+        <header>
+          <div className="THE-margin">
+            <NavLink className="logo" href="/">
+              <img src="/img/logo.svg" id="logo" />
+            </NavLink>
+          </div>
+          <nav>
+            <div className="THE-margin">
+              <div className="section group">
+                <div className="col span_3_of_4">
+                  <NavLink href="/zadania">Bank pracy</NavLink>
+                  <Authentication user_id={this.user_id()} user_name={this.user_name()} />
+                </div>
+                <div className="col span_1_of_4 search">
+                  <form>
+                    <input type="text" className="form" id="menu-search-box" />
+                    <input type="image" src="/img/search.svg" id="menu-search-submit" />
+                  </form>
+                  <NavLink href="/wyszukiwarka">Zaawansowane wyszukiwanie</NavLink>
+                </div>
+              </div>
+            </div>
+          </nav>
+        </header>
+        <article>
+          <header className="THE-margin">
+            <h1 id="THE-title">{this.state.title}</h1>
+          </header>
+          <div className="THE-margin" id="THE-body">
+            <Handler context={this.context} />
+          </div>
+        </article>
+        <footer>
+        </footer>
       </div>
     )
   },
+
+  //<Snackbar
+    //open={!!this.state.infoSnack}
+    //message={this.state.infoSnack || ''}
+    //autoHideDuration={5000}
+    //onRequestClose={this.handleInfoSnackbarRequestClose} />
+  //<Snackbar
+    //open={!!this.state.errorSnack}
+    //message={this.state.errorSnack || ''}
+    //autoHideDuration={5000}
+    //onRequestClose={this.handleErrorSnackbarRequestClose} />
 
   user: function() {
     return this.props.context.getUser()

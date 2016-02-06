@@ -14,7 +14,7 @@ module.exports = {
       function (err, data) {
         if (err) { debug(err) }
         else { context.dispatch('LOAD_VOLUNTEER', data) }
-        cb()
+        cb(data)
       }
     )
   },
@@ -56,6 +56,17 @@ module.exports = {
       }
       cb()
     })
+  },
+
+  showXls: function(context, payload, cb) {
+    // Pobierz dane wolontariusza z bazy danych
+    context.service.read('Xls', payload, {},
+      function (err, data) {
+        if (err) { debug(err) }
+        else { context.dispatch('LOAD_XLS', data) }
+        cb()
+      }
+    )
   },
 
   showActivity: function(context, payload, cb) {
