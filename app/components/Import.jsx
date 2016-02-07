@@ -21,7 +21,7 @@ var Search = React.createClass({
 
       r.end(function(err, response){
           that.setState({
-              result: response.text
+              result: response.body
           })
       })
 
@@ -38,7 +38,7 @@ var Search = React.createClass({
               <input type="file" name="fileToUpload" id="fileToUpload" onChange={this.onSelected} multiple="multiple " />
           </form>
 
-          <textarea value={this.state.result} />
+          <pre><code>{this.state.result ? JSON.stringify(this.state.result, null, 2) : null}</code></pre>
       </div>
     )
   }

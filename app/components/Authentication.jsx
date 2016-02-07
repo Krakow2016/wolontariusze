@@ -25,7 +25,6 @@ var LoginButton = React.createClass({
     return (
       <span>
         <NavLink href="/login">Zaloguj się</NavLink>
-        <NavLink href="/rejestracja">Zarejestruj się!</NavLink>
       </span>
     )
   }

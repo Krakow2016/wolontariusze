@@ -1,30 +1,37 @@
 var React = require('react')
 var VolunteerShell = require('./Shell.jsx')
+var VolunteerStore = require('../../stores/Volunteer')
 
 var Shell = React.createClass({
+
+  getInitialState: function () {
+    return this.props.context.getStore(VolunteerStore).getState().profile
+  },
+
+  _changeListener: function() {
+    this.setState(this.props.context.getStore(VolunteerStore).getState().profile)
+  },
+
+  componentDidMount: function() {
+    this.props.context.getStore(VolunteerStore)
+      .addChangeListener(this._changeListener)
+  },
+
+  componentWillUnmount: function() {
+    this.props.context.getStore(VolunteerStore)
+      .removeChangeListener(this._changeListener)
+  },
+
   render: function() {
     return (
       <VolunteerShell context={this.props.context}>
         <div className="section group">
-          <div className="col span_2_of_4">
-            <h1>Języki</h1>
-            <form action="#" method="get">
-              <input type="text" name="fname" className="form txr" /><br />
-              <input type="textarea" name="lname" className="form txr" /><br />
-              <input type="submit" value="Submit" />
-            </form>
-          </div>
-          <div className="col span_2_of_4">
-            <h1>Chciałbym się zaangażować w:</h1>
-            <ul>
-              <li>Condimentum ac </li>
-              <li>quis scelerisque </li>
-              <li>neque consequat a id </li>
-              <li>est elementum</li>
-              <li>Curae torquent</li>
-              <li>malesuada viverra</li>
-            </ul>
-          </div>
+            <h1>Kim jestem?</h1>
+            <p>{this.state.who_question}</p>
+            <h1>Co chciałbym robić w życiu najbardziej?</h1>
+            <p>{this.state.what_question}</p>
+            <h1>Dlaczego angażuję się w wolontariat ŚDM?</h1>
+            <p>{this.state.why_question}</p>
         </div>
         <div className="section group">
           <div className="col span_4_of_4">

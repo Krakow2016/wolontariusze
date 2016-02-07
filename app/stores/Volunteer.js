@@ -64,12 +64,11 @@ VolunteerStore.attributes = function() {
     'id',
     'first_name',
     'last_name',
-    'email',
-    'city',
+    'nationality',
     'profile_picture',
-    'interests',
-    'departments',
-    'my_dream'
+    'who_question',
+    'what_question',
+    'why_question'
   ]
 }
 
