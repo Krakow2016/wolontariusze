@@ -469,3 +469,22 @@ textarea.settings {
 .avatar-img {
   width: 375px
 }
+
+.searchForm {
+  line-height: 30px;
+  width: 500px;
+  margin: auto
+}
+
+.searchForm input:not([type]) {
+  padding: 5px;
+  width: 100%
+}
+
+.searchForm label {
+  padding: 5px
+}
+
+.searchForm .search {
+  margin: 10px
+}

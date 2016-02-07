@@ -263,40 +263,54 @@ module.exports = {
 
   showResults: function(context, state, cb) {
 
-    var age_from = parseInt(state['age-from'])
-    var age_to = parseInt(state['age-to'])
+    //var age_from = parseInt(state['age-from'])
+    //var age_to = parseInt(state['age-to'])
 
-    var filtered = {
-      filtered : {
-        query: {
-          bool: {
-            should: [
-              { bool: {
-                should: [
-                  { match: { 'doc.first_name': state.name } },
-                  { match: { 'doc.last_name': state.name } }
-                ]
+
+    var nested = {
+      query : {
+        bool: {
+          should: [
+            { nested: {
+              path: 'doc',
+              query : {
+                filtered : {
+                  query: {
+                    bool: {
+                      should: [
+                        { bool: {
+                          should: [
+                            { match: { 'doc.first_name': state.name } },
+                            { match: { 'doc.last_name': state.name } }
+                          ]
+                        }
+                        },
+                        { match: { 'doc.email': state.email } },
+                      ],
+                      must: []
+                    }
+                  },
+                  filter : { }
+                }
               }
-            },
-            { match: { 'doc.email': state.email } },
-            { match: { 'doc.address': state.address } },
-            { match: { 'doc.address2': state.address } },
-            { match: { 'doc.parish': state.parish } },
-            { match: { 'doc.education': state.education } },
-            { match: { 'doc.study_field': state.studies } },
-            { match: { 'doc.departments': state.departments } },
-            { match: { 'doc.comments': state.comments } },
-            { bool: {
-              should: [
-                { match: { 'doc.interests': state.interests } },
-                { match: { 'doc.experience': state.interests } }
-              ]
+            }},
+            { nested: {
+              path: 'raw',
+              query : {
+                filtered : {
+                  query: {
+                    bool: {
+                      should: [
+                      { match: { 'raw.cd_sectors': state.departments } },
+                      { match: { 'raw.sk_skills': state.skills } },
+                      ]
+                    }
+                  }
+                }
+              }
             }}
-            ],
-            must: []
-          }
-        },
-        filter : { }
+          ]
+        }
       }
     }
 
@@ -304,93 +318,86 @@ module.exports = {
       size: 100,
       query : {
         function_score: {
-          query : {
-            nested: {
-              path: 'doc',
-              query : filtered
-            }
-          },
+          query: nested,
           functions: [],
           score_mode: 'avg'
         }
       },
       //explain: true,
-      highlight : {
-        fields : {
-          experience: {},
-          interests: {},
-          departments: {},
-          comments: {}
-        }
-      }
+      //highlight : {
+        //fields : {
+          //sk_skills: {},
+          //cd_sectors: {},
+        //}
+      //}
     }
 
     // Jęzkyki
-    var language = state.language
-    var language_keys = language ? Object.keys(language) : []
-    language_keys.forEach(function(key){
-      if(language[key]) {
-        var lang_range = {}
-        lang_range['languages.'+key+'.level'] = { gte: 1, lte: 10 }
-        filtered.query.bool.must.push({range: lang_range})
-        query.query.function_score.functions.push({
-          field_value_factor: {
-            'field' : 'languages.'+key+'.level',
-            'modifier' : 'square'
-          }
-        })
-      }
-    })
+    //var language = state.language
+    //var language_keys = language ? Object.keys(language) : []
+    //language_keys.forEach(function(key){
+      //if(language[key]) {
+        //var lang_range = {}
+        //lang_range['languages.'+key+'.level'] = { gte: 1, lte: 10 }
+        //filtered.query.bool.must.push({range: lang_range})
+        //query.query.function_score.functions.push({
+          //field_value_factor: {
+            //'field' : 'languages.'+key+'.level',
+            //'modifier' : 'square'
+          //}
+        //})
+      //}
+    //})
 
-    if(state.other_val) {
-      var val = state.other_val
-      var other_lang_range = {}
-      other_lang_range['languages.'+val+'.level'] = { gte: 1, lte: 10 }
-      filtered.query.bool.must.push({range: other_lang_range})
-      query.query.function_score.functions.push({
-        field_value_factor: {
-          'field' : 'languages.'+val+'.level',
-          'modifier' : 'square'
-        }
-      })
-    }
+    //if(state.other_val) {
+      //var val = state.other_val
+      //var other_lang_range = {}
+      //other_lang_range['languages.'+val+'.level'] = { gte: 1, lte: 10 }
+      //filtered.query.bool.must.push({range: other_lang_range})
+      //query.query.function_score.functions.push({
+        //field_value_factor: {
+          //'field' : 'languages.'+val+'.level',
+          //'modifier' : 'square'
+        //}
+      //})
+    //}
 
-    // Uczestnictwo w poprzednich Światowych Dniach Młodzieży
-    var wyds = state.wyd
-    var wyds_keys = wyds ? Object.keys(wyds) : []
-    if(wyds_keys.length) {
-      filtered.filter.and = []
-      wyds_keys.forEach(function(key){
-        if(wyds[key]) {
-          filtered.filter.and.push({
-            exists: { field: 'previous_wyd.'+key }
-          })
-        }
-      })
-    }
+    //// Uczestnictwo w poprzednich Światowych Dniach Młodzieży
+    //var wyds = state.wyd
+    //var wyds_keys = wyds ? Object.keys(wyds) : []
+    //if(wyds_keys.length) {
+      //filtered.filter.and = []
+      //wyds_keys.forEach(function(key){
+        //if(wyds[key]) {
+          //filtered.filter.and.push({
+            //exists: { field: 'previous_wyd.'+key }
+          //})
+        //}
+      //})
+    //}
 
-    if(age_from || age_to) {
-      var today = new Date()
-      var age_range = {
-        range: {
-          birth_date: {}
-        }
-      }
+    //if(age_from || age_to) {
+      //var today = new Date()
+      //var age_range = {
+        //range: {
+          //birth_date: {}
+        //}
+      //}
 
-      if(age_from) {
-        age_range.range.birth_date.lte = new Date(new Date().setMonth(today.getMonth() - 12*(age_from-1)))
-      }
+      //if(age_from) {
+        //age_range.range.birth_date.lte = new Date(new Date().setMonth(today.getMonth() - 12*(age_from-1)))
+      //}
 
-      if(age_to) {
-        age_range.range.birth_date.gte = new Date(new Date().setMonth(today.getMonth() - 12*age_to))
-      }
+      //if(age_to) {
+        //age_range.range.birth_date.gte = new Date(new Date().setMonth(today.getMonth() - 12*age_to))
+      //}
 
-      if(filtered.filter.and) {
-        filtered.filter.and.push(age_range)
-      } else {
-        filtered.filter.and = [age_range]
-      }
-    }
+      //if(filtered.filter.and) {
+        //filtered.filter.and.push(age_range)
+      //} else {
+        //filtered.filter.and = [age_range]
+      //}
+    //}
 
     var request = new XMLHttpRequest()
     request.open('POST', '/search', true)

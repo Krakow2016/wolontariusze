@@ -72,6 +72,17 @@
             }
           }
       },
+      "raw": {
+        "type": "nested",
+          "properties" : {
+            "sk_skills": {
+              "type": "string"
+            },
+            "cd_sectors": {
+              "type": "string"
+            }
+          }
+      },
       "suggest" : {
         "type" : "completion",
         "analyzer" : "simple",
