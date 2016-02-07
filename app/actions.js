@@ -73,6 +73,18 @@ module.exports = {
     })
   },
 
+  updateProfilePicture: function(context, payload, cb) {
+    var r = request.post('/upload')
+
+    r.attach('avatar', payload[0])
+    r.end(function(err, resp){
+      console.log(resp)
+      context.dispatch('LOAD_VOLUNTEER', resp.body)
+      context.dispatch('VOLUNTEER_UPDATE_SUCCESS')
+      cb()
+    })
+  },
+
   showXls: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
     context.service.read('Xls', payload, {},
