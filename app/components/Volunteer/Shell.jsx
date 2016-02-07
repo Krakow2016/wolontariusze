@@ -26,11 +26,32 @@ var Volunteer = React.createClass({
   },
 
   render: function () {
-    var editLink
     var user = this.user()
-    if(user && user.is_admin) {
-      editLink = <NavLink href={'/wolontariusz/'+ this.state.id +'/admin'}>Edytuj</NavLink>
+
+    var tabs = [
+      <NavLink href={"/wolontariusz/" + this.state.id} className="profile-ribon-cell">
+        <b id="profile-ribon-txt">Profil</b>
+      </NavLink>,
+      <NavLink href={"/wolontariusz/" + this.state.id +'/aktywnosci'} className="profile-ribon-cell">
+        <b id="profile-ribon-txt">Aktywności</b>
+      </NavLink>
+    ]
+
+    if(user) {
+      tabs.push(
+        <NavLink href={"/wolontariusz/" + this.state.id +'/grafik'} className="profile-ribon-cell">
+          <b id="profile-ribon-txt">Grafik</b>
+        </NavLink>
+      )
+      if(user.is_admin) {
+        tabs.push(
+          <NavLink href={"/wolontariusz/" + this.state.id +'/admin'} className="profile-ribon-cell">
+            <b id="profile-ribon-txt">Szczegóły</b>
+          </NavLink>
+        )
+      }
     }
+
 
     return (
       <div className="volonteer">
@@ -62,18 +83,7 @@ var Volunteer = React.createClass({
 
         <div className="section group">
           <div className="col span_4_of_4 profile-ribon">
-            <NavLink href={"/wolontariusz/" + this.state.id} className="profile-ribon-cell">
-              <b id="profile-ribon-txt">Profil</b>
-            </NavLink>
-            <NavLink href={"/wolontariusz/" + this.state.id +'/aktywnosci'} className="profile-ribon-cell">
-              <b id="profile-ribon-txt">Aktywności</b>
-            </NavLink>
-            <NavLink href={"/wolontariusz/" + this.state.id +'/grafik'} className="profile-ribon-cell">
-              <b id="profile-ribon-txt">Grafik</b>
-            </NavLink>
-            <NavLink href={"/wolontariusz/" + this.state.id +'/admin'} className="profile-ribon-cell">
-              <b id="profile-ribon-txt">Szczegóły</b>
-            </NavLink>
+            {tabs}
           </div>
         </div>
 
