@@ -8,13 +8,7 @@ var ProfileImageChange = React.createClass({
   getInitialState : function() {
     return {
       showDropzone: false
-    };
-  },
-  
-  changeValue: function (event) {
-    this.setState({
-       showDropzone: true
-    }); 
+    }
   },
 
   multiple : false,
@@ -24,21 +18,18 @@ var ProfileImageChange = React.createClass({
   },
 
   render: function () {
-    
     var classNameBtn = 'btn-change-avatar' + (this.state.showDropzone && " hidden"),
         classNameWrapper = 'avatar-change avatar-change-size-'+this.props.size,
         classNameFile = "field-file hidden",
         classDropzone = "dropzone" + (!this.state.showDropzone && " hidden");
-     
+
     return (
-      <div className={classNameWrapper} >
+      <div className={classNameWrapper}>
         <ProfileImage src={this.props.src} />
 
-        <div className={classNameBtn} onClick={this.changeValue}>Zmień</div>
         <Dropzone onDrop={this.onDrop} className={classDropzone}>
-          <div>Upuść tu zdjęcie.</div>
+          <div>Kliknij aby wybrać lub upuść tu zdjęcie.</div>
         </Dropzone>
-        
       </div>
     )
   }
