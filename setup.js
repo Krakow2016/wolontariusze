@@ -6,8 +6,8 @@ var fs = require('fs')
 var env = process.env.NODE_ENV || 'development'
 var conf = require('./config.json')[env]
 
+// Klucz: tabela, wartość: indeksy
 var tables = {
-  // Tabela    : indeksy
   'APIClients' : ['user_id'],
   'APICodes'   : [],
   'APITokens'  : ['userId'],
@@ -20,6 +20,7 @@ var tables = {
 
 // Sprawdź czy środowisko korzysta z bazy RethinkDB
 if(conf.service !== 'rethinkdb') {
+  console.log('Konfiguracja nie dotyczy RethinkDB, pomijam.')
   return process.exit(0)
 }
 
@@ -30,25 +31,31 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
     return process.exit(1)
   }
 
-  return new Promise(function(resolve) {
+  return new Promise(function(resolve, reject) {
     // ElasticSearch index
     request({
       method: 'PUT',
       uri: conf.elasticSearch
     }, function(err) {
-      if(err) { return process.exit(1) }
-      resolve(conn)
+      if(err) {
+        reject('Błąd: brak połączenia z ElasticSearch.')
+      } else {
+        resolve(conn)
+      }
     })
   }).then(function(conn) {
-    return new Promise(function(resolve) {
+    return new Promise(function(resolve, reject) {
       // ElasticSearch mappings
       request({
         method: 'PUT',
         uri: conf.elasticSearch +'/volunteer/_mapping',
         body: fs.readFileSync('./config/elasticsearch_mappings.json', 'utf8')
       }, function(err, resp, json){
-        if(err) { return process.exit(1) }
-        resolve(conn)
+        if(err) {
+          reject('Błąd: wystąpił problem przy wgrywaniu mappingu ElasticSearch.')
+        } else {
+          resolve(conn)
+        }
       })
     })
   }).then(function(conn) {
@@ -93,43 +100,58 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
     })
   }).then(function(conn) {
     return new Promise(function(resolve) {
-      // TODO: sprawdź czy są jakieś dane w tabeli
-      // Dane dla tabeli wolontariuszy
-      var arr = []
-      var data = require('./app/services/static/volunteers.json')
-      Object.keys(data).forEach(function(key) { arr.push(data[key]) })
-      r.table('Volunteers').insert(arr).run(conn, function() {
-        resolve(conn)
+      r.table('Volunteers').count().run(conn, function(err, count) {
+        if(count > 0) {
+          // Dane dla tabeli wolontariuszy
+          var arr = []
+          var data = require('./app/services/static/volunteers.json')
+          Object.keys(data).forEach(function(key) { arr.push(data[key]) })
+          r.table('Volunteers').insert(arr).run(conn, function() {
+            resolve(conn)
+          })
+        } else { resolve(conn) }
       })
     })
   }).then(function(conn) {
     return new Promise(function(resolve) {
-      // Dane dla tabeli aktywności
-      var arr = []
-      var data = require('./app/services/static/activities.json')
-      Object.keys(data).forEach(function(key) { arr.push(data[key]) })
-      r.table('Activities').insert(arr).run(conn, function() {
-        resolve(conn)
+      r.table('Activities').count().run(conn, function(err, count) {
+        if(count > 0) {
+          // Dane dla tabeli aktywności
+          var arr = []
+          var data = require('./app/services/static/activities.json')
+          Object.keys(data).forEach(function(key) { arr.push(data[key]) })
+          r.table('Activities').insert(arr).run(conn, function() {
+            resolve(conn)
+          })
+        } else { resolve(conn) }
       })
     })
   }).then(function(conn) {
     return new Promise(function(resolve) {
-      // Dane dla tabeli połączeń wolontariuszy z aktywnościami
-      var arr = []
-      var data = require('./app/services/static/joints.json')
-      Object.keys(data).forEach(function(key) { arr.push(data[key]) })
-      r.table('Joints').insert(arr).run(conn, function(err) {
-        resolve(conn)
+      r.table('Joints').count().run(conn, function(err, count) {
+        if(count > 0) {
+          // Dane dla tabeli połączeń wolontariuszy z aktywnościami
+          var arr = []
+          var data = require('./app/services/static/joints.json')
+          Object.keys(data).forEach(function(key) { arr.push(data[key]) })
+          r.table('Joints').insert(arr).run(conn, function(err) {
+            resolve(conn)
+          })
+        } else { resolve(conn) }
       })
     })
   }).then(function(conn) {
     return new Promise(function(resolve) {
-    // Dane dla tabeli klientów api
-      var arr = []
-      var data = require('./app/services/static/apiclients.json')
-      Object.keys(data).forEach(function(key) { arr.push(data[key]) })
-      r.table('APIClients').insert(arr).run(conn, function(err) {
-        resolve(conn)
+      r.table('APIClients').count().run(conn, function(err, count) {
+        if(count > 0) {
+          // Dane dla tabeli klientów api
+          var arr = []
+          var data = require('./app/services/static/apiclients.json')
+          Object.keys(data).forEach(function(key) { arr.push(data[key]) })
+          r.table('APIClients').insert(arr).run(conn, function(err) {
+            resolve(conn)
+          })
+        } else { resolve(conn) }
       })
     })
   }).then(function() {
@@ -137,5 +159,6 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
     process.exit(0)
   }).catch(function(reason){
     console.log('Failed: '+reason)
+    process.exit(1)
   })
 })
