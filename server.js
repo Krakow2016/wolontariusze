@@ -16,7 +16,8 @@ var express = require('express'),
   crypto = require('crypto'),
   multipart = require('connect-multiparty'),
   excelParser = require('excel-parser'),
-  r = require('rethinkdb')
+  r = require('rethinkdb'),
+  async = require('async')
 
 // Służy do zapisywania sesji użytkowników w bazie danych
 var RDBStore = require('session-rethinkdb')(session)
@@ -231,6 +232,48 @@ server.post('/invitation', jsonParser, function(req, res) {
         })
       })
     })
+  } else {
+    res.send(403)
+  }
+})
+
+server.get('/stats', function(req, res) {
+  if(req.user && req.user.is_admin) {
+    var stats = {}
+
+    r.connect({ db: 'sdm' }, function(err, conn) {
+      async.parallel([function(cb){
+        r.table('Volunteers').count().run(conn, function(err, result) {
+          // Liczba wszystkich kont w systemie
+          stats.total_accounts = result
+          cb(err)
+        })
+      }, function(cb) {
+        r.table('Imports').count().run(conn, function(err, result) {
+          // Liczba wolontariuszy importowanych z bazy watykańskiej
+          stats.total_volunteers = result
+          cb(err)
+        })
+      }, function(cb) {
+        r.table('Volunteers').count(function(volunteer) {
+          return volunteer.hasFields('password')
+        }).run(conn, function(err, result) {
+          // Liczba użytkowników który mogą się zalogować do systemu
+          stats.total_active = result
+          cb(err)
+        })
+      }, function(cb) {
+        r.table('Volunteers')('is_admin').count(true).run(conn, function(err, result) {
+          // Liczba administratorów
+          stats.total_admins = result
+          cb(err)
+        })
+      }], function(err) {
+        if(err) { res.send(500) }
+        else { res.send(stats) }
+      })
+    })
+
   } else {
     res.send(403)
   }

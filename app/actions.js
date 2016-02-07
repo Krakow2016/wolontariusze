@@ -3,11 +3,24 @@
 var debug = require('debug')('Actions')
 var VolunteerStore = require('./stores/Volunteer')
 var navigateAction = require('fluxible-router').navigateAction
+var request = require('superagent')
 
 var env = process.env.NODE_ENV || 'development'
 var conf = require('../config.json')[env]
 
 module.exports = {
+
+  showIndex: function(context, payload, cb) {
+    // Pobierz statystyki systemu
+    request
+      .get('/stats')
+      .end(function (err, data) {
+        if (err) { debug(err) }
+        else { context.dispatch('LOAD_INDEX', data.body) }
+        cb()
+      })
+  },
+
   showVolunteer: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
     context.service.read('Volunteers', payload, {},

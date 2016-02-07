@@ -3,9 +3,7 @@ var NavLink = require('fluxible-router').NavLink
 var ReactMarkdown = require('react-markdown')
 
 var ActivityStore = require('../stores/Activity')
-
 var TimeService = require('../modules/time/TimeService.js')
-
 var actions = require('../actions')
 
 var Activity = React.createClass({
