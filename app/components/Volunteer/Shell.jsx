@@ -28,6 +28,7 @@ var Volunteer = React.createClass({
   render: function () {
     var user = this.user()
 
+    var email
     var tabs = [
       <NavLink href={"/wolontariusz/" + this.state.id} className="profile-ribon-cell">
         <b id="profile-ribon-txt">Profil</b>
@@ -49,9 +50,19 @@ var Volunteer = React.createClass({
             <b id="profile-ribon-txt">Szczegóły</b>
           </NavLink>
         )
+
+        email = (
+          <h2>
+            <b>E-mail: </b>
+            <span>
+              <a href={"mailto:"+ this.state.email} target="_blank">
+                {this.state.email}
+              </a>
+            </span>
+          </h2>
+        )
       }
     }
-
 
     return (
       <div className="volonteer">
@@ -62,22 +73,7 @@ var Volunteer = React.createClass({
           <div className="col span_2_of_4">
             <h1 className="profile-name">{this.name()}</h1>
             <h2><b>Kraj:</b> <span>Polska</span></h2>
-          </div>
-          <div className="col span_1_of_4">
-            <p id="profile-grow-title"><b>Lorem sprawił/a, że Góra Dobra urosła o</b></p>
-          </div>
-          <div className="col span_1_of_4" id="profile-stone-box">
-            <img src="/img/profile/stone.svg" id="prolife-stone-img" />
-            <p id="profile-stone-tasks">
-              <b id="profile-stone-tasks-nr">100</b><br />
-              <b>zadań</b>
-            </p>
-          </div>
-          <div className="col span_2_of_4">
-            <img src="/img/profile/phone.svg" id="prolife-contant-ico"/>
-            <div>
-              <h2 id="prolife-contant-data">0048 777 888 999</h2>
-            </div>
+            {email}
           </div>
         </div>
 
@@ -90,6 +86,23 @@ var Volunteer = React.createClass({
         {this.props.children}
       </div>
     )
+          //<div className="col span_1_of_4">
+            //<p id="profile-grow-title"><b>Lorem sprawił/a, że Góra Dobra urosła o</b></p>
+          //</div>
+          //<div className="col span_1_of_4" id="profile-stone-box">
+            //<img src="/img/profile/stone.svg" id="prolife-stone-img" />
+            //<p id="profile-stone-tasks">
+              //<b id="profile-stone-tasks-nr">100</b><br />
+              //<b>zadań</b>
+            //</p>
+          //</div>
+
+          //<div className="col span_2_of_4">
+            //<img src="/img/profile/phone.svg" id="prolife-contant-ico"/>
+            //<div>
+              //<h2 id="prolife-contant-data">0048 777 888 999</h2>
+            //</div>
+          //</div>
   },
 
   name: function() {

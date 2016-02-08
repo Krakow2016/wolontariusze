@@ -81,8 +81,8 @@ var Application = React.createClass({
                 </div>
                 <div className="col span_1_of_4 search">
                   <form>
-                    <input type="text" className="form" id="menu-search-box" />
-                    <input type="image" src="/img/search.svg" id="menu-search-submit" />
+                    <input type="text" disabled="disabled" className="form" id="menu-search-box" />
+                    <img src="/img/search.svg" id="menu-search-submit" />
                   </form>
                   <NavLink href="/wyszukiwarka">Zaawansowane wyszukiwanie</NavLink>
                 </div>

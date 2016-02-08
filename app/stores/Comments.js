@@ -46,7 +46,7 @@ var Comments = createStore({
 
   getState: function() {
     return {
-      comments: this.comments
+      comments: this.comments || []
     }
   },
 
