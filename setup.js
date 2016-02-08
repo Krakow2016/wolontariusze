@@ -15,7 +15,8 @@ var tables = {
   'Comments'   : [],
   'Joints'     : ['activity_id'],
   'Volunteers' : ['email'],
-  'Imports'    : ['rg_email']
+  'Imports'    : ['rg_email'],
+  'session'    : []
 }
 
 // Sprawdź czy środowisko korzysta z bazy RethinkDB
@@ -101,7 +102,7 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
   }).then(function(conn) {
     return new Promise(function(resolve) {
       r.table('Volunteers').count().run(conn, function(err, count) {
-        if(count > 0) {
+        if(count === 0) {
           // Dane dla tabeli wolontariuszy
           var arr = []
           var data = require('./app/services/static/volunteers.json')
@@ -115,7 +116,7 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
   }).then(function(conn) {
     return new Promise(function(resolve) {
       r.table('Activities').count().run(conn, function(err, count) {
-        if(count > 0) {
+        if(count === 0) {
           // Dane dla tabeli aktywności
           var arr = []
           var data = require('./app/services/static/activities.json')
@@ -129,7 +130,7 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
   }).then(function(conn) {
     return new Promise(function(resolve) {
       r.table('Joints').count().run(conn, function(err, count) {
-        if(count > 0) {
+        if(count === 0) {
           // Dane dla tabeli połączeń wolontariuszy z aktywnościami
           var arr = []
           var data = require('./app/services/static/joints.json')
@@ -143,7 +144,7 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
   }).then(function(conn) {
     return new Promise(function(resolve) {
       r.table('APIClients').count().run(conn, function(err, count) {
-        if(count > 0) {
+        if(count === 0) {
           // Dane dla tabeli klientów api
           var arr = []
           var data = require('./app/services/static/apiclients.json')

@@ -243,7 +243,10 @@ server.get('/stats', function(req, res) {
   if(req.user && req.user.is_admin) {
     var stats = {}
 
-    r.connect({ db: 'sdm' }, function(err, conn) {
+    r.connect(config.rethinkdb, function(err, conn) {
+      // Błąd połączenia z bazą danych
+      if(err) { return res.send(500) }
+
       async.parallel([function(cb){
         r.table('Volunteers').count().run(conn, function(err, result) {
           // Liczba wszystkich kont w systemie
@@ -275,7 +278,6 @@ server.get('/stats', function(req, res) {
         else { res.send(stats) }
       })
     })
-
   } else {
     res.send(403)
   }
@@ -289,7 +291,11 @@ server.post('/import', multipartMiddleware, function(req, res) {
       inFile: req.files.image.path, // TODO: co jeżeli > 1?
       worksheet: 'Volontari'
     }, function(err, records){
-      if(err) { console.error(err) }
+      if(err) {
+        res.status(500).send(err)
+        console.error(err)
+        return
+      }
 
       // Dokumenty do zapisu w bazie ElasticSearch
       var docs = []
@@ -319,11 +325,13 @@ server.post('/import', multipartMiddleware, function(req, res) {
         } // TODO: języki!
       })
 
-      r.connect({ db: 'sdm' }, function(err, conn) {
+      r.connect(config.rethinkdb, function(err, conn) {
         // Dane do ElasticSearcha najpierw lądują w tabeli `Imports` żeby
         // później zostać automatycznie przeniesione i zcalone z odpowiadającym
         // im dokumentem wolontariusza poprzez narzędzie LogStash.
         r.table('Imports').insert(docs).run(conn, function(err, imports) {
+          if(err) { return res.status(500).send(err) }
+
           var table = r.table('Volunteers')
           emails.push({index: 'email'})
           // Pobierz wszystkie duplikaty
@@ -343,7 +351,11 @@ server.post('/import', multipartMiddleware, function(req, res) {
                 })
                 // Zapisz nieistniejących wolontariuszy w bazie danych
                 r.table('Volunteers').insert(docs).run(conn, function(err, result) {
-                  res.send(result)
+                  if(err) {
+                    res.status(500).send(err)
+                  } else {
+                    res.send(result)
+                  }
                   conn.close()
                 })
               })
