@@ -29,7 +29,7 @@ var debug = require('debug')('Server')
 var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
 // Połączenie z sendgrid daje nam możliwość wysyłania emaili
-var sendgrid = require('sendgrid')(config.sendgrid_apikey)
+var sendgrid = require('sendgrid')(process.env.SENDGRID_APIKEY)
 
 require('node-jsx').install({extension: '.jsx'})
 var HtmlComponent = React.createFactory(require('./app/components/Html.jsx'))
