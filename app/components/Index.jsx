@@ -54,7 +54,9 @@ var App = React.createClass({
               Liczba wolontariuszy krótkoterminowych:
             </td>
             <td>
-              {this.state.total_volunteers}
+              <NavLink href="/wyszukiwarka?raw.is_volunteer=true">
+                {this.state.total_volunteers}
+              </NavLink>
             </td>
             <td>
               <NavLink href="/import">
@@ -67,7 +69,9 @@ var App = React.createClass({
               Liczba aktywnych kont w systemie:
             </td>
             <td>
-              {this.state.total_active}
+              <NavLink href="/wyszukiwarka?doc.has_password=true">
+                {this.state.total_active}
+              </NavLink>
             </td>
             <td></td>
           </tr>
@@ -76,7 +80,9 @@ var App = React.createClass({
               Liczba administratorów w systemie:
             </td>
             <td>
-              {this.state.total_admins}
+              <NavLink href="/wyszukiwarka?doc.is_admin=true">
+                {this.state.total_admins}
+              </NavLink>
             </td>
             <td></td>
           </tr>

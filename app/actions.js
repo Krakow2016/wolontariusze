@@ -266,70 +266,103 @@ module.exports = {
     //var age_from = parseInt(state['age-from'])
     //var age_to = parseInt(state['age-to'])
 
+    var doc_must = []
+    var doc_should = []
+    var raw_must = []
+    var raw_should = []
 
-    var nested = {
-      query : {
-        bool: {
-          should: [
-            { nested: {
-              path: 'doc',
-              query : {
-                filtered : {
-                  query: {
-                    bool: {
-                      should: [
-                        { bool: {
-                          should: [
-                            { match: { 'doc.first_name': state.name } },
-                            { match: { 'doc.last_name': state.name } }
-                          ]
-                        }
-                        },
-                        { match: { 'doc.email': state.email } },
-                      ],
-                      must: []
-                    }
-                  },
-                  filter : { }
-                }
-              }
-            }},
-            { nested: {
-              path: 'raw',
-              query : {
-                filtered : {
-                  query: {
-                    bool: {
-                      should: [
-                      { match: { 'raw.cd_sectors': state.departments } },
-                      { match: { 'raw.sk_skills': state.skills } },
-                      ]
-                    }
-                  }
-                }
-              }
-            }}
-          ]
+    if(state.name) {
+      doc_should.push({
+        multi_match: {
+          query: state.name,
+          fields: ['doc.first_name', 'doc.last_name'],
         }
-      }
+      })
+    }
+
+    if(state.email) {
+      doc_should.push({
+        term: { 'doc.email': state.email }
+      })
+    }
+
+    if(state['doc.is_admin']) {
+      doc_must.push({
+        term: { 'doc.is_admin': true }
+      })
+    }
+
+    if(state['doc.has_password']) {
+      doc_must.push({
+        term: { 'doc.has_password': true }
+      })
+    }
+
+    if(state['raw.is_volunteer']) {
+      raw_must.push({
+        exists: { 'field': 'raw.id' }
+      })
+    }
+
+    if(state.departments) {
+      raw_should.push({
+        match: { 'raw.cd_sectors': state.departments }
+      })
+    }
+
+    if(state.skills) {
+      raw_should.push({
+        match: { 'raw.sk_skills': state.skills }
+      })
+    }
+
+    var should = []
+
+    if(doc_should.length || doc_must.length) {
+      should.push({
+        nested: {
+          path: 'doc',
+          query : {
+            bool: {
+              should: doc_should,
+              must: doc_must
+            }
+          }
+        }
+      })
+    }
+
+    if(raw_should.length || raw_must.length) {
+      should.push({
+        nested: {
+          path: 'raw',
+          query : {
+            bool: {
+              should: raw_should,
+              must: raw_must
+            }
+          }
+        }
+      })
     }
 
     var query = {
+      bool: {
+        should: should,
+        minimum_should_match: should.length
+      }
+    }
+
+    var params = {
       size: 100,
       query : {
         function_score: {
-          query: nested,
+          query: query,
           functions: [],
           score_mode: 'avg'
         }
       },
       //explain: true,
-      //highlight : {
-        //fields : {
-          //sk_skills: {},
-          //cd_sectors: {},
-        //}
-      //}
     }
 
     // Jęzkyki
@@ -419,13 +452,15 @@ module.exports = {
       // There was a connection error of some sort
     }
 
-    request.send(JSON.stringify(query))
+    request.send(JSON.stringify(params))
 
-    // Usuń parametry
     var base = window.location.toString().replace(new RegExp('[?](.*)$'), '')
-    var attributes = Object.keys(state).map(function(key) {
+    var attributes = Object.keys(state).filter(function(key) {
+      return state[key]
+    }).map(function(key) {
       return key + '=' + state[key]
     }).join('&')
+
     history.replaceState({}, '', base +'?'+ attributes)
   },
 

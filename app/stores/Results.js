@@ -4,7 +4,13 @@ var createStore  = require('fluxible/addons').createStore
 var Results = createStore({
   storeName: 'ResultsStore',
   handlers: {
-    'LOAD_RESULTS': 'loadAll'
+    'LOAD_RESULTS': 'loadAll',
+    'LOAD_QUERY': 'loadQuery'
+  },
+
+  initialize: function () {
+    this.all = []
+    this.query = {}
   },
 
   loadAll: function(data) {
@@ -12,22 +18,21 @@ var Results = createStore({
     this.emitChange()
   },
 
-  initialize: function () {
-    this.all = []
-  },
-
-  getState: function () {
-    return {
-      all: this.all
-    }
+  loadQuery: function(data) {
+    this.query = data
+    this.emitChange()
   },
 
   dehydrate: function () {
-    return this.getState()
+    return {
+      all: this.all,
+      query: this.query
+    }
   },
 
   rehydrate: function (state) {
     this.all = state.all
+    this.query = state.query
   }
 })
 
