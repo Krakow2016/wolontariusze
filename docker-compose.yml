@@ -1,18 +1,22 @@
 rethinkdb:
   image: rethinkdb:2.2
-  container_name: rethinkdb
 
 es:
   image: krakow2016/elasticsearch
-  container_name: es
 
 logstash:
   image: krakow2016/logstash
+  links:
+    - es
+    - rethinkdb
 
 wolontariusze:
   image: krakow2016/wolontariusze
-  container_name: wolontariusze
   environment:
     - NODE_ENV=production
+  links:
+    - es
+    - rethinkdb
   ports:
-    - "8000:80"
+    - "80:80"
+    - "443:443"

@@ -58,7 +58,7 @@ Uruchomienie (i wcześniejsze pobranie w przypadku gdy ich brak w systemie)
 wszystkich serwisów (kontenerów Dockera) odbywa się za pomocą komendy:
 
 ```
-docker-compose --x-networking -f docker-compose.yml up
+docker-compose -f docker-compose.yml up
 ```
 
 Po wykonaniu wszystkich czynności strona www będzie dostępna na hoście
