@@ -68,7 +68,7 @@ var Volunteer = React.createClass({
       <div className="volonteer">
         <div className="section group">
           <div className="col span_2_of_4">
-            <img src={this.state.profile_picture_url || "/img/profile/face.svg"} id="prolife-photo" />
+            <img src={this.state.profile_picture_url} id="prolife-photo" />
           </div>
           <div className="col span_2_of_4">
             <h1 className="profile-name">{this.name()}</h1>

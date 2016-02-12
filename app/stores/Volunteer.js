@@ -12,6 +12,7 @@ var VolunteerStore = createStore({
   },
 
   initialize: function () {
+    this.profile = {}
   },
 
   load: function(data) {
@@ -36,11 +37,18 @@ var VolunteerStore = createStore({
   },
 
   getState: function () {
-    return {
-      profile: this.profile || {},
+    var state = {
+      profile: this.profile,
       error: this.error,
       success: this.success
     }
+
+    // Domyślna wartość
+    if(!state.profile.profile_picture_url) {
+      state.profile.profile_picture_url = '/img/profile/face.svg'
+    }
+
+    return state
   },
 
     // Returns a serializable object containing the state of the Fluxible and
