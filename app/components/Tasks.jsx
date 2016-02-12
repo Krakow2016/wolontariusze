@@ -1,4 +1,9 @@
-var React = require('react')
+Tasks - 
+TaskFilters
+CoordinatorTasks
+OpenTasks
+UserTasks
+TaskBankvar React = require('react')
 
 var Tasks = React.createClass({
   render: function () {

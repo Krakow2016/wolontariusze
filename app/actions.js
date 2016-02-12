@@ -5,9 +5,6 @@ var VolunteerStore = require('./stores/Volunteer')
 var navigateAction = require('fluxible-router').navigateAction
 var request = require('superagent')
 
-var env = process.env.NODE_ENV || 'development'
-var conf = require('../config.json')[env]
-
 module.exports = {
 
   showIndex: function(context, payload, cb) {
@@ -78,7 +75,7 @@ module.exports = {
 
     r.attach('avatar', payload[0])
     r.end(function(err, resp){
-      console.log(resp)
+      //console.log(resp)
       context.dispatch('LOAD_VOLUNTEER', resp.body)
       context.dispatch('VOLUNTEER_UPDATE_SUCCESS')
       cb()
@@ -199,6 +196,17 @@ module.exports = {
       cb()
     })
   },
+  showTasks: function(context, payload, cb) {
+    var user = context.getUser()
+    context.service.read('Activities', Object.assign({}, payload, {
+      user_id: user.id
+    }), {}, function (err, data) {
+      if(err) { debug(err) }
+      else { 
+        context.dispatch('LOAD_TASKS', data) }
+      cb()
+    })
+  },
 
   createComment: function(context, payload, cb) {
     debug('profile comment create')
@@ -285,7 +293,7 @@ module.exports = {
                           ]
                         }
                         },
-                        { match: { 'doc.email': state.email } },
+                        { match: { 'doc.email': state.email } }
                       ],
                       must: []
                     }
@@ -302,7 +310,7 @@ module.exports = {
                     bool: {
                       should: [
                       { match: { 'raw.cd_sectors': state.departments } },
-                      { match: { 'raw.sk_skills': state.skills } },
+                      { match: { 'raw.sk_skills': state.skills } }
                       ]
                     }
                   }
@@ -322,7 +330,7 @@ module.exports = {
           functions: [],
           score_mode: 'avg'
         }
-      },
+      }
       //explain: true,
       //highlight : {
         //fields : {

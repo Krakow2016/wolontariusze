@@ -90,7 +90,7 @@ var Activity = React.createClass({
     var buttons = []
 
     //acceptButton
-    if (!has_joined && volunteers.length < activity.maxVolunteers) {
+    if (!has_joined && (volunteers.length < activity.maxVolunteers || activity.maxVolunteers==0)) {
       buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" key="join" />)
     }
 

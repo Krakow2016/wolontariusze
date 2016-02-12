@@ -2,7 +2,6 @@ var React = require('react')
 var handleHistory = require('fluxible-router').handleHistory
 var addons = require('fluxible-addons-react')
 var NavLink = require('fluxible-router').NavLink
-var Snackbar = require('material-ui/lib/snackbar')
 var provideContext = addons.provideContext
 
 var ApplicationStore = require('../stores/ApplicationStore')
@@ -76,7 +75,7 @@ var Application = React.createClass({
             <div className="THE-margin">
               <div className="section group">
                 <div className="col span_3_of_4">
-                  <NavLink href="/zadania">Bank pracy</NavLink>
+                  <NavLink href="/bank_pracy">Bank pracy</NavLink>
                   <Authentication user_id={this.user_id()} user_name={this.user_name()} />
                 </div>
                 <div className="col span_1_of_4 search">

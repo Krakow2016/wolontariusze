@@ -194,7 +194,9 @@ var Activities = module.exports = {
             .pluck({'left': ['id'], 'right': ['user_id', 'first_name', 'last_name']})
             .zip()
             .run(conn, function(err, cursor){
-              if (err) { console.log(err) }
+              if (err) { 
+                //console.log(err) 
+              }
               cursor.toArray(function(err, volunteers) {
                 activity.volunteers = volunteers || []
                 callback(null, activity)
@@ -202,10 +204,74 @@ var Activities = module.exports = {
             })
         })
       } else {
-        r.table(tableName).limit(50).run(conn, function(err, cursor) {
-          if(err) { callback(err) }
-          else { cursor.toArray(callback) }
-        })
+        
+        if (params.type) 
+        {
+          //http://www.w3schools.com/jsref/jsref_gettime.asp
+          var currentTime = new Date().getTime()
+          if (params.type === 'openTasks') {
+            r.table(tableName)
+            .filter (function (task) {
+              return (task('startEventTimestamp').gt(currentTime) )  //TODO: change startEventTimestamp  datetime
+            }, {default: true})
+           .filter( function (task) {
+             return task('maxVolunteers').coerceTo('number').eq(0).or(
+                task('maxVolunteers').coerceTo('number').gt(r.table('Joints')
+                  .getAll(task('id'), {index: 'activity_id'})
+                  .filter(function (x) {
+                    return x.hasFields('is_canceled').not()
+                  }, {default: true})
+                  .count()))
+           }, {default: true})
+            .run(conn, function(err, cursor) {
+              if(err) { callback(err) }
+              else { 
+                cursor.toArray(callback) 
+              }
+            })
+          }
+          
+          if (params.type === 'volunteerTasks') {
+            r.table(tableName)
+            .filter (function (task) {
+              return (task('startEventTimestamp').gt(currentTime) )  //TODO: change startEventTimestamp  datetime
+            }, {default: true})
+            .filter( function (task) {
+              return r.table('Joints').getAll(task('id'), {index: 'activity_id'})
+                      .contains(function (x) {
+                        return x.hasFields('is_canceled').not().and(
+                          x('user_id').coerceTo('string').eq(params.user_id+'')
+                        )
+                      })
+            }, {default: true})
+            .run(conn, function(err, cursor) {
+              if(err) { callback(err) }
+              else { 
+                cursor.toArray(callback)
+              }
+            })
+          }
+          
+          if (params.type === 'adminTasks') {
+            r.table(tableName)
+            .filter( function (task) {
+              return task('creator').coerceTo('string').eq(params.user_id+'')
+            }, {default: true})
+            .run(conn, function(err, cursor) {
+              if(err) { callback(err) }
+              else { 
+                cursor.toArray(callback) 
+              }
+            })
+          }
+
+        } else {
+          r.table(tableName).limit(50).run(conn, function(err, cursor) {
+            if(err) { callback(err) }
+            else { cursor.toArray(callback) }
+          })
+        }
+
       }
     })
   },
