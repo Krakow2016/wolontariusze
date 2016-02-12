@@ -65,9 +65,9 @@ module.exports = {
 
     context.service.update('Volunteers', {}, volunteer, function (err) {
       if (err) { // Błąd po stronie serwera
-        context.dispatch('VOLUNTEER_UPDATE_FAILURE', [volunteer])
+        context.dispatch('VOLUNTEER_UPDATE_FAILURE')
       } else {
-        context.dispatch('VOLUNTEER_UPDATE_SUCCESS', [volunteer])
+        context.dispatch('VOLUNTEER_UPDATE_SUCCESS', volunteer)
       }
       cb()
     })
@@ -79,8 +79,7 @@ module.exports = {
     r.attach('avatar', payload[0])
     r.end(function(err, resp){
       console.log(resp)
-      context.dispatch('LOAD_VOLUNTEER', resp.body)
-      context.dispatch('VOLUNTEER_UPDATE_SUCCESS')
+      context.dispatch('VOLUNTEER_UPDATE_SUCCESS', resp.body)
       cb()
     })
   },

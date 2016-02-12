@@ -8,7 +8,8 @@ var VolunteerStore = createStore({
     'VOLUNTEER_CREATION_FAILURE': 'onFailure',
     //'VOLUNTEER_CREATION_SUCCESS': 'onSuccess',
     'VOLUNTEER_UPDATE_FAILURE': 'onFailure',
-    'VOLUNTEER_UPDATE_SUCCESS': 'onSuccess'
+    'VOLUNTEER_UPDATE_SUCCESS': 'onSuccess',
+    'INVITATION_SEND': 'onInvited',
   },
 
   initialize: function () {
@@ -30,9 +31,16 @@ var VolunteerStore = createStore({
     this.emitChange()
   },
 
-  onSuccess: function() {
+  onSuccess: function(data) {
     this.error = null
     this.success = true
+    // Zaaplikuj wprowadzone zmiany do interface-u
+    Object.assign(this.profile, data)
+    this.emitChange()
+  },
+
+  onInvited: function() {
+    this.profile.approved = true
     this.emitChange()
   },
 
