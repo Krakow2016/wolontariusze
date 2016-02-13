@@ -6,7 +6,7 @@ var AdminTasks = React.createClass({
     return (
       <Tasks context={this.props.context}
              type={'admin'}
-             pagination={10} />
+             pagination={2} />
     )
   }
 })

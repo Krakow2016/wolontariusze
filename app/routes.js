@@ -260,7 +260,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/TaskBank/AdminTasks.jsx'),
     action: function(context, payload, done) {
-      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy - Utworzyłem' })
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy - Moje zadania' })
       context.executeAction(actions.showTasks, { type: 'adminTasks' }, function() {
         done()
       })
