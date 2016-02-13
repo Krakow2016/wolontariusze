@@ -1,6 +1,7 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var update = require('react-addons-update')
+var TaskFilters = require('./TaskFilters.jsx')
 
 var TimeService = require('../../modules/time/TimeService.js')
 
@@ -132,6 +133,12 @@ var Tasks = React.createClass({
     }))
   },
 
+  filter: function (filteredData) {
+    this.setState(update(this.state, {
+      filteredData: {$set: filteredData}
+    }))
+  },
+
   render: function () {
     var user = this.user()
 
@@ -243,6 +250,11 @@ var Tasks = React.createClass({
             {tabs}
           </div>
         </div>
+        <br></br>
+        <TaskFilters data={this.state.data}
+                     filterFunction={this.filter}
+                     type={this.props.type}
+                     />
         <br></br>{numberDisplay}
         {taskTable}
         {paginationButtons}

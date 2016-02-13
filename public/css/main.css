@@ -489,6 +489,11 @@ textarea.settings {
   margin: 10px
 }
 
+.tasks-filters-filterType {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
 .tasks-table {
   width: 90%;
 }
