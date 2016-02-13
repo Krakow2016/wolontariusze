@@ -11,6 +11,7 @@ var TasksStore = createStore({
   loadAll: function(data) {
     this.data = data
     this.page = 1
+    this.order = 1
     this.emitChange()
   },
 
@@ -22,25 +23,29 @@ var TasksStore = createStore({
   getState: function () {
     return {
       data: this.data || [],
-      page: this.page
+      page: this.page,
+      order: this.order
     }
   },
 
   initialize: function () {
     this.data = []
     this.page = 1
+    this.order = 1
   },
 
   dehydrate: function () {
     return {
       data: this.data,
-      page: this.page
+      page: this.page,
+      order: this.order
     }
   },
 
   rehydrate: function (state) {
     this.data = state.data
     this.page = state.page
+    this.order = state.order
   }
 })
 

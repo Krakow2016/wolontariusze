@@ -87,6 +87,7 @@ ActivityStore.attributes = function() {
   return [
     'id',
     'name',
+    'title',
     'description',
     'created_at',
     'updated_at',
@@ -97,7 +98,8 @@ ActivityStore.attributes = function() {
     'creator',
     'editor',
     'maxVolunteers',
-    'volunteers'
+    'volunteers',
+    'volunteerNumber'
   ]
 }
 

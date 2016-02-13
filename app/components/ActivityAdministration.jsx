@@ -326,7 +326,7 @@ var ActivityAdministration = React.createClass({
           <br></br>
           <b>Zadanie jest PILNE? </b>
           <br></br>
-          <input type="checkbox" name="is_urgent" checked={this.state.activity.is_urgent} changeValue={this.handleChange} />
+          <input type="checkbox" name="is_urgent" checked={this.state.activity.is_urgent} onChange={this.handleChange} />
           <br></br>
 
           <br></br>

@@ -488,3 +488,28 @@ textarea.settings {
 .searchForm .search {
   margin: 10px
 }
+
+.tasks-table {
+  width: 90%;
+}
+.tasks-table td, .tasks-table th{
+  text-align: left;
+}
+.tasks-th  {
+  color: black;
+  font-weight: 600;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+.tasks-priority-urgent-tr  {
+  color: red
+}
+.tasks-priority-normal-tr  {
+  color: black
+}
+.tasks-title-td {
+  width: 35%;
+}
+.tasks-categories-td {
+  width: 25%;
+}
