@@ -17,12 +17,21 @@ var Volunteers = require('./app/services/volunteers')(config.service)
 var Activities = require('./app/services/activities')(config.service)
 var Joints = require('./app/services/joints')(config.service)
 
+// Służy do zapisywania sesji użytkowników w bazie danych
+var RDBStore = require('session-rethinkdb')(expressSession)
+
 // Express configuration
 
+// Konfiguracja zapisu danych sesji w bazie danych
+var session_store = {
+  servers: [ config.rethinkdb ]
+}
+
 var session = [expressSession({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true,
+    store: config.service === 'rethinkdb' ? new RDBStore(session_store) : new session.MemoryStore()
 }), passport.initialize(), passport.session()]
 
 // Format każdego poprawnie wykonanego zapytania
