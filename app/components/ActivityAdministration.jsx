@@ -243,8 +243,10 @@ var ActivityAdministration = React.createClass({
     var removeActiveVolonteer = this.removeActiveVolonteer
     var addVolonteer
     if (this.state.volunteers.length < this.state.activity.maxVolunteers) {
-      addVolonteer = <ActivityVolonteersList addActiveVolonteer={this.addActiveVolonteer}
-                                             excludedVolunteers={this.state.volunteers}/>
+        addVolonteer = <ActivityVolonteersList
+            id="activeVolonteers"
+            addActiveVolonteer={this.addActiveVolonteer}
+            excludedVolunteers={this.state.volunteers} />
     }
     var volunteers = this.state.volunteers || []
     var list = volunteers.map(function(volunteer) {

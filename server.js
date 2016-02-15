@@ -174,7 +174,7 @@ server.post('/search', function(req, res) {
 })
 
 server.post('/suggest', function(req, res) {
-  if(req.user && req.user.is_admin) {
+  if(req.user) {
     var elasticSearch = config.elasticSearch +'/_suggest'
     req.pipe(request(elasticSearch))
       .on('error', function(e) {

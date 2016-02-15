@@ -152,7 +152,6 @@ nav a:last:after { content: ""; }
 /*---------------FORMS-----------------------*/
 
 .form {
-	width: 100%;
 	border: 1px solid #0082BD;
 	border-radius: 2rem;
 	height: 2rem;
@@ -164,7 +163,7 @@ nav a:last:after { content: ""; }
 }
 #menu-search-submit {
 	position: absolute;
-	top:2.4rem;
+	top: 50%;
 	right: 1rem;
 	-webkit-transform: translate(0%,-50%);
 	-ms-transform: translate(0%,-50%);
@@ -441,7 +440,7 @@ footer {
 }
 .search a {
   position: absolute;
-  bottom: 0;
+  bottom: -100%;
   right: 0;
   font-size: 12px;
   line-height: 12px;
@@ -487,4 +486,48 @@ textarea.settings {
 
 .searchForm .search {
   margin: 10px
+}
+
+.react-autosuggest__container {
+  position: relative;
+  display: inline-block;
+}
+
+.react-autosuggest__input {
+  width: 240px;
+  height: 30px;
+  padding: 10px 20px;
+  font-family: Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+}
+
+.react-autosuggest__input:focus {
+  outline: none;
+}
+
+.react-autosuggest__container--open .react-autosuggest__input {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.react-autosuggest__suggestions-container {
+  position: absolute;
+  top: 51px;
+  width: 280px;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  border: 1px solid #aaa;
+  background-color: #fff;
+  font-family: Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  z-index: 2;
+}
+
+.react-autosuggest__suggestion {
+  cursor: pointer;
 }

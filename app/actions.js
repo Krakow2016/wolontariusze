@@ -345,6 +345,11 @@ module.exports = {
       })
     }
 
+    // Nie wpisano żadnego zapytania
+    if(!should.length) {
+        return
+    }
+
     var query = {
       bool: {
         should: should,
