@@ -31,7 +31,7 @@ var session = [expressSession({
     secret: 'secret',
     resave: true,
     saveUninitialized: true,
-    store: config.service === 'rethinkdb' ? new RDBStore(session_store) : new session.MemoryStore()
+    store: config.service === 'rethinkdb' ? new RDBStore(session_store) : new expressSession.MemoryStore()
 }), passport.initialize(), passport.session()]
 
 // Format każdego poprawnie wykonanego zapytania
