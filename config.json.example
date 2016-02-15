@@ -16,8 +16,9 @@
     "api_port": 3000,
     "domain": "localhost",
     "service": "rethinkdb",
-    "elasticSearch": "http://localhost:9200/sdm",
+    "elasticSearch": "http://es:9200/sdm",
     "rethinkdb": {
+      "host": "rethinkdb",
       "db": "sdm"
     }
   },

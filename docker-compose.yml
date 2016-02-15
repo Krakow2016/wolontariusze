@@ -14,6 +14,9 @@ wolontariusze:
   image: krakow2016/wolontariusze
   environment:
     - NODE_ENV=production
+  volumes:
+    #- ./app:/opt/wolontariusze/app:ro
+    - ./logs:/opt/wolontariusze/logs:rw
   links:
     - es
     - rethinkdb
