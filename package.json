@@ -46,7 +46,9 @@
     "sendgrid": "2.0.0",
     "serialize-javascript": "^1.0.0",
     "session-rethinkdb": "^1.0.8",
-    "through2": "*"
+    "through2": "*",
+    "instafeed.js": "*",
+    "instagram-node": "*"
   },
   "devDependencies": {
     "babel-preset-react": "^6.3.13",

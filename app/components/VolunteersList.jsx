@@ -1,7 +1,7 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 
-varuVolunteerLi = React.createClass({
+var VolunteerLi = React.createClass({
   render: function() {
     var id = "/wolontariusz/"+ this.props.volunteer.id
     return (

@@ -5,8 +5,8 @@ body {
   background-image: url(/img/bg.svg);
   background-color: #f4f5f6;
   background-repeat: no-repeat;
-  background-repeat-x: repeat;
-  background-position-x: 50%;
+  background-repeat: repeat-x;
+  background-position: 50% 0;
   background-size: auto 538px;
   background-attachment: fixed
 }
@@ -68,10 +68,10 @@ body {
 
 .profileComments {
     width: 900px;
-    
+
 }
 #profileCommentsAddTitle {
-    padding: 2px 0px 2px 2px;    
+    padding: 2px 0px 2px 2px;
     width: 100%;
     background-color: #E9967A;
     color: white;
@@ -95,11 +95,11 @@ body {
 }
 #profileCommentsEditToolbar {
     width: 100%;
-    background-color: #9ACD32; 
+    background-color: #9ACD32;
     text-align: right;
 }
 #profileCommentsListTitle {
-    padding: 2px 0px 2px 2px;  
+    padding: 2px 0px 2px 2px;
     width: 100%;
     background-color: #E9967A;
     color: white;
