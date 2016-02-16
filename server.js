@@ -83,16 +83,16 @@ passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
         var expiration_date = token.generated_at + 48*60*60*1000 // +48h
 
         if(token.used) { // Sprawdź czy token nie został już użyty
-          return done('Token already used. You must generate a new one.')
+          return done(null, false, {message: 'Token already used. You must generate a new one.'})
         } else if(new Date() > expiration_date) { // Sprawdź czy token nie wygasł
-          return done({message: 'Token expired. You must generate a new one.'})
+          return done(null, false, {message: 'Token expired. You must generate a new one.'})
         } else { // Autoryzacja przebiegła pomyślnie
           token.used = { datetime: new Date(), ip: req.ip, headers: req.headers }
           Volunteers.update({force_admin: true}, 'Volunteers', {id: user.id}, {
             access_tokens: tokens
           }, {}, function (err) {
             if(err) {
-              return done(err)
+              return done(500) // Błąd bazy danych
             }
             return done(null, user)
           })

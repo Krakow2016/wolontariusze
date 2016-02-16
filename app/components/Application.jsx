@@ -10,6 +10,7 @@ var ApplicationStore = require('../stores/ApplicationStore')
 
 var Authentication = require('./Authentication.jsx')
 var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
+var Message = require('./Message.jsx')
 
 var injectTapEventPlugin = require('react-tap-event-plugin')
 //Needed for onTouchTap
@@ -30,8 +31,8 @@ var Application = React.createClass({
     // Wyświetl komunikat flash
     var applicationStore = this.props.context.getStore(ApplicationStore)
     return {
-      infoSnack: applicationStore.getSuccess(),
-      errorSnack: applicationStore.getFailure(),
+      infoMessage: applicationStore.getSuccess(),
+      errorMessage: applicationStore.getFailure(),
       title: applicationStore.getPageTitle()
     }
   },
@@ -43,6 +44,14 @@ var Application = React.createClass({
   componentDidMount: function() {
     this.props.context.getStore(ApplicationStore)
       .addChangeListener(this._changeListener)
+
+    var that = this
+    setTimeout(function() {
+      that.setState({
+        infoMessage: false,
+        errorMessage: false
+      })
+    }, 5000)
   },
 
   componentWillUnmount: function() {
@@ -52,13 +61,13 @@ var Application = React.createClass({
 
   handleInfoSnackbarRequestClose: function() {
     this.setState({
-      infoSnack: false
+      infoMessage: false
     })
   },
 
   handleErrorSnackbarRequestClose: function() {
     this.setState({
-      errorSnack: false
+      errorMessage: false
     })
   },
 
@@ -74,6 +83,8 @@ var Application = React.createClass({
 
     var searchForm
     var advancedSearch
+    var infoMessage
+    var errorMessage
 
     if(this.user()) {
 
@@ -89,6 +100,22 @@ var Application = React.createClass({
           <img src="/img/search.svg" id="menu-search-submit" />
           {advancedSearch}
         </span>
+      )
+    }
+
+    if(this.state.infoMessage) {
+      infoMessage = (
+        <Message>
+          <b>{this.state.infoMessage}</b>
+        </Message>
+      )
+    }
+
+    if(this.state.errorMessage) {
+      errorMessage = (
+        <Message>
+          <b>{this.state.errorMessage}</b>
+        </Message>
       )
     }
 
@@ -121,6 +148,8 @@ var Application = React.createClass({
             <Handler context={this.context} />
           </div>
         </article>
+        {infoMessage}
+        {errorMessage}
         <footer>
         </footer>
       </div>

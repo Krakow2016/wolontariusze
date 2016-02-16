@@ -531,3 +531,13 @@ textarea.settings {
 .react-autosuggest__suggestion {
   cursor: pointer;
 }
+
+.message {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #fff;
+  color: #000;
+  text-align: center;
+}
