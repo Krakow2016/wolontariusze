@@ -162,16 +162,5 @@ module.exports = {
     action: function(context, payload, done) {
       done()
     }
-  },
-
-  instagram: {
-    path: '/instagram',
-    method: 'get',
-    handler: require('./components/Instagram.jsx'),
-    action: function(context, payload, done){
-      context.dispatch('LOAD_QUERY', payload.query)
-      context.executeAction(actions.getInstaCode, payload.query)
-      done();
-    }
   }
 }

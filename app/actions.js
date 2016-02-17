@@ -318,15 +318,5 @@ module.exports = {
     }
 
     request.send(JSON.stringify(query))
-  },
-  getInstaCode: function(context, data){
-    var base = window.location.toString().replace(new RegExp('[?](.*)$'), '')
-    var attributes = Object.keys(state).filter(function(key) {
-      return state[key]
-    }).map(function(key) {
-      return key + '=' + state[key]
-    }).join('&')
-    console.log("MAGIC" +attributes);
-    history.replaceState({}, '', base +'?'+ attributes)
   }
 }

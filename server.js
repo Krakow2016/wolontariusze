@@ -271,3 +271,6 @@ server.use(function(req, res, next) {
     res.send(html);
   })
 })
+server.get('/instagram', function(req, res){
+  console.log(req.query);
+});

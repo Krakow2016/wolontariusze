@@ -18,7 +18,7 @@ var Instagram = React.createClass({
   // },
   render: function(){
     return(
-      <h1>WELCOME</h1>
+      <h1>WELCOME </h1>
     )
   }
 })
