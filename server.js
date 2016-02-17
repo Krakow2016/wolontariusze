@@ -42,6 +42,9 @@ var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
 var fetchrPlugin = app.getPlugin('FetchrPlugin');
 
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var util = require("util");
+
 // Konfiguracja zapisu danych sesji w bazie danych
 var session_store = {
   servers: [ config.rethinkdb ]
@@ -150,6 +153,41 @@ server.get('/logout', function(req, res){
   req.flash('success', 'Wylogowano.')
   res.redirect('/')
 })
+
+server.get('/instagram', function(req, res){
+  if(req.user){
+    if(req.query.m == 123){
+      Volunteer.read(req, 'Volunteers', {id: req.user.id}, {}, function(err, user){
+        res.send(user);
+      });
+    }else if(req.query.m == 1){
+      res.sendfile('public/authenticate_insta.html', {root: __dirname});
+    }else if(req.query.code){
+      var request = new XMLHttpRequest()
+      var params = "client_id=611343ce4afa4af9a09b7421fe553b92&client_secret=e4aa7dd825ec4dfa8e3b9dd1ab8b14b4&grant_type=authorization_code&redirect_uri=http://localhost:7000/instagram&code=" + req.query.code;
+      request.open('POST', 'https://api.instagram.com/oauth/access_token', true)
+      request.setRequestHeader('Content-Type', 'application/json')
+      request.send(params);
+      request.onload = function() {
+        if (request.status >= 200 && request.status < 400) {
+
+          var resp = request.responseText
+          var json = JSON.parse(resp)
+
+          Volunteer.update(req, 'Volunteers', {id: req.user.id}, {instagram: {access_token: json.access_token, id: json.user.id, username: json.user.username}}, {}, function(err, data){
+            if(err) res.send(500);
+            res.sendfile('public/authenticate_insta.html', {root: __dirname});
+          })
+        } else {
+          res.send('<h1 style="text-align:center; color: red;">Błąd '+ request.status +'</h1>' );
+        }
+      }
+
+    }
+  }else{
+    res.send(403)
+  }
+});
 
 server.post('/search', function(req, res) {
   if(req.user && req.user.is_admin) {
@@ -271,6 +309,3 @@ server.use(function(req, res, next) {
     res.send(html);
   })
 })
-server.get('/instagram', function(req, res){
-  console.log(req.query);
-});

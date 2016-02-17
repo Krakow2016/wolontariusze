@@ -176,7 +176,7 @@ var ProfileTabs = React.createClass({
 
       <Paper className="paper" key="instagram">
         <h1>#sdm2016</h1>
-        <InstagramImages />
+        <InstagramImages id={this.props.id} context={this.props.context}z />
       </Paper>
     ]
 
@@ -234,39 +234,39 @@ var ExtraAttributesVisible = React.createClass({
 })
 var InstagramImages = React.createClass({
   componentDidMount: function() {
-    console.log("SOMETHING");
-    // Instagram.set('client_id', '611343ce4afa4af9a09b7421fe553b92');
-    // Instagram.set('client_secret', 'e4aa7dd825ec4dfa8e3b9dd1ab8b14b4');
-    // Instagram.set('callback_url', 'http://localhost:7000');
-    // Instagram.set('redirect_uri', 'http://localhost:7000');
-    //
-    // console.log(Instagram.users.search({ q: 'swiatowedni' }));
-    // SearchUserAPI('swiatowedni', function(user){
-    //   console.log(user)
-    //   // new Instafeed({
-    //   //   get: 'user',
-    //   //   userId: user.id,
-    //   //   clientId: '611343ce4afa4af9a09b7421fe553b92',
-    //   //   accessToken: '2711750280.1677ed0.f142ef4dcd534362b5642ea1fbf38500'
-    //   // }).run();
-    // });
-    // new Instafeed({
-    //   get: 'user',
-    //   userId: '2711750280',
-    //   clientId: '611343ce4afa4af9a09b7421fe553b92',
-    //   accessToken: '2711750280.611343c.0f3d87003db34397b2d56a29bbc42afa',
-    //   filter: function(image) {
-    //     return image.tags.indexOf('sdm2016') >= 0;
-    //   },
-    //   // accessToken: '2711750280.1677ed0.f142ef4dcd534362b5642ea1fbf38500'
-    // }).run()
+    var user = this.user();
+    new Instafeed({
+      get: 'user',
+      userId: user.instagram.id,
+      clientId: '611343ce4afa4af9a09b7421fe553b92',
+      accessToken: '2711750280.611343c.0f3d87003db34397b2d56a29bbc42afa',
+      filter: function(image) {
+        return image.tags.indexOf('sdm2016') >= 0;
+      },
+    }).run()
   },
 
   render: function(){
+    var user = this.user();
+    var insta_content;
+    if(typeof user.instagram !== 'undefined'){
+      insta_content = [
+        <div id="instafeed"></div>
+      ];
+    }else{
+      insta_content = [
+        <NavLink href="https://api.instagram.com/oauth/authorize/?client_id=611343ce4afa4af9a09b7421fe553b92&redirect_uri=http://localhost:7000/instagram&response_type=code">Zaloguj się do instagrama</NavLink>
+      ];
+    }
     return(
-      <NavLink href="https://api.instagram.com/oauth/authorize/?client_id=11343ce4afa4af9a09b7421fe553b92&redirect_uri=http://localhost:7000&response_type=code">Zaloguj się do instagrama</NavLink>
-      // <div id="instafeed"></div>
-    )
+      <div>
+        {insta_content}
+      </div>
+    );
+  },
+
+  user: function() {
+    return this.props.context.getUser()
   }
 });
 
