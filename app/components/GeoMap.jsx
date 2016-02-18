@@ -56,12 +56,9 @@ var GeoMap = React.createClass({
     var searchUrl = searchBaseUrl+query+searchParams
     var request = new XMLHttpRequest()
     request.open('GET', searchUrl, true)
-    console.log("headers", document.referrer)
-    console.log("headers", navigator.userAgent)
     
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
-        console.log('request', request)
         var resp = request.responseText
         //console.log(resp)
         var json = JSON.parse(resp)
