@@ -89,7 +89,7 @@ server.post('/api/v2/login', session, passport.authenticate('local', {
 
 server.get('/api/v2/logout', session, function(req, res) {
   req.logout()
-  res.redirect('/api/v2/')
+  res.redirect('/api/v2/login')
 })
 
 // Okienko w którym wolontariusz wyraża zgodę (lub nie) na dostęp do swojego
