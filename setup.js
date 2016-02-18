@@ -15,7 +15,8 @@ var tables = {
   'Comments'   : [],
   'Joints'     : ['activity_id'],
   'Volunteers' : ['email'],
-  'Imports'    : ['rg_email']
+  'Imports'    : ['rg_email'],
+  'ActivityTags': []
 }
 
 // Sprawdź czy środowisko korzysta z bazy RethinkDB
@@ -35,24 +36,41 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
     // ElasticSearch index
     request({
       method: 'PUT',
-      uri: conf.elasticSearch
+      uri: conf.elasticSearch,
+      body: fs.readFileSync('./config/elasticsearch_mappings.json', 'utf8')
     }, function(err) {
       if(err) {
         reject('Błąd: brak połączenia z ElasticSearch.')
       } else {
+        console.log('abcc')
         resolve(conn)
       }
     })
   }).then(function(conn) {
     return new Promise(function(resolve, reject) {
-      // ElasticSearch mappings
+      // ElasticSearch index and mappings
       request({
         method: 'PUT',
-        uri: conf.elasticSearch +'/volunteer/_mapping',
+        uri: conf.elasticSearch+'/volunteer/_mapping',
         body: fs.readFileSync('./config/elasticsearch_mappings.json', 'utf8')
       }, function(err, resp, json){
         if(err) {
           reject('Błąd: wystąpił problem przy wgrywaniu mappingu ElasticSearch.')
+        } else {
+          resolve(conn)
+        }
+      })
+    })
+  }).then(function(conn) {
+    return new Promise(function(resolve, reject) {
+      // ElasticSearch index and mappings
+      request({
+        method: 'PUT',
+        uri: conf.elasticSearch+'/activity_tag/_mapping',
+        body: fs.readFileSync('./config/activityTag_es_mappings.json', 'utf8')
+      }, function(err, resp, json){
+        if(err) {
+          reject('Błąd: wystąpił problem przy wgrywaniu mappingu ElasticSearch. (Activity Tag)')
         } else {
           resolve(conn)
         }
@@ -141,6 +159,21 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
       })
     })
   }).then(function(conn) {
+    return new Promise(function(resolve) {
+      r.table('ActivityTags').count().run(conn, function(err, count) {
+        if(count > 0) {
+          // Dane dla tabeli połączeń wolontariuszy z aktywnościami
+          var arr = []
+          var data = require('./app/services/static/activityTags.json')
+          Object.keys(data).forEach(function(key) { arr.push(data[key]) })
+          r.table('ActivityTags').insert(arr).run(conn, function(err) {
+            resolve(conn)
+          })
+        } else { resolve(conn) }
+      })
+    })
+  }).
+  then(function(conn) {
     return new Promise(function(resolve) {
       r.table('APIClients').count().run(conn, function(err, count) {
         if(count > 0) {

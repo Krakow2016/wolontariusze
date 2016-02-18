@@ -45,6 +45,7 @@ var Integration = require('./app/services/'+config.service+'/integrations')
 var APIClient = require('./app/services/'+config.service+'/apiclients')
 var Joints = require('./app/services/'+config.service+'/joints')
 var Xls = require('./app/services/'+config.service+'/xls')
+var ActivityTags = require('./app/services/'+config.service+'/activityTags')
 
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
@@ -142,6 +143,7 @@ if(fetchrPlugin) {
   fetchrPlugin.registerService(APIClient)
   fetchrPlugin.registerService(Joints)
   fetchrPlugin.registerService(Xls)
+  fetchrPlugin.registerService(ActivityTags)
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), jsonParser, fetchrPlugin.getMiddleware())
 }
@@ -174,6 +176,18 @@ server.post('/search', function(req, res) {
 })
 
 server.post('/suggest', function(req, res) {
+  if(req.user && req.user.is_admin) {
+    var elasticSearch = config.elasticSearch +'/_suggest'
+    req.pipe(request(elasticSearch))
+      .on('error', function(e) {
+        res.send(500) // Brak połączenia z bazą
+      }).pipe(res)
+  } else {
+    res.send(403)
+  }
+})
+
+server.post('/activity_tag_suggest', function(req, res) {
   if(req.user && req.user.is_admin) {
     var elasticSearch = config.elasticSearch +'/_suggest'
     req.pipe(request(elasticSearch))

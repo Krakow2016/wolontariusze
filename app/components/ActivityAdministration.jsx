@@ -1,6 +1,7 @@
 var React = require('react')
 var ActivityStore = require('../stores/Activity')
 var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
+var ActivityTags = require('./ActivityTags.jsx')
 
 var Formsy = require('formsy-react')
 var MyTextField = require('./Formsy/MyTextField.jsx')
@@ -34,6 +35,22 @@ Formsy.addValidationRule('isDuration', function (values, value) {
 })
 Formsy.addValidationRule('isMoreOrGreaterIntThanZero', function (values, value) {
   return (value % 1 === 0 && value >= 0)
+})
+
+
+var AddedTag = React.createClass({
+  onClick: function () {
+    this.props.onRemoveButtonClick(this.props.tag.id)
+  },
+  name: function() {
+    var t = this.props.tag
+    return t.display_name || t.name
+  },
+  render: function () {
+    return (
+        <div className="addedTag" >{this.name()} <input type="button" className="addedTagRemoveButton" onClick={this.onClick} value="Usuń"/></div>
+    )
+  }
 })
 
 var AddedVolonteer = React.createClass({
@@ -141,6 +158,29 @@ var ActivityAdministration = React.createClass({
       }}
     }))
   },
+  
+  addTag: function (tag) {
+    var tag = {
+      id: tag.id,
+      display_name: tag.display_name
+    }
+
+    this.setState(update(this.state, {
+      tags: {$push: [tag]}
+    }))
+  },
+
+  removeTag: function (id) {
+    this.setState(update(this.state, {
+      tags: {$apply: function(arr) {
+        var index = arr.findIndex(function(tag){
+          return tag.id === id
+        })
+        if(index > -1) { arr.splice(index, 1) }
+        return arr
+      }}
+    }))
+  },
 
 
   isValidDate: function (currentDate) {
@@ -230,6 +270,21 @@ var ActivityAdministration = React.createClass({
   render: function() {
   
   
+    var removeTag = this.removeTag
+    var addTag = <ActivityTags addTag={this.addTag}
+                               excludedTags={this.state.tags}
+                               context={this.props.context}/>
+    var tags = this.state.tags || []
+    var tagsList = tags.map(function(tag) {
+      return (
+        <AddedTag
+          key={tag.id}
+          tag={tag}
+          onRemoveButtonClick={removeTag} />
+      )
+    })
+    
+    
     var startTime
     if (typeof (this.state.activity.startEventTimestamp) != 'undefined')  {
       var startEventDate = new Date(this.state.activity.startEventTimestamp)
@@ -282,7 +337,7 @@ var ActivityAdministration = React.createClass({
                                              excludedVolunteers={this.state.volunteers}/>
     }
     var volunteers = this.state.volunteers || []
-    var list = volunteers.map(function(volunteer) {
+    var volunteersList = volunteers.map(function(volunteer) {
       return (
         <AddedVolonteer
           key={volunteer.user_id}
@@ -323,6 +378,15 @@ var ActivityAdministration = React.createClass({
             </select>
           </div>
 
+          <br></br>
+          <b>Kategorie:</b>
+          <br></br>
+          {addTag}
+          <div>
+            {tagsList}
+          </div>
+          <br></br>
+          
 
           <div className="pure-u-1 pure-u-md-1-3">
             <b>Czas rozpoczęcia</b>
@@ -332,7 +396,7 @@ var ActivityAdministration = React.createClass({
           {startTime}
 
           <br></br>
-          <b>Zadanie jest zarchiwizowane? </b>
+          <b>Zadanie jest w archiwum? </b>
           <br></br>
           <input type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
           <br></br>
@@ -386,7 +450,7 @@ var ActivityAdministration = React.createClass({
           <br></br>
           {addVolonteer}
           <div>
-            {list}
+            {volunteersList}
           </div>
           <br></br>
           <div className="pure-u-1 pure-u-md-1-3">

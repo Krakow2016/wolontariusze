@@ -85,6 +85,12 @@ var Activity = React.createClass({
       }
     }()
     
+    var tags = this.state.tags
+    var tagsList = tags.map (function (tag) {
+      return (
+        <span className="activityTagLabel" key={tag.id}>{tag.name} </span>
+      )
+    })
     
     var startTime
     if (typeof (this.state.activity.startEventTimestamp) != 'undefined')  {
@@ -132,6 +138,8 @@ var Activity = React.createClass({
         <br></br>
         <br></br>
         <b>Typ:</b> {type}
+        <br></br>
+        <b>Kategorie:</b> {tagsList}
         <br></br>
         <b>Czas rozpoczęcia:</b> {startTime} <b>Czas trwania:</b> {activity.duration}
         <br></br>

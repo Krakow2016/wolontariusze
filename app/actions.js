@@ -196,6 +196,31 @@ module.exports = {
       cb()
     })
   },
+  
+  createActivityTag: function(context, payload, cb) {
+    context.service.create('ActivityTags', {}, payload, function (err, data) {
+      if (err) { // Błąd po stronie serwera
+      } else {
+        cb()
+      }
+    })
+  },
+
+  removeActivityTag: function(context, payload, cb) {
+    var params = {id: payload.id, ids: payload.ids}
+    context.service.update('ActivityTags', params, payload.body, function (err, data) {
+      if (err) { // Błąd po stronie serwera
+        //context.dispatch('JOINT_UPDATE_FAILURE', [])
+      } else {
+        var ids = params.ids || [params.id]
+        ids.forEach(function(id) {
+          context.dispatch('ACTIVITY_TAG_DELETED', id)
+        })
+      }
+      cb()
+    })
+  },
+  
   showTasks: function(context, payload, cb) {
     var user = context.getUser()
     context.service.read('Activities', Object.assign({}, payload, {
