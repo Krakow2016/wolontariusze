@@ -484,22 +484,17 @@ table.details tr > * {
   color: magenta;
 }
 
-#geoMapCopyright{
-  color: black;
-  position: relative;
-  top: -50px;
-  left: 5px;
-}
 
 #geoMapCopyright{
   color: black;
   font-size: 12px;
   position: relative;
   top: -20px;
-  left: 5px;
+  float: right;
+  left: -5px;
 }
 
-#geoMapCopyright a, #geoMapCopyright span  {
+#geoMapCopyright a, #geoMapCopyright span, #geoMapCopyright2 a, #geoMapCopyright2 span  {
   font-size: 1.0rem;
 }
 
