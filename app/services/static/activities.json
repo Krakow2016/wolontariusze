@@ -23,6 +23,7 @@
         "datetime": "1970-01-01T00:36:40.200Z",
         "duration": "2h",
         "place": "Dobczyce",
+        "lat_lon": [13, 37],
         "is_urgent": false,
         "creator": "2",
         "editor": "1",

@@ -4,7 +4,8 @@ describe('Activity API', function() {
       apiRequest(function(r, cb){
         var body = {
           name: "Nazwa zadania",
-          description: "Opis zadania"
+          description: "Opis zadania",
+          lat_lon: [13, 37]
         }
         r.admin_post('/activities/', body, function(err, resp, json){
           expect(err).toBeNull()
@@ -16,6 +17,7 @@ describe('Activity API', function() {
           expect(json.data.activity.id).toBeDefined()
           expect(json.data.activity.name).toBe("Nazwa zadania")
           expect(json.data.activity.description).toBe("Opis zadania")
+          expect(json.data.activity.lat_lon).toEqual([13, 37])
           expect(json.data.activity.user_id).toBe("2")
           done()
         })
@@ -58,6 +60,7 @@ describe('Activity API', function() {
           var json = parse_json()
           expect(json.status).toEqual('success')
           expect(json.data).toBeDefined() // Object
+          expect(json.data.activity.lat_lon).toEqual([13, 37])
           done()
         })
       })

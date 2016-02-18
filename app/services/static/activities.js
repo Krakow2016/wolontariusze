@@ -13,48 +13,9 @@ var activities = require('./activities.json')
 var joints = require('./joints.json')
 var volunteers = require('./volunteers.json')
 
-var public_attrs = [
-  'id',
-  'title',
-  'description',
-  'creationTimestamp',
-  'editionTimestamp',
-  'startEventTimestamp',
-  'duration',
-  'place',
-  'creator',
-  'editor',
-  'maxVolunteers'
-]
-
-var private_attrs = [
-]
-
-
 var modifiedActivity = function (activityId, req, config) {
-  var activity = activities[activityId]
-  if (activity != null) {
-
-    var user = req.user || config.user
-    // Flaga przywilejów administratora
-    var is_admin = user && user.is_admin
-    // Flaga właściciela profilu
-    var is_owner = (user && (activity.creator == user.id))
-
-    // Tablica parametrów uprawnionych do odczytu
-    var attrs = public_attrs
-
-    if(is_admin || is_owner) {
-      attrs = attrs.concat(private_attrs)
-    }
-
-    return activity
-  } else {
-    return null
-  }
-
+  return activities[activityId]
 }
-
 
 var getActivityVolunteers = function (activityId) {
   var vols = []

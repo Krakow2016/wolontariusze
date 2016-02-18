@@ -97,7 +97,8 @@ ActivityStore.attributes = function() {
     'creator',
     'editor',
     'maxVolunteers',
-    'volunteers'
+    'volunteers',
+    'lat_lon'
   ]
 }
 
