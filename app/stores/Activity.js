@@ -15,6 +15,7 @@ var ActivityStore = createStore({
   initialize: function () {
     this.activity = {
       name: '',
+      type: '',
       startEventTimestamp: '',
       duration: '',
       place: '',
@@ -88,6 +89,7 @@ ActivityStore.attributes = function() {
     'id',
     'name',
     'title',
+    'type',
     'description',
     'created_at',
     'updated_at',

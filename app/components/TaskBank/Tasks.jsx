@@ -191,9 +191,9 @@ var Tasks = React.createClass({
     var endNumber = (this.state.page*this.props.pagination < taskNumber) ? this.state.page*this.props.pagination : taskNumber
     var numberDisplay
     if (startNumber == endNumber) {
-      numberDisplay = <span>Zadanie {startNumber}</span>
+      numberDisplay = <span>Zadanie {startNumber} z {taskNumber}</span>
     } else {
-      numberDisplay = <span>Zadania {startNumber}-{endNumber}</span>
+      numberDisplay = <span>Zadania {startNumber}-{endNumber} z {taskNumber}</span>
     }
 
     // TYPE

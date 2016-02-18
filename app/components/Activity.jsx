@@ -74,6 +74,17 @@ var Activity = React.createClass({
       </div>
     }
 
+    var type = function () {
+      switch(activity.type) {
+        case 'dalem_dla_sdm':
+          return 'Dałem dla ŚDM'
+        case 'wzialem_od_sdm':
+          return 'Wziąłęm od ŚDM'
+        default:
+          return 'Niezdefiniowany'
+      }
+    }()
+    
     var priority = (activity.is_urgent) ? 'PILNE' : 'NORMALNE'
 
     var volunteers = this.state.volunteers
@@ -109,6 +120,8 @@ var Activity = React.createClass({
         {editLink}
         <h2>{activity.title}</h2>
         <br></br>
+        <br></br>
+        <b>Typ:</b> {type}
         <br></br>
         <b>Czas rozpoczęcia:</b> {TimeService.showTime(activity.startEventTimestamp)}  <b>Czas trwania:</b> {activity.duration}
         <br></br>

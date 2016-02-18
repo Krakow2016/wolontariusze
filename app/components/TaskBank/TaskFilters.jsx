@@ -17,7 +17,7 @@ var TaskFilters = React.createClass({
         availabilityStateCheckbox: false
       },
       selects: {
-        typeSelect: 'Dalem',
+        typeSelect: '',
         prioritySelect: 'NORMALNE',
         timeStateSelect: 'Trwajace',
         availabilityStateSelect: 'Wolne'
@@ -73,6 +73,14 @@ var TaskFilters = React.createClass({
     var filteredData = this.props.data
     var that = this
 
+    //Typ
+    if (this.state.checkboxes.typeCheckbox) {
+      filteredData = filteredData.filter(function (task) {
+        return that.state.selects.typeSelect == task.type ||
+               (that.state.selects.typeSelect == '' && typeof(task.type) == 'undefined')
+      })
+    }
+    
     //Priorytet
     if (this.state.checkboxes.priorityCheckbox) {
       filteredData = filteredData.filter(function (task) {
@@ -89,9 +97,10 @@ var TaskFilters = React.createClass({
     var filterByType = <div>
                         <input type="checkbox" name="typeCheckbox" checked={this.state.checkboxes.typeCheckbox} onChange={this.handleCheckboxChange} />
                         <span className="tasks-filters-filterType">Typ</span>
-                        <select name="typeSelect" selected={this.state.selects.typeSelect}  onChange={this.handleSelectFilterByType} >
-                          <option value="Dalem">Dałem dla ŚDM</option>
-                          <option value="Wzialem">Wziąłęm od ŚDM</option>
+                        <select name="typeSelect" selected={this.state.selects.typeSelect}  onChange={this.handleSelectChange} >
+                          <option value="">Niezdefiniowany</option>
+                          <option value="dalem_dla_sdm">Dałem dla ŚDM</option>
+                          <option value="wzialem_od_sdm">Wziąłęm od ŚDM</option>
                         </select>
                        </div>
     var filterByPriority = <div>
