@@ -145,7 +145,7 @@ exports.authorization = [
   login.ensureLoggedIn('/api/v2/login'),
   server.authorization(function(clientId, redirectURI, done) {
     APIClients.read({force_admin: true}, 'APIClients', { id: clientId }, {}, function (err, client) {
-      if (err) { return done(err) }
+      if (err) { return done(null, false, err) }
 
       // WARNING: For security purposes, it is highly advisable to check that
       // redirectURI provided by the client matches one registered with the

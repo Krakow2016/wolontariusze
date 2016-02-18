@@ -303,7 +303,11 @@ server.use(function(req, res, next) {
 
 // Obsługa błędów
 server.use(function(err, req, res, next) {
-  res.status(500).send(error('UnknownError', err))
+  if(err.status) {
+    res.status(err.status).send(error(err.name, err.message))
+  } else {
+    res.status(500).send(error('UnknownError', err))
+  }
 })
 
 // Baza noclegowa pielgrzymów
