@@ -20,7 +20,7 @@ var TaskFilters = React.createClass({
         typeSelect: '',
         prioritySelect: 'NORMALNE',
         timeStateSelect: 'Trwajace',
-        availabilityStateSelect: 'Wolne'
+        availabilityStateSelect: 'wolne'
       },
       placeDistance: '1',
       placeAddress: 'Kraków Kanonicza 14',
@@ -89,7 +89,18 @@ var TaskFilters = React.createClass({
       })
     }
 
+    //Dostępność
+    if (this.state.checkboxes.availabilityStateCheckbox) {
+      filteredData = filteredData.filter(function (task) {
+        var isFree = task.volunteerNumber < task.maxVolunteers || task.maxVolunteers == 0
+        return  (that.state.selects.availabilityStateSelect == 'wolne' && isFree) || 
+                (that.state.selects.availabilityStateSelect == 'pelne' && !isFree)
+      })
+    }
+    
     this.props.filterFunction(filteredData)
+    
+
   },
 
   render: function () {
@@ -147,8 +158,8 @@ var TaskFilters = React.createClass({
                                 <input type="checkbox" name="availabilityStateCheckbox" checked={this.state.checkboxes.availabilityStateCheckbox} onChange={this.handleCheckboxChange} />
                                 <span className="tasks-filters-filterType">Dostępność</span>
                                 <select name="availabilityStateSelect" selected={this.state.selects.availabilityStateSelect} onChange={this.handleSelectChange}>
-                                  <option value="Wolne">Wolne</option>
-                                  <option value="Pelne">Pełne</option>
+                                  <option value="wolne">Wolne</option>
+                                  <option value="pelne">Pełne</option>
                                 </select>
                               </div>
     }

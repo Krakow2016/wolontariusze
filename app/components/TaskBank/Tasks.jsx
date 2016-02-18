@@ -135,7 +135,8 @@ var Tasks = React.createClass({
 
   filter: function (filteredData) {
     this.setState(update(this.state, {
-      filteredData: {$set: filteredData}
+      filteredData: {$set: filteredData},
+      page: {$set: 1}
     }))
   },
 
