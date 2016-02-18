@@ -212,7 +212,12 @@ var Activities = module.exports = {
           if (params.type === 'openTasks') {
             r.table(tableName)
             .filter (function (task) {
-              return (task('startEventTimestamp').gt(currentTime) )  //TODO: change startEventTimestamp  datetime
+              return task.hasFields('is_archived').not().or(
+                            task('is_archived').eq(false))
+            }, {default: true})
+            .filter (function (task) {
+              return task.hasFields('startEventTimestamp').not().or(
+                            task('startEventTimestamp').gt(currentTime))  //TODO: change startEventTimestamp  datetime
             }, {default: true})
            .merge (function (task) {
              return {
@@ -239,7 +244,12 @@ var Activities = module.exports = {
           if (params.type === 'volunteerTasks') {
             r.table(tableName)
             .filter (function (task) {
-              return (task('startEventTimestamp').gt(currentTime) )  //TODO: change startEventTimestamp  datetime
+              return task.hasFields('is_archived').not().or(
+                            task('is_archived').eq(false))
+            }, {default: true})
+            .filter (function (task) {
+              return task.hasFields('startEventTimestamp').not().or(
+                            task('startEventTimestamp').gt(currentTime))  //TODO: change startEventTimestamp  datetime
             }, {default: true})
             .merge (function (task) {
               return {

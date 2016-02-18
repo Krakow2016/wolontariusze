@@ -87,6 +87,22 @@ var ActivityAdministration = React.createClass({
       activity: {startEventTimestamp: {$set: m.toDate().getTime()}}
     }))
   },
+  
+  handleAddStartEventTimestampChange: function(evt) {
+    var value = evt.target.checked
+      
+    var activity = this.state.activity
+    if (!value) {
+      delete activity.startEventTimestamp
+    } else {
+      activity.startEventTimestamp = new Date().getTime()
+    }
+    
+    this.setState(update(this.state, {
+        activity: {$set: activity}
+    }))
+  },
+  
 
   handleChange: function (evt) {
     var activity = {}
@@ -212,13 +228,32 @@ var ActivityAdministration = React.createClass({
   },
 
   render: function() {
-    var startEventDate = new Date(this.state.activity.startEventTimestamp)
-    var startEventDateHint
-    if (this.props.taskMode) {
-      startEventDateHint = <span> Dla zadania data powinna być w przyszłości </span>
-    } else {
-      startEventDateHint = <span> Dla aktywności data powinna być w przeszłości </span>
+  
+  
+    var startTime
+    if (typeof (this.state.activity.startEventTimestamp) != 'undefined')  {
+      var startEventDate = new Date(this.state.activity.startEventTimestamp)
+      var startEventDateHint
+      if (this.props.taskMode) {
+        startEventDateHint = <span> Dla zadania data powinna być w przyszłości </span>
+      } else {
+        startEventDateHint = <span> Dla aktywności data powinna być w przeszłości </span>
+      }
+      
+      startTime = <div className="pure-u-1 pure-u-md-2-3">
+                    <DateTime open={false}
+                      dateFormat={'YYYY/M/D'}
+                      timeFormat={'HH:mm'}
+                      isValidDate={this.isValidDate}
+                      value={startEventDate}
+                      onChange={this.handleStartEventTimestampChange}/>
+                    {startEventDateHint}
+                </div>
+      
     }
+    
+   
+
 
     var updateButton = []
     if (this.props.creationMode == false) {
@@ -291,16 +326,16 @@ var ActivityAdministration = React.createClass({
 
           <div className="pure-u-1 pure-u-md-1-3">
             <b>Czas rozpoczęcia</b>
+            <br></br>
+            <input type="checkbox" name="addPosition" checked={!!this.state.activity.startEventTimestamp} onChange={this.handleAddStartEventTimestampChange} />
           </div>
-          <div className="pure-u-1 pure-u-md-2-3">
-              <DateTime open={false}
-                dateFormat={'YYYY/M/D'}
-                timeFormat={'HH:mm'}
-                isValidDate={this.isValidDate}
-                value={startEventDate}
-                onChange={this.handleStartEventTimestampChange}/>
-              {startEventDateHint}
-          </div>
+          {startTime}
+
+          <br></br>
+          <b>Zadanie jest zarchiwizowane? </b>
+          <br></br>
+          <input type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
+          <br></br>
 
           <br></br>
           <br></br>

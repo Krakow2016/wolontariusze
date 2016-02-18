@@ -85,6 +85,16 @@ var Activity = React.createClass({
       }
     }()
     
+    
+    var startTime
+    if (typeof (this.state.activity.startEventTimestamp) != 'undefined')  {
+      startTime = TimeService.showTime(activity.startEventTimestamp)
+    } else {
+      startTime = 'Nieokreślony'
+    }
+    
+    var is_archived = (activity.is_archived) ? 'Tak' : 'Nie'
+    
     var priority = (activity.is_urgent) ? 'PILNE' : 'NORMALNE'
 
     var volunteers = this.state.volunteers
@@ -123,7 +133,9 @@ var Activity = React.createClass({
         <br></br>
         <b>Typ:</b> {type}
         <br></br>
-        <b>Czas rozpoczęcia:</b> {TimeService.showTime(activity.startEventTimestamp)}  <b>Czas trwania:</b> {activity.duration}
+        <b>Czas rozpoczęcia:</b> {startTime} <b>Czas trwania:</b> {activity.duration}
+        <br></br>
+        <b>Jest w archiwum?:</b> {is_archived}
         <br></br>
         <b>Miejsce wydarzenia:</b> {activity.place}
         <br></br>

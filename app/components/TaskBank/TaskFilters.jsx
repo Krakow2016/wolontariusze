@@ -19,7 +19,7 @@ var TaskFilters = React.createClass({
       selects: {
         typeSelect: '',
         prioritySelect: 'NORMALNE',
-        timeStateSelect: 'Trwajace',
+        timeStateSelect: 'trwajace',
         availabilityStateSelect: 'wolne'
       },
       placeDistance: '1',
@@ -89,6 +89,16 @@ var TaskFilters = React.createClass({
       })
     }
 
+    //Trwające, zakończone
+    if (this.state.checkboxes.timeStateCheckbox) {
+      filteredData = filteredData.filter(function (task) {
+        var currentTime = new Date().getTime()
+        var isFinished = (typeof(task.startEventTimestamp) != 'undefined' && task.startEventTimestamp < currentTime) || task.is_archived
+        return  (that.state.selects.timeStateSelect == 'trwajace' && !isFinished) || 
+                (that.state.selects.timeStateSelect == 'zakonczone' && isFinished)
+      })
+    }
+    
     //Dostępność
     if (this.state.checkboxes.availabilityStateCheckbox) {
       filteredData = filteredData.filter(function (task) {
@@ -150,8 +160,8 @@ var TaskFilters = React.createClass({
                               <input type="checkbox" name="timeStateCheckbox" checked={this.state.checkboxes.timeStateCheckbox} onChange={this.handleCheckboxChange} />
                               <span className="tasks-filters-filterType">Stan czasowy</span>
                               <select name="timeStateSelect" selected={this.state.selects.timeStateSelect} onChange={this.handleSelectChange} >
-                                <option value="Trwajace">Trwające</option>
-                                <option value="Zakonczone">Zakończone</option>
+                                <option value="trwajace">Trwające</option>
+                                <option value="zakonczone">Zakończone</option>
                               </select>
                             </div>
       filterByAvailabilityState = <div>
