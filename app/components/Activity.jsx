@@ -110,7 +110,7 @@ var Activity = React.createClass({
         <h2>{activity.title}</h2>
         <br></br>
         <br></br>
-        <b>Czas rozpoczęcia:</b> {TimeService.showTime(activity.startEventTimestamp)}  <b>Czas trwania:</b> {activity.duration}
+        <b>Czas rozpoczęcia:</b> {TimeService.showTime(activity.datetime)}  <b>Czas trwania:</b> {activity.duration}
         <br></br>
         <b>Miejsce wydarzenia:</b> {activity.place}
         <br></br>
