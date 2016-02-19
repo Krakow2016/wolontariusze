@@ -81,7 +81,10 @@ var ActivityAdministration = React.createClass({
   _changeListener: function() {
     // Interesują nas tylko zmiany w obiekcie activity. Aktualizacją obiektu
     // volunteers zajmujemy się sami.
-    this.setState(this.props.context.getStore(ActivityStore).getState())
+    //this.setState(this.props.context.getStore(ActivityStore).getState())
+    this.setState(update(this.state, {
+      activity: {$set: this.props.context.getStore(ActivityStore).getState().activity}
+    }))
   },
 
   componentDidMount: function() {
@@ -205,6 +208,8 @@ var ActivityAdministration = React.createClass({
       return
     }
 
+    this.state.activity.tags = this.state.tags
+    
     if (this.props.creationMode == false) {
       this.update()
     } else {
@@ -274,6 +279,7 @@ var ActivityAdministration = React.createClass({
     var addTag = <ActivityTags addTag={this.addTag}
                                excludedTags={this.state.tags}
                                context={this.props.context}/>
+
     var tags = this.state.tags || []
     var tagsList = tags.map(function(tag) {
       return (
@@ -283,7 +289,6 @@ var ActivityAdministration = React.createClass({
           onRemoveButtonClick={removeTag} />
       )
     })
-    
     
     var startTime
     if (typeof (this.state.activity.startEventTimestamp) != 'undefined')  {

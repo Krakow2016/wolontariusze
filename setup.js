@@ -1,3 +1,4 @@
+
 var r = require('rethinkdb')
 var async = require('async')
 var request = require('request')
@@ -42,7 +43,6 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
       if(err) {
         reject('Błąd: brak połączenia z ElasticSearch lub z mapping')
       } else {
-        console.log('abcc')
         resolve(conn)
       }
     })
@@ -131,8 +131,8 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
   }).then(function(conn) {
     return new Promise(function(resolve) {
       r.table('ActivityTags').count().run(conn, function(err, count) {
-        if(count > 0) {
-          // Dane dla tabeli połączeń wolontariuszy z aktywnościami
+        if(count >= 0) {
+          //Dane dla tagów aktywności
           var arr = []
           var data = require('./app/services/static/activityTags.json')
           Object.keys(data).forEach(function(key) { arr.push(data[key]) })

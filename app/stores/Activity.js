@@ -35,6 +35,7 @@ var ActivityStore = createStore({
     delete data.tags
     this.activity = data
     this.volunteers = volunteers
+    this.tags = tags
     this.emitChange()
   },
 

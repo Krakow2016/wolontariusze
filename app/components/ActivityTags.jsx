@@ -29,7 +29,8 @@ var ActivityTags = React.createClass ({
   
   onCreateTagButtonClick: function () {
     this.props.context.executeAction(actions.createActivityTag, {
-      name: this.state.value
+      name: this.state.value,
+      name_suffix: ''
     })
     this.setState(update(this.state, {
       value: {$set: ''}
@@ -41,7 +42,8 @@ var ActivityTags = React.createClass ({
     this.props.context.executeAction(actions.removeActivityTag, {
       id: id,
       body: {
-        is_canceled: true
+        is_canceled: true,
+        name_suffix: id //parametr przydatny, gdyby ktoś usunął kategorię a stworzył nową o tej samej nazwie, co usunięta
       }
     })
     this.setState(update(this.state, {
@@ -187,7 +189,7 @@ var ActivityTags = React.createClass ({
           return false
         }
         for (var i = 0; i < suggestions.length; i++) {
-          if (value == suggestions[i].display_name) {
+          if ((value+' ') == suggestions[i].display_name) {
             return false
           }
         }
@@ -217,7 +219,7 @@ var ActivityTags = React.createClass ({
     if (type=='usun') {
       var removeButton
       if (this.state.showRemoveButton) {
-        removeButton =<span>{this.state.removeSuggestion.display_name} <input type="button" onClick={this.onRemoveTagButtonClick} value="Usuń" key="removeTag" /></span>
+        removeButton =<span>{this.state.removeSuggestion.display_name} <input type="button" onClick={this.onRemoveTagButtonClick} value="Usuń kategorię" key="removeTag" /></span>
       }
       
       return (

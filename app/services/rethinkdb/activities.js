@@ -173,7 +173,18 @@ var Activities = module.exports = {
       }
 
       if(params.id) { // Pobierz krotkę o danym numerze id
-        r.table(tableName).get(params.id).run(conn, function(err, activity){
+        r.table(tableName).get(params.id)
+        .merge(function (activity) { //To służy do tego, żeby usunąć kategorie, które są cancelowane
+          return {
+            tags: r.table('ActivityTags')
+                  .getAll(r.args(activity('tags').map(function (tag) { return tag('id')}).coerceTo('array')))
+                  .filter(function (x) {
+                    return x.hasFields('is_canceled').not()
+                  }, {default: true})
+                  .coerceTo('array')
+          }
+        })
+        .run(conn, function(err, activity){
 
           if(err || !activity) {
             return callback(err || 404)
@@ -199,6 +210,7 @@ var Activities = module.exports = {
               }
               cursor.toArray(function(err, volunteers) {
                 activity.volunteers = volunteers || []
+                //console.log('ACTIVITY', activity)
                 callback(null, activity)
               })
             })
@@ -219,8 +231,24 @@ var Activities = module.exports = {
               return task.hasFields('startEventTimestamp').not().or(
                             task('startEventTimestamp').gt(currentTime))  //TODO: change startEventTimestamp  datetime
             }, {default: true})
+            .merge(function (activity) { //To służy do tego, żeby usunąć kategorie, które są cancelowane
+              return {
+                tags: r.table('ActivityTags')
+                      .getAll(r.args(activity('tags').map(function (tag) { return tag('id')}).coerceTo('array')))
+                      .filter(function (x) {
+                        return x.hasFields('is_canceled').not()
+                      }, {default: true})
+                      .coerceTo('array')
+              }
+            })
            .merge (function (task) {
              return {
+               tags: r.table('ActivityTags') //To służy do usunięcia zcancelowanych kategorii
+                      .getAll(r.args(task('tags').map(function (tag) { return tag('id')}).coerceTo('array')))
+                      .filter(function (x) {
+                        return x.hasFields('is_canceled').not()
+                      }, {default: true})
+                      .coerceTo('array'),
                volunteerNumber: r.table('Joints')
                   .getAll(task('id'), {index: 'activity_id'})
                   .filter(function (x) {
@@ -252,7 +280,13 @@ var Activities = module.exports = {
                             task('startEventTimestamp').gt(currentTime))  //TODO: change startEventTimestamp  datetime
             }, {default: true})
             .merge (function (task) {
-              return {
+              return {     
+                tags: r.table('ActivityTags') //To służy do usunięcia zcancelowanych kategorii
+                      .getAll(r.args(task('tags').map(function (tag) { return tag('id')}).coerceTo('array')))
+                      .filter(function (x) {
+                        return x.hasFields('is_canceled').not()
+                      }, {default: true})
+                      .coerceTo('array'),
                 volunteerNumber: r.table('Joints')
                     .getAll(task('id'), {index: 'activity_id'})
                     .filter(function (x) {
@@ -284,6 +318,12 @@ var Activities = module.exports = {
             }, {default: true})
             .merge (function (task) {
               return {
+                tags: r.table('ActivityTags') //To służy do usunięcia zcanelowanych kategorii
+                      .getAll(r.args(task('tags').map(function (tag) { return tag('id')}).coerceTo('array')))
+                      .filter(function (x) {
+                        return x.hasFields('is_canceled').not()
+                      }, {default: true})
+                      .coerceTo('array'),
                 volunteerNumber: r.table('Joints')
                     .getAll(task('id'), {index: 'activity_id'})
                     .filter(function (x) {
