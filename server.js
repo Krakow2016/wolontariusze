@@ -187,18 +187,6 @@ server.post('/suggest', function(req, res) {
   }
 })
 
-server.post('/activity_tag_suggest', function(req, res) {
-  if(req.user && req.user.is_admin) {
-    var elasticSearch = config.elasticSearch +'/_suggest'
-    req.pipe(request(elasticSearch))
-      .on('error', function(e) {
-        res.send(500) // Brak połączenia z bazą
-      }).pipe(res)
-  } else {
-    res.send(403)
-  }
-})
-
 server.get('/invitation', passport.authenticate('localapikey', {
   successRedirect: '/witaj',
   failureRedirect: '/login',

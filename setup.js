@@ -40,41 +40,11 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
       body: fs.readFileSync('./config/elasticsearch_mappings.json', 'utf8')
     }, function(err) {
       if(err) {
-        reject('Błąd: brak połączenia z ElasticSearch.')
+        reject('Błąd: brak połączenia z ElasticSearch lub z mapping')
       } else {
         console.log('abcc')
         resolve(conn)
       }
-    })
-  }).then(function(conn) {
-    return new Promise(function(resolve, reject) {
-      // ElasticSearch index and mappings
-      request({
-        method: 'PUT',
-        uri: conf.elasticSearch+'/volunteer/_mapping',
-        body: fs.readFileSync('./config/elasticsearch_mappings.json', 'utf8')
-      }, function(err, resp, json){
-        if(err) {
-          reject('Błąd: wystąpił problem przy wgrywaniu mappingu ElasticSearch.')
-        } else {
-          resolve(conn)
-        }
-      })
-    })
-  }).then(function(conn) {
-    return new Promise(function(resolve, reject) {
-      // ElasticSearch index and mappings
-      request({
-        method: 'PUT',
-        uri: conf.elasticSearch+'/activity_tag/_mapping',
-        body: fs.readFileSync('./config/activityTag_es_mappings.json', 'utf8')
-      }, function(err, resp, json){
-        if(err) {
-          reject('Błąd: wystąpił problem przy wgrywaniu mappingu ElasticSearch. (Activity Tag)')
-        } else {
-          resolve(conn)
-        }
-      })
     })
   }).then(function(conn) {
     // Stwórz nową bazę danych
