@@ -177,7 +177,7 @@ var Activities = module.exports = {
         .merge(function (activity) { //To służy do tego, żeby usunąć kategorie, które są cancelowane
           return {
             tags: r.table('ActivityTags')
-                  .getAll(r.args(activity('tags').map(function (tag) { return tag('id')}).coerceTo('array')))
+                  .getAll(r.args(r.branch(activity.hasFields('tags'), activity('tags').map(function (tag) { return tag('id')}).coerceTo('array'), [-1, -2])))
                   .filter(function (x) {
                     return x.hasFields('is_canceled').not()
                   }, {default: true})
@@ -231,20 +231,10 @@ var Activities = module.exports = {
               return task.hasFields('startEventTimestamp').not().or(
                             task('startEventTimestamp').gt(currentTime))  //TODO: change startEventTimestamp  datetime
             }, {default: true})
-            .merge(function (activity) { //To służy do tego, żeby usunąć kategorie, które są cancelowane
-              return {
-                tags: r.table('ActivityTags')
-                      .getAll(r.args(activity('tags').map(function (tag) { return tag('id')}).coerceTo('array')))
-                      .filter(function (x) {
-                        return x.hasFields('is_canceled').not()
-                      }, {default: true})
-                      .coerceTo('array')
-              }
-            })
            .merge (function (task) {
              return {
                tags: r.table('ActivityTags') //To służy do usunięcia zcancelowanych kategorii
-                      .getAll(r.args(task('tags').map(function (tag) { return tag('id')}).coerceTo('array')))
+                      .getAll(r.args(r.branch(task.hasFields('tags'), task('tags').map(function (tag) { return tag('id')}).coerceTo('array'), [-1, -2])))
                       .filter(function (x) {
                         return x.hasFields('is_canceled').not()
                       }, {default: true})
@@ -282,7 +272,7 @@ var Activities = module.exports = {
             .merge (function (task) {
               return {     
                 tags: r.table('ActivityTags') //To służy do usunięcia zcancelowanych kategorii
-                      .getAll(r.args(task('tags').map(function (tag) { return tag('id')}).coerceTo('array')))
+                      .getAll(r.args(r.branch(task.hasFields('tags'), task('tags').map(function (tag) { return tag('id')}).coerceTo('array'), [-1, -2])))
                       .filter(function (x) {
                         return x.hasFields('is_canceled').not()
                       }, {default: true})
@@ -318,8 +308,8 @@ var Activities = module.exports = {
             }, {default: true})
             .merge (function (task) {
               return {
-                tags: r.table('ActivityTags') //To służy do usunięcia zcanelowanych kategorii
-                      .getAll(r.args(task('tags').map(function (tag) { return tag('id')}).coerceTo('array')))
+                tags: r.table('ActivityTags') //To służy do usunięcia zcancelowanych kategorii
+                      .getAll(r.args(r.branch(task.hasFields('tags'), task('tags').map(function (tag) { return tag('id')}).coerceTo('array'), [-1, -2])))
                       .filter(function (x) {
                         return x.hasFields('is_canceled').not()
                       }, {default: true})

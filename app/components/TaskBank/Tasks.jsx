@@ -66,8 +66,8 @@ var Tasks = React.createClass({
     var filteredData = this.state.filteredData
     var order = this.state.order
     filteredData = filteredData.sort(function (task1, task2) {
-      task1.categories = 'A B C'
-      task2.categories = 'A B C'
+      task1.categories = task1.tags.map(function(t) {return t.name}).join()
+      task2.categories = task2.tags.map(function(t) {return t.name}).join()
       return (task1.categories < task2.categories) ? -order : order
     })
 
@@ -221,7 +221,7 @@ var Tasks = React.createClass({
     taskRows = taskRows.map(function (task) {
       var priorityClass = task.is_urgent ? 'tasks-priority-urgent-tr' : 'tasks-priority-normal-tr'
       var title = <td className="tasks-title-td"><a href={'/aktywnosc/'+task.id}>{task.title}</a></td>
-      var categories = <td className="tasks-categories-td"><span>Festiwal Młodych, Wolontariat+</span></td>
+      var categories = <td className="tasks-categories-td"><span>{task.tags.map(function (t) {return t.name}).join()}</span></td>
       var volunteerNumber = <td className="tasks-volunteerNumber-td"><span>{task.volunteerNumber}</span></td>
       var volunteerLimit = <td className="tasks-volunteerLimit-td"><span>{task.maxVolunteers != 0 ? task.maxVolunteers : 'Brak'}</span></td>
 
@@ -255,6 +255,7 @@ var Tasks = React.createClass({
         <TaskFilters data={this.state.data}
                      filterFunction={this.filter}
                      type={this.props.type}
+                     context={this.props.context}
                      />
         <br></br>{numberDisplay}
         {taskTable}

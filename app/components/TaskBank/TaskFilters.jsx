@@ -2,6 +2,24 @@ var React = require('react')
 var update = require('react-addons-update')
 
 var MyTextField = require('../Formsy/MyTextField.jsx')
+var ActivityTags = require('../ActivityTags.jsx')
+
+
+var AddedTag = React.createClass({
+  //onClick: function () {
+  //  this.props.onRemoveButtonClick(this.props.tag.id)
+  //},
+  //<input type="button" className="addedTagRemoveButton" onClick={this.onClick} value="Usuń"/> Przyda się, jeśli będzie więcej kategorii
+  name: function() {
+    var t = this.props.tag
+    return t.display_name || t.name
+  },
+  render: function () {
+    return (
+        <div className="addedTag" >(Wybrana kategoria: {this.name()} )</div>
+    )
+  }
+})
 
 var TaskFilters = React.createClass({
 
@@ -24,7 +42,7 @@ var TaskFilters = React.createClass({
       },
       placeDistance: '1',
       placeAddress: 'Kraków Kanonicza 14',
-      categoryName: 'Festiwal Młodych'
+      category: {}
 
     }
   },
@@ -68,6 +86,12 @@ var TaskFilters = React.createClass({
       handlePlaceAddressChange: {$set: value}
     }))
   },
+  
+  addCategory: function (category) {
+    this.setState(update(this.state, {
+      category: {$set: category}
+    }))
+  },
 
   filter: function () {
     var filteredData = this.props.data
@@ -86,6 +110,18 @@ var TaskFilters = React.createClass({
       filteredData = filteredData.filter(function (task) {
         var priority = task.is_urgent ? 'PILNE' : 'NORMALNE'
         return that.state.selects.prioritySelect == priority
+      })
+    }
+    
+    //Kategoria
+    if (this.state.checkboxes.categoryCheckbox) {
+      filteredData = filteredData.filter(function (task) {
+        for (var i = 0; i < task.tags.length; i++) {
+          if (that.state.category.id == task.tags[i].id) {
+            return true
+          }
+        }
+        return false
       })
     }
 
@@ -149,9 +185,16 @@ var TaskFilters = React.createClass({
                                           onChange={this.handlePlaceAddressChange}/>
                           </Formsy.Form>
                         </div>
+                        
+    var addTag = <ActivityTags addTag={this.addCategory}
+                               excludedTags={[this.state.category]}
+                               context={this.props.context}
+                               filterMode={true}/>
     var filterByCategory = <div>
                               <input type="checkbox" name="categoryCheckbox" checked={this.state.checkboxes.categoryCheckbox} onChange={this.handleCheckboxChange} />
                               <span className="tasks-filters-filterType">Kategoria</span>
+                              {addTag}
+                              <AddedTag tag={this.state.category} />
                             </div>
     var filterByTimeState
     var filterByAvailabilityState

@@ -18,7 +18,6 @@ var ActivityTags = React.createClass ({
 
   handleTypeChange: function (evt) {
     var value = evt.target.value
-    console.log('va', value)
     this.setState(update(this.state, {
       value: {$set: ''},
       type: {$set: value},
@@ -162,83 +161,99 @@ var ActivityTags = React.createClass ({
                     </select>
                     
 
-    if (type=='dodaj') {
+    if (this.props.filterMode) {
       return (
-        <div>
-          {typeSelect}
-          <AutoSuggest
-            id="activityTags"
-            inputProps={{
-              value: this.state.value,
-              onChange: this.handleChange
-            }}
-            suggestions={this.state.suggestions}
-            renderSuggestion={this.renderSuggestion}
-            getSuggestionValue={this.getSuggestionValue}
-            onSuggestionSelected={this.onSuggestionSelected} />
-        </div>
-      )
-    }
-    if (type=='nowa') {
-      var createButton
-      var that = this
-      var showCreateButton = function () {
-        var suggestions = that.state.suggestions
-        var value = that.state.value
-        if (value == '') {
-          return false
-        }
-        for (var i = 0; i < suggestions.length; i++) {
-          if ((value+' ') == suggestions[i].display_name) {
+            <AutoSuggest
+              id="activityTagsFilterMode"
+              inputProps={{
+                value: this.state.value,
+                onChange: this.handleChange
+              }}
+              suggestions={this.state.suggestions}
+              renderSuggestion={this.renderSuggestion}
+              getSuggestionValue={this.getSuggestionValue}
+              onSuggestionSelected={this.onSuggestionSelected} />
+        )
+    } else {
+      if (type=='dodaj') {
+        return (
+          <div>
+            {typeSelect}
+            <AutoSuggest
+              id="activityTags"
+              inputProps={{
+                value: this.state.value,
+                onChange: this.handleChange
+              }}
+              suggestions={this.state.suggestions}
+              renderSuggestion={this.renderSuggestion}
+              getSuggestionValue={this.getSuggestionValue}
+              onSuggestionSelected={this.onSuggestionSelected} />
+          </div>
+        )
+      }
+      if (type=='nowa') {
+        var createButton
+        var that = this
+        var showCreateButton = function () {
+          var suggestions = that.state.suggestions
+          var value = that.state.value
+          if (value == '') {
             return false
           }
+          for (var i = 0; i < suggestions.length; i++) {
+            if ((value+' ') == suggestions[i].display_name) {
+              return false
+            }
+          }
+          return true
+        }()
+        if (showCreateButton) {
+          createButton = <input type="button" onClick={this.onCreateTagButtonClick} value="Dodaj" key="createTag" />
         }
-        return true
-      }()
-      if (showCreateButton) {
-        createButton = <input type="button" onClick={this.onCreateTagButtonClick} value="Dodaj" key="createTag" />
+        
+        return (
+          <div>
+            {typeSelect}
+            <AutoSuggest
+              id="createActivityTag"
+              inputProps={{
+                value: this.state.value,
+                onChange: this.handleChange
+              }}
+              suggestions={this.state.suggestions}
+              renderSuggestion={this.renderSuggestion}
+              getSuggestionValue={this.getSuggestionValue}
+              onSuggestionSelected={this.onAddTagSuggestionSelected} />
+              {createButton}
+          </div>
+        )
       }
-      
-      return (
-        <div>
-          {typeSelect}
-          <AutoSuggest
-            id="createActivityTag"
-            inputProps={{
-              value: this.state.value,
-              onChange: this.handleChange
-            }}
-            suggestions={this.state.suggestions}
-            renderSuggestion={this.renderSuggestion}
-            getSuggestionValue={this.getSuggestionValue}
-            onSuggestionSelected={this.onAddTagSuggestionSelected} />
-            {createButton}
-        </div>
-      )
-    }
-    if (type=='usun') {
-      var removeButton
-      if (this.state.showRemoveButton) {
-        removeButton =<span>{this.state.removeSuggestion.display_name} <input type="button" onClick={this.onRemoveTagButtonClick} value="Usuń kategorię" key="removeTag" /></span>
+      if (type=='usun') {
+        var removeButton
+        if (this.state.showRemoveButton) {
+          removeButton =<span>{this.state.removeSuggestion.display_name} <input type="button" onClick={this.onRemoveTagButtonClick} value="Usuń kategorię" key="removeTag" /></span>
+        }
+        
+        return (
+          <div>
+            {typeSelect}
+            <AutoSuggest
+              id="removeActivityTag"
+              inputProps={{
+                value: this.state.value,
+                onChange: this.handleChange
+              }}
+              suggestions={this.state.suggestions}
+              renderSuggestion={this.renderSuggestion}
+              getSuggestionValue={this.getSuggestionValue}
+              onSuggestionSelected={this.onRemoveTagSuggestionSelected} />
+              {removeButton}
+          </div>
+        )
       }
-      
-      return (
-        <div>
-          {typeSelect}
-          <AutoSuggest
-            id="removeActivityTag"
-            inputProps={{
-              value: this.state.value,
-              onChange: this.handleChange
-            }}
-            suggestions={this.state.suggestions}
-            renderSuggestion={this.renderSuggestion}
-            getSuggestionValue={this.getSuggestionValue}
-            onSuggestionSelected={this.onRemoveTagSuggestionSelected} />
-            {removeButton}
-        </div>
-      )
     }
+    
     
   }
 })
