@@ -1,0 +1,8 @@
+{
+  "foo": {
+    "id": "foo",
+    "client_id": "bar",
+    "name": "Testowy klient API",
+    "callback_url": "https://developers.google.com/oauthplayground"
+  }
+}

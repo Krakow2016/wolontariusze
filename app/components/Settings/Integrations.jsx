@@ -11,7 +11,7 @@ var Integration = function(props) {
 var Integrations = React.createClass({
 
   getInitialState: function () {
-     return this.props.context.getStore(IntegrationsStore).getState()
+    return this.props.context.getStore(IntegrationsStore).getState()
   },
 
   _changeListener: function() {

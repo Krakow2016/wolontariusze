@@ -27,7 +27,7 @@ błędnie wprowadzonymi danymi (np. brak wymaganego parametru), a kody z zakresu
 
 | Identyfikator | Opis                                   |
 | ---           | ---                                    |
-| `status`      | Zawsze "error".                        |
+| `status`      | Zawsze `"error"`.                      |
 | `type`        | Typ błędu. Np. `authentication_error`. |
 | `message`     | Słowny opis błędu.                     |
 
@@ -129,12 +129,16 @@ API serwisu wolontariuszy wymaga aby token dostępu był wysłany w nagłówku
 Używając narzędzia cURL, przykładowe zapytanie będzie wyglądało w następujący sposób:
 
 ```
-curl -H "Authorization: Bearer ACCESS_TOKEN" https://wolontariusze.krakow2016.com/api/v2/volunteers/e5725fc8-1837-4a32-823c-2f08c7a8b3a1
+curl -H "Authorization: Bearer ACCESS_TOKEN" -H "Content-Type: application/json" https://wolontariusze.krakow2016.com/api/v2/volunteers/e5725fc8-1837-4a32-823c-2f08c7a8b3a1
 ```
 
 API zwróci kod HTTP 401 (Brak autoryzacji) jeżeli przesłane zapytanie będzie
 zawierać nieprawidłowy albo wygały token dostępu lub będzie nieuprawnione z
 innego powodu.
+
+W kolejnych przykładach, dla większej przejrzystości, pomijamy nagłówki
+`Authorization` i `Content-Type`, aczkolwiek należy pamiętać o tym że były one
+obecne przy wysyłaniu przytoczonych poniżej przykładnowych zapytań.
 
 ## Wolontariusze
 
@@ -155,6 +159,7 @@ Przykłady użycia są zawarte w pliku:
 | `is_approved`         | Tak       | 'true' jeżeli użytkownik może logować się w systemie.   |
 | `phone`               | Tak       | Numer telefonu kontaktowego. Np. `"+48 123456789"`.     |
 | `profile_picture_url` | Tak       | Adres url do zdjęcia profilowego.                       |
+| `thumb_picture_url`   | Tak       | Adres url do miniatury zdjęcia profilowego.                       |
 
 ### Tworzenie obiektu wolontariusza
 
@@ -245,34 +250,125 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/volunteers
 {}
 ```
 
-## Zadania
+## Aktywności i zadania
 
 Zadania są dodatkową pracą której wolontariusze będą mogli się podjąć i zgłosić
-się do niej. API umożliwia tworzenie, usuwanie i aktualizację zadań oraz
-pobieranie pojedynczych zadań jak i ich całej listy.
+się do niej. Aktywność jest klasą, od której wywodzą się zadania oraz inne
+zdarzenia które wolontariusz będzie mógł samodzielnie zalogować w systemie. API
+umożliwia tworzenie, usuwanie i aktualizację aktywności oraz pobieranie
+pojedynczych aktywności jak i całej listy aktywności.
+Przykłady użycia są zawarte w pliku:
+<https://github.com/Krakow2016/wolontariusze/blob/master/spec/api_activity_spec.js>.
 
-| Klucz         | Opis                                                    |
-| ---           | ---                                                     |
-| `id`          |                                                         |
-| `datetime`    | Data i czas rozpoczęcia zadania.                        |
-| `description` | Opis zadania.                                           |
-| `is_urgent`   | Flaga dla zadań oznaczonych jako pilne.                 |
-| `lat_lon`     | Współrzędne geograficzne miejsca wykonywania zadania.   |
-| `limit`       | Limit osób które mogą zgłosić się do zadania.           |
-| `name`        | Nazwa zadania.                                          |
-| `place`       | Opis miejsca wykonywania zadania.                       |
-| `volunteers`  | Tablica wolontariuszy zgłoszonych do wykonania zadania. |
+| Klucz         | Pomijalny | Opis                                                                       |
+| ---           | ---       | ---                                                                        |
+| `id`          | Nie       |                                                                            |
+| `description` | Nie       | Opis aktywności.                                                           |
+| `name`        | Nie       | Nazwa aktywności.                                                          |
+| `volunteers`  | Nie       | Tablica wolontariuszy zgłoszonych do wykonania zadania.                    |
+| `datetime`    | Tak       | Data i czas rozpoczęcia zadania.                                           |
+| `is_urgent`   | Tak       | `true` dla zadań oznaczonych jako pilne.                                   |
+| `lat_lon`     | Tak       | Współrzędne geograficzne miejsca wykonywania aktywności. Np. `[0.0, 0.0]`. |
+| `limit`       | Tak       | Limit osób które mogą zgłosić się do zadania. Np. `10`.                    |
+| `place`       | Tak       | Opis miejsca wykonywania zadania. Np. `"Sankruarium św. Jana Pawła II"`.   |
 
-### Tworzenie obiektu zadania
+### Tworzenie obiektu aktywności
 
 **Ścieżka:**  
 ```
-POST https://wolontariusze.krakow2016.com/api/v2/tasks
+POST https://wolontariusze.krakow2016.com/api/v2/activities
 ```
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/tasks
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities -d '{"name": "nazwa", "description": "opis"}'
+```
+
+**Przykładowa odpowiedź:**  
+```json
+{
+    "status": "success",
+    "data": {
+        "activity": {
+            "created_at": "2016-02-01T22:50:08.906Z",
+            "description": "opis",
+            "id": "0565ea98-86bf-4d5f-a3da-3236c8c3a876",
+            "name": "nazwa",
+            "user_id": "1"
+        }
+    }
+}
+```
+
+### Pobieranie obiektu aktywności
+
+**Ścieżka:**  
+```
+GET https://wolontariusze.krakow2016.com/api/v2/activities/:id
+```
+
+**Przykładowe zapytanie:**  
+```
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f-a3da-3236c8c3a876
+```
+
+**Przykładowa odpowiedź:**  
+```json
+{
+    "status": "success",
+    "data": {
+        "activity": {
+            "id": "0565ea98-86bf-4d5f-a3da-3236c8c3a876",
+            "name": "nazwa",
+            "description": "opis",
+            "created_at": "2016-02-01T22:50:08.906Z",
+            "volunteers": []
+        }
+    }
+}
+```
+
+### Aktualizacja obiektu aktywności
+
+*Wymagane uprawnienia:* administrator.
+
+**Ścieżka:**  
+```
+POST https://wolontariusze.krakow2016.com/api/v2/activities/:id
+```
+
+**Przykładowe zapytanie:**  
+```
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f-a3da-3236c8c3a876 -d '{"name": "nazwa", "description": "zmieniony opis"}'
+```
+
+**Przykładowa odpowiedź:**  
+```json
+{
+    "status": "success",
+    "data": {
+        "activity": {
+            "created_at": "2016-02-01T22:50:08.906Z",
+            "description": "zmieniony opis",
+            "id": "0565ea98-86bf-4d5f-a3da-3236c8c3a876",
+            "name": "nazwa",
+            "updated_at": "2016-02-02T11:47:28.162Z",
+            "user_id": "1"
+        }
+    }
+}
+```
+
+### Listowanie aktywności
+
+**Ścieżka:**  
+```
+GET https://wolontariusze.krakow2016.com/api/v2/activities
+```
+
+**Przykładowe zapytanie:**  
+```
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities
 ```
 
 **Przykładowa odpowiedź:**  
@@ -280,89 +376,82 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/tasks
 {}
 ```
 
-### Pobieranie obiektu zadania
+### Wysłanie zgłoszenia do aktywności
 
 **Ścieżka:**  
 ```
-GET https://wolontariusze.krakow2016.com/api/v2/tasks/:id
+POST https://wolontariusze.krakow2016.com/api/v2/activities/:id/join
 ```
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/tasks/123
+$ curl -X POST https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f-a3da-3236c8c3a876/join
 ```
 
 **Przykładowa odpowiedź:**  
-```
-{}
+```json
+{
+    "status": "success",
+    "data": {
+        "joint": {
+            "activity_id": "0565ea98-86bf-4d5f-a3da-3236c8c3a876",
+            "created_at": "2016-02-02T13:05:35.413Z",
+            "id": "91186ae2-27f6-4f3b-aadf-4d9570557187",
+            "user_id": "1"
+        }
+    }
+}
 ```
 
-### Aktualizacja obiektu zadania
+### Cofanie zgłoszenia do aktywności
 
 **Ścieżka:**  
 ```
-POST https://wolontariusze.krakow2016.com/api/v2/tasks/:id
+POST https://wolontariusze.krakow2016.com/api/v2/activities/:id/leave
 ```
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/tasks/123
+$ curl -X POST https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f-a3da-3236c8c3a876/leave
 ```
 
 **Przykładowa odpowiedź:**  
-```
-{}
+```json
+{
+    "status": "success",
+    "data": {
+        "joint": {
+            "activity_id": "0565ea98-86bf-4d5f-a3da-3236c8c3a876",
+            "created_at": "2016-02-02T13:05:35.413Z",
+            "id": "91186ae2-27f6-4f3b-aadf-4d9570557187",
+            "is_canceled": true,
+            "updated_at": "2016-02-02T13:06:24.705Z",
+            "user_id": "1"
+        }
+    }
+}
 ```
 
-### Wysłanie zgłoszenia do zadania
+### Usunięcie obiektu aktywności
+
+*Wymagane uprawnienia:* administrator.
 
 **Ścieżka:**  
 ```
-POST https://wolontariusze.krakow2016.com/api/v2/tasks/:id/join
+DELETE https://wolontariusze.krakow2016.com/api/v2/activities/:id
 ```
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/tasks/123/join
+$ curl -X DELETE https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f-a3da-3236c8c3a876
 ```
 
 **Przykładowa odpowiedź:**  
 ```
-{}
-```
-
-### Usunięcie obiektu zadania
-
-**Ścieżka:**  
-```
-DELETE https://wolontariusze.krakow2016.com/api/v2/tasks/:id
-```
-
-**Przykładowe zapytanie:**  
-```
-$ curl https://wolontariusze.krakow2016.com/api/v2/tasks/123
-```
-
-**Przykładowa odpowiedź:**  
-```
-{}
-```
-
-### Listowanie zadań
-
-**Ścieżka:**  
-```
-GET https://wolontariusze.krakow2016.com/api/v2/tasks
-```
-
-**Przykładowe zapytanie:**  
-```
-$ curl https://wolontariusze.krakow2016.com/api/v2/tasks
-```
-
-**Przykładowa odpowiedź:**  
-```
-{}
+{
+    "status": "success",
+    "data": {}
+}
 ```
 
 ## Baza noclegowa

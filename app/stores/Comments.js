@@ -1,5 +1,5 @@
-'use strict';
-var createStore  = require('fluxible/addons').createStore;
+'use strict'
+var createStore  = require('fluxible/addons').createStore
 var NewComment = require('./NewComment')
 
 var Comments = createStore({
@@ -23,7 +23,7 @@ var Comments = createStore({
   add: function(comments) {
     var that = this
     comments.forEach(function(comment){
-      that.comments.push(comment)
+      that.comments.unshift(comment)
     })
     this.emitChange()
   },
@@ -46,7 +46,7 @@ var Comments = createStore({
 
   getState: function() {
     return {
-      comments: this.comments
+      comments: this.comments || []
     }
   },
 
@@ -61,9 +61,9 @@ var Comments = createStore({
   // FluxibleContext instances (usually retrieved from dehydrate) to
   // rehydrate them to the same state as they were on the server
   rehydrate: function (state) {
-    this.comments = state
+    this.comments = state.comments
   }
-});
+})
 
 Comments.model = NewComment
 

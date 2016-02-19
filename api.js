@@ -13,14 +13,25 @@ var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
 var oauth2 = require('./oauth/oauth2')
 
-var Volunteer = require('./app/services/'+config.service+'/volonteers')
+var Volunteers = require('./app/services/volunteers')(config.service)
+var Activities = require('./app/services/activities')(config.service)
+var Joints = require('./app/services/joints')(config.service)
+
+// Służy do zapisywania sesji użytkowników w bazie danych
+var RDBStore = require('session-rethinkdb')(expressSession)
 
 // Express configuration
 
+// Konfiguracja zapisu danych sesji w bazie danych
+var session_store = {
+  servers: [ config.rethinkdb ]
+}
+
 var session = [expressSession({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true,
+    store: config.service === 'rethinkdb' ? new RDBStore(session_store) : new expressSession.MemoryStore()
 }), passport.initialize(), passport.session()]
 
 // Format każdego poprawnie wykonanego zapytania
@@ -37,7 +48,7 @@ var error = function(type, message) {
     status: 'error',
     type: type
   }
-  if(message) {
+  if(message && Object.keys(message).length) {
       result.message = message
   }
   return result
@@ -78,7 +89,7 @@ server.post('/api/v2/login', session, passport.authenticate('local', {
 
 server.get('/api/v2/logout', session, function(req, res) {
   req.logout()
-  res.redirect('/api/v2/')
+  res.redirect('/api/v2/login')
 })
 
 // Okienko w którym wolontariusz wyraża zgodę (lub nie) na dostęp do swojego
@@ -95,7 +106,7 @@ var bearer = [passport.initialize(), function(req, res, next) {
   passport.authenticate('bearer', { session: false }, function(err, user, info) {
     // Wystąpił błąd
     if (err) {
-      return next(err) // status: 500
+      return res.status(401).send(error('TokenNotFound'))
     }
     // Niezalogowany
     if (!user) {
@@ -107,6 +118,17 @@ var bearer = [passport.initialize(), function(req, res, next) {
     })
   })(req, res, next)
 }]
+
+var is_admin = bearer.concat([
+  function(req, res, next) {
+    // Sprawdź wymagane uprawnienia administratora
+    if(!req.user || !req.user.is_admin) {
+      res.status(403).send(error('AdminRequired'))
+    } else {
+      next()
+    }
+  }
+])
 
 // Wiadomość powitalna
 server.get('/api/v2/', bearer, function(req, res) {
@@ -120,13 +142,8 @@ server.get('/api/v2/client', bearer, function(req, res) {
 })
 
 // Dodawanie wolontariuszy
-server.post('/api/v2/volunteers/', bearer, function(req, res) {
-  // Sprawdź wymagane uprawnienia administratora
-  if(!req.user || !req.user.is_admin) {
-    return res.status(403).send(error('AdminRequired'))
-  }
-
-  Volunteer.create(req, 'Volunteers', {}, req.body, {}, function (err, volunteer) {
+server.post('/api/v2/volunteers/', is_admin, function(req, res) {
+  Volunteers.create(req, 'Volunteers', {}, req.body, {}, function (err, volunteer) {
     if(err) { res.send(500) }
     else { res.status(201).send(success({volunteer: volunteer})) }
   })
@@ -134,14 +151,14 @@ server.post('/api/v2/volunteers/', bearer, function(req, res) {
 
 // Lista wolontariuszy
 server.get('/api/v2/volunteers', bearer, function(req, res) {
-  Volunteer.read(req, 'Volunteers', {}, req.query, function (err, volunteers) {
+  Volunteers.read(req, 'Volunteers', {}, req.query, function (err, volunteers) {
     res.send(success({volunteers: volunteers}))
   })
 })
 
 // Szczegóły wolontariusza
 server.get('/api/v2/volunteers/:id', bearer, function(req, res) {
-  Volunteer.read(req, 'Volunteers', {id: req.params.id}, {}, function (err, volunteer) {
+  Volunteers.read(req, 'Volunteers', {id: req.params.id}, {}, function (err, volunteer) {
     res.send(success({volunteer: volunteer}))
   })
 })
@@ -154,9 +171,128 @@ server.post('/api/v2/volunteers/:id', bearer, function(req, res) {
     return res.status(403).send(error('AdminRequired'))
   }
 
-  Volunteer.update(req, 'Volunteers', {id: id}, req.body, {}, function (err, volunteer) {
+  Volunteers.update(req, 'Volunteers', {id: id}, req.body, {}, function (err, volunteer) {
     if(err) { res.send(500) }
     else { res.status(200).send(success({volunteer: volunteer})) }
+  })
+})
+
+// Dodawanie aktywności
+server.post('/api/v2/activities', bearer, function(req, res) {
+  Activities.create(req, 'Activities', {}, req.body, {}, function (err, result) {
+    if(err) { res.send(501) }
+    else {
+      var activity = result.changes[0].new_val
+      res.status(201).send(success({activity: activity}))
+    }
+  })
+})
+
+// Lista aktywności
+server.get('/api/v2/activities', bearer, function(req, res) {
+  Activities.read(req, 'Activities', {}, req.query, function (err, activities) {
+    res.send(success({activities: activities}))
+  })
+})
+
+// Szczegóły zadania
+server.get('/api/v2/activities/:id', bearer, function(req, res) {
+  Activities.read(req, 'Activities', {id: req.params.id}, {}, function (err, activity) {
+    if(err) {
+      res.status(404).send(error('NotFound'))
+    } else {
+      res.send(success({activity: activity}))
+    }
+  })
+})
+
+// Aktualizacja aktywności
+server.post('/api/v2/activities/:id', bearer, function(req, res) {
+  var id = req.params.id
+
+  Activities.update(req, 'Activities', {id: id}, req.body, {}, function (err, result) {
+    if(err) { res.status(500).send(error(err)) }
+    else {
+      var activity = result.changes[0].new_val
+      res.status(200).send(success({activity: activity})) }
+  })
+})
+
+// Usuwanie aktywności
+server.delete('/api/v2/activities/:id', is_admin, function(req, res) {
+  Activities.delete(req, 'Activities', {id: req.params.id}, {}, function (err, result) {
+    if(err) { res.send(500) }
+    else {
+      res.send(success({}))
+    }
+  })
+})
+
+// Dołączanie do zadania
+server.post('/api/v2/activities/:id/join', bearer, function(req, res) {
+  Activities.read(req, 'Activities', {id: req.params.id}, {}, function (err, activity) {
+    if(err) { return res.send(err) }
+    var body = {
+      user_id: req.user.id,
+      activity_id: req.params.id
+    }
+    Joints.create(req, 'Joints', {}, body, {}, function (err, result) {
+      var joint = result.changes[0].new_val
+      res.send(success({joint: joint}))
+    })
+  })
+})
+
+// Wypisywanie z zadania
+server.post('/api/v2/activities/:id/leave', bearer, function(req, res) {
+  Activities.read(req, 'Activities', {id: req.params.id}, {}, function (err, activity) {
+    var user_id = req.user.id
+    var joint = activity.volunteers.find(function(volunteer) {
+      return volunteer.user_id === user_id
+    })
+    if(!joint) { return res.status(400).send(error('NotJoined')) }
+    var body = {
+     is_canceled: true
+    }
+    Joints.update(req, 'Joints', {id: joint.id}, body, {}, function (err, result) {
+      var joint = result.changes[0].new_val
+      res.send(success({joint: joint}))
+    })
+  })
+})
+
+// Zgłoszenie do aktywności
+server.post('/api/v2/joints', is_admin, function(req, res) {
+  Joints.create(req, 'Joints', {}, req.body, {}, function (err, result) {
+    if(err) {
+      res.status(500).send(error('DBError', err))
+    } else {
+      var joint = result.changes[0].new_val
+      res.status(201).send(success({joint: joint}))
+    }
+  })
+})
+
+// Szczegóły zgłoszenia do aktywności
+server.get('/api/v2/joints/:id', bearer, function(req, res) {
+  Joints.read(req, 'Joints', {id: req.params.id}, {}, function (err, joint) {
+    if(err) {
+      res.status(500).send(error('DBError', err))
+    } else {
+      res.send(success({joint: joint}))
+    }
+  })
+})
+
+// Aktualizacja zgłoszenia do aktywności
+server.post('/api/v2/joints/:id', is_admin, function(req, res) {
+  Joints.update(req, 'Joints', {id: req.params.id}, req.body, {}, function (err, result) {
+    if(err) {
+      res.status(500).send(error('DBError', err))
+    } else {
+      var joint = result.changes[0].new_val
+      res.send(success({joint: joint}))
+    }
   })
 })
 
@@ -167,18 +303,12 @@ server.use(function(req, res, next) {
 
 // Obsługa błędów
 server.use(function(err, req, res, next) {
-  console.error(err.stack)
-  res.status(500).send(error('UnknownError', err))
+  if(err.status) {
+    res.status(err.status).send(error(err.name, err.message))
+  } else {
+    res.status(500).send(error('UnknownError', err))
+  }
 })
-
-// Lista zadań
-//server.get('/tasks', bearer, function(req, res) { })
-
-// Szczegóły zadania
-//server.get('/tasks/:id', bearer, function(req, res) { })
-
-// Zgłoszenie do zadania
-//server.post('/tasks/:id/join', bearer, function(req, res) { })
 
 // Baza noclegowa pielgrzymów
 //server.get('/pilgrims', bearer, function(req, res) { })

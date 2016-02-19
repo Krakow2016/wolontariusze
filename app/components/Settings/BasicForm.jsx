@@ -1,8 +1,17 @@
 var React = require('react')
-var MyTextField = require('./MyTextField.jsx')
+var MyTextField = require('./../Formsy/MyTextField.jsx')
+var ProfileImageChange = require('./ProfileImageChange.jsx')
 var BasicForm = function(props) {
   return (
     <div>
+      <div className="pure-g">
+        <div className="pure-u-1 pure-u-md-1-3">
+          <label>Avatar</label>
+        </div>
+        <div className="pure-u-1 pure-u-md-2-3">
+             <ProfileImageChange context={props.context} src={props.profile_picture_url} />
+        </div>
+      </div>
       <div className="pure-g">
         <div className="pure-u-1 pure-u-md-1-3">
           <label htmlFor="first_name">Imię</label>

@@ -12,7 +12,7 @@ var config = require('../config.json')[env]
 
 var APIClients = require('../app/services/'+config.service+'/apiclients')
 var APITokens = require('../app/services/'+config.service+'/apitokens')
-var Volunteer = require('../app/services/'+config.service+'/volonteers')
+var Volunteers = require('../app/services/volunteers')(config.service)
 
 /**
  * BasicStrategy & ClientPasswordStrategy
@@ -41,7 +41,7 @@ var Volunteer = require('../app/services/'+config.service+'/volonteers')
 passport.use(new ClientPasswordStrategy(function(clientId, clientSecret, done) {
   APIClients.read({force_admin: true}, 'APIClients', { id: clientId }, {}, function (err, client) {
     if (err) { return done(err) }
-    if (!client) { return done(null, false) }
+    if (!client) { return done(null, false, {message: "API client not found."}) }
     if (client.secret != clientSecret) { return done(null, false) }
     return done(null, client);
   })
@@ -62,7 +62,7 @@ passport.use(new BearerStrategy(
       if (!token) { return done(null, false) }
 
       if(token.userId != null) {
-        Volunteer.read({force_admin: true}, 'Volunteers', { id: token.userId }, {}, function (err, user) {
+        Volunteers.read({force_admin: true}, 'Volunteers', { id: token.userId }, {}, function (err, user) {
           if (err) { return done(err) }
           if (!user) { return done(null, false) }
           done(null, user)

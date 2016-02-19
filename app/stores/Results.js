@@ -1,34 +1,39 @@
-'use strict';
+'use strict'
 var createStore  = require('fluxible/addons').createStore
 
 var Results = createStore({
-    storeName: 'ResultsStore',
-    handlers: {
-      'LOAD_RESULTS': 'loadAll'
-    },
+  storeName: 'ResultsStore',
+  handlers: {
+    'LOAD_RESULTS': 'loadAll',
+    'LOAD_QUERY': 'loadQuery'
+  },
 
-    loadAll: function(data) {
-        this.all = data.hits.hits
-        this.emitChange()
-    },
+  initialize: function () {
+    this.all = []
+    this.query = {}
+  },
 
-    initialize: function () {
-        this.all = []
-    },
+  loadAll: function(data) {
+    this.all = data.hits.hits
+    this.emitChange()
+  },
 
-    getState: function () {
-      return {
-        all: this.all
-      }
-    },
+  loadQuery: function(data) {
+    this.query = data
+    this.emitChange()
+  },
 
-    dehydrate: function () {
-        return this.getState()
-    },
-
-    rehydrate: function (state) {
-        this.all = state.all
+  dehydrate: function () {
+    return {
+      all: this.all,
+      query: this.query
     }
+  },
+
+  rehydrate: function (state) {
+    this.all = state.all
+    this.query = state.query
+  }
 })
 
 module.exports = Results

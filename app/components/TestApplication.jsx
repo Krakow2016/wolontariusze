@@ -7,12 +7,12 @@ var connectToStores = addons.connectToStores
 var ApplicationStore = require('../stores/ApplicationStore')
 var VolunteerStore = require('../stores/Volunteer')
 
-var injectTapEventPlugin = require('react-tap-event-plugin');
+var injectTapEventPlugin = require('react-tap-event-plugin')
 //Needed for onTouchTap
 //Can go away when react 1.0 release
 //Check this repo:
 //https://github.com/zilverline/react-tap-event-plugin
-injectTapEventPlugin();
+injectTapEventPlugin()
 
 var Application = React.createClass({
 
@@ -29,7 +29,7 @@ var Application = React.createClass({
       <div>
         <Handler context={this.context} />
       </div>
-    );
+    )
   }
 })
 
@@ -44,5 +44,5 @@ Application = handleHistory(Application)
 
 // Module.exports instead of normal dom mounting
 module.exports = provideContext(Application, {
-    getUser: React.PropTypes.func.isRequired
+  getUser: React.PropTypes.func.isRequired
 })

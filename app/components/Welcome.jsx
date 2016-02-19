@@ -1,5 +1,4 @@
 var React = require('react')
-var Paper = require('material-ui/lib/paper')
 var navigateAction = require('fluxible-router').navigateAction
 
 var Password = require('./Settings/Password.jsx')
@@ -38,13 +37,13 @@ var Welcome = React.createClass({
   enableButton: function () {
     this.setState({
       canSubmit: true
-    });
+    })
   },
 
   disableButton: function () {
     this.setState({
       canSubmit: false
-    });
+    })
   },
 
   handleSubmit: function(data) {
@@ -54,7 +53,7 @@ var Welcome = React.createClass({
 
   render: function() {
     return (
-      <Paper className="paper">
+      <div>
         <Formsy.Form className="settingsForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
           <p>
             Welcome!
@@ -71,7 +70,7 @@ var Welcome = React.createClass({
             </div>
           </div>
         </Formsy.Form>
-      </Paper>
+      </div>
     )
   }
 })

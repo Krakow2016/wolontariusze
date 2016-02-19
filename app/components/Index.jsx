@@ -1,50 +1,104 @@
 var React = require('react')
-var Paper = require('material-ui/lib/paper')
-
-var ApplicationStore = require('../stores/ApplicationStore')
-var VolunteersStore = require('../stores/Volunteers')
-
 var NavLink = require('fluxible-router').NavLink
-var VolunteerList = require('./VolunteersList.jsx')
+
+var IndexStore = require('../stores/Index')
+var actions = require('../actions')
 
 var App = React.createClass({
-  contextTypes: {
-    getUser       : React.PropTypes.func
-  },
 
   getInitialState: function () {
-    return this.props.context.getStore(VolunteersStore).getAll()
+    return this.props.context.getStore(IndexStore).data || {}
   },
 
   _changeListener: function() {
-    this.setState(this.props.context.getStore(VolunteersStore).getAll())
+    this.setState(this.props.context.getStore(IndexStore).data)
   },
 
   componentDidMount: function() {
-    this.props.context.getStore(VolunteersStore)
+    this.props.context.getStore(IndexStore)
       .addChangeListener(this._changeListener)
+
+    var user = this.props.context.getUser()
+    if(user && user.is_admin) {
+      context.executeAction(actions.showIndex, {}, function() {})
+    }
   },
 
   componentWillUnmount: function() {
-    this.props.context.getStore(VolunteersStore)
+    this.props.context.getStore(IndexStore)
       .removeChangeListener(this._changeListener)
   },
 
-  click: function() {
-    alert("React is working")
-  },
-
   render: function () {
+    var stats
+
+    var user = this.props.context.getUser()
+    if(user && user.is_admin) {
+      stats = (
+        <table>
+          <tr>
+            <td>
+              Liczba kont w systemie:
+            </td>
+            <td>
+              {this.state.total_accounts}
+            </td>
+            <td>
+              <NavLink href="/rejestracja">
+                Dodaj
+              </NavLink>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Liczba wolontariuszy krótkoterminowych:
+            </td>
+            <td>
+              <NavLink href="/wyszukiwarka?raw.is_volunteer=true">
+                {this.state.total_volunteers}
+              </NavLink>
+            </td>
+            <td>
+              <NavLink href="/import">
+                Importuj
+              </NavLink>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Liczba aktywnych kont w systemie:
+            </td>
+            <td>
+              <NavLink href="/wyszukiwarka?doc.has_password=true">
+                {this.state.total_active}
+              </NavLink>
+            </td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>
+              Liczba administratorów w systemie:
+            </td>
+            <td>
+              <NavLink href="/wyszukiwarka?doc.is_admin=true">
+                {this.state.total_admins}
+              </NavLink>
+            </td>
+            <td></td>
+          </tr>
+        </table>
+      )
+    }
+
     return (
-      <Paper className="paper">
-
-        <p style={{'textAlign': 'center'}}>
-            <NavLink href="/wyszukiwarka">Szukaj</NavLink>
+      <div>
+        <p>
+          To jest strona główna. Za jej stworzenie odpowiada Martin ☺
         </p>
-
-      </Paper>
+        {stats}
+      </div>
     )
-  },
+  }
 })
 
 

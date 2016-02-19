@@ -1,0 +1,25 @@
+rethinkdb:
+  image: rethinkdb:2.2
+  mem_limit: 262144000
+
+es:
+  image: krakow2016/elasticsearch
+  mem_limit: 262144000
+
+logstash:
+  image: krakow2016/logstash
+  mem_limit: 262144000
+  links:
+    - es
+    - rethinkdb
+
+wolontariusze:
+  image: krakow2016/wolontariusze
+  mem_limit: 262144000
+  environment:
+    - NODE_ENV=production
+  links:
+    - es
+    - rethinkdb
+  ports:
+    - "80:80"

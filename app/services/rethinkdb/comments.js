@@ -5,7 +5,7 @@ var env = process.env.NODE_ENV || 'development'
 var conf = require('../../../config.json')[env].rethinkdb
 
 // Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów
-var Protect = require('../../../lib/protect')
+var Protect = require('../helpers/protect')
 
 module.exports = Protect({
   name: 'Comments',
@@ -18,16 +18,16 @@ module.exports = Protect({
       }
 
       r.table('Comments')
-        .filter({volonteerId: params.volunteerId})
+        .filter({volunteerId: params.volunteerId})
         // Dołącz imię i nazwisko autora z tabeli wolontariuszy
-        .eqJoin('adminId', r.table('Volonteers'))
+        .eqJoin('adminId', r.table('Volunteers'))
         .pluck({ // Ogranicz do tylko wybranych atrybutów
           left: true, // Wszystkie parametry z tabeli komentarzy
-          right: ["first_name", "last_name"] // Tylko imię i nwzwisko autora
+          right: ['first_name', 'last_name'] // Tylko imię i nwzwisko autora
         })
         .zip()
         .limit(50)
-        .orderBy('creationTimestamp') // Sortowanie
+        .orderBy(r.desc('creationTimestamp')) // Sortowanie
         .run(conn, function(err, cursor) {
           if(err) { callback(err) }
           else { cursor.toArray(callback) }
@@ -70,7 +70,10 @@ module.exports = Protect({
         return
       }
 
-      r.table(resource).update({text: params.text}).run(conn, callback)
+      r.table(resource)
+        .get(body.id)
+        .update({text: body.text})
+        .run(conn, callback)
     })
   },
 

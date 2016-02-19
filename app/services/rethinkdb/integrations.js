@@ -6,7 +6,7 @@ var env = process.env.NODE_ENV || 'development'
 var conf = require('../../../config.json')[env].rethinkdb
 
 // Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów
-var Protect = require('../../../lib/protect')
+var Protect = require('../helpers/protect')
 
 module.exports = Protect({
 
@@ -20,20 +20,20 @@ module.exports = Protect({
       }
 
       var id = params.user_id
-      if(!id) { return callback("Błąd: Brak parametru `user_id`.") }
+      if(!id) { return callback('Błąd: Brak parametru `user_id`.') }
 
       // Pobierz klientów API którzy mają uprawnienia do komunikacji z serwisem
       // w imieniu użytkownika.
-      r.table("APITokens")
+      r.table('APITokens')
         .getAll(id, {index: 'userId'})
-        .eqJoin("clientId", r.table("APIClients"))
-        .pluck({"right": "name", "left": "id"})
+        .eqJoin('clientId', r.table('APIClients'))
+        .pluck({'right': 'name', 'left': 'id'})
         .zip()
         .run(conn, function(err, cursor){
 
-        if(err) { callback(err) }
+          if(err) { callback(err) }
         else { cursor.toArray(callback) }
-      })
+        })
     })
   }
 

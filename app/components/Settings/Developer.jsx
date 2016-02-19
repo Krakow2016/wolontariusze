@@ -43,7 +43,7 @@ var APIClient = function(props) {
 var Developer = React.createClass({
 
   getInitialState: function () {
-     return this.props.context.getStore(APIClientsStore).getState()
+    return this.props.context.getStore(APIClientsStore).getState()
   },
 
   _changeListener: function() {

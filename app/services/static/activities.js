@@ -8,100 +8,95 @@
 //
 // Więcej: http://fluxible.io/guides/data-services.html
 
-var activities = {
-    "1": {
-        id: "1",
-        title: "Pierwsza Aktywność",
-        content: "Treść pierwszej aktywności",
-        creationTimestamp: 120000,
-        startEventTimestamp: 1200200,
-        endEventTimestamp: 1500200,
-        attachments: ["1", "2", "3"],
-        place: "Kraków",
-        creatorId: 1,
-        points: 100,
-        visibilityIds: [1, 2],
-        maxVolonteers: 5,
-        activeIds: [1],
-        isOpen: true,
-        privateField: "Test1"
-     },
-    "2": {
-        id: "2",
-        title: "Druga Aktywność",
-        content: "Treść drugiej aktywności",
-        creationTimestamp: 220000,
-        startEventTimestamp: 2200200,
-        endEventTimestamp: 25000200,
-        attachments: ["1", "2", "3"],
-        place: "Dobczyce",
-        creatorId: 2,
-        points: 100,
-        visibilityIds: [2],
-        maxVolonteers: 5,
-        activeIds: [2],
-        isOpen: true,
-        privateField: "Test2"
-     },
-    "3": {     
-        id: "3",
-        title: "Trzecia Aktywność",
-        content: "Treść trzeciej aktywności",
-        creationTimestamp: 320000,
-        startEventTimestamp: 3200200,
-        endEventTimestamp: 3500200,
-        attachments: ["1", "2", "3"],
-        place: "Myślenice",
-        creatorId: 1,
-        points: 100,
-        visibilityIds: [1],
-        maxVolonteers: 10,
-        activeIds: [1],
-        isOpen: false,
-        privateField: "Test3"
-     },
+
+var activities = require('./activities.json')
+var joints = require('./joints.json')
+var volunteers = require('./volunteers.json')
+
+var modifiedActivity = function (activityId, req, config) {
+  return activities[activityId]
 }
 
-var public_attrs = [
-  'id',
-  'title',
-  'content',
-  'creationTimestamp',
-  'startEventTimestamp',
-  'endEventTimestamp',
-  'attachments',
-  'place',
-  'creatorId',
-  'points',
-  'visibilityIds',
-  'maxVolonteers',
-  'activeIds',
-  'isOpen'
-]
-
-var private_attrs = [
-    'privateField'
-]
+var getActivityVolunteers = function (activityId) {
+  var vols = []
+  for (var i in joints) {
+    if (joints[i].activity_id == activityId && joints[i].is_canceled != true) {
+      var vol = volunteers[joints[i].user_id]
+      vols.push( {
+        id: joints[i].id,
+        user_id: vol.id,
+        first_name: vol.first_name,
+        last_name: vol.last_name
+      })
+    }
+  }
+  return vols
+}
 
 module.exports = {
-    name: 'Activities',
-    // at least one of the CRUD methods is required
-    read: function(req, resource, params, config, callback) {
-
-      var activity
-      if(params.id) {
-        activity = activities[params.id];
-      }
-
-      if(activity) {
-        callback(null, activity);
+  name: 'Activities',
+  // at least one of the CRUD methods is required
+  read: function(req, resource, params, config, callback) {
+    if(params.id) {
+      var activity = modifiedActivity(params.id, req, config)
+      if(activity != null) {
+        var vols = getActivityVolunteers(activity.id)
+        activity.volunteers = vols || []
+        callback(null, activity)
       } else {
-        callback("404")
+        callback('404')
       }
-    },
+    } else { // Brak identyfikatora, zwróć wszystkie aktywności
+      var results = Object.keys(activities).map(function(key) {
+        return activities[key]
+      })
+      if(results) {
+        callback(null, results)
+      } else {
+        callback(404)
+      }
+      return
+    }
+  },
 
-    // create: function(req, resource, params, body, config, callback) {},
-    // update: function(resource, params, body, config, callback) {},
-    // delete: function(resource, params, config, callback) {}
+  create: function(req, resource, params, body, config, callback) {
+    var ids = Object.keys(activities)
+    var len = ids.length
+    var lastId = parseInt(ids[len-1])
+    var id
+    if (isNaN(lastId)) { //lista aktywności pusta
+      id = 1
+    } else {
+      id = lastId+1 //ostatnie id + 1
+    }
 
-};
+    body.id = id+''
+    activities[id] = body
+    callback(null, {
+      generated_keys: [id],
+      changes: [
+        { new_val: body }
+      ]
+    })
+  },
+
+  update: function(req, resource, params, body, config, callback) {
+    var id = body.id || params.id
+    for (var key in body) {
+      activities[id][key] = body[key]
+    }
+    var activity = modifiedActivity(id, req, config)
+    if(activity != null) {
+      var resp = { changes: [{new_val: activity}]}
+      callback(null, resp)
+    } else {
+      callback('404')
+    }
+  },
+
+  delete: function(req, resource, params, config, callback) {
+    delete activities[params.id]
+    callback(null, activities)
+  }
+
+}

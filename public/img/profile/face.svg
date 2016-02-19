@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Creator: CorelDRAW X7 -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="30.9032mm" height="30.9032mm" version="1.0" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 3090 3090"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil2 {fill:#0093C5}
+    .fil0 {fill:#71BFDF}
+    .fil1 {fill:#96D4EA}
+   ]]>
+  </style>
+ </defs>
+ <g id="Warstwa_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <rect class="fil0" width="3090" height="3090"/>
+  <path class="fil1" d="M1545 775c426,0 771,345 771,770 0,426 -345,771 -771,771 -425,0 -770,-345 -770,-771 0,-425 345,-770 770,-770z"/>
+  <path class="fil2" d="M986 1699l1119 0c-64,249 -290,434 -559,434 -270,0 -496,-185 -560,-434z"/>
+  <path class="fil2" d="M1699 1391l308 0c-1,-84 -70,-151 -154,-151 -84,0 -152,67 -154,151l0 0z"/>
+  <path class="fil2" d="M1388 1355l-302 0c-2,11 -3,22 -3,33 0,1 0,2 0,3l308 0c0,-1 0,-2 0,-3 0,-11 -1,-22 -3,-33z"/>
+ </g>
+</svg>

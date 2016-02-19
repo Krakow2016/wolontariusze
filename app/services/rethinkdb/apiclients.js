@@ -6,10 +6,8 @@ var env = process.env.NODE_ENV || 'development'
 var conf = require('../../../config.json')[env].rethinkdb
 
 var utils = require('../../../oauth/utils')
-// Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów
-var Protect = require('../../../lib/protect')
 
-module.exports = Protect({
+module.exports = {
 
   name: 'APIClients',
 
@@ -22,14 +20,20 @@ module.exports = Protect({
 
       if(params.id) { // Pobierz krotkę o danym numerze id
         r.table('APIClients').get(params.id).run(conn, function(err, row){
-          callback(err || !row, row)
+          if(err) {
+            callback(err)
+          } else if(!row) {
+            callback(404)
+          } else {
+            callback(null, row)
+          }
         })
       } else { // Pobierz listę krotek
-        var id = params.user_id // TODO: użyj tej samej konwencji do indeksów co w serwisie wolontariusza
-        if(!id) { return callback("Błąd: Brak parametru `user_id`.") }
+        var id = params.user_id.toString() // TODO: użyj tej samej konwencji do indeksów co w serwisie wolontariusza
+        if(!id) { return callback('Błąd: Brak parametru `user_id`.') }
 
         // Pobierz klientów API stworzonych przez użytkownika
-        r.table("APIClients")
+        r.table('APIClients')
         .getAll(id, {index: 'user_id'})
         .run(conn, function(err, cursor){
 
@@ -60,4 +64,4 @@ module.exports = Protect({
       })
     })
   }
-})
+}

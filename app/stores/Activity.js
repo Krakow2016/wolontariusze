@@ -1,50 +1,105 @@
-'use strict';
-var createStore  = require('fluxible/addons').createStore;
+
+'use strict'
+var createStore  = require('fluxible/addons').createStore
 
 var ActivityStore = createStore({
-    storeName: 'ActivityStore',
-    handlers: {
-        'LOAD_ACTIVITY'       : 'load'
-    },
+  storeName: 'Activity',
+  handlers: {
+    'LOAD_ACTIVITY': 'load',
+    'PRECREATE_ACTIVITY': 'precreate',
+    'ACTIVITY_UPDATED': 'update',
+    'JOINT_CREATED': 'join',
+    'JOINT_DELETED': 'leave'
+  },
 
-    initialize: function () {
-        //
-    },
-
-    load: function(data) {
-      console.log('>>> LOAD ACTIVITY <<<====')
-      this.rehydrate(data)
-      this.emitChange();
-    },
-
-    getState: function () {
-      var state = {}
-      Object.keys(this).forEach(function(attr) {
-        if(this.hasOwnProperty(attr) &&
-           attr !== 'dispatcher') {
-          state[attr] = this[attr]
-        }
-      }, this)
-      return state
-    },
-
-    // Returns a serializable object containing the state of the Fluxible and
-    // passed FluxibleContext instances. This is useful for serializing the
-    // state of the application to send it to the client.
-    dehydrate: function () {
-        return this.getState();
-    },
-
-    // Takes an object representing the state of the Fluxible and
-    // FluxibleContext instances (usually retrieved from dehydrate) to
-    // rehydrate them to the same state as they were on the server
-    rehydrate: function (state) {
-      var keys = Object.keys(state)
-      keys.forEach(function(attr) {
-        this[attr] = state[attr]
-      }, this)
+  initialize: function () {
+    this.activity = {
+      name: '',
+      datetime: '',
+      duration: '',
+      place: '',
+      description: '',
+      maxVolunteers: 5
     }
-});
+    this.volunteers = []
+    this.invalidSnackBar = ''
+  },
+
+  load: function(data) {
+    var volunteers = data.volunteers || []
+    delete data.volunteers
+    this.activity = data
+    this.volunteers = volunteers
+    this.emitChange()
+  },
+
+  precreate: function() {
+    this.initialize()
+    this.emitChange()
+  },
+
+  join: function(joint) {
+    this.volunteers.push(joint)
+    this.emitChange()
+  },
+
+  leave: function(id) {
+    // Usuń obiekt połączenia
+    this.volunteers = this.volunteers.filter(function(volunteer) {
+      return volunteer.id !== id
+    })
+    this.emitChange()
+  },
+
+  create: function(data) {
+    // TODO
+    //this.rehydrate(data)
+    this.emitChange()
+  },
 
 
-module.exports = ActivityStore;
+  update: function(data) {
+    this.activity = data
+    this.emitChange()
+  },
+
+  getState: function () {
+    return {
+      activity: this.activity,
+      volunteers: this.volunteers,
+      invalidSnackBar: this.invalidSnackBar
+    }
+  },
+
+  dehydrate: function () {
+    return this.getState()
+  },
+
+  rehydrate: function (state) {
+    this.activity = state.activity
+    this.volunteers = state.volunteers
+    this.invalidSnackBar = state.invalidSnackBar
+  }
+
+})
+
+ActivityStore.attributes = function() {
+  return [
+    'id',
+    'name',
+    'description',
+    'created_at',
+    'updated_at',
+    'datetime',
+    'duration',
+    'place',
+    'is_urgent',
+    'creator',
+    'editor',
+    'maxVolunteers',
+    'volunteers',
+    'lat_lon'
+  ]
+}
+
+module.exports = ActivityStore

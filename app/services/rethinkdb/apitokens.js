@@ -6,7 +6,7 @@ var env = process.env.NODE_ENV || 'development'
 var conf = require('../../../config.json')[env].rethinkdb
 
 // Nakładka na serwisy danych ograniczająca dostęp do prywatnych atrybutów
-var Protect = require('../../../lib/protect')
+var Protect = require('../helpers/protect')
 
 module.exports = Protect({
 
@@ -21,7 +21,13 @@ module.exports = Protect({
 
       if(params.id) { // Pobierz krotkę o danym numerze id
         r.table('APITokens').get(params.id).run(conn, function(err, row){
-          callback(err || !row, row)
+          if(err) {
+            callback(err)
+          } else if(!row) {
+            callback(404)
+          } else {
+            callback(null, row)
+          }
         })
       }
     })

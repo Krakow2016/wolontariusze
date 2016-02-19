@@ -1,7 +1,7 @@
 var React = require('react')
 
 var Settings = require('./Settings.jsx')
-var MyTextField = require('./MyTextField.jsx')
+var MyTextField = require('./../Formsy/MyTextField.jsx')
 var createAPIClient = require('../../actions').createAPIClient
 
 var Develop = React.createClass({
@@ -15,13 +15,13 @@ var Develop = React.createClass({
   enableButton: function () {
     this.setState({
       canSubmit: true
-    });
+    })
   },
 
   disableButton: function () {
     this.setState({
       canSubmit: false
-    });
+    })
   },
 
   handleSubmit: function(data) {

@@ -1,8 +1,4 @@
-var clients = {
-  foo: {
-    client_id: "bar"
-  }
-}
+var clients = require('./apiclients.json')
 
 var clients_by_client_id = {}
 Object.keys(clients).forEach(function(key){

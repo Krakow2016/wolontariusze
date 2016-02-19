@@ -41,6 +41,27 @@ var Requester = function(close) {
   this.admin_post = function(path, body, done) {
     _post('adminToken', path, body, done)
   }
+
+  var _delete = function(token, path, done) {
+    request({
+      method: 'delete',
+      url: 'http://localhost:3000/api/v2'+path,
+      auth: {
+        bearer: token
+      }
+    }, function(){
+      close()
+      done.apply(this, arguments)
+    })
+  }
+
+  this.del = function(path, done) {
+    _delete('bearerToken', path, done)
+  }
+
+  this.admin_del = function(path, done) {
+    _delete('adminToken', path, done)
+  }
 }
 
 // Assing global variable

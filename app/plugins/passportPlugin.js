@@ -3,13 +3,13 @@
 module.exports = function() {
   var user
   return {
-    name: "Passport",
+    name: 'Passport',
     plugContext: function (options) {
       user = options.user
       var plugGetUser = function (componentContext) {
-          componentContext.getUser = function () {
-              return user;
-          };
+        componentContext.getUser = function () {
+          return user
+        }
       }
       return {
         // Method called to allow modification of the component context
@@ -22,7 +22,7 @@ module.exports = function() {
           user = state.user
         },
         getUser: function() {
-            return user
+          return user
         }
       }
     }
