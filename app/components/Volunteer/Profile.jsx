@@ -6,11 +6,11 @@ var Instagram = require('./Instagram.jsx')
 var Shell = React.createClass({
 
   getInitialState: function () {
-    return this.props.context.getStore(VolunteerStore).getState().profile
+    return this.props.context.getStore(VolunteerStore).profile
   },
 
   _changeListener: function() {
-    this.setState(this.props.context.getStore(VolunteerStore).getState().profile)
+    this.replaceState(this.getInitialState())
   },
 
   componentDidMount: function() {
@@ -41,7 +41,7 @@ var Shell = React.createClass({
           </div>
         </div>
 
-        <Instagram id={this.state.id} context={this.props.context} />
+        <Instagram user_id={this.state.id} context={this.props.context} />
       </VolunteerShell>
     )
   }

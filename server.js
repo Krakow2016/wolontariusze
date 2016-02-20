@@ -165,40 +165,60 @@ server.get('/logout', function(req, res){
 })
 
 server.get('/instagram', function(req, res){
-  if(req.user){
-    if(req.query.m == 123){
-      Volunteers.read(req, 'Volunteers', {id: req.user.id}, {}, function(err, user){
-        res.send(user);
-      });
-    }else if(req.query.m == 1){
+  if(req.user) {
+    if (req.query.m == 1) {
       res.sendfile('public/authenticate_insta.html', {root: __dirname});
-    }else if(req.query.code){
-
-      var request = new XMLHttpRequest()
-      var params = "client_id="+ process.env.INSTAGRAM_CLIENT_ID +"&client_secret="+ process.env.INSTAGRAM_SECRET +"&grant_type=authorization_code&redirect_uri=http://localhost:7000/instagram&code=" + req.query.code;
-      request.open('POST', 'https://api.instagram.com/oauth/access_token', true)
-      request.setRequestHeader('Content-Type', 'application/json')
-      request.send(params);
-      request.onload = function() {
-        if (request.status >= 200 && request.status < 400) {
-
-          var resp = request.responseText
-          var json = JSON.parse(resp)
-
-          Volunteers.update(req, 'Volunteers', {id: req.user.id}, {instagram: {access_token: json.access_token, id: json.user.id, username: json.user.username}}, {}, function(err, data){
-            if(err) res.send(500);
-            res.sendfile('public/authenticate_insta.html', {root: __dirname});
-          })
-        } else {
-          res.send('<h1 style="text-align:center; color: red;">Błąd '+ request.status +'</h1>' );
+    } else if(req.query.code) {
+      request({
+        method: 'POST',
+        url: 'https://api.instagram.com/oauth/access_token',
+        formData: {
+          client_id: process.env.INSTAGRAM_CLIENT_ID,
+          client_secret: process.env.INSTAGRAM_SECRET,
+          code: req.query.code,
+          grant_type: 'authorization_code',
+          redirect_uri: 'http://localhost:7000/instagram'
         }
-      }
+      }, function(err, resp, body) {
 
+        if (err) { return res.send(err) }
+        if (resp.statusCode !== 200) { return res.send(500) }
+
+        var json = JSON.parse(body)
+        Volunteers.update(req, 'Volunteers', {id: req.user.id}, {
+          instagram: {
+            id: json.user.id,
+            access_token: json.access_token,
+            username: json.user.username
+          }
+        }, {}, function(err, data){
+          if(err) { return res.send(500) }
+          res.sendfile('public/authenticate_insta.html', {root: __dirname})
+        })
+      })
     }
-  }else{
+  } else {
     res.send(403)
   }
-});
+})
+
+server.get('/instagram/:id', function(req, res){
+  var id = req.params.id
+  Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function (err, user) {
+    if(err) { return res.send(500) }
+    var instagram = user.instagram
+    if(!instagram) { return res.send(404) }
+
+    var token = instagram.access_token
+    request({
+      url: 'https://api.instagram.com/v1/users/'+ instagram.id +'/media/recent/',
+      qs: { access_token: token },
+      json: true
+    }, function(err, req, resp) {
+      res.send(resp)
+    })
+  })
+})
 
 server.post('/search', function(req, res) {
   if(req.user && req.user.is_admin) {
@@ -497,6 +517,9 @@ server.use(function(req, res, next) {
   } else if(failure) { // Błąd
     context.getActionContext().dispatch('SAVE_FLASH_FAILURE', failure)
   }
+
+  // Ustaw konfigurację integracji z Instagramem
+  context.getActionContext().dispatch('INSTAGRAM_CONFIG',  process.env.INSTAGRAM_CLIENT_ID)
 
   debug('Executing navigate action')
   context.executeAction(navigateAction, {

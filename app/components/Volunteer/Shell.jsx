@@ -30,23 +30,23 @@ var Volunteer = React.createClass({
 
     var email
     var tabs = [
-      <NavLink href={"/wolontariusz/" + this.state.id} className="profile-ribon-cell">
+      <NavLink key="profile" href={"/wolontariusz/" + this.state.id} className="profile-ribon-cell">
         <b id="profile-ribon-txt">Profil</b>
       </NavLink>,
-      <NavLink href={"/wolontariusz/" + this.state.id +'/aktywnosci'} className="profile-ribon-cell">
+      <NavLink key="activities" href={"/wolontariusz/" + this.state.id +'/aktywnosci'} className="profile-ribon-cell">
         <b id="profile-ribon-txt">Aktywności</b>
       </NavLink>
     ]
 
     if(user) {
       tabs.push(
-        <NavLink href={"/wolontariusz/" + this.state.id +'/grafik'} className="profile-ribon-cell">
+        <NavLink key="schedule" href={"/wolontariusz/" + this.state.id +'/grafik'} className="profile-ribon-cell">
           <b id="profile-ribon-txt">Grafik</b>
         </NavLink>
       )
       if(user.is_admin) {
         tabs.push(
-          <NavLink href={"/wolontariusz/" + this.state.id +'/admin'} className="profile-ribon-cell">
+          <NavLink key="details" href={"/wolontariusz/" + this.state.id +'/admin'} className="profile-ribon-cell">
             <b id="profile-ribon-txt">Szczegóły</b>
           </NavLink>
         )
