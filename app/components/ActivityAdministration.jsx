@@ -101,20 +101,20 @@ var ActivityAdministration = React.createClass({
     return this.props.context.getUser()
   },
 
-  handleStartEventTimestampChange: function (m) {
+  handleDatetimeChange: function (m) {
     this.setState(update(this.state, {
       activity: {datetime: {$set: m}}
     }))
   },
   
-  handleAddStartEventTimestampChange: function(evt) {
+  handleAddDatetimeChange: function(evt) {
     var value = evt.target.checked
       
     var activity = this.state.activity
     if (!value) {
-      delete activity.startEventTimestamp
+      delete activity.datetime
     } else {
-      activity.startEventTimestamp = new Date().getTime()
+      activity.datetime = new Date().getTime()
     }
     
     this.setState(update(this.state, {
@@ -291,8 +291,8 @@ var ActivityAdministration = React.createClass({
     })
     
     var startTime
-    if (typeof (this.state.activity.startEventTimestamp) != 'undefined')  {
-      var startEventDate = new Date(this.state.activity.startEventTimestamp)
+    if (typeof (this.state.activity.datetime) != 'undefined')  {
+      var startEventDate = new Date(this.state.activity.datetime)
       var startEventDateHint
       if (this.props.taskMode) {
         startEventDateHint = <span> Dla zadania data powinna być w przyszłości </span>
@@ -306,7 +306,7 @@ var ActivityAdministration = React.createClass({
                       timeFormat={'HH:mm'}
                       isValidDate={this.isValidDate}
                       value={startEventDate}
-                      onChange={this.handleStartEventTimestampChange}/>
+                      onChange={this.handleDatetimeChange}/>
                     {startEventDateHint}
                 </div>
       
@@ -398,7 +398,7 @@ var ActivityAdministration = React.createClass({
           <div className="pure-u-1 pure-u-md-1-3">
             <b>Czas rozpoczęcia</b>
             <br></br>
-            <input type="checkbox" name="addPosition" checked={!!this.state.activity.startEventTimestamp} onChange={this.handleAddStartEventTimestampChange} />
+            <input type="checkbox" name="addDatetime" checked={!!this.state.activity.datetime} onChange={this.handleAddDatetimeChange} />
           </div>
           {startTime}
 

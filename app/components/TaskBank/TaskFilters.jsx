@@ -150,7 +150,7 @@ var TaskFilters = React.createClass({
     if (this.state.checkboxes.timeStateCheckbox) {
       filteredData = filteredData.filter(function (task) {
         var currentTime = new Date().getTime()
-        var isFinished = (typeof(task.startEventTimestamp) != 'undefined' && task.startEventTimestamp < currentTime) || task.is_archived
+        var isFinished = (typeof(task.datetime) != 'undefined' && new Date(task.datetime).getTime() < currentTime) || task.is_archived
         return  (that.state.selects.timeStateSelect == 'trwajace' && !isFinished) || 
                 (that.state.selects.timeStateSelect == 'zakonczone' && isFinished)
       })

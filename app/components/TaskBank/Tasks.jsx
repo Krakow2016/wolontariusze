@@ -122,8 +122,8 @@ var Tasks = React.createClass({
     var filteredData = this.state.filteredData
     var order = this.state.order
     filteredData = filteredData.sort(function (task1, task2) {
-      task1.expDate = (typeof (task1.startEventTimestamp) != 'undefined') ? task1.startEventTimestamp : 100000000000000
-      task2.expDate = (typeof (task2.startEventTimestamp) != 'undefined') ? task2.startEventTimestamp : 100000000000000
+      task1.expDate = (typeof (task1.datetime) != 'undefined') ? new Date(task1.datetime).getTime() : 100000000000000
+      task2.expDate = (typeof (task2.datetime) != 'undefined') ? new Date(task2.datetime).getTime() : 100000000000000
       return (task1.expDate < task2.expDate) ? -order : order
     })
 
@@ -226,7 +226,7 @@ var Tasks = React.createClass({
       var volunteerLimit = <td className="tasks-volunteerLimit-td"><span>{task.maxVolunteers != 0 ? task.maxVolunteers : 'Brak'}</span></td>
 
       var creationDate = <td className="tasks-creationDate-td"><span>{TimeService.showTime(task.created_at)}</span></td>
-      var expirationDate = <th className="tasks-expirationDate-td"><span>{(typeof (task.startEventTimestamp) != 'undefined') ? TimeService.showTime(task.startEventTimestamp) : 'Brak'}</span></th>
+      var expirationDate = <th className="tasks-expirationDate-td"><span>{(typeof (task.datetime) != 'undefined') ? task.datetime: 'Brak'}</span></th>
 
       return (
         <tr className={priorityClass}>
