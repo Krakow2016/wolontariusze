@@ -2,11 +2,14 @@ var React = require('react')
 var handleHistory = require('fluxible-router').handleHistory
 var addons = require('fluxible-addons-react')
 var NavLink = require('fluxible-router').NavLink
+var navigateAction = require('fluxible-router').navigateAction
 var provideContext = addons.provideContext
 
 var ApplicationStore = require('../stores/ApplicationStore')
 
 var Authentication = require('./Authentication.jsx')
+var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
+var Message = require('./Message.jsx')
 
 var injectTapEventPlugin = require('react-tap-event-plugin')
 //Needed for onTouchTap
@@ -27,8 +30,8 @@ var Application = React.createClass({
     // Wyświetl komunikat flash
     var applicationStore = this.props.context.getStore(ApplicationStore)
     return {
-      infoSnack: applicationStore.getSuccess(),
-      errorSnack: applicationStore.getFailure(),
+      infoMessage: applicationStore.getSuccess(),
+      errorMessage: applicationStore.getFailure(),
       title: applicationStore.getPageTitle()
     }
   },
@@ -40,6 +43,14 @@ var Application = React.createClass({
   componentDidMount: function() {
     this.props.context.getStore(ApplicationStore)
       .addChangeListener(this._changeListener)
+
+    var that = this
+    setTimeout(function() {
+      that.setState({
+        infoMessage: false,
+        errorMessage: false
+      })
+    }, 5000)
   },
 
   componentWillUnmount: function() {
@@ -49,18 +60,63 @@ var Application = React.createClass({
 
   handleInfoSnackbarRequestClose: function() {
     this.setState({
-      infoSnack: false
+      infoMessage: false
     })
   },
 
   handleErrorSnackbarRequestClose: function() {
     this.setState({
-      errorSnack: false
+      errorMessage: false
     })
   },
 
+  addActiveVolonteer: function(volunteer) {
+    this.context.executeAction(navigateAction, {
+      url: '/wolontariusz/'+ volunteer.user_id
+    })
+  },
+
+          //<input type="text" className="form" id="menu-search-box" />
   render: function() {
     var Handler = this.props.currentRoute.handler
+
+    var searchForm
+    var advancedSearch
+    var infoMessage
+    var errorMessage
+
+    if(this.user()) {
+
+      if(this.user().is_admin) {
+        advancedSearch = (
+          <NavLink href="/wyszukiwarka">Zaawansowane wyszukiwanie</NavLink>
+        )
+      }
+
+      searchForm = (
+        <span className="search">
+          <ActivityVolonteersList id="searchForm" addActiveVolonteer={this.addActiveVolonteer} className="form" />
+          <img src="/img/search.svg" id="menu-search-submit" />
+          {advancedSearch}
+        </span>
+      )
+    }
+
+    if(this.state.infoMessage) {
+      infoMessage = (
+        <Message>
+          <b>{this.state.infoMessage}</b>
+        </Message>
+      )
+    }
+
+    if(this.state.errorMessage) {
+      errorMessage = (
+        <Message>
+          <b>{this.state.errorMessage}</b>
+        </Message>
+      )
+    }
 
     //render content
     return (
@@ -74,17 +130,11 @@ var Application = React.createClass({
           <nav>
             <div className="THE-margin">
               <div className="section group">
-                <div className="col span_3_of_4">
+                <span className="">
                   <NavLink href="/bank_pracy">Bank pracy</NavLink>
                   <Authentication user_id={this.user_id()} user_name={this.user_name()} />
-                </div>
-                <div className="col span_1_of_4 search">
-                  <form>
-                    <input type="text" className="form" id="menu-search-box" />
-                    <input type="image" src="/img/search.svg" id="menu-search-submit" />
-                  </form>
-                  <NavLink href="/wyszukiwarka">Zaawansowane wyszukiwanie</NavLink>
-                </div>
+                </span>
+                  {searchForm}
               </div>
             </div>
           </nav>
@@ -97,6 +147,8 @@ var Application = React.createClass({
             <Handler context={this.context} />
           </div>
         </article>
+        {infoMessage}
+        {errorMessage}
         <footer>
         </footer>
       </div>

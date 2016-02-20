@@ -41,7 +41,7 @@ var Volunteers = require('../app/services/volunteers')(config.service)
 passport.use(new ClientPasswordStrategy(function(clientId, clientSecret, done) {
   APIClients.read({force_admin: true}, 'APIClients', { id: clientId }, {}, function (err, client) {
     if (err) { return done(err) }
-    if (!client) { return done(null, false) }
+    if (!client) { return done(null, false, {message: "API client not found."}) }
     if (client.secret != clientSecret) { return done(null, false) }
     return done(null, client);
   })

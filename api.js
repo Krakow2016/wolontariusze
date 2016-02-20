@@ -17,12 +17,21 @@ var Volunteers = require('./app/services/volunteers')(config.service)
 var Activities = require('./app/services/activities')(config.service)
 var Joints = require('./app/services/joints')(config.service)
 
+// Służy do zapisywania sesji użytkowników w bazie danych
+var RDBStore = require('session-rethinkdb')(expressSession)
+
 // Express configuration
 
+// Konfiguracja zapisu danych sesji w bazie danych
+var session_store = {
+  servers: [ config.rethinkdb ]
+}
+
 var session = [expressSession({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true,
+    store: config.service === 'rethinkdb' ? new RDBStore(session_store) : new expressSession.MemoryStore()
 }), passport.initialize(), passport.session()]
 
 // Format każdego poprawnie wykonanego zapytania
@@ -80,7 +89,7 @@ server.post('/api/v2/login', session, passport.authenticate('local', {
 
 server.get('/api/v2/logout', session, function(req, res) {
   req.logout()
-  res.redirect('/api/v2/')
+  res.redirect('/api/v2/login')
 })
 
 // Okienko w którym wolontariusz wyraża zgodę (lub nie) na dostęp do swojego
@@ -294,7 +303,11 @@ server.use(function(req, res, next) {
 
 // Obsługa błędów
 server.use(function(err, req, res, next) {
-  res.status(500).send(error('UnknownError', err))
+  if(err.status) {
+    res.status(err.status).send(error(err.name, err.message))
+  } else {
+    res.status(500).send(error('UnknownError', err))
+  }
 })
 
 // Baza noclegowa pielgrzymów

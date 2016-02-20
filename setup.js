@@ -17,6 +17,7 @@ var tables = {
   'Joints'     : ['activity_id'],
   'Volunteers' : ['email'],
   'Imports'    : ['rg_email'],
+  'session'    : [],
   'ActivityTags': []
 }
 
@@ -89,7 +90,7 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
   }).then(function(conn) {
     return new Promise(function(resolve) {
       r.table('Volunteers').count().run(conn, function(err, count) {
-        if(count > 0) {
+        if(count === 0) {
           // Dane dla tabeli wolontariuszy
           var arr = []
           var data = require('./app/services/static/volunteers.json')
@@ -103,7 +104,7 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
   }).then(function(conn) {
     return new Promise(function(resolve) {
       r.table('Activities').count().run(conn, function(err, count) {
-        if(count > 0) {
+        if(count === 0) {
           // Dane dla tabeli aktywności
           var arr = []
           var data = require('./app/services/static/activities.json')
@@ -117,7 +118,7 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
   }).then(function(conn) {
     return new Promise(function(resolve) {
       r.table('Joints').count().run(conn, function(err, count) {
-        if(count > 0) {
+        if(count === 0) {
           // Dane dla tabeli połączeń wolontariuszy z aktywnościami
           var arr = []
           var data = require('./app/services/static/joints.json')
@@ -131,7 +132,7 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
   }).then(function(conn) {
     return new Promise(function(resolve) {
       r.table('ActivityTags').count().run(conn, function(err, count) {
-        if(count >= 0) {
+        if(count === 0) {
           //Dane dla tagów aktywności
           var arr = []
           var data = require('./app/services/static/activityTags.json')
@@ -146,7 +147,7 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
   then(function(conn) {
     return new Promise(function(resolve) {
       r.table('APIClients').count().run(conn, function(err, count) {
-        if(count > 0) {
+        if(count === 0) {
           // Dane dla tabeli klientów api
           var arr = []
           var data = require('./app/services/static/apiclients.json')

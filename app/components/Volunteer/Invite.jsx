@@ -19,7 +19,9 @@ var Invite = React.createClass({
   },
 
   _onDialogSubmit: function() {
-    this.props.context.executeAction(actions.inviteUser, {id: this.props.id})
+    this.props.context.executeAction(actions.inviteUser, {
+      id: this.props.id
+    })
     this._handleRequestClose()
   },
 

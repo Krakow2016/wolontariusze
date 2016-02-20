@@ -39,7 +39,7 @@ var ActivityVolonteersList = React.createClass ({
             user_id: option.payload.id
           }
         }).filter(function (volunteer) {
-          var excludedVolunteers = that.props.excludedVolunteers
+          var excludedVolunteers = that.props.excludedVolunteers || []
           for (var i = 0; i < excludedVolunteers.length; i++) {
             if (volunteer.user_id == excludedVolunteers[i].user_id) {
               return false
@@ -93,10 +93,11 @@ var ActivityVolonteersList = React.createClass ({
   render: function () {
     return (
       <AutoSuggest
-        id="activeVolonteers"
+        id={this.props.id}
         inputProps={{
           value: this.state.value,
-          onChange: this.handleChange
+          onChange: this.handleChange,
+          className: this.props.className
         }}
         suggestions={this.state.suggestions}
         renderSuggestion={this.renderSuggestion}

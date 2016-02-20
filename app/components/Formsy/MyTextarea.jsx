@@ -20,13 +20,16 @@ var MyTextarea = React.createClass({
 
   render: function () {
     return (
-      <textarea
-        className="settings"
-        name={this.props.name}
-        onChange={this.changeValue}
-        placeholder={this.props.placeholder}
-        value={this.getValue()}>
-      </textarea>
+      <div>
+        <textarea
+          className="settings"
+          name={this.props.name}
+          onChange={this.changeValue}
+          placeholder={this.props.placeholder}
+          value={this.getValue()}>
+        </textarea>
+        <span>{this.getErrorMessage()}</span>
+      </div>
     )
   }
 })

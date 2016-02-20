@@ -18,6 +18,7 @@ var ActivityStore = createStore({
     this.activity = {
       name: '',
       type: '',
+      datetime: '',
       duration: '',
       place: '',
       description: '',
@@ -114,7 +115,7 @@ ActivityStore.attributes = function() {
     'description',
     'created_at',
     'updated_at',
-    'startEventTimestamp',
+    'datetime',
     'duration',
     'place',
     'is_archived',
@@ -123,6 +124,7 @@ ActivityStore.attributes = function() {
     'editor',
     'maxVolunteers',
     'volunteers',
+    'lat_lon'
     'volunteerNumber',
     'tags'
   ]

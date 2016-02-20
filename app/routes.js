@@ -218,6 +218,8 @@ module.exports = {
     handler: require('./components/Search.jsx'),
     action: function(context, payload, done) {
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Wyszukiwarka' })
+      context.dispatch('LOAD_QUERY', payload.query)
+      context.executeAction(actions.showResults, payload.query)
       done()
     }
   },

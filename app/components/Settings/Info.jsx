@@ -45,7 +45,13 @@ var Info = React.createClass({
               id="who_question"
               name="who_question"
               placeholder=""
-              value={this.state.profile.who_question} />
+              value={this.state.profile.who_question}
+              validations={{
+                maxLength: 500
+              }}
+              validationErrors={{
+                maxLength: 'Limit znaków wynosi 500.'
+              }} />
           </div>
         </div>
 
@@ -60,7 +66,13 @@ var Info = React.createClass({
               id="what_question"
               name="what_question"
               placeholder=""
-              value={this.state.profile.what_question} />
+              value={this.state.profile.what_question}
+              validations={{
+                maxLength: 500
+              }}
+              validationErrors={{
+                maxLength: 'Limit znaków wynosi 500.'
+              }} />
           </div>
         </div>
 
@@ -75,7 +87,13 @@ var Info = React.createClass({
               id="why_question"
               name="why_question"
               placeholder=""
-              value={this.state.profile.why_question} />
+              value={this.state.profile.why_question}
+              validations={{
+                maxLength: 500
+              }}
+              validationErrors={{
+                maxLength: 'Limit znaków wynosi 500.'
+              }} />
           </div>
         </div>
       </ProfileSettings>

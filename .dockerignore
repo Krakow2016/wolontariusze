@@ -2,5 +2,7 @@
 node_modules/
 rethinkdb_data/
 public/js/
+spec/
+logs/
 config.json
 *.md

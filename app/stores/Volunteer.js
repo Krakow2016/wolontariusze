@@ -8,10 +8,12 @@ var VolunteerStore = createStore({
     'VOLUNTEER_CREATION_FAILURE': 'onFailure',
     //'VOLUNTEER_CREATION_SUCCESS': 'onSuccess',
     'VOLUNTEER_UPDATE_FAILURE': 'onFailure',
-    'VOLUNTEER_UPDATE_SUCCESS': 'onSuccess'
+    'VOLUNTEER_UPDATE_SUCCESS': 'onSuccess',
+    'INVITATION_SEND': 'onInvited',
   },
 
   initialize: function () {
+    this.profile = {}
   },
 
   load: function(data) {
@@ -29,18 +31,32 @@ var VolunteerStore = createStore({
     this.emitChange()
   },
 
-  onSuccess: function() {
+  onSuccess: function(data) {
     this.error = null
     this.success = true
+    // Zaaplikuj wprowadzone zmiany do interface-u
+    Object.assign(this.profile, data)
+    this.emitChange()
+  },
+
+  onInvited: function() {
+    this.profile.approved = true
     this.emitChange()
   },
 
   getState: function () {
-    return {
-      profile: this.profile || {},
+    var state = {
+      profile: this.profile,
       error: this.error,
       success: this.success
     }
+
+    // Domyślna wartość
+    if(!state.profile.profile_picture_url) {
+      state.profile.profile_picture_url = '/img/profile/face.svg'
+    }
+
+    return state
   },
 
     // Returns a serializable object containing the state of the Fluxible and

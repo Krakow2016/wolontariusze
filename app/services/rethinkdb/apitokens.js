@@ -21,7 +21,13 @@ module.exports = Protect({
 
       if(params.id) { // Pobierz krotkę o danym numerze id
         r.table('APITokens').get(params.id).run(conn, function(err, row){
-          callback(err || !row, row)
+          if(err) {
+            callback(err)
+          } else if(!row) {
+            callback(404)
+          } else {
+            callback(null, row)
+          }
         })
       }
     })

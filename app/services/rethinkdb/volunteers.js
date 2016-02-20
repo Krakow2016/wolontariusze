@@ -30,7 +30,13 @@ module.exports = {
 
       if(params.id) { // Pobierz krotkę o danym numerze id
         r.table(tableName).get(params.id.toString()).run(conn, function(err, row){
-          callback(err || !row, row)
+          if(err) {
+            callback(err)
+          } else if(!row) {
+            callback(404)
+          } else {
+            callback(null, row)
+          }
         })
       } else { // Pobierz listę krotek
         if(config.index) { // use index

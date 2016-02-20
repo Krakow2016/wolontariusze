@@ -29,7 +29,7 @@ var debug = require('debug')('Server')
 var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
 // Połączenie z sendgrid daje nam możliwość wysyłania emaili
-var sendgrid = require('sendgrid')(config.sendgrid_apikey)
+var sendgrid = require('sendgrid')(process.env.SENDGRID_APIKEY)
 
 require('node-jsx').install({extension: '.jsx'})
 var HtmlComponent = React.createFactory(require('./app/components/Html.jsx'))
@@ -84,16 +84,16 @@ passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
         var expiration_date = token.generated_at + 48*60*60*1000 // +48h
 
         if(token.used) { // Sprawdź czy token nie został już użyty
-          return done('Token already used. You must generate a new one.')
+          return done(null, false, {message: 'Token already used. You must generate a new one.'})
         } else if(new Date() > expiration_date) { // Sprawdź czy token nie wygasł
-          return done({message: 'Token expired. You must generate a new one.'})
+          return done(null, false, {message: 'Token expired. You must generate a new one.'})
         } else { // Autoryzacja przebiegła pomyślnie
           token.used = { datetime: new Date(), ip: req.ip, headers: req.headers }
           Volunteers.update({force_admin: true}, 'Volunteers', {id: user.id}, {
             access_tokens: tokens
           }, {}, function (err) {
             if(err) {
-              return done(err)
+              return done(500) // Błąd bazy danych
             }
             return done(null, user)
           })
@@ -176,7 +176,7 @@ server.post('/search', function(req, res) {
 })
 
 server.post('/suggest', function(req, res) {
-  if(req.user && req.user.is_admin) {
+  if(req.user) {
     var elasticSearch = config.elasticSearch +'/_suggest'
     req.pipe(request(elasticSearch))
       .on('error', function(e) {
@@ -222,11 +222,14 @@ server.post('/invitation', jsonParser, function(req, res) {
             res.send(err)
           } else {
             var url = '/invitation?apikey='+ token
+
+            var text = 'Wolontariuszu!\n\nChcemy zaprosić Cię do Góry Dobra - portalu dla wolontariuszy, który będzie równocześnie naszą główną platformą komunikacji podczas Światowych Dni Młodzieży w Krakowie oraz narzędziem do organizacji projektów i wydarzeń.\n\nTo tutaj chcemy stworzyć środowisko młodych i zaangażowanych ludzi, dzielić się tym, co robimy i przekazywać Ci ważne informacje o ŚDM i zadaniach, jakie czekają na realizację.\n\nDzięki Górze Dobra będziesz mógł pochwalić się efektami swojej pracy. W tym też miejscu będziesz miał możliwość zobaczenia i dzielenia się z innymi informacjami o tym, jak dużo serca, i aktywności wolontariackiej dajesz na rzecz Światowych Dni Młodzieży w Krakowie.\n\nAby aktywować swoje konto kliknij w poniższy link:\n\nhttps://wolontariusze.krakow2016.com'+ url +'\n\nWAŻNE! Link, jaki otrzymujesz teraz do zalogowania, jest aktywny tylko przez 48h. W wypadku jakichkolwiek problemów bądź pytań, prosimy o kontakt na: goradobra2016@gmail.com.\n\nNie zwlekaj ani chwili dłużej i zostań już dziś Wolontariuszem ŚDM Kraków 2016.'
+
             var email = new sendgrid.Email({
               to:       user.email,
               from:     'wolontariat@krakow2016.com',
               subject:  'Zaproszenie do Góry Dobra!',
-              text:     'Wolontariuszu! Chcemy zaprosić Cię do Góry Dobra - portalu dla wolontariuszy, który będzie równocześnie naszą platformą komunikacji. To tutaj chcemy stworzyć środowisko młodych i zaangażowanych ludzi, dzielić się tym, co robimy i przekazywać Wam ważne informacje o ŚDM i zadaniach, jakie czekają na realizację. Zrób coś dla siebie! Zostań Wolontariuszem ŚDM Kraków 2016. Aby się zarejestrować kliknij: http://'+ config.domain + url
+              text:     text
             })
             sendgrid.send(email, function(err, json) {
               console.log('sendgrid:', err, url, json)
@@ -245,7 +248,10 @@ server.get('/stats', function(req, res) {
   if(req.user && req.user.is_admin) {
     var stats = {}
 
-    r.connect({ db: 'sdm' }, function(err, conn) {
+    r.connect(config.rethinkdb, function(err, conn) {
+      // Błąd połączenia z bazą danych
+      if(err) { return res.send(500) }
+
       async.parallel([function(cb){
         r.table('Volunteers').count().run(conn, function(err, result) {
           // Liczba wszystkich kont w systemie
@@ -277,7 +283,6 @@ server.get('/stats', function(req, res) {
         else { res.send(stats) }
       })
     })
-
   } else {
     res.send(403)
   }
@@ -291,7 +296,11 @@ server.post('/import', multipartMiddleware, function(req, res) {
       inFile: req.files.image.path, // TODO: co jeżeli > 1?
       worksheet: 'Volontari'
     }, function(err, records){
-      if(err) { console.error(err) }
+      if(err) {
+        res.status(500).send(err)
+        console.error(err)
+        return
+      }
 
       // Dokumenty do zapisu w bazie ElasticSearch
       var docs = []
@@ -321,11 +330,13 @@ server.post('/import', multipartMiddleware, function(req, res) {
         } // TODO: języki!
       })
 
-      r.connect({ db: 'sdm' }, function(err, conn) {
+      r.connect(config.rethinkdb, function(err, conn) {
         // Dane do ElasticSearcha najpierw lądują w tabeli `Imports` żeby
         // później zostać automatycznie przeniesione i zcalone z odpowiadającym
         // im dokumentem wolontariusza poprzez narzędzie LogStash.
         r.table('Imports').insert(docs).run(conn, function(err, imports) {
+          if(err) { return res.status(500).send(err) }
+
           var table = r.table('Volunteers')
           emails.push({index: 'email'})
           // Pobierz wszystkie duplikaty
@@ -345,7 +356,11 @@ server.post('/import', multipartMiddleware, function(req, res) {
                 })
                 // Zapisz nieistniejących wolontariuszy w bazie danych
                 r.table('Volunteers').insert(docs).run(conn, function(err, result) {
-                  res.send(result)
+                  if(err) {
+                    res.status(500).send(err)
+                  } else {
+                    res.send(result)
+                  }
                   conn.close()
                 })
               })
