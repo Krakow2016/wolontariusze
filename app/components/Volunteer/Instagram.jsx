@@ -1,12 +1,13 @@
 var React = require('react')
 var Instafeed = require('instafeed.js')
 
+var client_id = 'TODO' // TODO
+
 var Instagram = React.createClass({
   componentDidMount: function() {
     var user = this.user()
     if(!user.instagram) { return }
 
-    var clinent_id = 'TODO' // TODO
     var access_token = 'TODO' // TODO
 
     new Instafeed({
