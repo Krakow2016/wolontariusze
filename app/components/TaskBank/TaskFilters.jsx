@@ -40,8 +40,12 @@ var TaskFilters = React.createClass({
         timeStateSelect: 'trwajace',
         availabilityStateSelect: 'wolne'
       },
-      placeDistance: '1',
-      placeAddress: 'Kraków Kanonicza 14',
+      place: {
+        distance: 1.0,  //km
+        lat: 49.8883,   //wspolrzedne z Open Street Map
+        lon: 20.0986,
+      },
+      //placeAddress: 'Dobczyce',
       category: {}
 
     }
@@ -73,17 +77,34 @@ var TaskFilters = React.createClass({
     }))
   },
 
-  handlePlaceDistanceChange: function (evt) {
+  handlePlaceChange: function (evt) {
+    var place = {}
     var value = evt.target.value
+    value = parseFloat(value)
+    place[evt.target.name] = {$set: value}
+    if (place[evt.target.name]) {
+      return
+    }
+    
     this.setState(update(this.state, {
-      placeDistance: {$set: value}
+      place: place
     }))
   },
-
-  handlePlaceAddressChange: function (evt) {
+  
+  
+  handlePlaceSelectChange: function (evt) {
+    var place = {}
     var value = evt.target.value
+    var lat_lon = value.split(',')
+    place['lat'] = {$set: parseFloat(lat_lon[0])}
+    place['lon'] = {$set: parseFloat(lat_lon[1])}
+    
+    if (isNaN(place['lat']) || isNaN(place['lon'])) {
+      return
+    }
+
     this.setState(update(this.state, {
-      handlePlaceAddressChange: {$set: value}
+      place: place
     }))
   },
   
@@ -144,6 +165,38 @@ var TaskFilters = React.createClass({
       })
     }
     
+    //Miejsce na końcu, bo może być mniej obiektów do filtrowania (w celu przyspieszenia obliczeń)
+    // Orodroma - https://pl.wikipedia.org/wiki/Ortodroma
+    // https://en.wikipedia.org/wiki/Great-circle_distance
+    // https://pl.wikipedia.org/wiki/Promie%C5%84_Ziemi
+    if (this.state.checkboxes.placeCheckbox) {
+      filteredData = filteredData.filter(function (task) {
+          if (typeof(task.lat_lon) == 'undefined') {
+            return false
+          }
+          var c = Math.PI/180
+          var lat1=c*task.lat_lon[0]
+          var lat2=c*that.state.place.lat
+          var lon1=c*task.lat_lon[1]
+          var lon2=c*that.state.place.lon
+          var deltaLat = lat1-lat2
+          var deltaLon = lon1-lon2
+          var radius = 6378.41
+          //var underSqrt = Math.sin(deltaLat/2)*Math.sin(deltaLat/2)+Math.cos(lat1)*Math.cos(lat2)*Math.sin(deltaLon/2)*Math.sin(deltaLon/2)
+          //var orto = radius*2*Math.asin(Math.sqrt(underSqrt))
+          var orto = radius*Math.acos(Math.sin(lat1)*Math.sin(lat2)+Math.cos(lat1)*Math.cos(lat2)*Math.cos(deltaLon))
+          //console.log('Task Lat Lon', task.lat_lon)
+          //console.log('ORTO', orto)
+          if (orto < that.state.place.distance) {
+            return true
+          }
+          return false
+            
+      })
+    }
+    
+    
+    
     this.props.filterFunction(filteredData)
     
 
@@ -171,21 +224,38 @@ var TaskFilters = React.createClass({
     var filterByPlace = <div>
                           <Formsy.Form>
                             <input type="checkbox" name="placeCheckbox" checked={this.state.checkboxes.placeCheckbox} onChange={this.handleCheckboxChange} />
-                            <span className="tasks-filters-filterType">Miejsce oddalone o</span>
-                              <MyTextField id='placeDistance'
-                                          name='placeDistance'
-                                          validations='minLength:2'
-                                          value={this.state.placeDistance}
-                                          onChange={this.handlePlaceDistanceChange}/>
+                            <span className="tasks-filters-filterType">Miejsce</span>
+                            <span className="tasks-filters-filterType"><br></br> Oddalone o</span>
+                              <MyTextField id='distance'
+                                          name='distance'
+                                          validations='isFloat'
+                                          value={this.state.place.distance}
+                                          validationError='Powinno być np. 2.05'
+                                          onChange={this.handlePlaceChange}/>
                             <span className="tasks-filters-filterType">km od</span>
-                              <MyTextField id='placeAddress'
-                                          name='placeAddress'
-                                          validations='minLength:2'
-                                          value={this.state.placeAddress}
-                                          onChange={this.handlePlaceAddressChange}/>
+                            <span className="tasks-filters-filterType"><br></br>Współrzędne geograficzne (sz, dł): </span>
+                              <MyTextField id='lat'
+                                          name='lat'
+                                          validations='isFloat'
+                                          value={this.state.place.lat}
+                                          validationError='Powinno być np. 51.12'
+                                          onChange={this.handlePlaceChange}/>
+                              <MyTextField id='lon'
+                                          name='lon'
+                                          validations='isFloat'
+                                          validationError='Powinno być np. 51.12'
+                                          value={this.state.place.lon}
+                                          onChange={this.handlePlaceChange}/>
+                              <span className="tasks-filters-filterType"><br></br>Wybierz z listy </span>
+                              <select name="prioritySelect" selected={this.state.selects.prioritySelect} onChange={this.handlePlaceSelectChange}>
+                                <option value="0.0,0.0">Brak</option>
+                                <option value="49.8883,20.0986">Dobczyce</option>
+                                <option value="50.0468,20.0047">Kraków</option>
+                              </select>
+                              <span>, współrzędne wzięte z OSM, © autorzy <a href="//www.openstreetmap.org/copyright">OpenStreetMap</a></span>
                           </Formsy.Form>
                         </div>
-                        
+    
     var addTag = <ActivityTags addTag={this.addCategory}
                                excludedTags={[this.state.category]}
                                context={this.props.context}
