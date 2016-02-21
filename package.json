@@ -57,9 +57,7 @@
     "session-rethinkdb": "1.0.10",
     "sharp": "^0.12.2",
     "superagent": "^1.7.2",
-    "through2": "*",
-    "instafeed.js": "*",
-    "instagram-node": "*"
+    "through2": "*"
   },
   "devDependencies": {
     "babel-preset-react": "^6.3.13",
