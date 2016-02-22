@@ -5,7 +5,6 @@ var ReactMarkdown = require('react-markdown')
 var ActivityStore = require('../stores/Activity')
 
 var TimeService = require('../modules/time/TimeService.js')
-var GeoMap = require('./GeoMap.jsx')
 
 var actions = require('../actions')
 
@@ -64,6 +63,29 @@ var Activity = React.createClass({
     return this.props.context.getUser()
   },
 
+  componentDidMount: function() {
+    var Leaflet = require('react-leaflet')
+
+    var position = this.state.activity.lat_lon.map(function(x){ return parseFloat(x) })
+    var map = (
+      <Leaflet.Map center={position} zoom={15}>
+        <Leaflet.TileLayer
+          url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <Leaflet.Marker position={position}>
+          <Leaflet.Popup>
+            <span>{this.state.activity.place}</span>
+          </Leaflet.Popup>
+        </Leaflet.Marker>
+      </Leaflet.Map>
+    )
+
+    this.setState({
+      map: map
+    })
+  },
+
   render: function () {
 
     var user = this.user()
@@ -77,13 +99,6 @@ var Activity = React.createClass({
       </div>
     }
 
-    var position = this.state.activity.lat_lon
-    var geomap
-    if (typeof (position) != 'undefined') {
-      geomap = <GeoMap editionMode={false} 
-                initialPosition={position}/>
-    }
-    
     var priority = (activity.is_urgent) ? 'PILNE' : 'NORMALNE'
 
     var volunteers = this.state.volunteers
@@ -124,7 +139,7 @@ var Activity = React.createClass({
         <br></br>
         <b>Miejsce wydarzenia:</b> {activity.place}
         <br></br>
-        {geomap}
+        {this.state.map}
         <b>Prorytet:</b> {priority}
         <br></br>
         <ReactMarkdown source={activity.description} />

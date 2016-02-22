@@ -537,3 +537,7 @@ table.details tr > * {
   width: 20px;
   height: 20px;
 }
+
+.leaflet-container {
+  height: 300px
+}
