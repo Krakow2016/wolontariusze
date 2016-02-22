@@ -191,10 +191,14 @@ var Tasks = React.createClass({
     var startNumber = (this.state.page-1)*this.props.pagination+1
     var endNumber = (this.state.page*this.props.pagination < taskNumber) ? this.state.page*this.props.pagination : taskNumber
     var numberDisplay
-    if (startNumber == endNumber) {
-      numberDisplay = <span>Zadanie {startNumber} z {taskNumber}</span>
+    if (taskNumber > 0) {
+      if (startNumber == endNumber) {
+        numberDisplay = <span>Zadanie {startNumber} z {taskNumber}</span>
+      } else {
+        numberDisplay = <span>Zadania {startNumber}-{endNumber} z {taskNumber}</span>
+      }
     } else {
-      numberDisplay = <span>Zadania {startNumber}-{endNumber} z {taskNumber}</span>
+      numberDisplay = <span>Brak zadań</span>
     }
 
     // TYPE
@@ -243,25 +247,29 @@ var Tasks = React.createClass({
 
     var taskTable = <table className="tasks-table"><tbody>{taskHeaders}{taskRows}</tbody></table>
 
-
-    return (
-      <div className="taskBank">
-        <div className="section group">
-          <div className="col span_4_of_4 profile-ribon">
-            {tabs}
+    if (user) {
+      return (
+        <div className="taskBank">
+          <div className="section group">
+            <div className="col span_4_of_4 profile-ribon">
+              {tabs}
+            </div>
           </div>
+          <br></br>
+          <TaskFilters data={this.state.data}
+                      filterFunction={this.filter}
+                      type={this.props.type}
+                      context={this.props.context}
+                      />
+          <br></br>{numberDisplay}
+          {taskTable}
+          {paginationButtons}
         </div>
-        <br></br>
-        <TaskFilters data={this.state.data}
-                     filterFunction={this.filter}
-                     type={this.props.type}
-                     context={this.props.context}
-                     />
-        <br></br>{numberDisplay}
-        {taskTable}
-        {paginationButtons}
-      </div>
-    )
+      )
+    } else {
+      return (<span>Bank pracy widoczny tylko dla zalogowanych użytkowników</span>)
+    }
+
   },
 
   user: function() {

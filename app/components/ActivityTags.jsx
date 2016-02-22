@@ -167,7 +167,8 @@ var ActivityTags = React.createClass ({
               id="activityTagsFilterMode"
               inputProps={{
                 value: this.state.value,
-                onChange: this.handleChange
+                onChange: this.handleChange,
+                className: this.props.className
               }}
               suggestions={this.state.suggestions}
               renderSuggestion={this.renderSuggestion}
@@ -183,7 +184,8 @@ var ActivityTags = React.createClass ({
               id="activityTags"
               inputProps={{
                 value: this.state.value,
-                onChange: this.handleChange
+                onChange: this.handleChange,
+                className: this.props.className
               }}
               suggestions={this.state.suggestions}
               renderSuggestion={this.renderSuggestion}
@@ -219,7 +221,8 @@ var ActivityTags = React.createClass ({
               id="createActivityTag"
               inputProps={{
                 value: this.state.value,
-                onChange: this.handleChange
+                onChange: this.handleChange,
+                className: this.props.className
               }}
               suggestions={this.state.suggestions}
               renderSuggestion={this.renderSuggestion}
@@ -242,7 +245,8 @@ var ActivityTags = React.createClass ({
               id="removeActivityTag"
               inputProps={{
                 value: this.state.value,
-                onChange: this.handleChange
+                onChange: this.handleChange,
+                className: this.props.className
               }}
               suggestions={this.state.suggestions}
               renderSuggestion={this.renderSuggestion}

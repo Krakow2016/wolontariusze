@@ -259,7 +259,8 @@ var TaskFilters = React.createClass({
     var addTag = <ActivityTags addTag={this.addCategory}
                                excludedTags={[this.state.category]}
                                context={this.props.context}
-                               filterMode={true}/>
+                               filterMode={true}
+                               className="form"/>
     var filterByCategory = <div>
                               <input type="checkbox" name="categoryCheckbox" checked={this.state.checkboxes.categoryCheckbox} onChange={this.handleCheckboxChange} />
                               <span className="tasks-filters-filterType">Kategoria</span>

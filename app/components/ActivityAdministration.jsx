@@ -278,7 +278,8 @@ var ActivityAdministration = React.createClass({
     var addTag = <ActivityTags addTag={this.addTag}
                                excludedTags={this.state.tags}
                                context={this.props.context}
-                               filterMode={false}/>
+                               filterMode={false}
+                               className="form"/>
 
     var tags = this.state.tags || []
     var tagsList = tags.map(function(tag) {
