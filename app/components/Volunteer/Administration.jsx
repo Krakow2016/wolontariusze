@@ -1,6 +1,7 @@
 var React = require('react')
 var VolunteerShell = require('./Shell.jsx')
 var Comments = require('./Comments.jsx')
+var update = require('react-addons-update')
 
 var Button = require('material-ui/lib/raised-button')
 var Dialog = require('material-ui/lib/dialog')
@@ -111,8 +112,25 @@ var VolunteerAdministration = React.createClass({
     })
   },
 
+  handleChange: function(evt) {
+    var tags = evt.target.value.split(', ')
+    this.setState(update(this.state, {
+      profile: {
+        tags: {$set: tags}
+      }
+    }))
+  },
+
+  saveTags: function() {
+    this.props.context.executeAction(updateVolunteer, {
+      id: this.state.profile.id,
+      tags: this.state.profile.tags
+    })
+  },
+
   render: function() {
     var papers = []
+    var tags = this.state.profile.tags || []
 
     if(this.state.profile.approved) {
       papers.push(
@@ -166,6 +184,10 @@ var VolunteerAdministration = React.createClass({
         </Dialog>
 
         <Details {...this.state.details} />
+
+        <b>Projekty: </b>
+        <input name="tags" value={tags.join(', ')} onChange={this.handleChange} />
+        <input type="button" value="Zapisz" onClick={this.saveTags} />
 
         <Comments context={this.props.context} />
       </VolunteerShell>

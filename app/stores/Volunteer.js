@@ -82,6 +82,7 @@ VolunteerStore.attributes = function() {
     'last_name',
     'nationality',
     'profile_picture_url',
+    'tags',
     'thumb_picture_url',
     'who_question',
     'what_question',
