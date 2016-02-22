@@ -1,7 +1,6 @@
 var React = require('react')
 var ActivityStore = require('../stores/Activity')
 var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
-var GeoMap = require('./GeoMap.jsx')
 
 var Formsy = require('formsy-react')
 var MyTextField = require('./Formsy/MyTextField.jsx')
@@ -59,6 +58,9 @@ var ActivityAdministration = React.createClass({
     // Tworzy kopię tablicy volontariuszy po to żeby później stwierdzić jakie
     // zaszły wn niej zmiany.
     state._volunteers = Object.assign({}, state).volunteers
+
+    state.init_position = state.activity.lat_lon.map(function(x){ return parseFloat(x) })
+
     return state
   },
 
@@ -121,12 +123,6 @@ var ActivityAdministration = React.createClass({
     }))
   },
   
-  handlePositionChange: function(position) {
-    this.setState(update(this.state, {
-      activity: {lat_lon: {$set: position}}
-    }))
-  },
-
   addActiveVolonteer: function (volunteer) {
     var joint = {
       activity_id: this.state.activity.id,
@@ -236,6 +232,43 @@ var ActivityAdministration = React.createClass({
     this.props.context.executeAction(deleteAction, {id: this.state.activity.id})
   },
 
+  map: function() {
+    if(!this.state.map || !this.state.activity.lat_lon) {
+      return (<div />)
+    }
+
+    console.log(this.state.activity.lat_lon)
+    var Leaflet = require('react-leaflet')
+    var position = this.state.activity.lat_lon.map(function(x){ return parseFloat(x) })
+
+    return (
+      <Leaflet.Map center={this.state.init_position} zoom={15} onLeafletMove={this.handleMove}>
+        <Leaflet.TileLayer
+          url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <Leaflet.Marker position={position}>
+          <Leaflet.Popup>
+            <span>{this.state.activity.place}</span>
+          </Leaflet.Popup>
+        </Leaflet.Marker>
+      </Leaflet.Map>
+    )
+  },
+
+  handleMove: function(e) {
+    var center = e.target.getCenter()
+    this.setState(update(this.state, {
+      activity: {lat_lon: {$set: [center.lat, center.lng]}}
+    }))
+  },
+
+  componentDidMount: function() {
+    this.setState({
+      map: true
+    })
+  },
+
   render: function() {
     var startEventDate = new Date(this.state.activity.startEventTimestamp)
     var startEventDateHint
@@ -245,14 +278,6 @@ var ActivityAdministration = React.createClass({
       startEventDateHint = <span> Dla aktywności data powinna być w przeszłości </span>
     }
 
-    var position = this.state.activity.lat_lon
-    var geomap
-    if (typeof (position) != 'undefined') {
-      geomap = <GeoMap editionMode={true}
-                  saveFunction={this.handlePositionChange}
-                  initialPosition={position}/>
-    }
-    
     var updateButton = []
     if (this.props.creationMode == false) {
       updateButton = <input type="submit" value="Zapisz" />
@@ -360,7 +385,7 @@ var ActivityAdministration = React.createClass({
             <b>Współrzędne geograficzne:  </b>
             <br></br>
             <input type="checkbox" name="addPosition" checked={!!this.state.activity.lat_lon} onChange={this.handleAddPositionChange} />
-            {geomap}
+            { this.map() }
           <br></br>
           
 
