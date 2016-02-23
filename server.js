@@ -319,13 +319,15 @@ server.post('/import', multipartMiddleware, function(req, res) {
         })
         docs.push(map)
         emails.push(map['rg_email'])
+
         // W bazie zapisujemy tylko ustalone wcześniej podstawowe informacje
         volunteers[map['rg_email']] = {
           email: map['rg_email'],
           first_name: map['rg_firstname'],
           last_name: map['rg_lastname'],
-          nationality: map['rg_nationality']
-        } // TODO: języki!
+          nationality: map['rg_nationality'],
+          languages: map['od_languages'].split('|')
+        }
       })
 
       r.connect(config.rethinkdb, function(err, conn) {
