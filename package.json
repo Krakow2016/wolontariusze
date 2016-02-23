@@ -28,7 +28,6 @@
     "gulp-rename": "*",
     "gulp-util": "*",
     "leaflet": "^0.7.7",
-    "map-the-tiles": "1.2.1",
     "material-ui": "0.14.0",
     "moment": "2.11.2",
     "node-jsx": "0.13.3",
@@ -56,7 +55,6 @@
     "sendgrid": "2.0.0",
     "serialize-javascript": "^1.0.0",
     "session-rethinkdb": "1.0.10",
-    "sphericalmercator": "^1.0.3",
     "superagent": "^1.7.2",
     "through2": "*"
   },
