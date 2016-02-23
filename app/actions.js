@@ -183,11 +183,12 @@ module.exports = {
         })
         context.service.create('Joints', {}, joints, function(){
           context.executeAction(navigateAction, {url: '/aktywnosc/'+id})
+          cb()
         })
       }
-      cb()
     })
   },
+
   deleteActivity: function(context, payload, cb) {
     context.service.delete('Activities', payload, {user: context.getUser()}, function (err, data) {
       if(err) { debug(err) }
