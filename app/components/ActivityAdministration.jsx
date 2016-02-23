@@ -1,4 +1,5 @@
 var React = require('react')
+var NavLink = require('fluxible-router').NavLink
 var ActivityStore = require('../stores/Activity')
 var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
 
@@ -59,7 +60,8 @@ var ActivityAdministration = React.createClass({
     // zaszły wn niej zmiany.
     state._volunteers = Object.assign({}, state).volunteers
 
-    state.init_position = state.activity.lat_lon.map(function(x){ return parseFloat(x) })
+    // Początkowa pozycja mapy (domyślnie Rynek Główny)
+    state.init_position = state.activity.lat_lon || [50.061720, 19.937376]
 
     return state
   },
@@ -104,25 +106,16 @@ var ActivityAdministration = React.createClass({
       activity: activity
     }))
   },
-  
-  handleAddPositionChange: function(evt) {
 
-    //https://facebook.github.io/react/docs/update.html
-    //https://facebook.github.io/react/docs/forms.html
+  handleAddPositionChange: function(evt) {
     var value = evt.target.checked
-      
-    var activity = this.state.activity
-    if (!value) {
-      delete activity.lat_lon
-    } else {
-      activity.lat_lon = [0, 0]
-    }
-    
     this.setState(update(this.state, {
-        activity: {$set: activity}
+      activity: {
+        lat_lon: {$set: value ? this.state.init_position : undefined}
+      }
     }))
   },
-  
+
   addActiveVolonteer: function (volunteer) {
     var joint = {
       activity_id: this.state.activity.id,
@@ -233,13 +226,12 @@ var ActivityAdministration = React.createClass({
   },
 
   map: function() {
-    if(!this.state.map || !this.state.activity.lat_lon) {
+    if(!this.state.mapReady || !this.state.activity.lat_lon) {
       return (<div />)
     }
 
-    console.log(this.state.activity.lat_lon)
     var Leaflet = require('react-leaflet')
-    var position = this.state.activity.lat_lon.map(function(x){ return parseFloat(x) })
+    var position = this.state.activity.lat_lon
 
     return (
       <Leaflet.Map center={this.state.init_position} zoom={15} onLeafletMove={this.handleMove}>
@@ -265,7 +257,7 @@ var ActivityAdministration = React.createClass({
 
   componentDidMount: function() {
     this.setState({
-      map: true
+      mapReady: true
     })
   },
 
@@ -295,7 +287,7 @@ var ActivityAdministration = React.createClass({
 
     var showButton = []
     if (this.props.creationMode == false) {
-      showButton = <a href={'/aktywnosc/'+this.state.activity.id} ><input type="button" value="Wyświetl" /></a>
+      showButton = <NavLink href={'/aktywnosc/'+this.state.activity.id} >Wyświetl</NavLink>
     }
 
     var removeActiveVolonteer = this.removeActiveVolonteer
