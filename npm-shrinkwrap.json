@@ -1763,6 +1763,11 @@
       "from": "lazy-cache@>=1.0.3 <2.0.0",
       "resolved": "https://registry.npmjs.org/lazy-cache/-/lazy-cache-1.0.3.tgz"
     },
+    "leaflet": {
+      "version": "0.7.7",
+      "from": "leaflet@latest",
+      "resolved": "https://registry.npmjs.org/leaflet/-/leaflet-0.7.7.tgz"
+    },
     "left-pad": {
       "version": "0.0.3",
       "from": "left-pad@0.0.3",
@@ -2591,6 +2596,11 @@
       "version": "3.3.2",
       "from": "react-dropzone@>=3.3.2 <4.0.0",
       "resolved": "https://registry.npmjs.org/react-dropzone/-/react-dropzone-3.3.2.tgz"
+    },
+    "react-leaflet": {
+      "version": "0.10.1",
+      "from": "react-leaflet@>=0.10.0 <0.11.0",
+      "resolved": "https://registry.npmjs.org/react-leaflet/-/react-leaflet-0.10.1.tgz"
     },
     "react-markdown": {
       "version": "2.0.0",

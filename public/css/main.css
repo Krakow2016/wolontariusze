@@ -541,3 +541,7 @@ textarea.settings {
   color: #000;
   text-align: center;
 }
+
+.leaflet-container {
+  height: 300px
+}

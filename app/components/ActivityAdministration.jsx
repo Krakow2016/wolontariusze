@@ -1,6 +1,8 @@
 var React = require('react')
+var NavLink = require('fluxible-router').NavLink
 var ActivityStore = require('../stores/Activity')
 var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
+var request = require('superagent')
 
 var Formsy = require('formsy-react')
 var MyTextField = require('./Formsy/MyTextField.jsx')
@@ -58,6 +60,10 @@ var ActivityAdministration = React.createClass({
     // Tworzy kopię tablicy volontariuszy po to żeby później stwierdzić jakie
     // zaszły wn niej zmiany.
     state._volunteers = Object.assign({}, state).volunteers
+
+    // Początkowa pozycja mapy (domyślnie Rynek Główny)
+    state.init_position = state.activity.lat_lon || [50.061720, 19.937376]
+
     return state
   },
 
@@ -98,6 +104,15 @@ var ActivityAdministration = React.createClass({
     activity[target.name] = {$set: value}
     this.setState(update(this.state, {
       activity: activity
+    }))
+  },
+
+  handleAddPositionChange: function(evt) {
+    var value = evt.target.checked
+    this.setState(update(this.state, {
+      activity: {
+        lat_lon: {$set: value ? this.state.init_position : undefined}
+      }
     }))
   },
 
@@ -210,6 +225,65 @@ var ActivityAdministration = React.createClass({
     this.props.context.executeAction(deleteAction, {id: this.state.activity.id})
   },
 
+  map: function() {
+    if(!this.state.mapReady || !this.state.activity.lat_lon) {
+      return (<div />)
+    }
+
+    var Leaflet = require('react-leaflet')
+    var position = this.state.activity.lat_lon
+
+    return (
+      <Leaflet.Map center={this.state.init_position} zoom={15} scrollWheelZoom='center' onLeafletMove={this.handleMove}>
+        <Leaflet.TileLayer
+          url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <Leaflet.Marker position={position}>
+          <Leaflet.Popup>
+            <span>{this.state.activity.place}</span>
+          </Leaflet.Popup>
+        </Leaflet.Marker>
+      </Leaflet.Map>
+    )
+  },
+
+  handleMove: function(e) {
+    var center = e.target.getCenter()
+    this.setState(update(this.state, {
+      activity: {lat_lon: {$set: [center.lat, center.lng]}}
+    }))
+  },
+
+  componentDidMount: function() {
+    this.setState({
+      mapReady: true
+    })
+  },
+
+  findCoordinates: function() {
+    var that = this
+
+    request
+      .get('http://nominatim.openstreetmap.org/search.php')
+      .query({
+        q: this.state.activity.place,
+        format: 'json'
+      })
+      .end(function(err, resp) {
+        var json = resp.body[0]
+        var lat_lon = [parseFloat(json.lat), parseFloat(json.lon)]
+        that.setState({
+          init_position: lat_lon
+        })
+        that.setState(update(that.state, {
+          activity: {
+            lat_lon: {$set: lat_lon}
+          }
+        }))
+      })
+  },
+
   render: function() {
     var startEventDate = new Date(this.state.activity.datetime)
     var startEventDateHint
@@ -236,7 +310,7 @@ var ActivityAdministration = React.createClass({
 
     var showButton = []
     if (this.props.creationMode == false) {
-      showButton = <a href={'/aktywnosc/'+this.state.activity.id} ><input type="button" value="Wyświetl" /></a>
+      showButton = <NavLink href={'/aktywnosc/'+this.state.activity.id} >Wyświetl</NavLink>
     }
 
     var removeActiveVolonteer = this.removeActiveVolonteer
@@ -322,12 +396,22 @@ var ActivityAdministration = React.createClass({
               disabled={false}
               value={this.state.activity.place}
               onChange={this.handleChange} />
+
+            <input type="button" value="Wyszukaj..." onClick={this.findCoordinates} disabled={this.state.activity.place === ''} />
           </div>
+          <br></br>
+            <br></br>
+            <b>Współrzędne geograficzne:  </b>
+            <br></br>
+            <input type="checkbox" name="addPosition" checked={!!this.state.activity.lat_lon} onChange={this.handleAddPositionChange} />
+            { this.map() }
+          <br></br>
+          
 
           <br></br>
           <b>Zadanie jest PILNE? </b>
           <br></br>
-          <input type="checkbox" name="is_urgent" checked={this.state.activity.is_urgent} changeValue={this.handleChange} />
+          <input type="checkbox" name="is_urgent" checked={this.state.activity.is_urgent} onChange={this.handleChange} />
           <br></br>
 
           <br></br>

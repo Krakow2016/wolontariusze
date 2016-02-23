@@ -82,9 +82,8 @@ module.exports = {
 
   update: function(req, resource, params, body, config, callback) {
     var id = body.id || params.id
-    for (var key in body) {
-      activities[id][key] = body[key]
-    }
+    delete activities[id]
+    activities[id] = body //replace old activity
     var activity = modifiedActivity(id, req, config)
     if(activity != null) {
       var resp = { changes: [{new_val: activity}]}
