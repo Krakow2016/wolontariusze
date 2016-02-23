@@ -2,6 +2,7 @@ var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var ActivityStore = require('../stores/Activity')
 var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
+var request = require('superagent')
 
 var Formsy = require('formsy-react')
 var MyTextField = require('./Formsy/MyTextField.jsx')
@@ -234,7 +235,7 @@ var ActivityAdministration = React.createClass({
     var position = this.state.activity.lat_lon
 
     return (
-      <Leaflet.Map center={this.state.init_position} zoom={15} onLeafletMove={this.handleMove}>
+      <Leaflet.Map center={this.state.init_position} zoom={15} scrollWheelZoom='center' onLeafletMove={this.handleMove}>
         <Leaflet.TileLayer
           url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -259,6 +260,29 @@ var ActivityAdministration = React.createClass({
     this.setState({
       mapReady: true
     })
+  },
+
+  findCoordinates: function() {
+    var that = this
+
+    request
+      .get('http://nominatim.openstreetmap.org/search.php')
+      .query({
+        q: this.state.activity.place,
+        format: 'json'
+      })
+      .end(function(err, resp) {
+        var json = resp.body[0]
+        var lat_lon = [parseFloat(json.lat), parseFloat(json.lon)]
+        that.setState({
+          init_position: lat_lon
+        })
+        that.setState(update(that.state, {
+          activity: {
+            lat_lon: {$set: lat_lon}
+          }
+        }))
+      })
   },
 
   render: function() {
@@ -371,6 +395,8 @@ var ActivityAdministration = React.createClass({
               disabled={false}
               value={this.state.activity.place}
               onChange={this.handleChange} />
+
+            <input type="button" value="Wyszukaj..." onClick={this.findCoordinates} disabled={this.state.activity.place === ''} />
           </div>
           <br></br>
             <br></br>
