@@ -64,6 +64,11 @@ var Volunteer = React.createClass({
       }
     }
 
+    var tags
+    if(this.state.tags) {
+      tags = (<h2><b>Tagi:</b> <span>{ this.state.tags.join(', ') }</span></h2>)
+    }
+
     return (
       <div className="volonteer">
         <div className="section group">
@@ -72,7 +77,8 @@ var Volunteer = React.createClass({
           </div>
           <div className="col span_2_of_4">
             <h1 className="profile-name">{this.name()}</h1>
-            <h2><b>Kraj:</b> <span>Polska</span></h2>
+            <h2><b>Kraj:</b> <span>{ this.state.nationality || 'Polska' }</span></h2>
+            {tags}
             {email}
           </div>
         </div>

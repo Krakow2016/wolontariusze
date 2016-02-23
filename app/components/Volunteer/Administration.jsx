@@ -45,6 +45,20 @@ var Details = React.createClass({
   }
 })
 
+var Tags = React.createClass({
+  render: function() {
+    var that = this
+    var list = this.props.data.map(function(li) {
+      return (<li>{li} <input type="button" value="usuń" data-tag={li} onClick={that.props.removeTag} /></li>)
+    })
+    return (
+      <ul>
+        {list}
+      </ul>
+    )
+  }
+})
+
 var VolunteerAdministration = React.createClass({
   getInitialState: function () {
     return {
@@ -55,7 +69,8 @@ var VolunteerAdministration = React.createClass({
 
   _changeListener: function() {
     this.setState({
-      profile: this.props.context.getStore(VolunteerStore).getState().profile
+      profile: this.props.context.getStore(VolunteerStore).getState().profile,
+      new_tag: ''
     })
   },
 
@@ -113,18 +128,30 @@ var VolunteerAdministration = React.createClass({
   },
 
   handleChange: function(evt) {
-    var tags = evt.target.value.split(', ')
-    this.setState(update(this.state, {
-      profile: {
-        tags: {$set: tags}
-      }
-    }))
+    this.setState({
+      new_tag: evt.target.value
+    })
   },
 
-  saveTags: function() {
+  saveTag: function() {
     this.props.context.executeAction(updateVolunteer, {
       id: this.state.profile.id,
-      tags: this.state.profile.tags
+      tags: this.state.profile.tags.concat(this.state.new_tag)
+    })
+  },
+
+  removeTag: function(e) {
+    var tag = e.target.dataset.tag
+    var index = this.state.profile.tags.indexOf(tag)
+    var state = update(this.state, {
+      profile: {
+        tags: {$splice: [[index, 1]]}
+      }
+    })
+
+    this.props.context.executeAction(updateVolunteer, {
+      id: state.profile.id,
+      tags: state.profile.tags
     })
   },
 
@@ -186,8 +213,11 @@ var VolunteerAdministration = React.createClass({
         <Details {...this.state.details} />
 
         <b>Projekty: </b>
-        <input name="tags" value={tags.join(', ')} onChange={this.handleChange} />
-        <input type="button" value="Zapisz" onClick={this.saveTags} />
+
+        <Tags data={tags} removeTag={this.removeTag} />
+
+        <input name="tags" value={this.state.new_tag} onChange={this.handleChange} />
+        <input type="button" value="Dodaj" onClick={this.saveTag} />
 
         <Comments context={this.props.context} />
       </VolunteerShell>
