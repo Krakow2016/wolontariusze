@@ -381,7 +381,10 @@ var Activities = module.exports = {
       }
 
       // Wykonaj zapytanie do bazy danych
-      r.table(tableName).get(id).update(body, {returnChanges: true}).run(conn, function (err, resp) {
+      // https://www.rethinkdb.com/api/python/replace/ -- replace dlatego, bo obiekt może posiadać a nie musi niektóre pola.
+      // Np. jeśli obiekt nie posiada współrzędnych geograficznych, to nie powinna wyświetlać się mapa.
+      // Używając update nie można by usunąć istnięjących pól
+      r.table(tableName).get(id).replace(body, {returnChanges: true}).run(conn, function (err, resp) {
           //if (!err1 && !err2 && params.updateEmail) {
             //var user = req.user || config.user
             //var data = {

@@ -571,3 +571,7 @@ textarea.settings {
 .tasks-categories-td {
   width: 25%;
 }
+
+.leaflet-container {
+  height: 300px
+}

@@ -26,6 +26,7 @@ var Html = React.createClass({
           <meta charSet="UTF-8" />
           <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600&subset=latin-ext' rel='stylesheet' type='text/css' />
           <link rel="stylesheet" href="/css/main.css" />
+          <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         </head>

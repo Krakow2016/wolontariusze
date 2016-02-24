@@ -19,11 +19,38 @@ var Activity = React.createClass({
   componentDidMount: function() {
     this.props.context.getStore(ActivityStore)
       .addChangeListener(this._changeListener)
+
+    this.setState({
+      mapReady: true
+    })
   },
 
   componentWillUnmount: function() {
     this.props.context.getStore(ActivityStore)
       .removeChangeListener(this._changeListener)
+  },
+
+  map: function() {
+    if(!this.state.mapReady || !this.state.activity.lat_lon) {
+      return (<div />)
+    }
+
+    var Leaflet = require('react-leaflet')
+    var position = this.state.activity.lat_lon
+
+    return (
+      <Leaflet.Map center={position} zoom={15}>
+        <Leaflet.TileLayer
+          url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <Leaflet.Marker position={position}>
+          <Leaflet.Popup>
+            <span>{this.state.activity.place}</span>
+          </Leaflet.Popup>
+        </Leaflet.Marker>
+      </Leaflet.Map>
+    )
   },
 
   update: function() {
@@ -147,6 +174,7 @@ var Activity = React.createClass({
         <br></br>
         <b>Miejsce wydarzenia:</b> {activity.place}
         <br></br>
+        { this.map() }
         <b>Prorytet:</b> {priority}
         <br></br>
         <ReactMarkdown source={activity.description} />

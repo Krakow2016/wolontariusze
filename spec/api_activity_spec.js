@@ -60,7 +60,7 @@ describe('Activity API', function() {
           var json = parse_json()
           expect(json.status).toEqual('success')
           expect(json.data).toBeDefined() // Object
-          expect(json.data.activity.lat_lon).toEqual([13, 37])
+          expect(json.data.activity.lat_lon).toEqual([50.02, 19.9376])
           done()
         })
       })
