@@ -91,8 +91,19 @@ module.exports = {
     }
   },
 
+  activity_creation: {
+    path: '/zadania/nowe',
+    method: 'get',
+    handler: require('./components/ActivityCreate.jsx'),
+    action: function (context, payload, done) {
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Nowa Aktywnosc' })
+      context.dispatch('PRECREATE_ACTIVITY', {})
+      done()
+    }
+  },
+
   activity: {
-    path: '/aktywnosc/:id',
+    path: '/zadania/:id',
     method: 'get',
     handler: require('./components/Activity.jsx'),
     action: function (context, payload, done) {
@@ -105,7 +116,7 @@ module.exports = {
   },
 
   activity_edition: {
-    path: '/aktywnosc/:id/edytuj',
+    path: '/zadania/:id/edytuj',
     method: 'get',
     handler: require('./components/ActivityEdit.jsx'),
     action: function (context, payload, done) {
@@ -114,17 +125,6 @@ module.exports = {
       context.executeAction(actions.showActivity, { id: activityId }, function() {
         done()
       })
-    }
-  },
-
-  activity_creation: {
-    path: '/aktywnosci/nowa',
-    method: 'get',
-    handler: require('./components/ActivityCreate.jsx'),
-    action: function (context, payload, done) {
-      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Nowa Aktywnosc' })
-      context.dispatch('PRECREATE_ACTIVITY', {})
-      done()
     }
   },
 
@@ -234,7 +234,7 @@ module.exports = {
   },
 
   open_tasks: {
-    path: '/bank_pracy',
+    path: '/zadania',
     method: 'get',
     handler: require('./components/TaskBank/OpenTasks.jsx'),
     action: function(context, payload, done) {
@@ -246,7 +246,7 @@ module.exports = {
   },
 
   volunteer_tasks: {
-    path: '/bank_pracy/wolontariusz',
+    path: '/zadania/moje',
     method: 'get',
     handler: require('./components/TaskBank/VolunteerTasks.jsx'),
     action: function(context, payload, done) {
@@ -258,7 +258,7 @@ module.exports = {
   },
 
   admin_tasks: {
-    path: '/bank_pracy/admin',
+    path: '/zadania/dodane',
     method: 'get',
     handler: require('./components/TaskBank/AdminTasks.jsx'),
     action: function(context, payload, done) {

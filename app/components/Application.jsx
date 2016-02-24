@@ -131,7 +131,7 @@ var Application = React.createClass({
             <div className="THE-margin">
               <div className="section group">
                 <span className="">
-                  <NavLink href="/bank_pracy">Bank pracy</NavLink>
+                  <NavLink href="/zadania">Bank pracy</NavLink>
                   <Authentication user_id={this.user_id()} user_name={this.user_name()} />
                 </span>
                   {searchForm}

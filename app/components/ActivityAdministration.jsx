@@ -407,7 +407,7 @@ var ActivityAdministration = React.createClass({
 
     var showButton = []
     if (this.props.creationMode == false) {
-      showButton = <NavLink href={'/aktywnosc/'+this.state.activity.id} >Wyświetl</NavLink>
+      showButton = <NavLink href={'/zadania/'+this.state.activity.id} >Wyświetl</NavLink>
     }
 
     var removeActiveVolonteer = this.removeActiveVolonteer

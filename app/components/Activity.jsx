@@ -97,7 +97,7 @@ var Activity = React.createClass({
     var editLink
     if(is_admin) {
       editLink = <div className="adminToolbar">
-        <NavLink href={'/aktywnosc/'+ activity.id +'/edytuj'}>Edytuj</NavLink>
+        <NavLink href={'/zadania/'+ activity.id +'/edytuj'}>Edytuj</NavLink>
       </div>
     }
 

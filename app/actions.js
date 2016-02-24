@@ -179,7 +179,7 @@ module.exports = {
           }
         })
         context.service.create('Joints', {}, joints, function(){
-          context.executeAction(navigateAction, {url: '/aktywnosc/'+id})
+          context.executeAction(navigateAction, {url: '/zadania/'+id})
           cb()
         })
       }

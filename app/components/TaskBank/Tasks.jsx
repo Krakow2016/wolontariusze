@@ -145,20 +145,20 @@ var Tasks = React.createClass({
 
     // TABS
     var tabs = [
-      <NavLink href={"/bank_pracy" } className="profile-ribon-cell">
+      <NavLink href={"/zadania" } className="profile-ribon-cell">
         <b id="profile-ribon-txt">Bank pracy</b>
       </NavLink>
     ]
 
     if(user) {
       tabs.push(
-        <NavLink href={"/bank_pracy/wolontariusz"} className="profile-ribon-cell">
+        <NavLink href={"/zadania/moje"} className="profile-ribon-cell">
           <b id="profile-ribon-txt">Biorę udział w</b>
         </NavLink>
       )
       if(user.is_admin) {
         tabs.push(
-          <NavLink href={"/bank_pracy/admin"} className="profile-ribon-cell">
+          <NavLink href={"/zadania/dodane"} className="profile-ribon-cell">
             <b id="profile-ribon-txt">Moje zadania</b>
           </NavLink>
         )
@@ -224,7 +224,7 @@ var Tasks = React.createClass({
 
     taskRows = taskRows.map(function (task) {
       var priorityClass = task.is_urgent ? 'tasks-priority-urgent-tr' : 'tasks-priority-normal-tr'
-      var title = <td className="tasks-title-td"><a href={'/aktywnosc/'+task.id}>{task.title}</a></td>
+      var title = <td className="tasks-title-td"><NavLink href={'/zadania/'+task.id}>{task.title}</NavLink></td>
       var categories = <td className="tasks-categories-td"><span>{task.tags.map(function (t) {return t.name}).join()}</span></td>
       var volunteerNumber = <td className="tasks-volunteerNumber-td"><span>{task.volunteerNumber}</span></td>
       var volunteerLimit = <td className="tasks-volunteerLimit-td"><span>{task.maxVolunteers != 0 ? task.maxVolunteers : 'Brak'}</span></td>
@@ -264,6 +264,8 @@ var Tasks = React.createClass({
           <br></br>{numberDisplay}
           {taskTable}
           {paginationButtons}
+
+          <NavLink href="/zadania/nowe">Dodaj zadanie</NavLink>
         </div>
       )
     } else {

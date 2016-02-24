@@ -24,7 +24,7 @@ var Shell = React.createClass({
                     <li>Arcu ut etiam dis ad a sed sem convallis turpis id </li>
                     <li>quisque pulvinar penatibus lobortis non. Adipisc</li>
                     <li>To jest lista aktywności wolontariusza. Za implementację odpowiada Paweł.</li>
-                    <li><NavLink href="/aktywnosci/nowa">Dodaj aktywność</NavLink></li>
+                    <li><NavLink href="/zadania/nowe">Dodaj aktywność</NavLink></li>
                 </ul>
             </div>
             <div className="col span_2_of_4">
