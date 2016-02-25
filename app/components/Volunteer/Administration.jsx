@@ -10,6 +10,7 @@ var VolunteerStore = require('../../stores/Volunteer')
 var XlsStore = require('../../stores/Xls')
 var updateVolunteer = require('../../actions').updateVolunteer
 var Invite = require('./Invite.jsx')
+var NewTag = require('./NewTag.jsx')
 
 var Details = React.createClass({
 
@@ -127,16 +128,10 @@ var VolunteerAdministration = React.createClass({
     })
   },
 
-  handleChange: function(evt) {
-    this.setState({
-      new_tag: evt.target.value
-    })
-  },
-
-  saveTag: function() {
+  saveTag: function(tag) {
     this.props.context.executeAction(updateVolunteer, {
       id: this.state.profile.id,
-      tags: this.state.profile.tags.concat(this.state.new_tag)
+      tags: this.state.profile.tags.concat(tag)
     })
   },
 
@@ -216,8 +211,7 @@ var VolunteerAdministration = React.createClass({
 
         <Tags data={tags} removeTag={this.removeTag} />
 
-        <input name="tags" value={this.state.new_tag} onChange={this.handleChange} />
-        <input type="button" value="Dodaj" onClick={this.saveTag} />
+        <NewTag onSave={this.saveTag} />
 
         <Comments context={this.props.context} />
       </VolunteerShell>
