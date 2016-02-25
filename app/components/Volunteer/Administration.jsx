@@ -1,6 +1,7 @@
 var React = require('react')
 var VolunteerShell = require('./Shell.jsx')
 var Comments = require('./Comments.jsx')
+var update = require('react-addons-update')
 
 var Button = require('material-ui/lib/raised-button')
 var Dialog = require('material-ui/lib/dialog')
@@ -9,6 +10,7 @@ var VolunteerStore = require('../../stores/Volunteer')
 var XlsStore = require('../../stores/Xls')
 var updateVolunteer = require('../../actions').updateVolunteer
 var Invite = require('./Invite.jsx')
+var NewTag = require('./NewTag.jsx')
 
 var Details = React.createClass({
 
@@ -44,6 +46,20 @@ var Details = React.createClass({
   }
 })
 
+var Tags = React.createClass({
+  render: function() {
+    var that = this
+    var list = this.props.data.map(function(li) {
+      return (<li>{li} <input type="button" value="usuń" data-tag={li} onClick={that.props.removeTag} /></li>)
+    })
+    return (
+      <ul>
+        {list}
+      </ul>
+    )
+  }
+})
+
 var VolunteerAdministration = React.createClass({
   getInitialState: function () {
     return {
@@ -54,7 +70,8 @@ var VolunteerAdministration = React.createClass({
 
   _changeListener: function() {
     this.setState({
-      profile: this.props.context.getStore(VolunteerStore).getState().profile
+      profile: this.props.context.getStore(VolunteerStore).getState().profile,
+      new_tag: ''
     })
   },
 
@@ -111,8 +128,31 @@ var VolunteerAdministration = React.createClass({
     })
   },
 
+  saveTag: function(tag) {
+    this.props.context.executeAction(updateVolunteer, {
+      id: this.state.profile.id,
+      tags: this.state.profile.tags.concat(tag)
+    })
+  },
+
+  removeTag: function(e) {
+    var tag = e.target.dataset.tag
+    var index = this.state.profile.tags.indexOf(tag)
+    var state = update(this.state, {
+      profile: {
+        tags: {$splice: [[index, 1]]}
+      }
+    })
+
+    this.props.context.executeAction(updateVolunteer, {
+      id: state.profile.id,
+      tags: state.profile.tags
+    })
+  },
+
   render: function() {
     var papers = []
+    var tags = this.state.profile.tags || []
 
     if(this.state.profile.approved) {
       papers.push(
@@ -166,6 +206,12 @@ var VolunteerAdministration = React.createClass({
         </Dialog>
 
         <Details {...this.state.details} />
+
+        <b>Projekty: </b>
+
+        <Tags data={tags} removeTag={this.removeTag} />
+
+        <NewTag onSave={this.saveTag} />
 
         <Comments context={this.props.context} />
       </VolunteerShell>

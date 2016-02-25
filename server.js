@@ -242,6 +242,19 @@ server.post('/invitation', jsonParser, function(req, res) {
   }
 })
 
+// Zwraca listę unikalnych tagów przypisanych do wolontariuszy
+server.get('/tags', function(req, res) {
+  r.connect(config.rethinkdb, function(err, conn) {
+    r.table('Volunteers').map(function(vol) {
+      return vol('tags')
+    }).reduce(function(left, right) {
+      return left.union(right)
+    }).distinct().run(conn, function(err, result) {
+      res.send(result)
+    })
+  })
+})
+
 server.get('/stats', function(req, res) {
   if(req.user && req.user.is_admin) {
     var stats = {}

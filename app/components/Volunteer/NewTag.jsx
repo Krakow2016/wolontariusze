@@ -1,0 +1,88 @@
+var React = require('react')
+var Autosuggest = require('react-autosuggest')
+var request = require('superagent')
+
+var NewTag = React.createClass({
+
+  getInitialState: function () {
+    return {
+      value: '',
+      suggestions: []
+    }
+  },
+
+  getSuggestions: function (value) {
+    var inputValue = value.trim().toLowerCase();
+    var inputLength = inputValue.length;
+
+    return inputLength === 0 ? [] : this.suggestions.filter(function(lang) {
+      return lang.name.toLowerCase().slice(0, inputLength) === inputValue
+    })
+  },
+
+  onChange: function(evt, opts) {
+    this.setState({
+      value: opts.newValue
+    })
+  },
+
+  getSuggestionValue: function(suggestion) {
+    return suggestion.name
+  },
+
+  renderSuggestion: function(suggestion) {
+    return (
+      <span>{suggestion.name}</span>
+    )
+  },
+
+  onSuggestionSelected: function(evt, opts) {
+    this.handleSave(opts.suggestionValue)
+    this.setState({value: ''})
+  },
+
+  onSuggestionsUpdateRequested: function(opts) {
+    this.setState({
+      suggestions: this.getSuggestions(opts.value)
+    })
+  },
+
+  handleSave: function(tag) {
+    this.props.onSave(tag || this.state.value)
+  },
+
+  componentDidMount: function() {
+    var that = this
+    request
+      .get('/tags')
+      .end(function(err, resp){
+          that.suggestions = resp.body.map(function(tag) {
+            return { name: tag }
+          })
+      })
+  },
+
+  render: function() {
+
+    var inputProps = {
+      placeholder: 'Dodaj projekt...',
+      value: this.state.value,
+      onChange: this.onChange
+    }
+
+    return (
+      <div>
+        <Autosuggest
+          suggestions={this.state.suggestions}
+          onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
+          renderSuggestion={this.renderSuggestion}
+          getSuggestionValue={this.getSuggestionValue}
+          onSuggestionSelected={this.onSuggestionSelected}
+          inputProps={inputProps} />
+        <input type="button" value="Dodaj" onClick={this.props.handleSave} />
+      </div>
+    )
+  }
+})
+
+module.exports = NewTag
