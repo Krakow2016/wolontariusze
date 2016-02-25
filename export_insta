@@ -1,0 +1,3 @@
+#!/bin/bash
+export INSTAGRAM_CLIENT_ID=611343ce4afa4af9a09b7421fe553b92
+export INSTAGRAM_SECRET=e4aa7dd825ec4dfa8e3b9dd1ab8b14b4

@@ -202,6 +202,14 @@ server.get('/instagram', function(req, res){
   }
 })
 
+server.get('/volunteer/:id', function(req, res){
+  var id = req.params.id;
+  Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function(err, user){
+    console.log("USER", user);
+    res.send(200);
+  })
+})
+
 server.get('/instagram/:id', function(req, res){
   var id = req.params.id
   Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function (err, user) {
@@ -220,6 +228,19 @@ server.get('/instagram/:id', function(req, res){
   })
 })
 
+server.get('/instagram/remove/:id', function(req, res){
+  var id = req.params.id;
+  console.log("ASDASDC ID " + id)
+  Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function(err, user){
+    if(err) return res.send(500);
+    if(!user.instagram) return res.send({result: 'ok'});
+    Volunteers.update(req, 'Volunteers', {id: id}, {instagram: ''}, {}, function(err, data){
+      if(err) return res.send(500);
+      console.log("MMMMMMM %j", data);
+      return res.send({result: 'ok'});
+    })
+  });
+});
 server.post('/search', function(req, res) {
   if(req.user && req.user.is_admin) {
     var elasticSearch = config.elasticSearch +'/_search'

@@ -35,6 +35,8 @@ var Integrations = React.createClass({
 
     return (
       <Settings>
+        <p>Lista integracji:</p>
+        
         <p>Lista aplikacji:</p>
         <ul>
           {integrations}
