@@ -246,7 +246,7 @@ server.post('/invitation', jsonParser, function(req, res) {
 server.get('/tags', function(req, res) {
   r.connect(config.rethinkdb, function(err, conn) {
     r.table('Volunteers').map(function(vol) {
-      return vol('tags')
+      return vol('tags').default([])
     }).reduce(function(left, right) {
       return left.union(right)
     }).distinct().run(conn, function(err, result) {

@@ -129,9 +129,10 @@ var VolunteerAdministration = React.createClass({
   },
 
   saveTag: function(tag) {
+    var tags = this.state.profile.tags || []
     this.props.context.executeAction(updateVolunteer, {
       id: this.state.profile.id,
-      tags: this.state.profile.tags.concat(tag)
+      tags: tags.concat(tag)
     })
   },
 

@@ -36,8 +36,8 @@ var NewTag = React.createClass({
     )
   },
 
-  onSuggestionSelected: function(evt, opts) {
-    this.handleSave(opts.suggestionValue)
+  handleSave: function(evt, opts) {
+    this.props.onSave(opts.suggestionValue || this.state.value)
     this.setState({value: ''})
   },
 
@@ -47,18 +47,14 @@ var NewTag = React.createClass({
     })
   },
 
-  handleSave: function(tag) {
-    this.props.onSave(tag || this.state.value)
-  },
-
   componentDidMount: function() {
     var that = this
     request
       .get('/tags')
       .end(function(err, resp){
-          that.suggestions = resp.body.map(function(tag) {
+          that.suggestions = resp.body ? resp.body.map(function(tag) {
             return { name: tag }
-          })
+          }) : []
       })
   },
 
@@ -77,9 +73,9 @@ var NewTag = React.createClass({
           onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
           renderSuggestion={this.renderSuggestion}
           getSuggestionValue={this.getSuggestionValue}
-          onSuggestionSelected={this.onSuggestionSelected}
+          onSuggestionSelected={this.handleSave}
           inputProps={inputProps} />
-        <input type="button" value="Dodaj" onClick={this.props.handleSave} />
+        <input type="button" value="Dodaj" onClick={this.handleSave} />
       </div>
     )
   }
