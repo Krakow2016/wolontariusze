@@ -69,9 +69,8 @@ var VolunteerAdministration = React.createClass({
   },
 
   _changeListener: function() {
-    this.setState({
-      profile: this.props.context.getStore(VolunteerStore).getState().profile,
-      new_tag: ''
+    this.replaceState({
+      profile: this.props.context.getStore(VolunteerStore).getState().profile
     })
   },
 
@@ -183,7 +182,7 @@ var VolunteerAdministration = React.createClass({
     }
 
     return (
-      <VolunteerShell context={this.props.context}>
+      <VolunteerShell context={this.props.context} profile={this.state.profile}>
         {papers}
 
         <Dialog

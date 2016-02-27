@@ -149,7 +149,7 @@ if(fetchrPlugin) {
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), jsonParser, function(req, res, done) {
     // Google Analytics Measurement Protocol
-    var visitor = ua(GA, req.user.id).debug()
+    var visitor = ua(GA, req.user && req.user.id).debug()
     visitor.pageview(req.originalUrl).send()
     done()
   }, fetchrPlugin.getMiddleware())
@@ -484,7 +484,7 @@ server.use(function(req, res, next) {
   }
 
   // Google Analytics Measurement Protocol
-  var visitor = ua(GA, req.user.id).debug()
+  var visitor = ua(GA, req.user && req.user.id).debug()
   visitor.pageview(req.originalUrl).send()
 
   debug('Executing navigate action')

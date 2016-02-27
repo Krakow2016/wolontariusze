@@ -9,7 +9,7 @@ var Shell = React.createClass({
   },
 
   _changeListener: function() {
-    this.setState(this.props.context.getStore(VolunteerStore).getState().profile)
+    this.replaceState(this.props.context.getStore(VolunteerStore).getState().profile)
   },
 
   componentDidMount: function() {
@@ -24,7 +24,7 @@ var Shell = React.createClass({
 
   render: function() {
     return (
-      <VolunteerShell context={this.props.context}>
+      <VolunteerShell context={this.props.context} profile={this.state}>
         <div className="section group">
             <h1>Kim jestem?</h1>
             <p>{this.state.who_question}</p>
