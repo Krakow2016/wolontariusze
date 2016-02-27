@@ -293,6 +293,18 @@
       "from": "babylon@>=6.5.2 <7.0.0",
       "resolved": "https://registry.npmjs.org/babylon/-/babylon-6.5.2.tgz"
     },
+    "backdraft-js": {
+      "version": "0.0.1",
+      "from": "backdraft-js@latest",
+      "resolved": "https://registry.npmjs.org/backdraft-js/-/backdraft-js-0.0.1.tgz",
+      "dependencies": {
+        "lodash": {
+          "version": "4.5.1",
+          "from": "lodash@>=4.5.1 <5.0.0",
+          "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.5.1.tgz"
+        }
+      }
+    },
     "balanced-match": {
       "version": "0.3.0",
       "from": "balanced-match@>=0.3.0 <0.4.0",
@@ -900,6 +912,18 @@
       "from": "domutils@>=1.5.1 <2.0.0",
       "resolved": "https://registry.npmjs.org/domutils/-/domutils-1.5.1.tgz"
     },
+    "draft-js": {
+      "version": "0.1.0",
+      "from": "draft-js@latest",
+      "resolved": "https://registry.npmjs.org/draft-js/-/draft-js-0.1.0.tgz",
+      "dependencies": {
+        "fbjs": {
+          "version": "0.8.0-alpha.1",
+          "from": "fbjs@>=0.8.0-alpha.1 <0.9.0",
+          "resolved": "https://registry.npmjs.org/fbjs/-/fbjs-0.8.0-alpha.1.tgz"
+        }
+      }
+    },
     "duplexer": {
       "version": "0.1.1",
       "from": "duplexer@>=0.1.1 <0.2.0",
@@ -929,6 +953,11 @@
       "version": "6.2.3",
       "from": "elliptic@>=6.0.0 <7.0.0",
       "resolved": "https://registry.npmjs.org/elliptic/-/elliptic-6.2.3.tgz"
+    },
+    "encoding": {
+      "version": "0.1.12",
+      "from": "encoding@>=0.1.11 <0.2.0",
+      "resolved": "https://registry.npmjs.org/encoding/-/encoding-0.1.12.tgz"
     },
     "end-of-stream": {
       "version": "0.1.5",
@@ -1528,6 +1557,11 @@
       "from": "ieee754@>=1.1.4 <2.0.0",
       "resolved": "https://registry.npmjs.org/ieee754/-/ieee754-1.1.6.tgz"
     },
+    "immutable": {
+      "version": "3.7.6",
+      "from": "immutable@>=3.7.4 <4.0.0",
+      "resolved": "https://registry.npmjs.org/immutable/-/immutable-3.7.6.tgz"
+    },
     "in-publish": {
       "version": "2.0.0",
       "from": "in-publish@>=2.0.0 <3.0.0",
@@ -1661,6 +1695,18 @@
       "version": "2.0.0",
       "from": "isobject@>=2.0.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/isobject/-/isobject-2.0.0.tgz"
+    },
+    "isomorphic-fetch": {
+      "version": "2.2.1",
+      "from": "isomorphic-fetch@>=2.1.1 <3.0.0",
+      "resolved": "https://registry.npmjs.org/isomorphic-fetch/-/isomorphic-fetch-2.2.1.tgz",
+      "dependencies": {
+        "whatwg-fetch": {
+          "version": "0.11.0",
+          "from": "whatwg-fetch@>=0.10.0",
+          "resolved": "https://registry.npmjs.org/whatwg-fetch/-/whatwg-fetch-0.11.0.tgz"
+        }
+      }
     },
     "isstream": {
       "version": "0.1.2",
@@ -2185,6 +2231,11 @@
       "version": "0.5.3",
       "from": "negotiator@0.5.3",
       "resolved": "https://registry.npmjs.org/negotiator/-/negotiator-0.5.3.tgz"
+    },
+    "node-fetch": {
+      "version": "1.3.3",
+      "from": "node-fetch@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-1.3.3.tgz"
     },
     "node-jsx": {
       "version": "0.13.3",

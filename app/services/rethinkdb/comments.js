@@ -74,7 +74,7 @@ module.exports = Protect({
 
       r.table(resource)
         .get(body.id)
-        .update({text: body.text})
+        .update({raw: body.raw})
         .run(conn, callback)
     })
   },

@@ -1,6 +1,7 @@
 var React = require('react')
-var ReactMarkdown = require('react-markdown')
 var NavLink = require('fluxible-router').NavLink
+var Draft = require('draft-js')
+var backdraft = require('backdraft-js')
 
 var TimeService = require('../../modules/time/TimeService.js')
 
@@ -11,35 +12,28 @@ var updateAction = actions.profileCommentsUpdate
 var deleteAction = actions.profileCommentsDelete
 
 var NewComment = require('../NewComment.jsx')
+var Editor = require('../Editor.jsx')
 
 var EditedProfileComment = React.createClass({
-  getInitialState: function() {
-    return this.props.comment
-  },
 
-  handleChange: function (evt) {
-    this.setState({
-      text: evt.target.value
-    })
-  },
-
-  update: function() {
-    this.props.context.executeAction(updateAction, this.state)
+  update: function(comment) {
+    this.props.context.executeAction(updateAction, Object.assign(this.props.comment, {
+      raw: comment
+    }))
   },
 
   render: function () {
+
+    var blocks = Draft.convertFromRaw(this.props.comment.raw)
+    var contentState = Draft.ContentState.createFromBlockArray(blocks)
+    var editorState = Draft.EditorState.createWithContent(contentState)
+
     return (
       <tr>
         <td colSpan="3">
-          <textarea id="profileCommentsEditTextarea" type="text" name="comment" onChange={this.handleChange}>
-            {this.state.text}
-          </textarea>
+          <Editor editorState={editorState} onSave={this.update} />
           <div id="profileCommentsEditToolbar">
             <input type="button" onClick={this.props.cancel} value="Anuluj" />
-            <a href="https://guides.github.com/features/mastering-markdown/">
-              <input type="button" value="Markdown" />
-            </a>
-            <input type="button" onClick={this.update} value="Zapisz" />
           </div>
         </td>
       </tr>
@@ -80,10 +74,12 @@ var ProfileComment = React.createClass ({
           context={this.props.context} />
       )
     } else {
+      if(!this.props.comment.raw) { return (<div />) }
+      var html = backdraft(this.props.comment.raw, {})
       return (
         <tr>
           <td>
-            <ReactMarkdown source={this.props.comment.text} />
+              { html }
           </td>
           <td>{TimeService.showTime(this.props.comment.creationTimestamp)}</td>
           <td>

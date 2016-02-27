@@ -1,15 +1,16 @@
 'use strict'
 var createStore  = require('fluxible/addons').createStore
+var Draft = require('draft-js')
 
 var NewComment = createStore({
   storeName: 'NewComment',
 
   initialize: function () {
-    this.text = ''
+    this.editorState = Draft.EditorState.createEmpty()
   },
 
   handlers: {
-    'COMMENT_CREATED': 'reset',
+    'COMMENT_CREATED' : 'reset',
     'LOAD_VOLUNTEER'  : 'update_volunteer'
   },
 
@@ -26,7 +27,7 @@ var NewComment = createStore({
 
   getState: function() {
     return {
-      text: this.text,
+      editorState: this.editorState,
       volunteerId: this.volunteerId
     }
   },
@@ -35,14 +36,19 @@ var NewComment = createStore({
   // passed FluxibleContext instances. This is useful for serializing the
   // state of the application to send it to the client.
   dehydrate: function () {
-    return this.getState()
+    return {
+      editorState: Draft.convertToRaw(this.editorState.getCurrentContent()),
+      volunteerId: this.volunteerId
+    }
   },
 
   // Takes an object representing the state of the Fluxible and
   // FluxibleContext instances (usually retrieved from dehydrate) to
   // rehydrate them to the same state as they were on the server
   rehydrate: function (state) {
-    this.text = state.text
+    var blocks = Draft.convertFromRaw(state.editorState)
+    var contentState = Draft.ContentState.createFromBlockArray(blocks)
+    this.editorState = Draft.EditorState.createWithContent(contentState)
     this.volunteerId = state.volunteerId
   }
 })
