@@ -19,7 +19,8 @@ var express = require('express'),
   r = require('rethinkdb'),
   AWS = require('aws-sdk'),
   async = require('async'),
-  sharp = require('sharp')
+  sharp = require('sharp'),
+  ua = require('universal-analytics')
 
 // Służy do zapisywania sesji użytkowników w bazie danych
 var RDBStore = require('session-rethinkdb')(session)
@@ -30,6 +31,9 @@ var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
 // Połączenie z sendgrid daje nam możliwość wysyłania emaili
 var sendgrid = require('sendgrid')(process.env.SENDGRID_APIKEY)
+
+// Identyfikator użytkownika Google Analytics
+var GA = process.env.GOOGLE_ANALYTICS_UID || 'UA-XXXX-XX'
 
 require('node-jsx').install({extension: '.jsx'})
 var HtmlComponent = React.createFactory(require('./app/components/Html.jsx'))
@@ -143,7 +147,12 @@ if(fetchrPlugin) {
   fetchrPlugin.registerService(Joints)
   fetchrPlugin.registerService(Xls)
   // Set up the fetchr middleware
-  server.use(fetchrPlugin.getXhrPath(), jsonParser, fetchrPlugin.getMiddleware())
+  server.use(fetchrPlugin.getXhrPath(), jsonParser, function(req, res, done) {
+    // Google Analytics Measurement Protocol
+    var visitor = ua(GA, req.user.id).debug()
+    visitor.pageview(req.originalUrl).send()
+    done()
+  }, fetchrPlugin.getMiddleware())
 }
 
 // W pierwszej kolejności sprawdź ścieżki z poza single-page
@@ -473,6 +482,10 @@ server.use(function(req, res, next) {
   } else if(failure) { // Błąd
     context.getActionContext().dispatch('SAVE_FLASH_FAILURE', failure)
   }
+
+  // Google Analytics Measurement Protocol
+  var visitor = ua(GA, req.user.id).debug()
+  visitor.pageview(req.originalUrl).send()
 
   debug('Executing navigate action')
   context.executeAction(navigateAction, {
