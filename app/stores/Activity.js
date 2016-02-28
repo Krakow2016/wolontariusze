@@ -10,8 +10,6 @@ var ActivityStore = createStore({
     'ACTIVITY_UPDATED': 'update',
     'JOINT_CREATED': 'join',
     'JOINT_DELETED': 'leave',
-    'ACTIVITY_TAG_CREATED': 'tag_created',
-    'ACTIVITY_TAG_DELETED': 'tag_deleted'
   },
 
   initialize: function () {
@@ -25,17 +23,13 @@ var ActivityStore = createStore({
     }
     this.volunteers = []
     this.invalidSnackBar = ''
-    this.tags = []
   },
 
   load: function(data) {
     var volunteers = data.volunteers || []
-    var tags = data.tags || []
     delete data.volunteers
-    delete data.tags
     this.activity = data
     this.volunteers = volunteers
-    this.tags = tags
     this.emitChange()
   },
 
@@ -57,29 +51,14 @@ var ActivityStore = createStore({
     this.emitChange()
   },
   
-  tag_created: function(joint) {
-    this.tags.push(joint)
-    this.emitChange()
-  },
-
-  tag_deleted: function(id) {
-    // Usuń obiekt połączenia
-    this.tags = this.tags.filter(function(tag) {
-      return tag.id !== id
-    })
-    this.emitChange()
-  },
-  
-
   create: function(data) {
     // TODO
     //this.rehydrate(data)
     this.emitChange()
   },
 
-
   update: function(data) {
-    this.activity = data
+    Object.assign(this.activity, data)
     this.emitChange()
   },
 
@@ -88,7 +67,6 @@ var ActivityStore = createStore({
       activity: this.activity,
       volunteers: this.volunteers,
       invalidSnackBar: this.invalidSnackBar,
-      tags: this.tags
     }
   },
 
@@ -100,7 +78,6 @@ var ActivityStore = createStore({
     this.activity = state.activity
     this.volunteers = state.volunteers
     this.invalidSnackBar = state.invalidSnackBar
-    this.tags = state.tags
   }
 
 })

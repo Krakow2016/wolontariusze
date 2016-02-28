@@ -25,7 +25,7 @@ module.exports = function(service) {
   service.read = function(req, resource, params, config, callback) {
     read(req, resource, params, config, function(err, result) {
       if(err) {
-        callback(err)
+        callback({message: err, statusCode: 500})
       } else {
         // W przypadku zapytania xhr zmienna `req` reprezentuje obiekt tego
         // zapytania.
@@ -48,7 +48,7 @@ module.exports = function(service) {
 
           // Sprawdź czy którykolwiek z atrybutów jest do odczytu
           if(attrs && !attrs.length) {
-            return callback('403') // Brak dostępu
+            return callback({statusCode: 403}) // Brak dostępu
           }
 
           var protected_result = util.isArray(result)

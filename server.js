@@ -46,7 +46,6 @@ var Integration = require('./app/services/'+config.service+'/integrations')
 var APIClient = require('./app/services/'+config.service+'/apiclients')
 var Joints = require('./app/services/'+config.service+'/joints')
 var Xls = require('./app/services/'+config.service+'/xls')
-var ActivityTags = require('./app/services/'+config.service+'/activityTags')
 
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
@@ -149,7 +148,6 @@ if(fetchrPlugin) {
   fetchrPlugin.registerService(APIClient)
   fetchrPlugin.registerService(Joints)
   fetchrPlugin.registerService(Xls)
-  fetchrPlugin.registerService(ActivityTags)
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), jsonParser, function(req, res, done) {
     // Google Analytics Measurement Protocol

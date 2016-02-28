@@ -112,10 +112,10 @@ var Activity = React.createClass({
       }
     }()
     
-    var tags = this.state.tags
-    var tagsList = tags.map (function (tag) {
+    var tags = this.state.activity.tags || []
+    var tagsList = tags.map(function(tag) {
       return (
-        <span className="activityTagLabel" key={tag.id}>{tag.name}, </span>
+        <span className="activityTagLabel" key={tag}>{tag}</span>
       )
     })
     

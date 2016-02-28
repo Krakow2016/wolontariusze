@@ -17,8 +17,7 @@ var tables = {
   'Joints'     : ['activity_id'],
   'Volunteers' : ['email'],
   'Imports'    : ['rg_email'],
-  'session'    : [],
-  'ActivityTags': []
+  'session'    : []
 }
 
 // Sprawdź czy środowisko korzysta z bazy RethinkDB
@@ -130,21 +129,6 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
       })
     })
   }).then(function(conn) {
-    return new Promise(function(resolve) {
-      r.table('ActivityTags').count().run(conn, function(err, count) {
-        if(count === 0) {
-          //Dane dla tagów aktywności
-          var arr = []
-          var data = require('./app/services/static/activityTags.json')
-          Object.keys(data).forEach(function(key) { arr.push(data[key]) })
-          r.table('ActivityTags').insert(arr).run(conn, function(err) {
-            resolve(conn)
-          })
-        } else { resolve(conn) }
-      })
-    })
-  }).
-  then(function(conn) {
     return new Promise(function(resolve) {
       r.table('APIClients').count().run(conn, function(err, count) {
         if(count === 0) {

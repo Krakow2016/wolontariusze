@@ -173,23 +173,16 @@ var Activities = module.exports = {
       }
 
       if(params.id) { // Pobierz krotkę o danym numerze id
-        r.table(tableName).get(params.id)
-        .merge(function (activity) { //To służy do tego, żeby usunąć kategorie, które są cancelowane
-          return {
-            tags: r.table('ActivityTags')
-                  .getAll(r.args(r.branch(activity.hasFields('tags').and(activity('tags').count().gt(0)), activity('tags').map(function (tag) { return tag('id')}).coerceTo('array'), [-1, -2])))
-                  .filter(function (x) {
-                    return x.hasFields('is_canceled').not()
-                  }, {default: true})
-                  .coerceTo('array')
-          }
-        })
-        .run(conn, function(err, activity){
+        r.table(tableName).get(params.id.toString()).run(conn, function(err, activity){
 
-          if(err || !activity) {
-            return callback(err || 404)
+          console.log(err, activity)
+          if(err) {
+            return callback(err)
+          } else if (!activity) {
+            return callback(404)
           }
 
+          console.log(params, activity)
           r.table('Joints')
             .getAll(params.id, {index: 'activity_id'})
             .filter(function(x){
@@ -205,12 +198,10 @@ var Activities = module.exports = {
             .pluck({'left': ['id'], 'right': ['user_id', 'first_name', 'last_name']})
             .zip()
             .run(conn, function(err, cursor){
-              if (err) { 
-                //console.log(err) 
-              }
+              if (err) { return callback(500) }
               cursor.toArray(function(err, volunteers) {
                 activity.volunteers = volunteers || []
-                //console.log('ACTIVITY', activity)
+                console.log('ACTIVITY', activity)
                 callback(null, activity)
               })
             })
@@ -233,12 +224,6 @@ var Activities = module.exports = {
             }, {default: true})
            .merge (function (task) {
              return {
-               tags: r.table('ActivityTags') //To służy do usunięcia zcancelowanych kategorii
-                      .getAll(r.args(r.branch(task.hasFields('tags').and(task('tags').count().gt(0)), task('tags').map(function (tag) { return tag('id')}).coerceTo('array'), [-1, -2])))
-                      .filter(function (x) {
-                        return x.hasFields('is_canceled').not()
-                      }, {default: true})
-                      .coerceTo('array'),
                volunteerNumber: r.table('Joints')
                   .getAll(task('id'), {index: 'activity_id'})
                   .filter(function (x) {
@@ -271,12 +256,6 @@ var Activities = module.exports = {
             }, {default: true})
             .merge (function (task) {
               return {     
-                tags: r.table('ActivityTags') //To służy do usunięcia zcancelowanych kategorii
-                      .getAll(r.args(r.branch(task.hasFields('tags').and(task('tags').count().gt(0)), task('tags').map(function (tag) { return tag('id')}).coerceTo('array'), [-1, -2])))
-                      .filter(function (x) {
-                        return x.hasFields('is_canceled').not()
-                      }, {default: true})
-                      .coerceTo('array'),
                 volunteerNumber: r.table('Joints')
                     .getAll(task('id'), {index: 'activity_id'})
                     .filter(function (x) {
@@ -308,12 +287,6 @@ var Activities = module.exports = {
             }, {default: true})
             .merge (function (task) {
               return {
-                tags: r.table('ActivityTags') //To służy do usunięcia zcancelowanych kategorii
-                      .getAll(r.args(r.branch(task.hasFields('tags').and(task('tags').count().gt(0)), task('tags').map(function (tag) { return tag('id')}).coerceTo('array'), [-1, -2])))
-                      .filter(function (x) {
-                        return x.hasFields('is_canceled').not()
-                      }, {default: true})
-                      .coerceTo('array'),
                 volunteerNumber: r.table('Joints')
                     .getAll(task('id'), {index: 'activity_id'})
                     .filter(function (x) {
@@ -381,10 +354,7 @@ var Activities = module.exports = {
       }
 
       // Wykonaj zapytanie do bazy danych
-      // https://www.rethinkdb.com/api/python/replace/ -- replace dlatego, bo obiekt może posiadać a nie musi niektóre pola.
-      // Np. jeśli obiekt nie posiada współrzędnych geograficznych, to nie powinna wyświetlać się mapa.
-      // Używając update nie można by usunąć istnięjących pól
-      r.table(tableName).get(id).replace(body, {returnChanges: true}).run(conn, function (err, resp) {
+      r.table(tableName).get(id).update(body, {returnChanges: true}).run(conn, function (err, resp) {
           //if (!err1 && !err2 && params.updateEmail) {
             //var user = req.user || config.user
             //var data = {

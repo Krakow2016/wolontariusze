@@ -1,18 +1,20 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
-var ActivityStore = require('../stores/Activity')
-var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
-var ActivityTags = require('./ActivityTags.jsx')
 var request = require('superagent')
-
 var Formsy = require('formsy-react')
-var MyTextField = require('./Formsy/MyTextField.jsx')
-var MyTextarea = require('./Formsy/MyTextarea.jsx')
+
 var Snackbar = require('material-ui/lib/snackbar')
 var DateTime = require('react-datetime')
 var moment = require('moment')
 
 var update = require('react-addons-update')
+
+var ActivityStore = require('../stores/Activity')
+var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
+var Tags = require('./Tags/Tags.jsx')
+
+var MyTextField = require('./Formsy/MyTextField.jsx')
+var MyTextarea = require('./Formsy/MyTextarea.jsx')
 
 var actions = require('../actions')
 var updateAction = actions.updateActivity
@@ -39,21 +41,6 @@ Formsy.addValidationRule('isMoreOrGreaterIntThanZero', function (values, value) 
   return (value % 1 === 0 && value >= 0)
 })
 
-
-var AddedTag = React.createClass({
-  onClick: function () {
-    this.props.onRemoveButtonClick(this.props.tag.id)
-  },
-  name: function() {
-    var t = this.props.tag
-    return t.display_name || t.name
-  },
-  render: function () {
-    return (
-        <div className="addedTag" >{this.name()} <input type="button" className="addedTagRemoveButton" onClick={this.onClick} value="Usuń"/></div>
-    )
-  }
-})
 
 var AddedVolonteer = React.createClass({
   onClick: function () {
@@ -96,6 +83,10 @@ var ActivityAdministration = React.createClass({
   componentDidMount: function() {
     this.props.context.getStore(ActivityStore)
       .addChangeListener(this._changeListener)
+
+    this.setState({
+      mapReady: true
+    })
   },
 
   componentWillUnmount: function() {
@@ -175,30 +166,6 @@ var ActivityAdministration = React.createClass({
       }}
     }))
   },
-  
-  addTag: function (tag) {
-    var tag = {
-      id: tag.id,
-      display_name: tag.display_name
-    }
-
-    this.setState(update(this.state, {
-      tags: {$push: [tag]}
-    }))
-  },
-
-  removeTag: function (id) {
-    this.setState(update(this.state, {
-      tags: {$apply: function(arr) {
-        var index = arr.findIndex(function(tag){
-          return tag.id === id
-        })
-        if(index > -1) { arr.splice(index, 1) }
-        return arr
-      }}
-    }))
-  },
-
 
   isValidDate: function (currentDate) {
     var now = moment()
@@ -222,8 +189,6 @@ var ActivityAdministration = React.createClass({
       return
     }
 
-    this.state.activity.tags = this.state.tags
-    
     if (this.props.creationMode == false) {
       this.update()
     } else {
@@ -316,12 +281,6 @@ var ActivityAdministration = React.createClass({
     }))
   },
 
-  componentDidMount: function() {
-    this.setState({
-      mapReady: true
-    })
-  },
-
   findCoordinates: function() {
     var that = this
 
@@ -345,26 +304,25 @@ var ActivityAdministration = React.createClass({
       })
   },
 
-  render: function() {
-  
-  
-    var removeTag = this.removeTag
-    var addTag = <ActivityTags addTag={this.addTag}
-                               excludedTags={this.state.tags}
-                               context={this.props.context}
-                               filterMode={false}
-                               className="form"/>
+  saveTag: function(tag) {
+    this.setState(update(this.state, {
+      activity: {
+        tags: {$push: [tag]}
+      }
+    }))
+  },
 
-    var tags = this.state.tags || []
-    var tagsList = tags.map(function(tag) {
-      return (
-        <AddedTag
-          key={tag.id}
-          tag={tag}
-          onRemoveButtonClick={removeTag} />
-      )
-    })
-    
+  removeTag: function(e) {
+    var tag = e.target.dataset.tag
+    var index = this.state.activity.tags.indexOf(tag)
+    this.setState(update(this.state, {
+      activity: {
+        tags: {$splice: [[index, 1]]}
+      }
+    }))
+  },
+
+  render: function() {
     var startTime
     if (typeof (this.state.activity.datetime) != 'undefined')  {
       var startEventDate = new Date(this.state.activity.datetime)
@@ -428,6 +386,8 @@ var ActivityAdministration = React.createClass({
       )
     })
 
+    var tags = this.state.activity.tags || []
+
     return (
       <div>
         <Formsy.Form className="settingsForm"
@@ -462,13 +422,8 @@ var ActivityAdministration = React.createClass({
 
           <br></br>
           <b>Kategorie:</b>
-          <br></br>
-          {addTag}
-          <div>
-            {tagsList}
-          </div>
-          <br></br>
-          
+
+          <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
 
           <div className="pure-u-1 pure-u-md-1-3">
             <b>Czas rozpoczęcia</b>

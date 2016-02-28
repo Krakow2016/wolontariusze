@@ -10,7 +10,7 @@ var VolunteerStore = require('../../stores/Volunteer')
 var XlsStore = require('../../stores/Xls')
 var updateVolunteer = require('../../actions').updateVolunteer
 var Invite = require('./Invite.jsx')
-var NewTag = require('./NewTag.jsx')
+var Tags = require('../Tags/Tags.jsx')
 
 var Details = React.createClass({
 
@@ -42,20 +42,6 @@ var Details = React.createClass({
         </tr>
         {rows}
       </table>
-    )
-  }
-})
-
-var Tags = React.createClass({
-  render: function() {
-    var that = this
-    var list = this.props.data.map(function(li) {
-      return (<li>{li} <input type="button" value="usuń" data-tag={li} onClick={that.props.removeTag} /></li>)
-    })
-    return (
-      <ul>
-        {list}
-      </ul>
     )
   }
 })
@@ -209,9 +195,7 @@ var VolunteerAdministration = React.createClass({
 
         <b>Projekty: </b>
 
-        <Tags data={tags} removeTag={this.removeTag} />
-
-        <NewTag onSave={this.saveTag} />
+        <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
 
         <Comments context={this.props.context} />
       </VolunteerShell>

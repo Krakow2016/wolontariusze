@@ -575,3 +575,7 @@ textarea.settings {
 .leaflet-container {
   height: 300px
 }
+
+.activityTagLabel {
+  padding-left: 5px
+}

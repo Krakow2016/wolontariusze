@@ -99,7 +99,7 @@ module.exports = {
     }, function (err, data) {
       if(err) { debug(err) }
       else { context.dispatch('LOAD_ACTIVITY', data) }
-      cb()
+      cb(data)
     })
   },
 
@@ -117,10 +117,10 @@ module.exports = {
     context.service.update('Activities', {}, payload, function (err, data) {
       if(err) { debug(err) }
       else {
-        var change = data.changes[0]
-        if(change) {
-          context.dispatch('ACTIVITY_UPDATED', change.new_val)
-        }
+        //var change = data.changes[0]
+        //if(change) {
+          context.dispatch('ACTIVITY_UPDATED', payload)
+        //}
       }
       cb()
     })
@@ -192,30 +192,6 @@ module.exports = {
       else {
         context.dispatch('ACTIVITY_DELETED', data)
         context.executeAction(navigateAction, {url: '/'})
-      }
-      cb()
-    })
-  },
-  
-  createActivityTag: function(context, payload, cb) {
-    context.service.create('ActivityTags', {}, payload, function (err, data) {
-      if (err) { // Błąd po stronie serwera
-      } else {
-        cb()
-      }
-    })
-  },
-
-  removeActivityTag: function(context, payload, cb) {
-    var params = {id: payload.id, ids: payload.ids}
-    context.service.update('ActivityTags', params, payload.body, function (err, data) {
-      if (err) { // Błąd po stronie serwera
-        //context.dispatch('JOINT_UPDATE_FAILURE', [])
-      } else {
-        var ids = params.ids || [params.id]
-        ids.forEach(function(id) {
-          context.dispatch('ACTIVITY_TAG_DELETED', id)
-        })
       }
       cb()
     })

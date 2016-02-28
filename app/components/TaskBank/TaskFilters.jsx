@@ -2,8 +2,6 @@ var React = require('react')
 var update = require('react-addons-update')
 
 var MyTextField = require('../Formsy/MyTextField.jsx')
-var ActivityTags = require('../ActivityTags.jsx')
-
 
 var AddedTag = React.createClass({
   //onClick: function () {
@@ -256,15 +254,10 @@ var TaskFilters = React.createClass({
                           </Formsy.Form>
                         </div>
     
-    var addTag = <ActivityTags addTag={this.addCategory}
-                               excludedTags={[this.state.category]}
-                               context={this.props.context}
-                               filterMode={true}
-                               className="form"/>
     var filterByCategory = <div>
                               <input type="checkbox" name="categoryCheckbox" checked={this.state.checkboxes.categoryCheckbox} onChange={this.handleCheckboxChange} />
                               <span className="tasks-filters-filterType">Kategoria</span>
-                              {addTag}
+                              TODO
                               <AddedTag tag={this.state.category} />
                             </div>
     var filterByTimeState

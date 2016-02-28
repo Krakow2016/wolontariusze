@@ -91,6 +91,42 @@ module.exports = {
     }
   },
 
+  open_tasks: {
+    path: '/zadania',
+    method: 'get',
+    handler: require('./components/TaskBank/OpenTasks.jsx'),
+    action: function(context, payload, done) {
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy' })
+      context.executeAction(actions.showTasks, { type: 'openTasks' }, function() {
+        done()
+      })
+    }
+  },
+
+  volunteer_tasks: {
+    path: '/zadania/moje',
+    method: 'get',
+    handler: require('./components/TaskBank/VolunteerTasks.jsx'),
+    action: function(context, payload, done) {
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy - Biorę udział w' })
+      context.executeAction(actions.showTasks, { type: 'volunteerTasks' }, function() {
+        done()
+      })
+    }
+  },
+
+  admin_tasks: {
+    path: '/zadania/dodane',
+    method: 'get',
+    handler: require('./components/TaskBank/AdminTasks.jsx'),
+    action: function(context, payload, done) {
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy - Moje zadania' })
+      context.executeAction(actions.showTasks, { type: 'adminTasks' }, function() {
+        done()
+      })
+    }
+  },
+
   activity_creation: {
     path: '/zadania/nowe',
     method: 'get',
@@ -108,8 +144,8 @@ module.exports = {
     handler: require('./components/Activity.jsx'),
     action: function (context, payload, done) {
       var activityId  = payload.params.id
-      context.dispatch('UPDATE_PAGE_TITLE', { title: activityId + ' Aktywnosc' })
-      context.executeAction(actions.showActivity, { id: activityId }, function() {
+      context.executeAction(actions.showActivity, { id: activityId }, function(activity) {
+        context.dispatch('UPDATE_PAGE_TITLE', { title: activity.title })
         done()
       })
     }
@@ -121,8 +157,8 @@ module.exports = {
     handler: require('./components/ActivityEdit.jsx'),
     action: function (context, payload, done) {
       var activityId  = payload.params.id
-      context.dispatch('UPDATE_PAGE_TITLE', { title: activityId + ' Edytuj Aktywnosc' })
-      context.executeAction(actions.showActivity, { id: activityId }, function() {
+      context.executeAction(actions.showActivity, { id: activityId }, function(activity) {
+        context.dispatch('UPDATE_PAGE_TITLE', { title: activity.title })
         done()
       })
     }
@@ -232,40 +268,4 @@ module.exports = {
       done()
     }
   },
-
-  open_tasks: {
-    path: '/zadania',
-    method: 'get',
-    handler: require('./components/TaskBank/OpenTasks.jsx'),
-    action: function(context, payload, done) {
-      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy' })
-      context.executeAction(actions.showTasks, { type: 'openTasks' }, function() {
-        done()
-      })
-    }
-  },
-
-  volunteer_tasks: {
-    path: '/zadania/moje',
-    method: 'get',
-    handler: require('./components/TaskBank/VolunteerTasks.jsx'),
-    action: function(context, payload, done) {
-      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy - Biorę udział w' })
-      context.executeAction(actions.showTasks, { type: 'volunteerTasks' }, function() {
-        done()
-      })
-    }
-  },
-
-  admin_tasks: {
-    path: '/zadania/dodane',
-    method: 'get',
-    handler: require('./components/TaskBank/AdminTasks.jsx'),
-    action: function(context, payload, done) {
-      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy - Moje zadania' })
-      context.executeAction(actions.showTasks, { type: 'adminTasks' }, function() {
-        done()
-      })
-    }
-  }
 }
