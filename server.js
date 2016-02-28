@@ -19,7 +19,8 @@ var express = require('express'),
   r = require('rethinkdb'),
   AWS = require('aws-sdk'),
   async = require('async'),
-  sharp = require('sharp')
+  sharp = require('sharp'),
+  ua = require('universal-analytics')
 
 // Służy do zapisywania sesji użytkowników w bazie danych
 var RDBStore = require('session-rethinkdb')(session)
@@ -127,6 +128,11 @@ server.use(flash())
 server.use(passport.initialize())
 // Przechowywuj sesje użytkownika w pamięci serwera.
 server.use(passport.session())
+// Google Analytics Measurement Protocol
+server.use(function(req, res, next) {
+  req.visitor = ua(process.env.GOOGLE_ANALYTICS_UID, req.user && req.user.id)
+  next()
+})
 
 // Użyj silnika szablonów Handlebars
 server.engine('handlebars', handlebars({
@@ -145,7 +151,16 @@ if(fetchrPlugin) {
   fetchrPlugin.registerService(Xls)
   fetchrPlugin.registerService(ActivityTags)
   // Set up the fetchr middleware
-  server.use(fetchrPlugin.getXhrPath(), jsonParser, fetchrPlugin.getMiddleware())
+  server.use(fetchrPlugin.getXhrPath(), jsonParser, function(req, res, done) {
+    // Google Analytics Measurement Protocol
+    req.visitor.pageview({
+      dp: req.path,
+      dh: 'https://wolontariusze.krakow2016.com',
+      uip: req.ip,
+      ua: req.headers['user-agent']
+    }).send()
+    done()
+  }, fetchrPlugin.getMiddleware())
 }
 
 // W pierwszej kolejności sprawdź ścieżki z poza single-page
@@ -242,6 +257,19 @@ server.post('/invitation', jsonParser, function(req, res) {
   } else {
     res.send(403)
   }
+})
+
+// Zwraca listę unikalnych tagów przypisanych do wolontariuszy
+server.get('/tags', function(req, res) {
+  r.connect(config.rethinkdb, function(err, conn) {
+    r.table('Volunteers').map(function(vol) {
+      return vol('tags').default([])
+    }).reduce(function(left, right) {
+      return left.union(right)
+    }).distinct().run(conn, function(err, result) {
+      res.send(result)
+    })
+  })
 })
 
 server.get('/stats', function(req, res) {
@@ -462,6 +490,14 @@ server.use(function(req, res, next) {
   } else if(failure) { // Błąd
     context.getActionContext().dispatch('SAVE_FLASH_FAILURE', failure)
   }
+
+  // Google Analytics Measurement Protocol
+  req.visitor.pageview({
+    dp: req.path,
+    dh: 'https://wolontariusze.krakow2016.com',
+    uip: req.ip,
+    ua: req.headers['user-agent']
+  }).send()
 
   debug('Executing navigate action')
   context.executeAction(navigateAction, {
