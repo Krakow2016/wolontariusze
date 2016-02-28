@@ -32,9 +32,6 @@ var config = require('./config.json')[env]
 // Połączenie z sendgrid daje nam możliwość wysyłania emaili
 var sendgrid = require('sendgrid')(process.env.SENDGRID_APIKEY)
 
-// Identyfikator użytkownika Google Analytics
-var GA = process.env.GOOGLE_ANALYTICS_UID || 'UA-XXXX-XX'
-
 require('node-jsx').install({extension: '.jsx'})
 var HtmlComponent = React.createFactory(require('./app/components/Html.jsx'))
 var server = module.exports = express()
@@ -130,6 +127,11 @@ server.use(flash())
 server.use(passport.initialize())
 // Przechowywuj sesje użytkownika w pamięci serwera.
 server.use(passport.session())
+// Google Analytics Measurement Protocol
+server.use(function(req, res, next) {
+  req.visitor = ua(process.env.GOOGLE_ANALYTICS_UID, req.user && req.user.id)
+  next()
+})
 
 // Użyj silnika szablonów Handlebars
 server.engine('handlebars', handlebars({
@@ -149,8 +151,14 @@ if(fetchrPlugin) {
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), jsonParser, function(req, res, done) {
     // Google Analytics Measurement Protocol
-    var visitor = ua(GA, req.user && req.user.id).debug()
-    visitor.pageview(req.originalUrl).send()
+    if(req.visitor) {
+      req.visitor.pageview({
+        dp: req.path,
+        dh: 'https://wolontariusze.krakow2016.com',
+        uip: req.ip,
+        ua: req.headers['user-agent']
+      }).send()
+    }
     done()
   }, fetchrPlugin.getMiddleware())
 }
@@ -484,8 +492,14 @@ server.use(function(req, res, next) {
   }
 
   // Google Analytics Measurement Protocol
-  var visitor = ua(GA, req.user && req.user.id).debug()
-  visitor.pageview(req.originalUrl).send()
+  if(req.visitor) {
+    req.visitor.pageview({
+      dp: req.path,
+      dh: 'https://wolontariusze.krakow2016.com',
+      uip: req.ip,
+      ua: req.headers['user-agent']
+    }).send()
+  }
 
   debug('Executing navigate action')
   context.executeAction(navigateAction, {
