@@ -101,8 +101,8 @@ var Activity = React.createClass({
       </div>
     }
 
-    var type = function () {
-      switch(activity.type) {
+    var actType = function () {
+      switch(activity.act_type) {
         case 'dalem_dla_sdm':
           return 'Dałem dla ŚDM'
         case 'wzialem_od_sdm':
@@ -164,7 +164,7 @@ var Activity = React.createClass({
         <h2>{activity.name}</h2>
         <br></br>
         <br></br>
-        <b>Typ:</b> {type}
+        <b>Typ:</b> {actType}
         <br></br>
         <b>Kategorie:</b> {tagsList}
         <br></br>

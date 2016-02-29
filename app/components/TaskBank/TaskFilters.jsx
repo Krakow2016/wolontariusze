@@ -119,8 +119,8 @@ var TaskFilters = React.createClass({
     //Typ
     if (this.state.checkboxes.typeCheckbox) {
       filteredData = filteredData.filter(function (task) {
-        return that.state.selects.typeSelect == task.type ||
-               (that.state.selects.typeSelect == '' && typeof(task.type) == 'undefined')
+        return that.state.selects.typeSelect == task.act_type ||
+               (that.state.selects.typeSelect == '' && typeof(task.act_type) == 'undefined')
       })
     }
     
