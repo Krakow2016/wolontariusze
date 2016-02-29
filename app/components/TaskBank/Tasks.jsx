@@ -201,51 +201,19 @@ var Tasks = React.createClass({
       numberDisplay = <span>Brak zadań</span>
     }
 
-    // TYPE
-    var taskHeaders = function () {
-      var title = <th className="tasks-th" onClick={that.sortByTitle}>Tytuł</th>
-      var categories = <th className="tasks-th" onClick={that.sortByCategories}>Kategorie</th>
-      var volunteerNumber = <th className="tasks-th" onClick={that.sortByVolunteerNumber}>Ilość osób</th>
-      var volunteerLimit = <th className="tasks-th" onClick={that.sortByVolunteerLimit}>Limit osób</th>
-      var creationDate = <th className="tasks-th" onClick={that.sortByCreationDate}>Czas utworzenia</th>
-      var expirationDate = <th className="tasks-th" onClick={that.sortByExpirationDate}>Czas wygaśnięcia</th>
-
-      return (
-        <tr>
-          {title}
-          {categories}
-          {volunteerNumber}
-          {volunteerLimit}
-          {creationDate}
-          {expirationDate}
-        </tr>
-      )
-    }()
-
-    taskRows = taskRows.map(function (task) {
+    var tasks = taskRows.map(function (task) {
       var priorityClass = task.is_urgent ? 'tasks-priority-urgent-tr' : 'tasks-priority-normal-tr'
-      var title = <td className="tasks-title-td"><NavLink href={'/zadania/'+task.id}>{task.title}</NavLink></td>
-      var categories = <td className="tasks-categories-td"><span>{task.tags.map(function (t) {return t.name}).join()}</span></td>
-      var volunteerNumber = <td className="tasks-volunteerNumber-td"><span>{task.volunteerNumber}</span></td>
-      var volunteerLimit = <td className="tasks-volunteerLimit-td"><span>{task.maxVolunteers != 0 ? task.maxVolunteers : 'Brak'}</span></td>
-
-      var creationDate = <td className="tasks-creationDate-td"><span>{TimeService.showTime(task.created_at)}</span></td>
-      var expirationDate = <th className="tasks-expirationDate-td"><span>{(typeof (task.datetime) != 'undefined') ? task.datetime: 'Brak'}</span></th>
-
       return (
         <tr className={priorityClass}>
-          {title}
-          {categories}
-          {volunteerNumber}
-          {volunteerLimit}
-          {creationDate}
-          {expirationDate}
+          <td className="tasks-title-td"><NavLink href={'/zadania/'+task.id}>{task.title}</NavLink></td>
+          <td className="tasks-categories-td"><span>{ (task.tags || []).join(', ') }</span></td>
+          <td className="tasks-volunteerNumber-td"><span>{task.volunteerNumber}</span></td>
+          <td className="tasks-volunteerLimit-td"><span>{task.maxVolunteers != 0 ? task.maxVolunteers : 'Brak'}</span></td>
+          <td className="tasks-creationDate-td"><span>{TimeService.showTime(task.created_at)}</span></td>
+          <th className="tasks-expirationDate-td"><span>{(typeof (task.datetime) != 'undefined') ? task.datetime: 'Brak'}</span></th>
         </tr>
       )
     })
-
-
-    var taskTable = <table className="tasks-table"><tbody>{taskHeaders}{taskRows}</tbody></table>
 
     if (user) {
       return (
@@ -259,10 +227,22 @@ var Tasks = React.createClass({
           <TaskFilters data={this.state.data}
                       filterFunction={this.filter}
                       type={this.props.type}
-                      context={this.props.context}
-                      />
+                      context={this.props.context} />
           <br></br>{numberDisplay}
-          {taskTable}
+          <table className="tasks-table">
+            <tbody>
+              <tr>
+                <th className="tasks-th" onClick={that.sortByTitle}>Tytuł</th>
+                <th className="tasks-th" onClick={that.sortByCategories}>Kategorie</th>
+                <th className="tasks-th" onClick={that.sortByVolunteerNumber}>Ilość osób</th>
+                <th className="tasks-th" onClick={that.sortByVolunteerLimit}>Limit osób</th>
+                <th className="tasks-th" onClick={that.sortByCreationDate}>Czas utworzenia</th>
+                <th className="tasks-th" onClick={that.sortByExpirationDate}>Czas wygaśnięcia</th>
+              </tr>
+              {tasks}
+            </tbody>
+          </table>
+
           {paginationButtons}
 
           <NavLink href="/zadania/nowe">Dodaj zadanie</NavLink>

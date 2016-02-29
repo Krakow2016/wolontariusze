@@ -12,19 +12,11 @@
 var activities = require('./activities.json')
 var joints = require('./joints.json')
 var volunteers = require('./volunteers.json')
-var activityTags = require('./activityTags.json')
 
 var modifiedActivity = function (activityId, req, config) {
   if (activities[activityId]) {
-    var tags = activities[activityId].tags || []
-    tags = tags.map (function (tag) {
-      return (activityTags[tag.id])
-    })
-    activities[activityId].tags = tags
     return activities[activityId]
   }
-  return null
-
 }
 
 var getActivityVolunteers = function (activityId) {
