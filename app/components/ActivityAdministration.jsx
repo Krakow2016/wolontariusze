@@ -399,13 +399,13 @@ var ActivityAdministration = React.createClass({
           </div>
           <div className="pure-u-1 pure-u-md-2-3">
             <MyTextField required
-              id='title'
-              name='title'
+              id='name'
+              name='name'
               placeholder=''
               validations='minLength:3'
               validationError='Tytuł jest wymagany'
               disabled={false}
-              value={this.state.activity.title}
+              value={this.state.activity.name}
               onChange={this.handleChange} />
           </div>
           

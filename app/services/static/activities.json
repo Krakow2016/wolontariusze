@@ -1,7 +1,7 @@
 {
     "1": {
         "id": "1",
-        "title": "Pierwsza Aktywność",
+        "name": "Pierwsza Aktywność",
         "description": "Treść pierwszej aktywności",
         "type": "dalem_dla_sdm",
         "created_at": 120000,
@@ -20,7 +20,7 @@
      
     "2": {
         "id": "2",
-        "title": "Druga Aktywność",
+        "name": "Druga Aktywność",
         "description": "Treść drugiej aktywności",
         "type": "wzialem_od_sdm",
         "created_at": 220000,
@@ -38,7 +38,7 @@
 
     "3": {     
         "id": "3",
-        "title": "Trzecia Aktywność",
+        "name": "Trzecia Aktywność",
         "description": "Treść trzeciej aktywności",
         "type": "dalem_dla_sdm",
         "created_at": 320000,

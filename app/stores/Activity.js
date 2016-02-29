@@ -86,7 +86,6 @@ ActivityStore.attributes = function() {
   return [
     'id',
     'name',
-    'title',
     'type',
     'description',
     'created_at',

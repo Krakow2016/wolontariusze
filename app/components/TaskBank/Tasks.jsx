@@ -47,13 +47,13 @@ var Tasks = React.createClass({
     }))
   },
 
-  sortByTitle: function () {
+  sortByName: function () {
     //http://www.w3schools.com/jsref/jsref_sort.asp
     //http://www.w3schools.com/js/js_comparisons.asp
     var filteredData = this.state.filteredData
     var order = this.state.order
     filteredData = filteredData.sort(function (task1, task2) {
-      return (task1.title < task2.title) ? -order : order
+      return (task1.name < task2.name) ? -order : order
     })
 
     this.setState(update(this.state, {
@@ -203,7 +203,7 @@ var Tasks = React.createClass({
 
     // TYPE
     var taskHeaders = function () {
-      var title = <th className="tasks-th" onClick={that.sortByTitle}>Tytuł</th>
+      var name = <th className="tasks-th" onClick={that.sortByName}>Tytuł</th>
       var categories = <th className="tasks-th" onClick={that.sortByCategories}>Kategorie</th>
       var volunteerNumber = <th className="tasks-th" onClick={that.sortByVolunteerNumber}>Ilość osób</th>
       var volunteerLimit = <th className="tasks-th" onClick={that.sortByVolunteerLimit}>Limit osób</th>
@@ -212,7 +212,7 @@ var Tasks = React.createClass({
 
       return (
         <tr>
-          {title}
+          {name}
           {categories}
           {volunteerNumber}
           {volunteerLimit}
@@ -224,8 +224,8 @@ var Tasks = React.createClass({
 
     taskRows = taskRows.map(function (task) {
       var priorityClass = task.is_urgent ? 'tasks-priority-urgent-tr' : 'tasks-priority-normal-tr'
-      var title = <td className="tasks-title-td"><NavLink href={'/zadania/'+task.id}>{task.title}</NavLink></td>
-      var categories = <td className="tasks-categories-td"><span>{task.tags.map(function (t) {return t.name}).join()}</span></td>
+      var name = <td className="tasks-name-td"><NavLink href={'/zadania/'+task.id}>{task.name}</NavLink></td>
+      var categories = <td className="tasks-categories-td"><span>nic</span></td>
       var volunteerNumber = <td className="tasks-volunteerNumber-td"><span>{task.volunteerNumber}</span></td>
       var volunteerLimit = <td className="tasks-volunteerLimit-td"><span>{task.maxVolunteers != 0 ? task.maxVolunteers : 'Brak'}</span></td>
 
@@ -234,7 +234,7 @@ var Tasks = React.createClass({
 
       return (
         <tr className={priorityClass}>
-          {title}
+          {name}
           {categories}
           {volunteerNumber}
           {volunteerLimit}

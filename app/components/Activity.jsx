@@ -161,7 +161,7 @@ var Activity = React.createClass({
     return (
       <div>
         {editLink}
-        <h2>{activity.title}</h2>
+        <h2>{activity.name}</h2>
         <br></br>
         <br></br>
         <b>Typ:</b> {type}
