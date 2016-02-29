@@ -55,7 +55,7 @@ time, mark, audio, video {
 /*--------------------TEXTS------------------------*/
 html {
 	font-family: 'Open Sans', sans-serif;
-	font-size: 15px;
+	font-weight: 400;
 	}
 h1 {
 	margin: 1rem 0 1rem 0;
@@ -64,15 +64,9 @@ h1 {
 h2 {
 	margin: 1rem 0 0 0;
 }
-h2,p,b,a,ul,span{
-	font-size: 1.4rem;
-}
 h2,a{
 	color:#0082BD;
 	font-weight: 600;
-}
-p,ul,span {
-	font-weight: 400;
 }
 p,ul{
 	color:#000;
@@ -231,17 +225,6 @@ footer {
 	transition: transform 0.5s ease;
 }
 /*------RESPONSIVE---------------*/
-@media only screen and (max-width: 1200px) {
-	html{
-		font-size: 13px;
-	}
-}
-@media only screen and (max-width: 1024px) {
-	html{
-		font-size: 12px;
-	}
-}
-
 @media only screen and (max-width: 840px) {
 	body {background-image:url("../img/bgcutmob.svg"),url("../img/bg.svg");background-position:0% 15em, center top; background-color:#00A8D8; }
 	.col { 	margin: 1% 0 1% 0%; }
@@ -276,21 +259,6 @@ footer {
   .search {
     display: none;
   }
-}
-@media only screen and (max-width: 700px) {
-	html{
-		font-size: 11px;
-	}
-}
-@media only screen and (max-width: 600px) {
-	html{
-		font-size: 9px;
-	}
-}
-@media only screen and (max-width: 500px) {
-	html{
-		font-size: 5px;
-	}
 }
 
 #prolife-photo {
@@ -544,4 +512,67 @@ textarea.settings {
 
 .leaflet-container {
   height: 300px
+}
+
+.RichEditor-root {
+  background: #fff;
+  border: 1px solid #ddd;
+  font-family: 'Georgia', serif;
+  font-size: 14px;
+  padding: 15px;
+}
+
+.RichEditor-editor {
+  border-top: 1px solid #ddd;
+  cursor: text;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.RichEditor-editor .public-DraftEditorPlaceholder-root,
+.RichEditor-editor .public-DraftEditor-content {
+  margin: 0 -15px -15px;
+  padding: 15px;
+}
+
+.RichEditor-editor .public-DraftEditor-content {
+  min-height: 100px;
+}
+
+.RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
+  display: none;
+}
+
+.RichEditor-editor .RichEditor-blockquote {
+  border-left: 5px solid #eee;
+  color: #666;
+  font-family: 'Hoefler Text', 'Georgia', serif;
+  font-style: italic;
+  margin: 16px 0;
+  padding: 10px 20px;
+}
+
+.RichEditor-editor .public-DraftStyleDefault-pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
+  font-size: 16px;
+  padding: 20px;
+}
+
+.RichEditor-controls {
+  font-family: 'Helvetica', sans-serif;
+  font-size: 14px;
+  margin-bottom: 5px;
+  user-select: none;
+}
+
+.RichEditor-styleButton {
+  color: #999;
+  cursor: pointer;
+  margin-right: 16px;
+  padding: 2px 0;
+}
+
+.RichEditor-activeButton {
+  color: #5890ff;
 }

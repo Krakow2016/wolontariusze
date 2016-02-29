@@ -2,6 +2,7 @@ var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var Draft = require('draft-js')
 var backdraft = require('backdraft-js')
+var update = require('react-addons-update')
 
 var TimeService = require('../../modules/time/TimeService.js')
 
@@ -16,25 +17,40 @@ var Editor = require('../Editor.jsx')
 
 var EditedProfileComment = React.createClass({
 
-  update: function(comment) {
-    this.props.context.executeAction(updateAction, Object.assign(this.props.comment, {
-      raw: comment
-    }))
-  },
-
-  render: function () {
-
+  getInitialState: function() {
     var blocks = Draft.convertFromRaw(this.props.comment.raw)
     var contentState = Draft.ContentState.createFromBlockArray(blocks)
     var editorState = Draft.EditorState.createWithContent(contentState)
 
+    return {
+      editorState: editorState
+    }
+  },
+
+  onChange: function(editorState) {
+    this.setState({
+      editorState: editorState
+    })
+  },
+
+  handleSave: function() {
+    var state = this.state.editorState.getCurrentContent()
+    this.props.context.executeAction(updateAction, Object.assign(this.props.comment, {
+      raw: Draft.convertToRaw(state),
+      editMode: false
+    }))
+  },
+
+  render: function () {
     return (
       <tr>
         <td colSpan="3">
-          <Editor editorState={editorState} onSave={this.update} />
-          <div id="profileCommentsEditToolbar">
-            <input type="button" onClick={this.props.cancel} value="Anuluj" />
-          </div>
+          <Editor editorState={this.state.editorState} onChange={this.onChange}>
+            <div>
+              <input type="submit" onClick={this.handleSave} value="Aktualizuj" />
+              <span onClick={this.props.cancel}>Anuluj</span>
+            </div>
+          </Editor>
         </td>
       </tr>
     )
@@ -43,22 +59,12 @@ var EditedProfileComment = React.createClass({
 
 var ProfileComment = React.createClass ({
 
-  getInitialState: function() {
-    return {
-      editMode: false
-    }
-  },
-
   editComment: function() {
-    this.setState({
-      editMode: true
-    })
+    this.props.editComment(this.props.comment.id)
   },
 
-  cancelEditComment: function () {
-    this.setState({
-      editMode: false
-    })
+  cancelEditComment: function() {
+    this.props.cancelEditComment(this.props.comment.id)
   },
 
   deleteComment: function () {
@@ -66,21 +72,24 @@ var ProfileComment = React.createClass ({
   },
 
   render: function (){
-    if(this.state.editMode) {
+    if(this.props.comment.editMode) {
       return (
         <EditedProfileComment
-          cancel={this.cancelEditComment.bind(this)}
+          cancel={this.cancelEditComment}
           comment={this.props.comment}
           context={this.props.context} />
       )
     } else {
       if(!this.props.comment.raw) { return (<div />) }
-      var html = backdraft(this.props.comment.raw, {})
+      var html = backdraft(this.props.comment.raw, {
+        'BOLD': ['<strong>', '</strong>'],
+        'ITALIC': ['<i>', '</i>'],
+        'UNDERLINE': ['<u>', '</u>'],
+        'CODE': ['<span style="font-family: monospace">', '</span>'],
+      })
       return (
         <tr>
-          <td>
-              { html }
-          </td>
+          <td dangerouslySetInnerHTML={{__html: html}} />
           <td>{TimeService.showTime(this.props.comment.creationTimestamp)}</td>
           <td>
             <NavLink href={'/wolontariusz/'+this.props.comment.adminId}>
@@ -121,10 +130,43 @@ var ProfileComments = React.createClass({
     this.setState(this.props.context.getStore(CommentsStore).getState())
   },
 
+  editComment: function(id) {
+    var comment = this.state.comments.find(function(c) {
+      return c.id === id
+    })
+
+    var index = this.state.comments.indexOf(comment)
+    comment.editMode = true
+
+    this.setState(update(this.state, {
+        comments: {$splice: [[index, 1, comment]]}
+    }))
+  },
+
+  cancelEdit: function(id) {
+    var comment = this.state.comments.find(function(c) {
+      return c.id === id
+    })
+
+    var index = this.state.comments.indexOf(comment)
+    comment.editMode = false
+
+    this.setState(update(this.state, {
+        comments: {$splice: [[index, 1, comment]]}
+    }))
+  },
+
   render: function (){
     var that = this
     var comments = this.state.comments.map(function(comment) {
-      return (<ProfileComment context={that.props.context} comment={comment} key={comment.id} />)
+      return (
+        <ProfileComment
+          context={that.props.context}
+          comment={comment}
+          editComment={that.editComment}
+          cancelEditComment={that.cancelEdit}
+          key={comment.id} />
+      )
     })
 
     return (

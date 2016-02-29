@@ -1,4 +1,5 @@
 var React = require('react')
+var Draft = require('draft-js')
 
 var createComment = require('../actions').createComment
 var NewCommentStore = require('../stores/NewComment')
@@ -29,18 +30,25 @@ var NewComment = React.createClass ({
     this.setState(this.props.context.getStore(NewCommentStore).getState())
   },
 
+  onChange: function(editorState) {
+    this.setState({
+      editorState: editorState
+    })
+  },
+
   handleSave: function (comment) {
+    var state = this.state.editorState.getCurrentContent()
     this.props.context.executeAction(createComment, {
-      raw: comment,
+      raw: Draft.convertToRaw(state),
       volunteerId: this.state.volunteerId
     })
   },
 
   render: function() {
     return (
-      <div>
-        <Editor editorState={this.state.editorState} onSave={this.handleSave} />
-      </div>
+      <Editor editorState={this.state.editorState} onChange={this.onChange}>
+        <input type="submit" onClick={this.handleSave} value="Dodaj" />
+      </Editor>
     )
   }
 })

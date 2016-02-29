@@ -1,38 +1,81 @@
+'use strict'
+
 var React = require('react')
 var Draft = require('draft-js')
 
+var INLINE_STYLES = [
+    {label: 'Bold', style: 'BOLD'},
+    {label: 'Italic', style: 'ITALIC'},
+    {label: 'Underline', style: 'UNDERLINE'},
+    {label: 'Monospace', style: 'CODE'},
+];
+
+class StyleButton extends React.Component {
+  constructor() {
+    super();
+    this.onToggle = (e) => {
+      e.preventDefault();
+      this.props.onToggle(this.props.style);
+    };
+  }
+
+  render() {
+    let className = 'RichEditor-styleButton';
+    if (this.props.active) {
+      className += ' RichEditor-activeButton';
+    }
+
+    return (
+      <span className={className} onMouseDown={this.onToggle}>
+        {this.props.label}
+      </span>
+    );
+  }
+}
+
+const InlineStyleControls = (props) => {
+  var currentStyle = props.editorState.getCurrentInlineStyle()
+  return (
+    <div className="RichEditor-controls">
+      {INLINE_STYLES.map(type =>
+        <StyleButton
+          key={type.label}
+          active={currentStyle.has(type.style)}
+          label={type.label}
+          onToggle={props.onToggle}
+          style={type.style}
+        />
+      )}
+    </div>
+  )
+}
+
 var Editor = React.createClass({
 
-  getInitialState: function() {
-    return {
-      editorState: this.props.editorState
-    }
-  },
-
-  onChange: function(editorState) {
-    this.setState({
-      editorState: editorState
-    })
-  },
-
-  handleSave: function() {
-    var state = this.state.editorState.getCurrentContent()
-    this.props.onSave(Draft.convertToRaw(state))
+  toggleInlineStyle: function(inlineStyle) {
+    this.props.onChange(
+      Draft.RichUtils.toggleInlineStyle(
+        this.props.editorState,
+        inlineStyle
+      )
+    )
   },
 
   render: function() {
     return (
       <div>
+        <InlineStyleControls
+          editorState={this.props.editorState}
+          onToggle={this.toggleInlineStyle} />
+
         <div style={{ border: '1px solid #ccc', cursor: 'text', padding: 10 }}>
           <Draft.Editor
             placeholder="Wpisz komentarz..."
-            editorState={this.state.editorState}
-            onChange={this.onChange} />
+            editorState={this.props.editorState}
+            onChange={this.props.onChange} />
         </div>
 
-        <div id="profileCommentsAddToolbar">
-          <input type="submit" onClick={this.handleSave} value="Dodaj" />
-        </div>
+        {this.props.children}
       </div>
     )
   }

@@ -35,12 +35,13 @@ var Comments = createStore({
   },
 
   update: function(comment) {
-    var deleted = this.comments.find(function(c) {
-      return comment.id === c.id
+    var index = this.comments.findIndex(function(c) {
+      return c.id === comment.id
     })
-    if(deleted) {
-      this.remove(deleted)
-      this.add([comment])
+
+    if(index > -1) {
+      this.comments[index] = comment
+      this.emitChange()
     }
   },
 
