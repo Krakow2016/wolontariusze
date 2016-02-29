@@ -121,7 +121,7 @@ var Activity = React.createClass({
     
     var startTime
     if (typeof (this.state.activity.datetime) != 'undefined')  {
-      startTime = activity.datetime
+      startTime = TimeService.showTime(activity.datetime) 
     } else {
       startTime = 'Nieokreślony'
     }
