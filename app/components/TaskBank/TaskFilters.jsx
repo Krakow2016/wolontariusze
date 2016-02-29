@@ -157,7 +157,7 @@ var TaskFilters = React.createClass({
     //Dostępność
     if (this.state.checkboxes.availabilityStateCheckbox) {
       filteredData = filteredData.filter(function (task) {
-        var isFree = task.volunteerNumber < task.maxVolunteers || task.maxVolunteers == 0
+        var isFree = task.volunteerNumber < task.limit || task.limit == 0
         return  (that.state.selects.availabilityStateSelect == 'wolne' && isFree) || 
                 (that.state.selects.availabilityStateSelect == 'pelne' && !isFree)
       })

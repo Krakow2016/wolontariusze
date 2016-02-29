@@ -94,9 +94,9 @@ var Tasks = React.createClass({
     var filteredData = this.state.filteredData
     var order = this.state.order
     filteredData = filteredData.sort(function (task1, task2) {
-      task1.limit = task1.maxVolunteers != 0 ? task1.maxVolunteers : 1000000
-      task2.limit = task2.maxVolunteers != 0 ? task2.maxVolunteers : 1000000
-      return (task1.limit < task2.limit) ? -order : order
+      task1.limitValue = task1.limit != 0 ? task1.limit : 1000000
+      task2.limitValue = task2.limit != 0 ? task2.limit : 1000000
+      return (task1.limitValue < task2.limitValue) ? -order : order
     })
 
     this.setState(update(this.state, {
@@ -227,7 +227,7 @@ var Tasks = React.createClass({
       var name = <td className="tasks-name-td"><NavLink href={'/zadania/'+task.id}>{task.name}</NavLink></td>
       var categories = <td className="tasks-categories-td"><span>nic</span></td>
       var volunteerNumber = <td className="tasks-volunteerNumber-td"><span>{task.volunteerNumber}</span></td>
-      var volunteerLimit = <td className="tasks-volunteerLimit-td"><span>{task.maxVolunteers != 0 ? task.maxVolunteers : 'Brak'}</span></td>
+      var volunteerLimit = <td className="tasks-volunteerLimit-td"><span>{task.limit != 0 ? task.limit : 'Brak'}</span></td>
 
       var creationDate = <td className="tasks-creationDate-td"><span>{TimeService.showTime(task.created_at)}</span></td>
       var expirationDate = <th className="tasks-expirationDate-td"><span>{(typeof (task.datetime) != 'undefined') ? task.datetime: 'Brak'}</span></th>

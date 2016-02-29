@@ -144,7 +144,7 @@ var Activity = React.createClass({
     var buttons = []
 
     //acceptButton
-    if (!has_joined && (volunteers.length < activity.maxVolunteers || activity.maxVolunteers==0)) {
+    if (!has_joined && (volunteers.length < activity.limit || activity.limit==0)) {
       buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" key="join" />)
     }
 
@@ -153,7 +153,7 @@ var Activity = React.createClass({
       buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" key="leave" />)
     }
 
-    var volonteersLimit = (activity.maxVolunteers == 0) ? 'Brak' : activity.maxVolunteers
+    var volonteersLimit = (activity.limit == 0) ? 'Brak' : activity.limit
 
     // TODO
     //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>

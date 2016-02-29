@@ -19,7 +19,7 @@ var ActivityStore = createStore({
       duration: '',
       place: '',
       description: '',
-      maxVolunteers: 5
+      limit: 5
     }
     this.volunteers = []
     this.invalidSnackBar = ''
@@ -97,7 +97,7 @@ ActivityStore.attributes = function() {
     'is_urgent',
     'creator',
     'editor',
-    'maxVolunteers',
+    'limit',
     'volunteers',
     'lat_lon',
     'volunteerNumber',

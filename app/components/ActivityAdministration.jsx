@@ -182,7 +182,7 @@ var ActivityAdministration = React.createClass({
 
   onValidSubmit: function () {
 
-    if (this.state.volunteers.length > this.state.activity.maxVolunteers) {
+    if (this.state.volunteers.length > this.state.activity.limit) {
       this.setState(update(this.state, {
         invalidSnackBar: {$set: 'Ustaw większy limit wolontariuszy'}
       }))
@@ -370,7 +370,7 @@ var ActivityAdministration = React.createClass({
 
     var removeActiveVolonteer = this.removeActiveVolonteer
     var addVolonteer
-    if (this.state.volunteers.length < this.state.activity.maxVolunteers) {
+    if (this.state.volunteers.length < this.state.activity.limit) {
         addVolonteer = <ActivityVolonteersList
             id="activeVolonteers"
             addActiveVolonteer={this.addActiveVolonteer}
@@ -505,13 +505,13 @@ var ActivityAdministration = React.createClass({
           </div>
           <div className="pure-u-1 pure-u-md-2-3">
             <MyTextField required
-              id='maxVolunteers'
-              name='maxVolunteers'
+              id='limit'
+              name='limit'
               placeholder=''
               validations='isMoreOrGreaterIntThanZero'
               validationError='Ustaw maksymalną liczbę wolontariuszy lub 0 (brak limitu)'
               disabled={false}
-              value={this.state.activity.maxVolunteers}
+              value={this.state.activity.limit}
               onChange={this.handleChange} />
           </div>
 

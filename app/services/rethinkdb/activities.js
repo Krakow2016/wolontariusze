@@ -233,8 +233,8 @@ var Activities = module.exports = {
              }
            })
            .filter( function (task) {
-             return task('maxVolunteers').coerceTo('number').eq(0).or(
-                task('maxVolunteers').coerceTo('number').gt(task('volunteerNumber')))
+             return task('limit').coerceTo('number').eq(0).or(
+                task('limit').coerceTo('number').gt(task('volunteerNumber')))
            }, {default: true})
             .run(conn, function(err, cursor) {
               if(err) { callback(err) }
