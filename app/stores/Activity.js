@@ -15,11 +15,11 @@ var ActivityStore = createStore({
   initialize: function () {
     this.activity = {
       name: '',
-      type: '',
+      act_type: '',
       duration: '',
       place: '',
       description: '',
-      maxVolunteers: 5
+      limit: 5
     }
     this.volunteers = []
     this.invalidSnackBar = ''
@@ -86,8 +86,7 @@ ActivityStore.attributes = function() {
   return [
     'id',
     'name',
-    'title',
-    'type',
+    'act_type',
     'description',
     'created_at',
     'updated_at',
@@ -98,7 +97,7 @@ ActivityStore.attributes = function() {
     'is_urgent',
     'creator',
     'editor',
-    'maxVolunteers',
+    'limit',
     'volunteers',
     'lat_lon',
     'volunteerNumber',

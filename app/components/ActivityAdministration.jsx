@@ -182,7 +182,7 @@ var ActivityAdministration = React.createClass({
 
   onValidSubmit: function () {
 
-    if (this.state.volunteers.length > this.state.activity.maxVolunteers) {
+    if (this.state.volunteers.length > this.state.activity.limit) {
       this.setState(update(this.state, {
         invalidSnackBar: {$set: 'Ustaw większy limit wolontariuszy'}
       }))
@@ -370,7 +370,7 @@ var ActivityAdministration = React.createClass({
 
     var removeActiveVolonteer = this.removeActiveVolonteer
     var addVolonteer
-    if (this.state.volunteers.length < this.state.activity.maxVolunteers) {
+    if (this.state.volunteers.length < this.state.activity.limit) {
         addVolonteer = <ActivityVolonteersList
             id="activeVolonteers"
             addActiveVolonteer={this.addActiveVolonteer}
@@ -399,13 +399,13 @@ var ActivityAdministration = React.createClass({
           </div>
           <div className="pure-u-1 pure-u-md-2-3">
             <MyTextField required
-              id='title'
-              name='title'
+              id='name'
+              name='name'
               placeholder=''
               validations='minLength:3'
               validationError='Tytuł jest wymagany'
               disabled={false}
-              value={this.state.activity.title}
+              value={this.state.activity.name}
               onChange={this.handleChange} />
           </div>
           
@@ -413,7 +413,7 @@ var ActivityAdministration = React.createClass({
             <b>Typ</b>
           </div>
           <div>
-            <select name="type" selected={this.state.activity.type} onChange={this.handleChange}>
+            <select name="act_type" selected={this.state.activity.act_type} onChange={this.handleChange}>
               <option value="dalem_dla_sdm">Niezdefiniowany</option>
               <option value="dalem_dla_sdm">Dałem dla ŚDM</option>
               <option value="wzialem_od_sdm">Wziąłęm od ŚDM</option>
@@ -505,13 +505,13 @@ var ActivityAdministration = React.createClass({
           </div>
           <div className="pure-u-1 pure-u-md-2-3">
             <MyTextField required
-              id='maxVolunteers'
-              name='maxVolunteers'
+              id='limit'
+              name='limit'
               placeholder=''
               validations='isMoreOrGreaterIntThanZero'
               validationError='Ustaw maksymalną liczbę wolontariuszy lub 0 (brak limitu)'
               disabled={false}
-              value={this.state.activity.maxVolunteers}
+              value={this.state.activity.limit}
               onChange={this.handleChange} />
           </div>
 

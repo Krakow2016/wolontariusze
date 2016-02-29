@@ -119,8 +119,8 @@ var TaskFilters = React.createClass({
     //Typ
     if (this.state.checkboxes.typeCheckbox) {
       filteredData = filteredData.filter(function (task) {
-        return that.state.selects.typeSelect == task.type ||
-               (that.state.selects.typeSelect == '' && typeof(task.type) == 'undefined')
+        return that.state.selects.typeSelect == task.act_type ||
+               (that.state.selects.typeSelect == '' && typeof(task.act_type) == 'undefined')
       })
     }
     
@@ -157,7 +157,7 @@ var TaskFilters = React.createClass({
     //Dostępność
     if (this.state.checkboxes.availabilityStateCheckbox) {
       filteredData = filteredData.filter(function (task) {
-        var isFree = task.volunteerNumber < task.maxVolunteers || task.maxVolunteers == 0
+        var isFree = task.volunteerNumber < task.limit || task.limit == 0
         return  (that.state.selects.availabilityStateSelect == 'wolne' && isFree) || 
                 (that.state.selects.availabilityStateSelect == 'pelne' && !isFree)
       })

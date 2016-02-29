@@ -62,7 +62,7 @@ module.exports = {
             var data = new Date(task.datetime).getTime()
             return ((typeof(task.is_archived) == 'undefined' || task.is_archived == false) &&
                    (typeof( task.datetime) == 'undefined' || (new Date(task.datetime).getTime()) > currentTime) &&
-                   (parseInt(task.maxVolunteers) == 0 || parseInt(task.maxVolunteers) > task.volunteerNumber))
+                   (parseInt(task.limit) == 0 || parseInt(task.limit) > task.volunteerNumber))
           })
         }
         if (params.type === 'volunteerTasks') {

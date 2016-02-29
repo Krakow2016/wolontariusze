@@ -47,13 +47,13 @@ var Tasks = React.createClass({
     }))
   },
 
-  sortByTitle: function () {
+  sortByName: function () {
     //http://www.w3schools.com/jsref/jsref_sort.asp
     //http://www.w3schools.com/js/js_comparisons.asp
     var filteredData = this.state.filteredData
     var order = this.state.order
     filteredData = filteredData.sort(function (task1, task2) {
-      return (task1.title < task2.title) ? -order : order
+      return (task1.name < task2.name) ? -order : order
     })
 
     this.setState(update(this.state, {
@@ -94,9 +94,9 @@ var Tasks = React.createClass({
     var filteredData = this.state.filteredData
     var order = this.state.order
     filteredData = filteredData.sort(function (task1, task2) {
-      task1.limit = task1.maxVolunteers != 0 ? task1.maxVolunteers : 1000000
-      task2.limit = task2.maxVolunteers != 0 ? task2.maxVolunteers : 1000000
-      return (task1.limit < task2.limit) ? -order : order
+      task1.limitValue = task1.limit != 0 ? task1.limit : 1000000
+      task2.limitValue = task2.limit != 0 ? task2.limit : 1000000
+      return (task1.limitValue < task2.limitValue) ? -order : order
     })
 
     this.setState(update(this.state, {
@@ -205,12 +205,12 @@ var Tasks = React.createClass({
       var priorityClass = task.is_urgent ? 'tasks-priority-urgent-tr' : 'tasks-priority-normal-tr'
       return (
         <tr className={priorityClass}>
-          <td className="tasks-title-td"><NavLink href={'/zadania/'+task.id}>{task.title}</NavLink></td>
+          <td className="tasks-name-td"><NavLink href={'/zadania/'+task.id}>{task.name}</NavLink></td>
           <td className="tasks-categories-td"><span>{ (task.tags || []).join(', ') }</span></td>
           <td className="tasks-volunteerNumber-td"><span>{task.volunteerNumber}</span></td>
-          <td className="tasks-volunteerLimit-td"><span>{task.maxVolunteers != 0 ? task.maxVolunteers : 'Brak'}</span></td>
+          <td className="tasks-volunteerLimit-td"><span>{task.limit != 0 ? task.limit : 'Brak'}</span></td>
           <td className="tasks-creationDate-td"><span>{TimeService.showTime(task.created_at)}</span></td>
-          <th className="tasks-expirationDate-td"><span>{(typeof (task.datetime) != 'undefined') ? task.datetime: 'Brak'}</span></th>
+          <th className="tasks-expirationDate-td"><span>{(typeof (task.datetime) != 'undefined') ? TimeService.showTime(task.datetime) : 'Brak'}</span></th>
         </tr>
       )
     })
@@ -232,7 +232,7 @@ var Tasks = React.createClass({
           <table className="tasks-table">
             <tbody>
               <tr>
-                <th className="tasks-th" onClick={that.sortByTitle}>Tytuł</th>
+                <th className="tasks-th" onClick={that.sortByName}>Tytuł</th>
                 <th className="tasks-th" onClick={that.sortByCategories}>Kategorie</th>
                 <th className="tasks-th" onClick={that.sortByVolunteerNumber}>Ilość osób</th>
                 <th className="tasks-th" onClick={that.sortByVolunteerLimit}>Limit osób</th>

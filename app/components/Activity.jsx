@@ -101,8 +101,8 @@ var Activity = React.createClass({
       </div>
     }
 
-    var type = function () {
-      switch(activity.type) {
+    var actType = function () {
+      switch(activity.act_type) {
         case 'dalem_dla_sdm':
           return 'Dałem dla ŚDM'
         case 'wzialem_od_sdm':
@@ -121,7 +121,7 @@ var Activity = React.createClass({
     
     var startTime
     if (typeof (this.state.activity.datetime) != 'undefined')  {
-      startTime = activity.datetime
+      startTime = TimeService.showTime(activity.datetime) 
     } else {
       startTime = 'Nieokreślony'
     }
@@ -144,7 +144,7 @@ var Activity = React.createClass({
     var buttons = []
 
     //acceptButton
-    if (!has_joined && (volunteers.length < activity.maxVolunteers || activity.maxVolunteers==0)) {
+    if (!has_joined && (volunteers.length < activity.limit || activity.limit==0)) {
       buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" key="join" />)
     }
 
@@ -153,7 +153,7 @@ var Activity = React.createClass({
       buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" key="leave" />)
     }
 
-    var volonteersLimit = (activity.maxVolunteers == 0) ? 'Brak' : activity.maxVolunteers
+    var volonteersLimit = (activity.limit == 0) ? 'Brak' : activity.limit
 
     // TODO
     //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>
@@ -161,10 +161,10 @@ var Activity = React.createClass({
     return (
       <div>
         {editLink}
-        <h2>{activity.title}</h2>
+        <h2>{activity.name}</h2>
         <br></br>
         <br></br>
-        <b>Typ:</b> {type}
+        <b>Typ:</b> {actType}
         <br></br>
         <b>Kategorie:</b> {tagsList}
         <br></br>
