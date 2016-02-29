@@ -97,31 +97,7 @@ module.exports = {
     handler: require('./components/TaskBank/OpenTasks.jsx'),
     action: function(context, payload, done) {
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy' })
-      context.executeAction(actions.showTasks, { type: 'openTasks' }, function() {
-        done()
-      })
-    }
-  },
-
-  volunteer_tasks: {
-    path: '/zadania/moje',
-    method: 'get',
-    handler: require('./components/TaskBank/VolunteerTasks.jsx'),
-    action: function(context, payload, done) {
-      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy - Biorę udział w' })
-      context.executeAction(actions.showTasks, { type: 'volunteerTasks' }, function() {
-        done()
-      })
-    }
-  },
-
-  admin_tasks: {
-    path: '/zadania/dodane',
-    method: 'get',
-    handler: require('./components/TaskBank/AdminTasks.jsx'),
-    action: function(context, payload, done) {
-      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy - Moje zadania' })
-      context.executeAction(actions.showTasks, { type: 'adminTasks' }, function() {
+      context.executeAction(actions.loadActivities, {}, function() {
         done()
       })
     }

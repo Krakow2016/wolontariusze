@@ -4,140 +4,30 @@ var update = require('react-addons-update')
 var TaskFilters = require('./TaskFilters.jsx')
 
 var TimeService = require('../../modules/time/TimeService.js')
-
-var TasksStore = require('../../stores/Tasks')
-
+var ActivitiesStore = require('../../stores/Activities.js')
 
 var Tasks = React.createClass({
 
   getInitialState: function () {
-    var state = this.props.context.getStore(TasksStore).getState()
-    state.filteredData = Object.assign({}, state).data
-    return state
+    return {
+      all: this.props.context.getStore(ActivitiesStore).all
+    }
   },
 
   _changeListener: function() {
-    this.state.filteredData = {}
-    var state = this.props.context.getStore(TasksStore).getState()
-    state.filteredData = Object.assign({}, state).data
-    this.setState(state)
+    this.setState({
+      all: this.props.context.getStore(ActivitiesStore).all
+    })
   },
 
   componentDidMount: function() {
-    this.props.context.getStore(TasksStore)
+    this.props.context.getStore(ActivitiesStore)
       .addChangeListener(this._changeListener)
   },
 
   componentWillUnmount: function() {
-    this.props.context.getStore(TasksStore)
+    this.props.context.getStore(ActivitiesStore)
       .removeChangeListener(this._changeListener)
-  },
-
-  onPreviousPageButtonClick: function () {
-    var page = this.state.page-1
-    this.setState(update(this.state, {
-      page: {$set: page}
-    }))
-  },
-
-  onNextPageButtonClick: function () {
-    var page = this.state.page+1
-    this.setState(update(this.state, {
-      page: {$set: page}
-    }))
-  },
-
-  sortByName: function () {
-    //http://www.w3schools.com/jsref/jsref_sort.asp
-    //http://www.w3schools.com/js/js_comparisons.asp
-    var filteredData = this.state.filteredData
-    var order = this.state.order
-    filteredData = filteredData.sort(function (task1, task2) {
-      return (task1.name < task2.name) ? -order : order
-    })
-
-    this.setState(update(this.state, {
-      filteredData: {$set: filteredData},
-      order: {$set: -order}
-    }))
-  },
-
-  sortByCategories: function () {
-    var filteredData = this.state.filteredData
-    var order = this.state.order
-    filteredData = filteredData.sort(function (task1, task2) {
-      task1.categories = task1.tags.map(function(t) {return t.name}).join()
-      task2.categories = task2.tags.map(function(t) {return t.name}).join()
-      return (task1.categories < task2.categories) ? -order : order
-    })
-
-    this.setState(update(this.state, {
-      filteredData: {$set: filteredData},
-      order: {$set: -order}
-    }))
-  },
-
-  sortByVolunteerNumber: function () {
-    var filteredData = this.state.filteredData
-    var order = this.state.order
-    filteredData = filteredData.sort(function (task1, task2) {
-      return (task1.volunteerNumber < task2.volunteerNumber) ? -order : order
-    })
-
-    this.setState(update(this.state, {
-      filteredData: {$set: filteredData},
-      order: {$set: -order}
-    }))
-  },
-
-  sortByVolunteerLimit: function () {
-    var filteredData = this.state.filteredData
-    var order = this.state.order
-    filteredData = filteredData.sort(function (task1, task2) {
-      task1.limitValue = task1.limit != 0 ? task1.limit : 1000000
-      task2.limitValue = task2.limit != 0 ? task2.limit : 1000000
-      return (task1.limitValue < task2.limitValue) ? -order : order
-    })
-
-    this.setState(update(this.state, {
-      filteredData: {$set: filteredData},
-      order: {$set: -order}
-    }))
-  },
-
-  sortByCreationDate: function () {
-    var filteredData = this.state.filteredData
-    var order = this.state.order
-    filteredData = filteredData.sort(function (task1, task2) {
-      return (task1.created_at < task2.created_at) ? -order : order
-    })
-
-    this.setState(update(this.state, {
-      filteredData: {$set: filteredData},
-      order: {$set: -order}
-    }))
-  },
-
-  sortByExpirationDate: function () {
-    var filteredData = this.state.filteredData
-    var order = this.state.order
-    filteredData = filteredData.sort(function (task1, task2) {
-      task1.expDate = (typeof (task1.datetime) != 'undefined') ? new Date(task1.datetime).getTime() : 100000000000000
-      task2.expDate = (typeof (task2.datetime) != 'undefined') ? new Date(task2.datetime).getTime() : 100000000000000
-      return (task1.expDate < task2.expDate) ? -order : order
-    })
-
-    this.setState(update(this.state, {
-      filteredData: {$set: filteredData},
-      order: {$set: -order}
-    }))
-  },
-
-  filter: function (filteredData) {
-    this.setState(update(this.state, {
-      filteredData: {$set: filteredData},
-      page: {$set: 1}
-    }))
   },
 
   render: function () {
@@ -165,49 +55,16 @@ var Tasks = React.createClass({
       }
     }
 
-    //PAGINATION
-    var that = this
-    var taskNumber = 1
-    var taskRows = this.state.filteredData.filter(function () {
-      var page = that.state.page
-      var pagination = that.props.pagination
-      var result = (taskNumber > (page-1)*pagination && taskNumber <= page*pagination)
-      taskNumber++
-      return result
-    })
-    taskNumber = taskNumber-1
-    var pageNumber = parseInt((taskNumber-1)/(this.props.pagination)) + 1
-    //console.log("taskNumber", taskNumber)
-    //console.log("pageNumber", pageNumber)
-    var paginationButtons = []
-    if (this.state.page > 1) {
-      paginationButtons.push(<input type="button" onClick={this.onPreviousPageButtonClick} value="Poprzednie" key="previousPage" /> )
-    }
-    if (this.state.page < pageNumber) {
-      paginationButtons.push(<input type="button" onClick={this.onNextPageButtonClick} value="Następne" key="nextPage" /> )
-    }
-
-
-    var startNumber = (this.state.page-1)*this.props.pagination+1
-    var endNumber = (this.state.page*this.props.pagination < taskNumber) ? this.state.page*this.props.pagination : taskNumber
-    var numberDisplay
-    if (taskNumber > 0) {
-      if (startNumber == endNumber) {
-        numberDisplay = <span>Zadanie {startNumber} z {taskNumber}</span>
-      } else {
-        numberDisplay = <span>Zadania {startNumber}-{endNumber} z {taskNumber}</span>
-      }
-    } else {
-      numberDisplay = <span>Brak zadań</span>
-    }
-
-    var tasks = taskRows.map(function (task) {
+    var tasks = this.state.all.map(function (doc) {
+      var source = doc._source
+var task = source.doc
+if(!task) { return }
       var priorityClass = task.is_urgent ? 'tasks-priority-urgent-tr' : 'tasks-priority-normal-tr'
       return (
-        <tr className={priorityClass}>
+        <tr key={task.id} className={priorityClass}>
           <td className="tasks-name-td"><NavLink href={'/zadania/'+task.id}>{task.name}</NavLink></td>
           <td className="tasks-categories-td"><span>{ (task.tags || []).join(', ') }</span></td>
-          <td className="tasks-volunteerNumber-td"><span>{task.volunteerNumber}</span></td>
+          <td className="tasks-volunteerNumber-td"><span>{ (source.volunteers || []).length }</span></td>
           <td className="tasks-volunteerLimit-td"><span>{task.limit != 0 ? task.limit : 'Brak'}</span></td>
           <td className="tasks-creationDate-td"><span>{TimeService.showTime(task.created_at)}</span></td>
           <th className="tasks-expirationDate-td"><span>{(typeof (task.datetime) != 'undefined') ? TimeService.showTime(task.datetime) : 'Brak'}</span></th>
@@ -223,27 +80,19 @@ var Tasks = React.createClass({
               {tabs}
             </div>
           </div>
-          <br></br>
-          <TaskFilters data={this.state.data}
-                      filterFunction={this.filter}
-                      type={this.props.type}
-                      context={this.props.context} />
-          <br></br>{numberDisplay}
           <table className="tasks-table">
             <tbody>
               <tr>
-                <th className="tasks-th" onClick={that.sortByName}>Tytuł</th>
-                <th className="tasks-th" onClick={that.sortByCategories}>Kategorie</th>
-                <th className="tasks-th" onClick={that.sortByVolunteerNumber}>Ilość osób</th>
-                <th className="tasks-th" onClick={that.sortByVolunteerLimit}>Limit osób</th>
-                <th className="tasks-th" onClick={that.sortByCreationDate}>Czas utworzenia</th>
-                <th className="tasks-th" onClick={that.sortByExpirationDate}>Czas wygaśnięcia</th>
+                <th className="tasks-th" onClick={this.sortByName}>Tytuł</th>
+                <th className="tasks-th" onClick={this.sortByCategories}>Kategorie</th>
+                <th className="tasks-th" onClick={this.sortByVolunteerNumber}>Ilość osób</th>
+                <th className="tasks-th" onClick={this.sortByVolunteerLimit}>Limit osób</th>
+                <th className="tasks-th" onClick={this.sortByCreationDate}>Czas utworzenia</th>
+                <th className="tasks-th" onClick={this.sortByExpirationDate}>Czas wygaśnięcia</th>
               </tr>
               {tasks}
             </tbody>
           </table>
-
-          {paginationButtons}
 
           <NavLink href="/zadania/nowe">Dodaj zadanie</NavLink>
         </div>

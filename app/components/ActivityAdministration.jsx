@@ -305,6 +305,7 @@ var ActivityAdministration = React.createClass({
   },
 
   saveTag: function(tag) {
+    this.state.activity.tags = this.state.activity.tags || []
     this.setState(update(this.state, {
       activity: {
         tags: {$push: [tag]}

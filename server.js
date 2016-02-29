@@ -40,11 +40,12 @@ var server = module.exports = express()
 // (CRUD). Zamień w ścieżkach pliku `static` na `rethinkdb` aby podłączyć się
 // pod lokalną bazę danych.
 var Activities = require('./app/services/activities')(config.service)
+var ActivitiesES = require('./app/services/es/activities')
 var Comments = require('./app/services/'+config.service+'/comments')
 var Volunteers = require('./app/services/volunteers')(config.service)
 var Integration = require('./app/services/'+config.service+'/integrations')
 var APIClient = require('./app/services/'+config.service+'/apiclients')
-var Joints = require('./app/services/'+config.service+'/joints')
+var Joints = require('./app/services/joints')(config.service)
 var Xls = require('./app/services/'+config.service+'/xls')
 
 var app = require('./app/fluxible')
@@ -143,6 +144,7 @@ if(fetchrPlugin) {
   // Register our messages REST services
   fetchrPlugin.registerService(Volunteers)
   fetchrPlugin.registerService(Activities)
+  fetchrPlugin.registerService(ActivitiesES)
   fetchrPlugin.registerService(Comments)
   fetchrPlugin.registerService(Integration)
   fetchrPlugin.registerService(APIClient)

@@ -19,7 +19,6 @@ var APIClientStore = require('./stores/APIClient')
 var APIClientsStore = require('./stores/APIClients')
 var XlsStore = require('./stores/Xls')
 var IndexStore = require('./stores/Index')
-var TasksStore = require('./stores/Tasks')
 
 var passportPlugin = require('./plugins/passportPlugin')
 
@@ -40,8 +39,7 @@ var app = new Fluxible({
     APIClientStore,
     APIClientsStore,
     XlsStore,
-    IndexStore,
-    TasksStore
+    IndexStore
   ]
 })
 

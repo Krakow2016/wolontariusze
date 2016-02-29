@@ -6,23 +6,11 @@ var ActivitiesStore = createStore({
   storeName: 'Activities',
   handlers: {
     'LOAD_ACTIVITIES' : 'loadAll',
-    'ACTIVITY_DELETED': 'delete'
   },
 
   loadAll: function(data) {
     this.all = data
     this.emitChange()
-  },
-
-  delete: function (data) {
-    this.all =  data
-    this.emitChange()
-  },
-
-  getAll: function () {
-    return {
-      all: this.all
-    }
   },
 
   initialize: function () {
@@ -41,11 +29,5 @@ var ActivitiesStore = createStore({
 })
 
 ActivitiesStore.model = Activity
-
-// Oznacz wszystkie atrybuty jako dostępne tylko dla administratorów
-//ActivitiesStore.attributes = function() {
-//  return []
-//}
-
 
 module.exports = ActivitiesStore

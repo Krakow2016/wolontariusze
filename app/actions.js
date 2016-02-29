@@ -104,9 +104,8 @@ module.exports = {
   },
 
   loadActivities: function(context, payload, cb) {
-    // Pobierz dane wolontariusza z bazy danych
-    context.service.read('Activities', payload, {
-    }, function (err, data) {
+    // Pobiera zadania z elastic searcha
+    context.service.read('ActivitiesES', payload, {}, function (err, data) {
       if(err) { debug(err) }
       else { context.dispatch('LOAD_ACTIVITIES', data) }
       cb()
@@ -133,7 +132,7 @@ module.exports = {
       } else {
         var user = context.getUser()
         context.dispatch('JOINT_CREATED', Object.assign({}, user, {
-          id: data.generated_keys[0],
+          id: data.changes[0].new_val.id,
           user_id: user.id
         }))
       }
@@ -187,24 +186,12 @@ module.exports = {
   },
 
   deleteActivity: function(context, payload, cb) {
-    context.service.delete('Activities', payload, {user: context.getUser()}, function (err, data) {
+    context.service.delete('Activities', payload, {}, function (err, data) {
       if(err) { debug(err) }
       else {
         context.dispatch('ACTIVITY_DELETED', data)
         context.executeAction(navigateAction, {url: '/'})
       }
-      cb()
-    })
-  },
-  
-  showTasks: function(context, payload, cb) {
-    var user = context.getUser()
-    context.service.read('Activities', Object.assign({}, payload, {
-      user_id: user.id
-    }), {}, function (err, data) {
-      if(err) { debug(err) }
-      else { 
-        context.dispatch('LOAD_TASKS', data) }
       cb()
     })
   },
