@@ -42,8 +42,8 @@ var ApplicationStore = createStore({
     return this.title
   },
 
-  setInstagram: function(instagram_clinet_id) {
-    this.instagram_clinet_id = instagram_clinet_id
+  setInstagram: function(instagram_client_id) {
+    this.instagram_client_id = instagram_client_id
   },
 
   getState: function () {
@@ -54,7 +54,8 @@ var ApplicationStore = createStore({
       route: this.currentRoute,
       title: this.title,
       flashSuccess: this.flashSuccess,
-      flashFailure: this.flashFailure
+      flashFailure: this.flashFailure,
+      instagram_client_id: this.instagram_client_id
     }
   },
 
@@ -70,6 +71,7 @@ var ApplicationStore = createStore({
     this.title = state.title
     this.flashSuccess = state.flashSuccess
     this.flashFailure = state.flashFailure
+    this.instagram_client_id = state.instagram_client_id
   }
 })
 

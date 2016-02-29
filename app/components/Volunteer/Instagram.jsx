@@ -7,7 +7,8 @@ var Instagram = React.createClass({
 
   getInitialState: function() {
     return {
-      media: null
+      media: null,
+      client_id: null
     }
   },
 
@@ -22,7 +23,7 @@ var Instagram = React.createClass({
   loadInstagram: function(id) {
     var that = this
     var config = this.props.context.getStore(ApplicationStore)
-    this.client_id = config.instagram_client_id
+    this.setState({ client_id: config.instagram_client_id })
     request
       .get('/instagram/'+ id)
       .end(function(err, resp){
@@ -50,7 +51,7 @@ var Instagram = React.createClass({
       )
     } else { // Użytkownik nie autoryzował nas do wykonywania zapytań
       insta_content = (
-        <a href={'https://api.instagram.com/oauth/authorize/?client_id='+ this.client_id +'&redirect_uri=http://localhost:7000/instagram&response_type=code'}>
+        <a href={'https://api.instagram.com/oauth/authorize/?client_id='+ this.state.client_id +'&redirect_uri=http://localhost:7000/instagram&response_type=code'}>
           Zaloguj się do instagrama
         </a>
       )
