@@ -167,8 +167,10 @@ server.get('/logout', function(req, res){
 server.get('/instagram', function(req, res){
   if(req.user) {
     if (req.query.m == 1) {
-      res.sendfile('public/authenticate_insta.html', {root: __dirname});
-    } else if(req.query.code) {
+      res.sendfile('public/authenticate_insta.html', {root: __dirname})
+    }else if(req.query.m == 2){
+      res.sendfile('public/wrong_insta.html', {root: __dirname})
+    }else if(req.query.code) {
       request({
         method: 'POST',
         url: 'https://api.instagram.com/oauth/access_token',
@@ -181,7 +183,7 @@ server.get('/instagram', function(req, res){
         }
       }, function(err, resp, body) {
 
-        if (err) { return res.send(err) }
+        if (err) { return res.sendfile('public/wrong_insta.html', {root: __dirname}) }
         if (resp.statusCode !== 200) { return res.send(500) }
 
         var json = JSON.parse(body)
@@ -202,14 +204,6 @@ server.get('/instagram', function(req, res){
   }
 })
 
-server.get('/volunteer/:id', function(req, res){
-  var id = req.params.id;
-  Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function(err, user){
-    console.log("USER", user);
-    res.send(200);
-  })
-})
-
 server.get('/instagram/:id', function(req, res){
   var id = req.params.id
   Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function (err, user) {
@@ -217,14 +211,37 @@ server.get('/instagram/:id', function(req, res){
     var instagram = user.instagram
     if(!instagram) { return res.send(404) }
 
+    var tags = ['sdm2016', 'wyd2016', 'jmj2016', 'gmg2016', 'СДМ2016', 'wjt2016', 'ВДМ2016']
+    var result = []
     var token = instagram.access_token
+    var guard = false
+
     request({
       url: 'https://api.instagram.com/v1/users/'+ instagram.id +'/media/recent/',
       qs: { access_token: token },
       json: true
     }, function(err, req, resp) {
-      res.send(resp)
+      for(var tag_id in tags){
+        for(var insta in resp.data){
+          for(var insta_tag in resp.data[insta].tags){
+            if(resp.data[insta].tags[insta_tag] == tags[tag_id]){
+              guard = false
+              for(var r in result){
+                if(result[r].id == resp.data[insta].id){
+                  guard = true
+                  break;
+                }
+              }
+              if(!guard){
+                result.push(resp.data[insta])
+              }
+            }
+          }
+        }
+      }
+      res.send(result);
     })
+
   })
 })
 
