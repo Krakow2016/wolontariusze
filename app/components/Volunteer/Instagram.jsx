@@ -23,7 +23,9 @@ var Instagram = React.createClass({
   loadInstagram: function(id) {
     var that = this
     var config = this.props.context.getStore(ApplicationStore)
+
     this.setState({ client_id: config.instagram_client_id })
+
     request
       .get('/instagram/'+ id)
       .end(function(err, resp){

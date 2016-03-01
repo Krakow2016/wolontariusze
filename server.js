@@ -230,14 +230,12 @@ server.get('/instagram/:id', function(req, res){
 
 server.get('/instagram/remove/:id', function(req, res){
   var id = req.params.id;
-  console.log("ASDASDC ID " + id)
   Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function(err, user){
     if(err) return res.send(500);
-    if(!user.instagram) return res.send({result: 'ok'});
+    if(!user.instagram) return res.redirect('/wolontariusz/' + id)
     Volunteers.update(req, 'Volunteers', {id: id}, {instagram: ''}, {}, function(err, data){
       if(err) return res.send(500);
-      console.log("MMMMMMM %j", data);
-      return res.send({result: 'ok'});
+      return res.redirect('/wolontariusz/' + id)
     })
   });
 });
