@@ -121,7 +121,7 @@ module.exports = {
     action: function (context, payload, done) {
       var activityId  = payload.params.id
       context.executeAction(actions.showActivity, { id: activityId }, function(activity) {
-        context.dispatch('UPDATE_PAGE_TITLE', { title: activity.title })
+        context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
         done()
       })
     }
@@ -134,7 +134,7 @@ module.exports = {
     action: function (context, payload, done) {
       var activityId  = payload.params.id
       context.executeAction(actions.showActivity, { id: activityId }, function(activity) {
-        context.dispatch('UPDATE_PAGE_TITLE', { title: activity.title })
+        context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
         done()
       })
     }
