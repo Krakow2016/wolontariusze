@@ -211,7 +211,7 @@ var Activities = module.exports = {
         if (params.type) 
         {
           //http://www.w3schools.com/jsref/jsref_gettime.asp
-          var currentTime = new Date().getTime()
+          var currentTime = (new Date().getTime())/1000
           if (params.type === 'openTasks') {
             r.table(tableName)
             .filter (function (task) {
@@ -220,10 +220,11 @@ var Activities = module.exports = {
             }, {default: true})
             .filter (function (task) {
               return task.hasFields('datetime').not().or(
-                            r.ISO8601(task('datetime')).toEpochTime().gt(currentTime))  
+                            r.ISO8601(task('datetime')).toEpochTime().gt(currentTime))
             }, {default: true})
            .merge (function (task) {
              return {
+               time: r.ISO8601(task('datetime')).toEpochTime(),
                volunteerNumber: r.table('Joints')
                   .getAll(task('id'), {index: 'activity_id'})
                   .filter(function (x) {
