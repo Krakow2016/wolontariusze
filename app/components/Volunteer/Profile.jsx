@@ -41,7 +41,7 @@ var Shell = React.createClass({
           </div>
         </div>
 
-        <Instagram user_id={this.state.id} insta_state={this.state.instagram != ''} context={this.props.context} />
+        <Instagram user_id={this.state.id} context={this.props.context} />
       </VolunteerShell>
     )
   }

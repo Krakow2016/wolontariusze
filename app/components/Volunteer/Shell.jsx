@@ -84,7 +84,6 @@ var Volunteer = React.createClass({
         </div>
 
         {this.props.children}
-
       </div>
     )
           //<div className="col span_1_of_4">
@@ -225,3 +224,4 @@ var ExtraAttributesVisible = React.createClass({
 
 // Module.exports instead of normal dom mounting
 module.exports = Volunteer
+

@@ -50,9 +50,6 @@ var Search = React.createClass({
   render: function() {
     return (
       <div>
-        <p>Uprawnienia dostępu do bazy wyszukiwarki masz jedynie jako koordynator. Korzystając z niej zobowiązujesz się do zachowania w tajemnicy i nie ujawniania osobom trzecim otrzymanych tu informacji i danych o charakterze poufnym, w tym danych osobowych.
-Administratorem powyższych danych jest Archidiecezja Krakowska.
-Potwierdź swoje uprawnienia. (button)</p>
         <SearchForm
           query={this.state.query}
           search={this.search}

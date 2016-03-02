@@ -26,52 +26,31 @@ var Instagram = React.createClass({
 
     this.setState({ client_id: config.instagram_client_id })
 
-    if(this.props.insta_state){
-      request
-        .get('/instagram/'+ id)
-        .end(function(err, resp){
-          if(err) {
-            that.setState({
-              error: err
-            })
-          } else {
-            that.setState({
-              media: resp.body
-            })
-          }
-        })
-    }
+    request
+      .get('/instagram/'+ id)
+      .end(function(err, resp){
+        if(err) {
+          // Brak integracji
+        } else {
+          that.setState({
+            media: resp.body.data
+          })
+        }
+      })
   },
 
   render: function(){
     var insta_content
 
-    if(this.state.error){
-
-      insta_content = (
-        <h3>Wystapił błąd podczas połączenia z Instagram.com</h3>
-      )
-      console.error(this.state.error);
-
-    }else if(this.state.media) { // Zapytanie wykonane poprawnie
-      if(this.state.media.length > 10){
-        this.setState({
-          media: this.state.media.splice(9, this.state.media.length - 1)
-        })
-      }
+    if(this.state.media) { // Zapytanie wykonane poprawnie
       var media = this.state.media.map(function(img) {
         return (
-          <a href={img.link}><img src={img.images.low_resolution.url} key={img.id} /></a>
+          <img src={img.images.low_resolution.url} key={img.id} />
         )
       })
       insta_content = (
         <div id='instafeed'>{ media }</div>
       )
-    }else if (this.props.insta_state) {
-      insta_content = (
-        <h3>Ładuję treść poczekaj chwilkę</h3>
-      )
-
     } else { // Użytkownik nie autoryzował nas do wykonywania zapytań
       insta_content = (
         <a href={'https://api.instagram.com/oauth/authorize/?client_id='+ this.state.client_id +'&redirect_uri=http://localhost:7000/instagram&response_type=code'}>

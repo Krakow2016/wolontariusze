@@ -143,9 +143,6 @@ var VolunteerAdministration = React.createClass({
 
     return (
       <VolunteerShell context={this.props.context}>
-        <p>Tu: blurred
-Ta strona jest do wglądu wyłącznie dla koordynatorów. Korzystając z niej zobowiązujesz się do zachowania w tajemnicy i nie ujawniania osobom trzecim otrzymanych tu informacji i danych osobowych o charakterze poufnym.
-Komentarze, które możesz dodawać są widoczne tylko i wyłącznie dla innych koordynatorów- nie są widoczne dla właściciela profilu.</p>
         {papers}
 
         <Dialog
