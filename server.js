@@ -50,9 +50,6 @@ var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
 var fetchrPlugin = app.getPlugin('FetchrPlugin')
 
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-var util = require("util");
-
 // Konfiguracja zapisu danych sesji w bazie danych
 var session_store = {
   servers: [ config.rethinkdb ]
@@ -164,11 +161,10 @@ server.get('/logout', function(req, res){
   res.redirect('/')
 })
 
+// Końcówka zwrotna dla API instagrama po udanym uwierzytelnieniu
 server.get('/instagram', function(req, res){
   if(req.user) {
-    if (req.query.m == 1) {
-      res.sendfile('public/authenticate_insta.html', {root: __dirname});
-    } else if(req.query.code) {
+    if(req.query.code) {
       request({
         method: 'POST',
         url: 'https://api.instagram.com/oauth/access_token',
@@ -177,11 +173,16 @@ server.get('/instagram', function(req, res){
           client_secret: process.env.INSTAGRAM_SECRET,
           code: req.query.code,
           grant_type: 'authorization_code',
-          redirect_uri: 'http://localhost:7000/instagram'
+          redirect_uri: 'https://wolontariusze.krakow2016.com/instagram'
         }
       }, function(err, resp, body) {
 
-        if (err) { return res.send(err) }
+        if (err) {
+          req.flash('error', 'Integracja z Instagramem nie powiodła się.')
+          res.redirect('/wolontariusz/'+ req.user.id)
+          return
+        }
+
         if (resp.statusCode !== 200) { return res.send(500) }
 
         var json = JSON.parse(body)
@@ -193,7 +194,8 @@ server.get('/instagram', function(req, res){
           }
         }, {}, function(err, data){
           if(err) { return res.send(500) }
-          res.sendfile('public/authenticate_insta.html', {root: __dirname})
+          req.flash('success', 'Integracja z Instagramem zakończona pomyślnie.')
+          res.redirect('/wolontariusz/'+ req.user.id)
         })
       })
     }
@@ -202,14 +204,7 @@ server.get('/instagram', function(req, res){
   }
 })
 
-server.get('/volunteer/:id', function(req, res){
-  var id = req.params.id;
-  Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function(err, user){
-    console.log("USER", user);
-    res.send(200);
-  })
-})
-
+// Pobiera zdjęcia dla danego usera
 server.get('/instagram/:id', function(req, res){
   var id = req.params.id
   Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function (err, user) {
@@ -228,17 +223,6 @@ server.get('/instagram/:id', function(req, res){
   })
 })
 
-server.get('/instagram/remove/:id', function(req, res){
-  var id = req.params.id;
-  Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function(err, user){
-    if(err) return res.send(500);
-    if(!user.instagram) return res.redirect('/wolontariusz/' + id)
-    Volunteers.update(req, 'Volunteers', {id: id}, {instagram: ''}, {}, function(err, data){
-      if(err) return res.send(500);
-      return res.redirect('/wolontariusz/' + id)
-    })
-  });
-});
 server.post('/search', function(req, res) {
   if(req.user && req.user.is_admin) {
     var elasticSearch = config.elasticSearch +'/_search'

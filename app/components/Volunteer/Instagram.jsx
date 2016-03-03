@@ -53,7 +53,7 @@ var Instagram = React.createClass({
       )
     } else { // Użytkownik nie autoryzował nas do wykonywania zapytań
       insta_content = (
-        <a href={'https://api.instagram.com/oauth/authorize/?client_id='+ this.state.client_id +'&redirect_uri=http://localhost:7000/instagram&response_type=code'}>
+        <a href={'https://api.instagram.com/oauth/authorize/?client_id='+ this.state.client_id +'&redirect_uri=https://wolontariusze.krakow2016.com/instagram&response_type=code'}>
           Zaloguj się do instagrama
         </a>
       )

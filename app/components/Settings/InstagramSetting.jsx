@@ -3,6 +3,7 @@ var NavLink = require('fluxible-router').NavLink
 
 var VolunteerStore = require('../../stores/Volunteer')
 var ApplicationStore = require('../../stores/ApplicationStore')
+var updateVolunteer = require('../../actions').updateVolunteer
 
 var InstagramSetting = React.createClass({
 
@@ -11,7 +12,7 @@ var InstagramSetting = React.createClass({
   },
 
   _changeListener: function() {
-    this.replaceState(this.getInitialState())
+    this.setState(this.getInitialState())
   },
 
   componentDidMount: function() {
@@ -24,20 +25,25 @@ var InstagramSetting = React.createClass({
       .removeChangeListener(this._changeListener)
   },
 
+  removeInstagram: function() {
+    this.props.context.executeAction(updateVolunteer, Object.assign(this.state, {
+      instagram: null
+    }))
+
+  },
+
   render: function() {
-    var insta_state;
+    var insta_state
     var config = this.props.context.getStore(ApplicationStore)
 
-    if(this.state.instagram == '' || typeof this.state.instagram == 'undefined'){
+    if(this.state.instagram && this.state.instagram.id) {
       insta_state = (
-        <a href={'https://api.instagram.com/oauth/authorize/?client_id='+ config.instagram_client_id +'&redirect_uri=http://localhost:7000/instagram&response_type=code'}>
-          Zaloguj się
-        </a>
+        <input type="button" value="Usuń" onClick={this.removeInstagram} />
       )
-    }else{
+    } else {
       insta_state = (
-        <a href={'/instagram/remove/' + this.state.id}>
-          Usuń
+        <a href={'https://api.instagram.com/oauth/authorize/?client_id='+ config.instagram_client_id +'&redirect_uri=https://wolontariusze.krakow2016.com/instagram&response_type=code'}>
+          Zaloguj się
         </a>
       )
     }

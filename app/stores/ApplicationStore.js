@@ -44,6 +44,7 @@ var ApplicationStore = createStore({
 
   setInstagram: function(instagram_client_id) {
     this.instagram_client_id = instagram_client_id
+    this.emitChange()
   },
 
   getState: function () {
