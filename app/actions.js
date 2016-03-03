@@ -233,7 +233,14 @@ module.exports = {
       function (err, data) {
         if (err) { debug(err) }
         else { context.dispatch('LOAD_INTEGRATIONS', data) }
-        cb()
+
+        context.service.read('Volunteers', {id: payload.user_id}, {},
+          function (err, data) {
+            if (err) { debug(err) }
+            else { context.dispatch('LOAD_VOLUNTEER', data) }
+            cb()
+          }
+        )
       }
     )
   },
