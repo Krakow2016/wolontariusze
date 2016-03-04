@@ -33,11 +33,12 @@ var LoginButton = React.createClass({
 var LogoutButton = React.createClass({
   render: function() {
     return (
-      <span>
-        <NavLink href={'/wolontariusz/'+this.props.user_id}>Witaj {this.props.user_name}!</NavLink>
-        <NavLink href="/ustawienia/konto">Ustawienia</NavLink>
-        <a href="/logout">Wyloguj się</a>
-      </span>
+      <ul>
+        <li><NavLink href="/zadania">Bank pracy</NavLink></li>
+        <li><NavLink href={'/wolontariusz/'+this.props.user_id}>Witaj {this.props.user_name}!</NavLink></li>
+        <li><NavLink href="/ustawienia/konto">Ustawienia</NavLink></li>
+        <li><a href="/logout">Wyloguj się</a></li>
+      </ul>
     )
   }
 })

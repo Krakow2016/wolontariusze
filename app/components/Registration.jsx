@@ -8,35 +8,29 @@ var createVolunteer = require('../actions').createVolunteer
 var BasicForm = require('./Settings/BasicForm.jsx')
 
 var MyInput = React.createClass({
-
+  
   // Add the Formsy Mixin
   mixins: [Formsy.Mixin],
 
   // setValue() will set the value of the component, which in
   // turn will validate it and the rest of the form
-  changeValue: function (event) {
+  changeValue: function(event) {
     this.setValue(event.currentTarget.value)
   },
 
-  render: function () {
+  render: function() {
 
     // An error message is returned ONLY if the component is invalid
     // or the server has returned an error message
     var errorMessage = this.getErrorMessage()
 
-    return (
-      <input
-        id={this.props.id}
-        type={this.props.type}
-        onChange={this.changeValue}
-        errorText={errorMessage} />
-    )
+    return (<input id={this.props.id} type={this.props.type} onChange={this.changeValue} errorText={errorMessage}/>)
   }
 })
 
 var Registration = React.createClass({
 
-  getInitialState: function () {
+  getInitialState: function() {
     return {}
   },
 
@@ -58,56 +52,47 @@ var Registration = React.createClass({
   },
 
   render: function() {
-    if(this.state.success) {
+    if (this.state.success) {
       return (
         <p>Dziękujemy za zgłoszenie!</p>
       )
     } else {
-      return (
-        <RegistrationForm context={this.props.context} error={this.state.error} />
-      )
+      return (<RegistrationForm context={this.props.context} error={this.state.error}/>)
     }
   }
 })
 
 var RegistrationForm = React.createClass({
 
-  getInitialState: function () {
-    return {
-      canSubmit: false
-    }
+  getInitialState: function() {
+    return {canSubmit: false}
   },
 
-  enableButton: function () {
-    this.setState({
-      canSubmit: true
-    })
+  enableButton: function() {
+    this.setState({canSubmit: true})
   },
 
-  disableButton: function () {
-    this.setState({
-      canSubmit: false
-    })
+  disableButton: function() {
+    this.setState({canSubmit: false})
   },
 
   handleSubmit: function(data) {
     this.props.context.executeAction(createVolunteer, data)
   },
 
-  render: function () {
+  render: function() {
     var message
-    if(this.props.error) { // error message
-      message = (<p>Wystąpił nieznany błąd.</p>)
+    if (this.props.error) { // error message
+      message = (
+        <p>Wystąpił nieznany błąd.</p>
+      )
     }
 
     return (
       <Formsy.Form className="registrationForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
-        <p>(imię i nazwisko) nie występuje jeszcze w naszej bazie danych, a chcemy go dodać do naszego grona. Jako administrator masz możliwość utworzenia konta uzupełniając poniższe dane o wolontariusza:
-….imię
-…nazwisko
-….adres e-mail
- Pamiętaj! Aby nowo utworzone konto było aktywne, musisz zaznaczyć …. </p>
-        <BasicForm {...this.state} />
+        <p>(imię i nazwisko) nie występuje jeszcze w naszej bazie danych, a chcemy go dodać do naszego grona. Jako administrator masz możliwość utworzenia konta uzupełniając poniższe dane o wolontariusza: ….imię …nazwisko ….adres e-mail Pamiętaj! Aby nowo utworzone konto było aktywne, musisz zaznaczyć ….
+        </p>
+        <BasicForm {...this.state}/>
 
         <div className="pure-g">
           <div className="pure-u-1 pure-u-md-1-3"></div>

@@ -61,11 +61,13 @@ var Instagram = React.createClass({
       }
       var media = this.state.media.map(function(img) {
         return (
-          <a href={img.link}><img src={img.images.low_resolution.url} key={img.id} /></a>
+          <div className="col span_1_of_4">
+            <a href={img.link}><img src={img.images.low_resolution.url} key={img.id} className="profile-insta-photo"/></a>
+          </div>
         )
       })
       insta_content = (
-        <div id='instafeed'>{ media }</div>
+        <div className="section group">{ media }</div>
       )
     }else if (this.props.insta_state) {
       insta_content = (
