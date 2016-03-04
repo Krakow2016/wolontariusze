@@ -62,7 +62,8 @@ var SearchForm = React.createClass({
         <div className="pure-g">
           <div className="pure-u-1-3"> </div>
           <div className="pure-u-2-3">
-            <RaisedButton label="Szukaj" primary={true} onClick={this.props.search} />
+            <button type="button" className="button" primary={true} onClick={this.props.search}>Szukaj</button>
+            <div id="button-clear"></div>
           </div>
         </div>
       </div>

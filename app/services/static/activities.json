@@ -1,48 +1,56 @@
 {
     "1": {
         "id": "1",
-        "title": "Pierwsza Aktywność",
+        "name": "Pierwsza Aktywność",
         "description": "Treść pierwszej aktywności",
-        "creationTimestamp": 120000,
-        "editionTimestamp": 120000,
+        "act_type": "dalem_dla_sdm",
+        "created_at": "2009-01-01T00:20:00.200Z",
+        "updated_at": "2010-01-01T00:20:00.200Z",
         "datetime": "1970-01-01T00:20:00.200Z",
         "duration": "1h",
         "place": "Kraków Kanonicza 14",
         "lat_lon": [50.0565, 19.9376],
+        "is_archived": false,
         "is_urgent": true,
         "creator": "1",
         "editor": "1",
-        "maxVolunteers": 5
+        "limit": 5,
+        "tags": []
      },
      
     "2": {
         "id": "2",
-        "title": "Druga Aktywność",
+        "name": "Druga Aktywność",
         "description": "Treść drugiej aktywności",
-        "creationTimestamp": 220000,
-        "editionTimestamp": 1220000,
-        "datetime": "1970-01-01T00:36:40.200Z",
+        "act_type": "wzialem_od_sdm",
+        "created_at": "2016-01-01T00:20:00.200Z",
+        "updated_at": "2016-02-01T00:20:00.200Z",      
+        "datetime": "2020-01-01T00:36:40.200Z",
         "duration": "2h",
         "place": "Sankuarium Bożego Miłosierdzia",
         "lat_lon": [50.0200, 19.9376],
         "is_urgent": false,
         "creator": "2",
         "editor": "1",
-        "maxVolunteers": 1
+        "limit": 1,
+        "tags": ["Wolontariat+"]
      },
 
     "3": {     
         "id": "3",
-        "title": "Trzecia Aktywność",
+        "name": "Trzecia Aktywność",
         "description": "Treść trzeciej aktywności",
-        "creationTimestamp": 320000,
-        "editionTimestamp": 1320000,
-        "datetime": "1970-01-01T00:53:20.200Z",
+        "act_type": "dalem_dla_sdm",
+        "created_at": "2016-01-03T00:20:00.200Z",
+        "updated_at": "2016-02-03T00:20:00.200Z", 
+        "datetime": "2020-01-01T00:53:20.200Z",
         "duration": "1d",
         "place": "Myślenice",
+        "is_archived": false,
         "is_urgent": false,
         "creator": "1",
         "editor": "2",
-        "maxVolunteers": 10
+        "limit": 10,
+        "tags": ["Wolontariat+", "Tłumaczenia"]
      }
 }

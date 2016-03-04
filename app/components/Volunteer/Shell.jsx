@@ -7,46 +7,28 @@ var actions = require('../../actions')
 
 var Volunteer = React.createClass({
 
-  getInitialState: function () {
-    return this.props.context.getStore(VolunteerStore).getState().profile
-  },
-
-  _changeListener: function() {
-    this.setState(this.props.context.getStore(VolunteerStore).getState().profile)
-  },
-
-  componentDidMount: function() {
-    this.props.context.getStore(VolunteerStore)
-      .addChangeListener(this._changeListener)
-  },
-
-  componentWillUnmount: function() {
-    this.props.context.getStore(VolunteerStore)
-      .removeChangeListener(this._changeListener)
-  },
-
   render: function () {
     var user = this.user()
 
     var email
     var tabs = [
-      <NavLink href={"/wolontariusz/" + this.state.id} className="profile-ribon-cell">
+      <NavLink key="profile" href={"/wolontariusz/" + this.props.profile.id} className="profile-ribon-cell">
         <b id="profile-ribon-txt">Profil</b>
       </NavLink>,
-      <NavLink href={"/wolontariusz/" + this.state.id +'/aktywnosci'} className="profile-ribon-cell">
+      <NavLink key="activities" href={"/wolontariusz/" + this.props.profile.id +'/aktywnosci'} className="profile-ribon-cell">
         <b id="profile-ribon-txt">Aktywności</b>
       </NavLink>
     ]
 
     if(user) {
       tabs.push(
-        <NavLink href={"/wolontariusz/" + this.state.id +'/grafik'} className="profile-ribon-cell">
+        <NavLink key="schedule" href={"/wolontariusz/" + this.props.profile.id +'/grafik'} className="profile-ribon-cell">
           <b id="profile-ribon-txt">Grafik</b>
         </NavLink>
       )
       if(user.is_admin) {
         tabs.push(
-          <NavLink href={"/wolontariusz/" + this.state.id +'/admin'} className="profile-ribon-cell">
+          <NavLink key="details" href={"/wolontariusz/" + this.props.profile.id +'/admin'} className="profile-ribon-cell">
             <b id="profile-ribon-txt">Szczegóły</b>
           </NavLink>
         )
@@ -55,8 +37,8 @@ var Volunteer = React.createClass({
           <h2>
             <b>E-mail: </b>
             <span>
-              <a href={"mailto:"+ this.state.email} target="_blank">
-                {this.state.email}
+              <a href={"mailto:"+ this.props.profile.email} target="_blank">
+                {this.props.profile.email}
               </a>
             </span>
           </h2>
@@ -65,19 +47,19 @@ var Volunteer = React.createClass({
     }
 
     var tags
-    if(this.state.tags) {
-      tags = (<h2><b>Tagi:</b> <span>{ this.state.tags.join(', ') }</span></h2>)
+    if(this.props.profile.tags) {
+      tags = (<h2><b>Tagi:</b> <span>{ this.props.profile.tags.join(', ') }</span></h2>)
     }
 
     return (
       <div className="volonteer">
         <div className="section group">
           <div className="col span_2_of_4">
-            <img src={this.state.profile_picture_url} id="prolife-photo" />
+            <img src={this.props.profile.profile_picture_url} id="prolife-photo" />
           </div>
           <div className="col span_2_of_4">
             <h1 className="profile-name">{this.name()}</h1>
-            <h2><b>Kraj:</b> <span>{ this.state.nationality || 'Polska' }</span></h2>
+            <h2><b>Kraj:</b> <span>{ this.props.profile.nationality || 'Polska' }</span></h2>
             {tags}
             {email}
           </div>
@@ -112,7 +94,7 @@ var Volunteer = React.createClass({
   },
 
   name: function() {
-    return this.state.first_name +' '+ this.state.last_name
+    return this.props.profile.first_name +' '+ this.props.profile.last_name
   },
 
   user: function() {

@@ -91,40 +91,52 @@ module.exports = {
     }
   },
 
-  activity: {
-    path: '/aktywnosc/:id',
+  open_tasks: {
+    path: '/zadania',
     method: 'get',
-    handler: require('./components/Activity.jsx'),
-    action: function (context, payload, done) {
-      var activityId  = payload.params.id
-      context.dispatch('UPDATE_PAGE_TITLE', { title: activityId + ' Aktywnosc' })
-      context.executeAction(actions.showActivity, { id: activityId }, function() {
-        done()
-      })
-    }
-  },
-
-  activity_edition: {
-    path: '/aktywnosc/:id/edytuj',
-    method: 'get',
-    handler: require('./components/ActivityEdit.jsx'),
-    action: function (context, payload, done) {
-      var activityId  = payload.params.id
-      context.dispatch('UPDATE_PAGE_TITLE', { title: activityId + ' Edytuj Aktywnosc' })
-      context.executeAction(actions.showActivity, { id: activityId }, function() {
+    handler: require('./components/TaskBank/OpenTasks.jsx'),
+    action: function(context, payload, done) {
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy' })
+      context.executeAction(actions.loadActivities, payload.query, function() {
         done()
       })
     }
   },
 
   activity_creation: {
-    path: '/aktywnosci/nowa',
+    path: '/zadania/nowe',
     method: 'get',
     handler: require('./components/ActivityCreate.jsx'),
     action: function (context, payload, done) {
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Nowa Aktywnosc' })
       context.dispatch('PRECREATE_ACTIVITY', {})
       done()
+    }
+  },
+
+  activity: {
+    path: '/zadania/:id',
+    method: 'get',
+    handler: require('./components/Activity.jsx'),
+    action: function (context, payload, done) {
+      var activityId  = payload.params.id
+      context.executeAction(actions.showActivity, { id: activityId }, function(activity) {
+        context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
+        done()
+      })
+    }
+  },
+
+  activity_edition: {
+    path: '/zadania/:id/edytuj',
+    method: 'get',
+    handler: require('./components/ActivityEdit.jsx'),
+    action: function (context, payload, done) {
+      var activityId  = payload.params.id
+      context.executeAction(actions.showActivity, { id: activityId }, function(activity) {
+        context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
+        done()
+      })
     }
   },
 
@@ -178,6 +190,7 @@ module.exports = {
     action: function (context, payload, done) {
       var user = context.getUser()
       if(user) {
+        context.dispatch('UPDATE_PAGE_TITLE', { title: 'Aplikacje' })
         context.executeAction(actions.showIntegrations, { user_id: user.id }, function() {
           done()
         })
@@ -232,15 +245,4 @@ module.exports = {
       done()
     }
   },
-
-  tasks: {
-    path: '/zadania',
-    method: 'get',
-    handler: require('./components/Tasks.jsx'),
-    action: function(context, payload, done) {
-      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy' })
-      // TODO: wczytaj zadania
-      done()
-    }
-  }
 }

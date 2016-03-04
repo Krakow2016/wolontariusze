@@ -19,7 +19,8 @@ var express = require('express'),
   r = require('rethinkdb'),
   AWS = require('aws-sdk'),
   async = require('async'),
-  sharp = require('sharp')
+  sharp = require('sharp'),
+  ua = require('universal-analytics')
 
 // Służy do zapisywania sesji użytkowników w bazie danych
 var RDBStore = require('session-rethinkdb')(session)
@@ -39,11 +40,12 @@ var server = module.exports = express()
 // (CRUD). Zamień w ścieżkach pliku `static` na `rethinkdb` aby podłączyć się
 // pod lokalną bazę danych.
 var Activities = require('./app/services/activities')(config.service)
+var ActivitiesES = require('./app/services/es/activities')
 var Comments = require('./app/services/'+config.service+'/comments')
 var Volunteers = require('./app/services/volunteers')(config.service)
 var Integration = require('./app/services/'+config.service+'/integrations')
 var APIClient = require('./app/services/'+config.service+'/apiclients')
-var Joints = require('./app/services/'+config.service+'/joints')
+var Joints = require('./app/services/joints')(config.service)
 var Xls = require('./app/services/'+config.service+'/xls')
 
 var app = require('./app/fluxible')
@@ -126,6 +128,11 @@ server.use(flash())
 server.use(passport.initialize())
 // Przechowywuj sesje użytkownika w pamięci serwera.
 server.use(passport.session())
+// Google Analytics Measurement Protocol
+server.use(function(req, res, next) {
+  req.visitor = ua(process.env.GOOGLE_ANALYTICS_UID, req.user && req.user.id)
+  next()
+})
 
 // Użyj silnika szablonów Handlebars
 server.engine('handlebars', handlebars({
@@ -137,13 +144,25 @@ if(fetchrPlugin) {
   // Register our messages REST services
   fetchrPlugin.registerService(Volunteers)
   fetchrPlugin.registerService(Activities)
+  fetchrPlugin.registerService(ActivitiesES)
   fetchrPlugin.registerService(Comments)
   fetchrPlugin.registerService(Integration)
   fetchrPlugin.registerService(APIClient)
   fetchrPlugin.registerService(Joints)
   fetchrPlugin.registerService(Xls)
   // Set up the fetchr middleware
-  server.use(fetchrPlugin.getXhrPath(), jsonParser, fetchrPlugin.getMiddleware())
+  server.use(fetchrPlugin.getXhrPath(), jsonParser, function(req, res, done) {
+    // Google Analytics Measurement Protocol
+    if(req.visitor) {
+      req.visitor.pageview({
+        dp: req.path,
+        dh: 'https://wolontariusze.krakow2016.com',
+        uip: req.ip,
+        ua: req.headers['user-agent']
+      }).send()
+    }
+    done()
+  }, fetchrPlugin.getMiddleware())
 }
 
 // W pierwszej kolejności sprawdź ścieżki z poza single-page
@@ -159,6 +178,68 @@ server.get('/logout', function(req, res){
   req.logout()
   req.flash('success', 'Wylogowano.')
   res.redirect('/')
+})
+
+// Końcówka zwrotna dla API instagrama po udanym uwierzytelnieniu
+server.get('/instagram', function(req, res){
+  if(req.user) {
+    if(req.query.code) {
+      request({
+        method: 'POST',
+        url: 'https://api.instagram.com/oauth/access_token',
+        formData: {
+          client_id: process.env.INSTAGRAM_CLIENT_ID,
+          client_secret: process.env.INSTAGRAM_SECRET,
+          code: req.query.code,
+          grant_type: 'authorization_code',
+          redirect_uri: 'https://wolontariusze.krakow2016.com/instagram'
+        }
+      }, function(err, resp, body) {
+
+        if (err) {
+          req.flash('error', 'Integracja z Instagramem nie powiodła się.')
+          res.redirect('/wolontariusz/'+ req.user.id)
+          return
+        }
+
+        if (resp.statusCode !== 200) { return res.send(500) }
+
+        var json = JSON.parse(body)
+        Volunteers.update(req, 'Volunteers', {id: req.user.id}, {
+          instagram: {
+            id: json.user.id,
+            access_token: json.access_token,
+            username: json.user.username
+          }
+        }, {}, function(err, data){
+          if(err) { return res.send(500) }
+          req.flash('success', 'Integracja z Instagramem zakończona pomyślnie.')
+          res.redirect('/wolontariusz/'+ req.user.id)
+        })
+      })
+    }
+  } else {
+    res.send(403)
+  }
+})
+
+// Pobiera zdjęcia dla danego usera
+server.get('/instagram/:id', function(req, res){
+  var id = req.params.id
+  Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function (err, user) {
+    if(err) { return res.send(500) }
+    var instagram = user.instagram
+    if(!instagram) { return res.send(404) }
+
+    var token = instagram.access_token
+    request({
+      url: 'https://api.instagram.com/v1/users/'+ instagram.id +'/media/recent/',
+      qs: { access_token: token },
+      json: true
+    }, function(err, req, resp) {
+      res.send(resp)
+    })
+  })
 })
 
 server.post('/search', function(req, res) {
@@ -472,6 +553,19 @@ server.use(function(req, res, next) {
     context.getActionContext().dispatch('SAVE_FLASH_SUCCESS', success)
   } else if(failure) { // Błąd
     context.getActionContext().dispatch('SAVE_FLASH_FAILURE', failure)
+  }
+
+  // Ustaw konfigurację integracji z Instagramem
+  context.getActionContext().dispatch('INSTAGRAM_CONFIG',  process.env.INSTAGRAM_CLIENT_ID)
+
+  // Google Analytics Measurement Protocol
+  if(req.visitor) {
+    req.visitor.pageview({
+      dp: req.path,
+      dh: 'https://wolontariusze.krakow2016.com',
+      uip: req.ip,
+      ua: req.headers['user-agent']
+    }).send()
   }
 
   debug('Executing navigate action')

@@ -2,7 +2,6 @@ var React = require('react')
 var handleHistory = require('fluxible-router').handleHistory
 var addons = require('fluxible-addons-react')
 var NavLink = require('fluxible-router').NavLink
-var Snackbar = require('material-ui/lib/snackbar')
 var navigateAction = require('fluxible-router').navigateAction
 var provideContext = addons.provideContext
 
@@ -93,13 +92,16 @@ var Application = React.createClass({
           <NavLink href="/wyszukiwarka">Zaawansowane wyszukiwanie</NavLink>
         )
       }
+      var searchStyle = {
+        position: 'relative'
+      }
 
       searchForm = (
-        <span className="search">
-          <ActivityVolonteersList id="searchForm" addActiveVolonteer={this.addActiveVolonteer} className="form" />
-          <img src="/img/search.svg" id="menu-search-submit" />
+        <div className="col span_1_of_4 search" style={searchStyle}>
+          <ActivityVolonteersList id="form" addActiveVolonteer={this.addActiveVolonteer} className="form menu-search-box" />
+          <input src="/img/search.svg" id="menu-search-submit" type="image" />
           {advancedSearch}
-        </span>
+        </div>
       )
     }
 
@@ -125,16 +127,16 @@ var Application = React.createClass({
         <header>
           <div className="THE-margin">
             <NavLink className="logo" href="/">
-              <img src="/img/logo.svg" id="logo" />
+              <img src="/img/egg.svg" id="egg" />
+              <img src="/img/logo.png" id="logo" />
             </NavLink>
           </div>
           <nav>
             <div className="THE-margin">
               <div className="section group">
-                <span className="">
-                  <NavLink href="/zadania">Bank pracy</NavLink>
+                <div className="col span_3_of_4">
                   <Authentication user_id={this.user_id()} user_name={this.user_name()} />
-                </span>
+                </div>
                   {searchForm}
               </div>
             </div>

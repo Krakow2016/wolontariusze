@@ -7,32 +7,46 @@ var ApplicationStore = createStore({
     'CHANGE_ROUTE_SUCCESS' : 'handleNavigate',
     'UPDATE_PAGE_TITLE'    : 'updatePageTitle',
     'SAVE_FLASH_SUCCESS'   : 'saveSuccess',
-    'SAVE_FLASH_FAILURE'   : 'saveFailure'
+    'SAVE_FLASH_FAILURE'   : 'saveFailure',
+    'INSTAGRAM_CONFIG'     : 'setInstagram'
   },
+
   initialize: function () {
     this.title = ''
   },
+
   saveFailure: function(message) {
     this.flashFailure = message
     this.emitChange()
   },
+
   saveSuccess: function(message) {
     this.flashSuccess = message
     this.emitChange()
   },
+
   getFailure: function() {
     return this.flashFailure
   },
+
   getSuccess: function() {
     return this.flashSuccess
   },
+
   updatePageTitle: function (title) {
     this.title = title.title
     this.emitChange()
   },
+
   getPageTitle: function () {
     return this.title
   },
+
+  setInstagram: function(instagram_client_id) {
+    this.instagram_client_id = instagram_client_id
+    this.emitChange()
+  },
+
   getState: function () {
     return {
       currentPageName: this.currentPageName,
@@ -41,12 +55,15 @@ var ApplicationStore = createStore({
       route: this.currentRoute,
       title: this.title,
       flashSuccess: this.flashSuccess,
-      flashFailure: this.flashFailure
+      flashFailure: this.flashFailure,
+      instagram_client_id: this.instagram_client_id
     }
   },
+
   dehydrate: function () {
     return this.getState()
   },
+
   rehydrate: function (state) {
     this.currentPageName = state.currentPageName
     this.currentPage = state.currentPage
@@ -55,6 +72,7 @@ var ApplicationStore = createStore({
     this.title = state.title
     this.flashSuccess = state.flashSuccess
     this.flashFailure = state.flashFailure
+    this.instagram_client_id = state.instagram_client_id
   }
 })
 

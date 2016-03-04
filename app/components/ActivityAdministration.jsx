@@ -1,17 +1,20 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
-var ActivityStore = require('../stores/Activity')
-var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
 var request = require('superagent')
-
 var Formsy = require('formsy-react')
-var MyTextField = require('./Formsy/MyTextField.jsx')
-var MyTextarea = require('./Formsy/MyTextarea.jsx')
+
 var Snackbar = require('material-ui/lib/snackbar')
 var DateTime = require('react-datetime')
 var moment = require('moment')
 
 var update = require('react-addons-update')
+
+var ActivityStore = require('../stores/Activity')
+var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
+var Tags = require('./Tags/Tags.jsx')
+
+var MyTextField = require('./Formsy/MyTextField.jsx')
+var MyTextarea = require('./Formsy/MyTextarea.jsx')
 
 var actions = require('../actions')
 var updateAction = actions.updateActivity
@@ -37,6 +40,7 @@ Formsy.addValidationRule('isDuration', function (values, value) {
 Formsy.addValidationRule('isMoreOrGreaterIntThanZero', function (values, value) {
   return (value % 1 === 0 && value >= 0)
 })
+
 
 var AddedVolonteer = React.createClass({
   onClick: function () {
@@ -70,12 +74,19 @@ var ActivityAdministration = React.createClass({
   _changeListener: function() {
     // Interesują nas tylko zmiany w obiekcie activity. Aktualizacją obiektu
     // volunteers zajmujemy się sami.
-    this.setState(this.props.context.getStore(ActivityStore).getState())
+    //this.setState(this.props.context.getStore(ActivityStore).getState())
+    this.setState(update(this.state, {
+      activity: {$set: this.props.context.getStore(ActivityStore).getState().activity}
+    }))
   },
 
   componentDidMount: function() {
     this.props.context.getStore(ActivityStore)
       .addChangeListener(this._changeListener)
+
+    this.setState({
+      mapReady: true
+    })
   },
 
   componentWillUnmount: function() {
@@ -87,11 +98,27 @@ var ActivityAdministration = React.createClass({
     return this.props.context.getUser()
   },
 
-  handleStartEventTimestampChange: function (m) {
+  handleDatetimeChange: function (m) {
     this.setState(update(this.state, {
       activity: {datetime: {$set: m}}
     }))
   },
+  
+  handleAddDatetimeChange: function(evt) {
+    var value = evt.target.checked
+      
+    var activity = this.state.activity
+    if (!value) {
+      delete activity.datetime
+    } else {
+      activity.datetime = new Date().getTime()
+    }
+    
+    this.setState(update(this.state, {
+        activity: {$set: activity}
+    }))
+  },
+  
 
   handleChange: function (evt) {
     var activity = {}
@@ -140,7 +167,6 @@ var ActivityAdministration = React.createClass({
     }))
   },
 
-
   isValidDate: function (currentDate) {
     var now = moment()
     var isDateFromFuture = currentDate.isAfter(now)
@@ -156,7 +182,7 @@ var ActivityAdministration = React.createClass({
 
   onValidSubmit: function () {
 
-    if (this.state.volunteers.length > this.state.activity.maxVolunteers) {
+    if (this.state.volunteers.length > this.state.activity.limit) {
       this.setState(update(this.state, {
         invalidSnackBar: {$set: 'Ustaw większy limit wolontariuszy'}
       }))
@@ -255,12 +281,6 @@ var ActivityAdministration = React.createClass({
     }))
   },
 
-  componentDidMount: function() {
-    this.setState({
-      mapReady: true
-    })
-  },
-
   findCoordinates: function() {
     var that = this
 
@@ -284,14 +304,50 @@ var ActivityAdministration = React.createClass({
       })
   },
 
+  saveTag: function(tag) {
+    this.state.activity.tags = this.state.activity.tags || []
+    this.setState(update(this.state, {
+      activity: {
+        tags: {$push: [tag]}
+      }
+    }))
+  },
+
+  removeTag: function(e) {
+    var tag = e.target.dataset.tag
+    var index = this.state.activity.tags.indexOf(tag)
+    this.setState(update(this.state, {
+      activity: {
+        tags: {$splice: [[index, 1]]}
+      }
+    }))
+  },
+
   render: function() {
-    var startEventDate = new Date(this.state.activity.datetime)
-    var startEventDateHint
-    if (this.props.taskMode) {
-      startEventDateHint = <span> Dla zadania data powinna być w przyszłości </span>
-    } else {
-      startEventDateHint = <span> Dla aktywności data powinna być w przeszłości </span>
+    var startTime
+    if (typeof (this.state.activity.datetime) != 'undefined')  {
+      var startEventDate = new Date(this.state.activity.datetime)
+      var startEventDateHint
+      if (this.props.taskMode) {
+        startEventDateHint = <span> Dla zadania data powinna być w przyszłości </span>
+      } else {
+        startEventDateHint = <span> Dla aktywności data powinna być w przeszłości </span>
+      }
+      
+      startTime = <div className="pure-u-1 pure-u-md-2-3">
+                    <DateTime open={false}
+                      dateFormat={'YYYY/M/D'}
+                      timeFormat={'HH:mm'}
+                      isValidDate={this.isValidDate}
+                      value={startEventDate}
+                      onChange={this.handleDatetimeChange}/>
+                    {startEventDateHint}
+                </div>
+      
     }
+    
+   
+
 
     var updateButton = []
     if (this.props.creationMode == false) {
@@ -310,19 +366,19 @@ var ActivityAdministration = React.createClass({
 
     var showButton = []
     if (this.props.creationMode == false) {
-      showButton = <NavLink href={'/aktywnosc/'+this.state.activity.id} >Wyświetl</NavLink>
+      showButton = <NavLink href={'/zadania/'+this.state.activity.id} >Wyświetl</NavLink>
     }
 
     var removeActiveVolonteer = this.removeActiveVolonteer
     var addVolonteer
-    if (this.state.volunteers.length < this.state.activity.maxVolunteers) {
+    if (this.state.volunteers.length < this.state.activity.limit) {
         addVolonteer = <ActivityVolonteersList
             id="activeVolonteers"
             addActiveVolonteer={this.addActiveVolonteer}
             excludedVolunteers={this.state.volunteers} />
     }
     var volunteers = this.state.volunteers || []
-    var list = volunteers.map(function(volunteer) {
+    var volunteersList = volunteers.map(function(volunteer) {
       return (
         <AddedVolonteer
           key={volunteer.user_id}
@@ -330,6 +386,8 @@ var ActivityAdministration = React.createClass({
           onRemoveButtonClick={removeActiveVolonteer} />
       )
     })
+
+    var tags = this.state.activity.tags || []
 
     return (
       <div>
@@ -342,29 +400,44 @@ var ActivityAdministration = React.createClass({
           </div>
           <div className="pure-u-1 pure-u-md-2-3">
             <MyTextField required
-              id='title'
-              name='title'
+              id='name'
+              name='name'
               placeholder=''
               validations='minLength:3'
               validationError='Tytuł jest wymagany'
               disabled={false}
-              value={this.state.activity.title}
+              value={this.state.activity.name}
               onChange={this.handleChange} />
           </div>
+          
+          <div className="pure-u-1 pure-u-md-1-3">
+            <b>Typ</b>
+          </div>
+          <div>
+            <select name="act_type" selected={this.state.activity.act_type} onChange={this.handleChange}>
+              <option value="dalem_dla_sdm">Niezdefiniowany</option>
+              <option value="dalem_dla_sdm">Dałem dla ŚDM</option>
+              <option value="wzialem_od_sdm">Wziąłęm od ŚDM</option>
+            </select>
+          </div>
 
+          <br></br>
+          <b>Kategorie:</b>
+
+          <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
 
           <div className="pure-u-1 pure-u-md-1-3">
             <b>Czas rozpoczęcia</b>
+            <br></br>
+            <input type="checkbox" name="addDatetime" checked={!!this.state.activity.datetime} onChange={this.handleAddDatetimeChange} />
           </div>
-          <div className="pure-u-1 pure-u-md-2-3">
-              <DateTime open={false}
-                dateFormat={'YYYY/M/D'}
-                timeFormat={'HH:mm'}
-                isValidDate={this.isValidDate}
-                value={startEventDate}
-                onChange={this.handleStartEventTimestampChange}/>
-              {startEventDateHint}
-          </div>
+          {startTime}
+
+          <br></br>
+          <b>Zadanie jest w archiwum? </b>
+          <br></br>
+          <input type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
+          <br></br>
 
           <br></br>
           <br></br>
@@ -425,7 +498,7 @@ var ActivityAdministration = React.createClass({
           <br></br>
           {addVolonteer}
           <div>
-            {list}
+            {volunteersList}
           </div>
           <br></br>
           <div className="pure-u-1 pure-u-md-1-3">
@@ -433,13 +506,13 @@ var ActivityAdministration = React.createClass({
           </div>
           <div className="pure-u-1 pure-u-md-2-3">
             <MyTextField required
-              id='maxVolunteers'
-              name='maxVolunteers'
+              id='limit'
+              name='limit'
               placeholder=''
               validations='isMoreOrGreaterIntThanZero'
               validationError='Ustaw maksymalną liczbę wolontariuszy lub 0 (brak limitu)'
               disabled={false}
-              value={this.state.activity.maxVolunteers}
+              value={this.state.activity.limit}
               onChange={this.handleChange} />
           </div>
 

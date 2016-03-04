@@ -5,9 +5,6 @@ var VolunteerStore = require('./stores/Volunteer')
 var navigateAction = require('fluxible-router').navigateAction
 var request = require('superagent')
 
-var env = process.env.NODE_ENV || 'development'
-var conf = require('../config.json')[env]
-
 module.exports = {
 
   showIndex: function(context, payload, cb) {
@@ -102,16 +99,73 @@ module.exports = {
     }, function (err, data) {
       if(err) { debug(err) }
       else { context.dispatch('LOAD_ACTIVITY', data) }
-      cb()
+      cb(data)
     })
   },
 
-  loadActivities: function(context, payload, cb) {
-    // Pobierz dane wolontariusza z bazy danych
-    context.service.read('Activities', payload, {
-    }, function (err, data) {
+  loadActivities: function(context, state, cb) {
+
+    var must = []
+    var must2 = []
+
+    if(state.created_by) {
+      must.push({
+        term: { 'doc.creator': state.created_by }
+      })
+    }
+
+    if(state.volunteer) {
+      must2.push({
+        term: { 'volunteers': state.volunteer }
+      })
+    }
+
+    var query = {
+      nested: {
+        path: 'doc',
+        query: {
+          bool: {
+            must: must
+          }
+        }
+      }
+    }
+
+    if(must2.length) {
+      must2.push(query)
+      query = {
+        bool: {
+          must: must2
+        }
+      }
+    }
+
+    var params = {
+      query : {
+        function_score: {
+          query: query,
+          functions: [],
+          score_mode: 'avg'
+        }
+      }
+    }
+
+    var payload = {
+      query: params,
+      config: {
+        size: 50
+      }
+    }
+
+    // Pobiera zadania z elastic searcha
+    context.service.create('ActivitiesES', payload.config, payload.query, function (err, data) {
       if(err) { debug(err) }
-      else { context.dispatch('LOAD_ACTIVITIES', data) }
+      else {
+        context.dispatch('LOAD_ACTIVITIES', {
+          all: data,
+          query: state
+        })
+      }
       cb()
     })
   },
@@ -120,10 +174,10 @@ module.exports = {
     context.service.update('Activities', {}, payload, function (err, data) {
       if(err) { debug(err) }
       else {
-        var change = data.changes[0]
-        if(change) {
-          context.dispatch('ACTIVITY_UPDATED', change.new_val)
-        }
+        //var change = data.changes[0]
+        //if(change) {
+          context.dispatch('ACTIVITY_UPDATED', payload)
+        //}
       }
       cb()
     })
@@ -136,7 +190,7 @@ module.exports = {
       } else {
         var user = context.getUser()
         context.dispatch('JOINT_CREATED', Object.assign({}, user, {
-          id: data.generated_keys[0],
+          id: data.changes[0].new_val.id,
           user_id: user.id
         }))
       }
@@ -182,7 +236,7 @@ module.exports = {
           }
         })
         context.service.create('Joints', {}, joints, function(){
-          context.executeAction(navigateAction, {url: '/aktywnosc/'+id})
+          context.executeAction(navigateAction, {url: '/zadania/'+id})
           cb()
         })
       }
@@ -190,7 +244,7 @@ module.exports = {
   },
 
   deleteActivity: function(context, payload, cb) {
-    context.service.delete('Activities', payload, {user: context.getUser()}, function (err, data) {
+    context.service.delete('Activities', payload, {}, function (err, data) {
       if(err) { debug(err) }
       else {
         context.dispatch('ACTIVITY_DELETED', data)
@@ -233,7 +287,14 @@ module.exports = {
       function (err, data) {
         if (err) { debug(err) }
         else { context.dispatch('LOAD_INTEGRATIONS', data) }
-        cb()
+
+        context.service.read('Volunteers', {id: payload.user_id}, {},
+          function (err, data) {
+            if (err) { debug(err) }
+            else { context.dispatch('LOAD_VOLUNTEER', data) }
+            cb()
+          }
+        )
       }
     )
   },
@@ -366,7 +427,7 @@ module.exports = {
           functions: [],
           score_mode: 'avg'
         }
-      },
+      }
       //explain: true,
     }
 

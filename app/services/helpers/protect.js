@@ -25,7 +25,7 @@ module.exports = function(service) {
   service.read = function(req, resource, params, config, callback) {
     read(req, resource, params, config, function(err, result) {
       if(err) {
-        callback(err)
+        callback({message: err, statusCode: 500})
       } else {
         // W przypadku zapytania xhr zmienna `req` reprezentuje obiekt tego
         // zapytania.
@@ -33,7 +33,11 @@ module.exports = function(service) {
         // Flaga przywilejów administratora
         var is_admin = (user && user.is_admin) || req.force_admin
         // Flaga właściciela profilu
-        var is_owner = (user && (params.id === user.id || params.user_id === user.id))
+        var is_owner = false
+        var id = user && user.id.toString()
+        if(id) {
+          is_owner = (params.id && params.id.toString() === id) || (params.user_id && params.user_id.toString() === id)
+        }
 
         // Jeźeli posiadamy uprawnienia administratora lub przeglądamy własny
         // profil potrzebujemy dostępu do wszystkich parametrów modelu
@@ -48,7 +52,7 @@ module.exports = function(service) {
 
           // Sprawdź czy którykolwiek z atrybutów jest do odczytu
           if(attrs && !attrs.length) {
-            return callback('403') // Brak dostępu
+            return callback({statusCode: 403}) // Brak dostępu
           }
 
           var protected_result = util.isArray(result)

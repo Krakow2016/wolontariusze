@@ -9,17 +9,17 @@ var ActivityStore = createStore({
     'PRECREATE_ACTIVITY': 'precreate',
     'ACTIVITY_UPDATED': 'update',
     'JOINT_CREATED': 'join',
-    'JOINT_DELETED': 'leave'
+    'JOINT_DELETED': 'leave',
   },
 
   initialize: function () {
     this.activity = {
       name: '',
-      datetime: '',
+      act_type: '',
       duration: '',
       place: '',
       description: '',
-      maxVolunteers: 5
+      limit: 5
     }
     this.volunteers = []
     this.invalidSnackBar = ''
@@ -50,16 +50,15 @@ var ActivityStore = createStore({
     })
     this.emitChange()
   },
-
+  
   create: function(data) {
     // TODO
     //this.rehydrate(data)
     this.emitChange()
   },
 
-
   update: function(data) {
-    this.activity = data
+    Object.assign(this.activity, data)
     this.emitChange()
   },
 
@@ -67,7 +66,7 @@ var ActivityStore = createStore({
     return {
       activity: this.activity,
       volunteers: this.volunteers,
-      invalidSnackBar: this.invalidSnackBar
+      invalidSnackBar: this.invalidSnackBar,
     }
   },
 
@@ -87,18 +86,22 @@ ActivityStore.attributes = function() {
   return [
     'id',
     'name',
+    'act_type',
     'description',
     'created_at',
     'updated_at',
     'datetime',
     'duration',
     'place',
+    'is_archived',
     'is_urgent',
     'creator',
     'editor',
-    'maxVolunteers',
+    'limit',
     'volunteers',
-    'lat_lon'
+    'lat_lon',
+    'volunteerNumber',
+    'tags'
   ]
 }
 

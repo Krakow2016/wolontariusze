@@ -10,7 +10,7 @@ var VolunteerStore = require('../../stores/Volunteer')
 var XlsStore = require('../../stores/Xls')
 var updateVolunteer = require('../../actions').updateVolunteer
 var Invite = require('./Invite.jsx')
-var NewTag = require('./NewTag.jsx')
+var Tags = require('../Tags/Tags.jsx')
 
 var Details = React.createClass({
 
@@ -46,20 +46,6 @@ var Details = React.createClass({
   }
 })
 
-var Tags = React.createClass({
-  render: function() {
-    var that = this
-    var list = this.props.data.map(function(li) {
-      return (<li>{li} <input type="button" value="usuń" data-tag={li} onClick={that.props.removeTag} /></li>)
-    })
-    return (
-      <ul>
-        {list}
-      </ul>
-    )
-  }
-})
-
 var VolunteerAdministration = React.createClass({
   getInitialState: function () {
     return {
@@ -69,9 +55,8 @@ var VolunteerAdministration = React.createClass({
   },
 
   _changeListener: function() {
-    this.setState({
-      profile: this.props.context.getStore(VolunteerStore).getState().profile,
-      new_tag: ''
+    this.replaceState({
+      profile: this.props.context.getStore(VolunteerStore).getState().profile
     })
   },
 
@@ -183,7 +168,8 @@ var VolunteerAdministration = React.createClass({
     }
 
     return (
-      <VolunteerShell context={this.props.context}>
+      <VolunteerShell context={this.props.context} profile={this.state.profile}>
+
         {papers}
 
         <Dialog
@@ -210,9 +196,7 @@ var VolunteerAdministration = React.createClass({
 
         <b>Projekty: </b>
 
-        <Tags data={tags} removeTag={this.removeTag} />
-
-        <NewTag onSave={this.saveTag} />
+        <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
 
         <Comments context={this.props.context} />
       </VolunteerShell>

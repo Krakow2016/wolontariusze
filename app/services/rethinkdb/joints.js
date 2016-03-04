@@ -1,5 +1,6 @@
 'use strict'
 var r = require('rethinkdb')
+var crypto = require('crypto')
 
 var env = process.env.NODE_ENV || 'development'
 var conf = require('../../../config.json')[env]
@@ -24,13 +25,26 @@ var Joints = module.exports = {
       if(body.length) {
         // Opcja tylko dla adminów
         if(!req.user.is_admin) { return callback(403) }
+
+        body.forEach(function(joint) {
+          // Upewnij się że user_id i activity są unikalne
+          var hash = crypto.createHash('sha256')
+          hash.update(joint.user_id + joint.activity_id)
+          joint.id = hash.digest('hex')
+        })
       } else {
         // Dopisz Id usera jeżeli pole jest puste
         if(!body.user_id) {
           body.user_id = req.user.id
         }
+        // Upewnij się że user_id i activity są unikalne
+        var hash = crypto.createHash('sha256')
+        hash.update(body.user_id + body.activity_id)
+        body.id = hash.digest('hex')
       }
 
+      // W przypadku kiedy wypisaliśmy się i ponownie sie zapisujemy
+      config.conflict = "replace"
       config.returnChanges = true
 
       r.table('Joints').insert(body, config).run(conn, function (err, resp) {
