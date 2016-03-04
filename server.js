@@ -153,12 +153,14 @@ if(fetchrPlugin) {
   // Set up the fetchr middleware
   server.use(fetchrPlugin.getXhrPath(), jsonParser, function(req, res, done) {
     // Google Analytics Measurement Protocol
-    req.visitor.pageview({
-      dp: req.path,
-      dh: 'https://wolontariusze.krakow2016.com',
-      uip: req.ip,
-      ua: req.headers['user-agent']
-    }).send()
+    if(req.visitor) {
+      req.visitor.pageview({
+        dp: req.path,
+        dh: 'https://wolontariusze.krakow2016.com',
+        uip: req.ip,
+        ua: req.headers['user-agent']
+      }).send()
+    }
     done()
   }, fetchrPlugin.getMiddleware())
 }
@@ -176,6 +178,68 @@ server.get('/logout', function(req, res){
   req.logout()
   req.flash('success', 'Wylogowano.')
   res.redirect('/')
+})
+
+// Końcówka zwrotna dla API instagrama po udanym uwierzytelnieniu
+server.get('/instagram', function(req, res){
+  if(req.user) {
+    if(req.query.code) {
+      request({
+        method: 'POST',
+        url: 'https://api.instagram.com/oauth/access_token',
+        formData: {
+          client_id: process.env.INSTAGRAM_CLIENT_ID,
+          client_secret: process.env.INSTAGRAM_SECRET,
+          code: req.query.code,
+          grant_type: 'authorization_code',
+          redirect_uri: 'https://wolontariusze.krakow2016.com/instagram'
+        }
+      }, function(err, resp, body) {
+
+        if (err) {
+          req.flash('error', 'Integracja z Instagramem nie powiodła się.')
+          res.redirect('/wolontariusz/'+ req.user.id)
+          return
+        }
+
+        if (resp.statusCode !== 200) { return res.send(500) }
+
+        var json = JSON.parse(body)
+        Volunteers.update(req, 'Volunteers', {id: req.user.id}, {
+          instagram: {
+            id: json.user.id,
+            access_token: json.access_token,
+            username: json.user.username
+          }
+        }, {}, function(err, data){
+          if(err) { return res.send(500) }
+          req.flash('success', 'Integracja z Instagramem zakończona pomyślnie.')
+          res.redirect('/wolontariusz/'+ req.user.id)
+        })
+      })
+    }
+  } else {
+    res.send(403)
+  }
+})
+
+// Pobiera zdjęcia dla danego usera
+server.get('/instagram/:id', function(req, res){
+  var id = req.params.id
+  Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function (err, user) {
+    if(err) { return res.send(500) }
+    var instagram = user.instagram
+    if(!instagram) { return res.send(404) }
+
+    var token = instagram.access_token
+    request({
+      url: 'https://api.instagram.com/v1/users/'+ instagram.id +'/media/recent/',
+      qs: { access_token: token },
+      json: true
+    }, function(err, req, resp) {
+      res.send(resp)
+    })
+  })
 })
 
 server.post('/search', function(req, res) {
@@ -491,13 +555,18 @@ server.use(function(req, res, next) {
     context.getActionContext().dispatch('SAVE_FLASH_FAILURE', failure)
   }
 
+  // Ustaw konfigurację integracji z Instagramem
+  context.getActionContext().dispatch('INSTAGRAM_CONFIG',  process.env.INSTAGRAM_CLIENT_ID)
+
   // Google Analytics Measurement Protocol
-  req.visitor.pageview({
-    dp: req.path,
-    dh: 'https://wolontariusze.krakow2016.com',
-    uip: req.ip,
-    ua: req.headers['user-agent']
-  }).send()
+  if(req.visitor) {
+    req.visitor.pageview({
+      dp: req.path,
+      dh: 'https://wolontariusze.krakow2016.com',
+      uip: req.ip,
+      ua: req.headers['user-agent']
+    }).send()
+  }
 
   debug('Executing navigate action')
   context.executeAction(navigateAction, {

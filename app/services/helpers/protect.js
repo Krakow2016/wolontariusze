@@ -33,7 +33,11 @@ module.exports = function(service) {
         // Flaga przywilejów administratora
         var is_admin = (user && user.is_admin) || req.force_admin
         // Flaga właściciela profilu
-        var is_owner = (user && (params.id === user.id || params.user_id === user.id))
+        var is_owner = false
+        var id = user && user.id.toString()
+        if(id) {
+          is_owner = (params.id && params.id.toString() === id) || (params.user_id && params.user_id.toString() === id)
+        }
 
         // Jeźeli posiadamy uprawnienia administratora lub przeglądamy własny
         // profil potrzebujemy dostępu do wszystkich parametrów modelu

@@ -169,6 +169,7 @@ var VolunteerAdministration = React.createClass({
 
     return (
       <VolunteerShell context={this.props.context} profile={this.state.profile}>
+
         {papers}
 
         <Dialog

@@ -190,6 +190,7 @@ module.exports = {
     action: function (context, payload, done) {
       var user = context.getUser()
       if(user) {
+        context.dispatch('UPDATE_PAGE_TITLE', { title: 'Aplikacje' })
         context.executeAction(actions.showIntegrations, { user_id: user.id }, function() {
           done()
         })

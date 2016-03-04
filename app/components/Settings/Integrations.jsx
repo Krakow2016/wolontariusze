@@ -2,6 +2,7 @@ var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 
 var Settings = require('./Settings.jsx')
+var InstagramSetting = require('./InstagramSetting.jsx')
 var IntegrationsStore = require('../../stores/Integrations')
 
 var Integration = function(props) {
@@ -35,6 +36,10 @@ var Integrations = React.createClass({
 
     return (
       <Settings>
+        <p>Lista integracji:</p>
+        <ul>
+          <li><InstagramSetting context={this.props.context} /></li>
+        </ul>
         <p>Lista aplikacji:</p>
         <ul>
           {integrations}

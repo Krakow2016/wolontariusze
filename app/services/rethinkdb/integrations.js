@@ -25,14 +25,14 @@ module.exports = Protect({
       // Pobierz klientów API którzy mają uprawnienia do komunikacji z serwisem
       // w imieniu użytkownika.
       r.table('APITokens')
-        .getAll(id, {index: 'userId'})
+        .getAll(id.toString(), {index: 'userId'})
         .eqJoin('clientId', r.table('APIClients'))
-        .pluck({'right': 'name', 'left': 'id'})
+        .pluck({'right': 'name', 'left': ['id', 'userId']})
         .zip()
         .run(conn, function(err, cursor){
 
           if(err) { callback(err) }
-        else { cursor.toArray(callback) }
+          else { cursor.toArray(callback) }
         })
     })
   }
