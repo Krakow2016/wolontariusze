@@ -33,14 +33,14 @@ var Joints = module.exports = {
           joint.id = hash.digest('hex')
         })
       } else {
-        // Upewnij się że user_id i activity są unikalne
-        var hash = crypto.createHash('sha256')
-        hash.update(body.user_id + body.activity_id)
-        body.id = hash.digest('hex')
         // Dopisz Id usera jeżeli pole jest puste
         if(!body.user_id) {
           body.user_id = req.user.id
         }
+        // Upewnij się że user_id i activity są unikalne
+        var hash = crypto.createHash('sha256')
+        hash.update(body.user_id + body.activity_id)
+        body.id = hash.digest('hex')
       }
 
       // W przypadku kiedy wypisaliśmy się i ponownie sie zapisujemy

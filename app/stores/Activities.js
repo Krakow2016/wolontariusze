@@ -6,25 +6,35 @@ var ActivitiesStore = createStore({
   storeName: 'Activities',
   handlers: {
     'LOAD_ACTIVITIES' : 'loadAll',
-  },
-
-  loadAll: function(data) {
-    this.all = data
-    this.emitChange()
+    'LOAD_ACTIVITIES_QUERY': 'loadQuery'
   },
 
   initialize: function () {
     this.all = []
+    this.query = {}
+  },
+
+  loadAll: function(data) {
+    this.all = data.all
+    this.query = data.query
+    this.emitChange()
+  },
+
+  loadQuery: function(data) {
+    this.query = data
+    this.emitChange()
   },
 
   dehydrate: function () {
     return {
-      all: this.all
+      all: this.all,
+      query: this.query
     }
   },
 
   rehydrate: function (state) {
     this.all = state.all
+    this.query = state.query
   }
 })
 

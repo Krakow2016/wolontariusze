@@ -1,23 +1,21 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var update = require('react-addons-update')
-var TaskFilters = require('./TaskFilters.jsx')
 
+var TaskFilters = require('./TaskFilters.jsx')
 var TimeService = require('../../modules/time/TimeService.js')
 var ActivitiesStore = require('../../stores/Activities.js')
+var ActivitiesSearchForm = require('./Search.jsx')
+var actions = require('../../actions')
 
 var Tasks = React.createClass({
 
   getInitialState: function () {
-    return {
-      all: this.props.context.getStore(ActivitiesStore).all
-    }
+    return this.props.context.getStore(ActivitiesStore).dehydrate()
   },
 
   _changeListener: function() {
-    this.setState({
-      all: this.props.context.getStore(ActivitiesStore).all
-    })
+    this.setState(this.props.context.getStore(ActivitiesStore).dehydrate())
   },
 
   componentDidMount: function() {
@@ -28,6 +26,32 @@ var Tasks = React.createClass({
   componentWillUnmount: function() {
     this.props.context.getStore(ActivitiesStore)
       .removeChangeListener(this._changeListener)
+  },
+
+  handleChange: function(event) {
+    var query = this.state.query
+    query[event.target.name] = event.target.value
+    this.setState({
+      query: query
+    })
+  },
+
+  onSubmit: function(){
+
+    var state = this.state.query
+
+    this.props.context.executeAction(actions.loadActivities, state)
+
+    // Zapisuje zapytanie w adresie url
+    var base = window.location.toString().replace(new RegExp('[?](.*)$'), '')
+    var attributes = Object.keys(state).filter(function(key) {
+      return state[key]
+    }).map(function(key) {
+      return key + '=' + state[key]
+    }).join('&')
+
+    history.replaceState({}, '', base +'?'+ attributes)
+
   },
 
   render: function () {
@@ -42,13 +66,13 @@ var Tasks = React.createClass({
 
     if(user) {
       tabs.push(
-        <NavLink href={"/zadania/moje"} className="profile-ribon-cell">
+        <NavLink href={"/zadania?volunteer="+user.id} className="profile-ribon-cell">
           <b id="profile-ribon-txt">Biorę udział w</b>
         </NavLink>
       )
       if(user.is_admin) {
         tabs.push(
-          <NavLink href={"/zadania/dodane"} className="profile-ribon-cell">
+          <NavLink href={"/zadania?created_by="+user.id} className="profile-ribon-cell">
             <b id="profile-ribon-txt">Moje zadania</b>
           </NavLink>
         )
@@ -80,6 +104,7 @@ if(!task) { return }
               {tabs}
             </div>
           </div>
+          <ActivitiesSearchForm query={this.state.query} handleChange={this.handleChange} submit={this.onSubmit} />
           <table className="tasks-table">
             <tbody>
               <tr>

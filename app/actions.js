@@ -103,11 +103,69 @@ module.exports = {
     })
   },
 
-  loadActivities: function(context, payload, cb) {
+  loadActivities: function(context, state, cb) {
+
+    var must = []
+    var must2 = []
+
+    if(state.created_by) {
+      must.push({
+        term: { 'doc.creator': state.created_by }
+      })
+    }
+
+    if(state.volunteer) {
+      must2.push({
+        term: { 'volunteers': state.volunteer }
+      })
+    }
+
+    var query = {
+      nested: {
+        path: 'doc',
+        query: {
+          bool: {
+            must: must
+          }
+        }
+      }
+    }
+
+    if(must2.length) {
+      must2.push(query)
+      query = {
+        bool: {
+          must: must2
+        }
+      }
+    }
+
+    var params = {
+      query : {
+        function_score: {
+          query: query,
+          functions: [],
+          score_mode: 'avg'
+        }
+      }
+    }
+
+    var payload = {
+      query: params,
+      config: {
+        size: 50
+      }
+    }
+
     // Pobiera zadania z elastic searcha
-    context.service.read('ActivitiesES', payload, {}, function (err, data) {
+    context.service.create('ActivitiesES', payload.config, payload.query, function (err, data) {
       if(err) { debug(err) }
-      else { context.dispatch('LOAD_ACTIVITIES', data) }
+      else {
+        context.dispatch('LOAD_ACTIVITIES', {
+          all: data,
+          query: state
+        })
+      }
       cb()
     })
   },

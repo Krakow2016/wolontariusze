@@ -9,18 +9,17 @@ var client = new elasticsearch.Client({
 
 var Activities = module.exports = {
   name: 'ActivitiesES',
-  read: function(req, resource, params, config, callback) {
+  create: function(req, resource, params, body, config, callback) {
 
-    client.search({
+    var query = {
       index: 'sdm',
       type: 'activity',
-      body: {
-        query: {
-          match_all: {}
-        }
-      },
-      size: 100
-    }).then(function (resp) {
+      body: body,
+      size: params.size
+    }
+
+    client.search(query)
+      .then(function (resp) {
       var hits = resp.hits.hits;
       callback(null, hits)
     }, function (err) {
