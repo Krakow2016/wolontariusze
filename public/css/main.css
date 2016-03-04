@@ -20,7 +20,9 @@ time, mark, audio, video {
 	background: transparent;
 	box-sizing:border-box;
 }
-a:focus, a:hover, a:active{
+a, a:focus, a:hover, a:active,
+button, button:focus, button:hover, button:active, button:checked, button:visited,
+input, input:focus, input:hover, input:active{
 	outline: 0;
 }
 /* -----------GRID---------------------*/
@@ -191,6 +193,11 @@ input, select, textarea,button {
 	margin: 0.5rem 0 0.5rem 0;
 	box-sizing:border-box;
 }
+input[type="checkbox"]{
+	width: auto;
+	height: auto;
+	margin: 1rem 0.5rem;
+}
 .form-radio{
 	display: inline-block;
 	width: auto;
@@ -209,6 +216,9 @@ button, input[type="submit"]{
 	border: medium none;
 	float: right;
 	margin: 2rem 0;
+}
+#searchBtn{
+	margin: 0;
 }
 #button-clear {
 	content: ".";
@@ -506,7 +516,6 @@ textarea.settings {
 }
 
 .searchForm input:not([type]) {
-  padding: 5px;
   width: 100%
 }
 
@@ -570,4 +579,73 @@ textarea.settings {
   background-color: #fff;
   color: #000;
   text-align: center;
+}
+
+
+/* ---------------SETTINGS----------------*/
+
+
+.setting-hide {
+  max-height: 0px;
+  overflow: hidden;
+  -webkit-transition: max-height 1.5s cubic-bezier(0, 1.05, 0, 1);
+  -o-transition: max-height 1.5s cubic-bezier(0, 1.05, 0, 1);
+  transition: max-height 1.5s cubic-bezier(0, 1.05, 0, 1);
+}
+.setting-show {
+  overflow: hidden;
+  max-height: 20000px;
+  -webkit-transition: max-height 5s ease;
+  -o-transition: max-height 5s ease;
+  transition: max-height 5s ease;
+}
+#setting-title {
+  position: relative;
+}
+#setting-title h1 {
+  background-color: #fff;
+  display: inline-block;
+  padding-right: 20px;
+  position: relative;
+  z-index: 1;
+}
+.blue-line {
+  background: #00A8D8 none repeat scroll 0 0;
+  height: 1px;
+  position: absolute;
+  top: 3rem;
+  width: calc(100% - 3rem);
+  z-index: 0;
+  display: block;
+}
+.setting-arrow {
+  position: absolute;
+  top: 2rem;
+  height: 2rem;
+  right: 0rem;
+}
+.setting-arrow.up {
+  -webkit-transition: transform: rotate(0deg);
+  -o-transition: transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+.setting-arrow.down {
+  -webkit-transition: transform: rotate(-180deg);
+  -o-transition: transform: rotate(-180deg);
+  transform: rotate(-180deg);
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+.number-down, .number-up {
+  width: 1.5rem;
+  padding: 0.75rem 0;
+}
+.number-down {
+  -webkit-transition: transform: rotate(-180deg);
+  -o-transition: transform: rotate(-180deg);
+  transform: rotate(-180deg);
 }
