@@ -8,7 +8,7 @@ var createVolunteer = require('../actions').createVolunteer
 var BasicForm = require('./Settings/BasicForm.jsx')
 
 var MyInput = React.createClass({
-  
+
   // Add the Formsy Mixin
   mixins: [Formsy.Mixin],
 
@@ -90,8 +90,6 @@ var RegistrationForm = React.createClass({
 
     return (
       <Formsy.Form className="registrationForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
-        <p>(imię i nazwisko) nie występuje jeszcze w naszej bazie danych, a chcemy go dodać do naszego grona. Jako administrator masz możliwość utworzenia konta uzupełniając poniższe dane o wolontariusza: ….imię …nazwisko ….adres e-mail Pamiętaj! Aby nowo utworzone konto było aktywne, musisz zaznaczyć ….
-        </p>
         <BasicForm {...this.state}/>
 
         <div className="pure-g">

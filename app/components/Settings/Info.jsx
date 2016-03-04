@@ -34,7 +34,6 @@ var Info = React.createClass({
         success={this.state.success}
         error={this.state.error}>
 
-        <p>Witaj! Właśnie stajeszś się jednym z kamyczków Góry Dobra, czyli platformy łączącej wszystkich Bożych szaleńców zaangażowanych w Światowe Dni Młodzieży w Krakowie. Od teraz masz własne konto Wolontariusza ŚDM i możliwość stworzenia swojego wyjątkowego profilu. Zachęcamy Cię do uzupełnienia go o dodatkowe informacje, które pozwolą Cię lepiej poznać. Profil będzie Twoją wizytówką. Informacje, które tutaj zamieścisz będą widoczne dla wszystkich odwiedzających portal. Będziesz mieć możliwość dzielenia się z innymi swoimi doświadczeniami i zaangażowaniem w ŚDM. Pokażesz ogrom wniesionego wkładu i efektów pracy, które będą tworzyć prawdziwą "Górę Dobra". Zastanów się też nad tym, co chcesz upublicznić, a które informacje wolisz zostawić dla siebie Daj się poznać i zainspiruj innych! Uzupełnij swój profil już dziś! Przy niekompletnym  profilu: Wolontariuszu ( lub automatycznie dodane imię) Twój profil jest nie kompletny. W celu uzupełnienia danych, kliknij w Ustawieniach „Informacje publiczne” ( link).</p>
 
         <div className="pure-g">
           <div className="pure-u-1 pure-u-md-1-3">
