@@ -8,7 +8,7 @@ var Instagram = React.createClass({
   getInitialState: function() {
     return {
       media: null,
-      client_id: null
+      client_id: this.props.context.getStore(ApplicationStore).instagram_client_id
     }
   },
 
@@ -22,19 +22,18 @@ var Instagram = React.createClass({
 
   loadInstagram: function(id) {
     var that = this
-    var config = this.props.context.getStore(ApplicationStore)
-
-    this.setState({ client_id: config.instagram_client_id })
 
     request
       .get('/instagram/'+ id)
       .end(function(err, resp){
         if(err) {
           that.setState({
-            error: err
+            error: err,
+            media: null
           })
         } else {
           that.setState({
+            error: null,
             media: resp.body.data
           })
         }
