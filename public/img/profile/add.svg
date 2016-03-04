@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Creator: CorelDRAW X7 -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="30.903mm" height="30.903mm" version="1.0" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 3090 3090"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .fil2 {fill:#0083BB}
+    .fil0 {fill:#71BFDF}
+    .fil1 {fill:#96D4EA}
+   ]]>
+  </style>
+ </defs>
+ <g id="Warstwa_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <rect class="fil0" width="3090" height="3090"/>
+  <path class="fil1" d="M1545 775c426,0 771,345 771,770 0,426 -345,771 -771,771 -425,0 -770,-345 -770,-771 0,-425 345,-770 770,-770z"/>
+  <polygon class="fil2" points="1584,1160 1507,1160 1507,1507 1160,1507 1160,1584 1507,1584 1507,1930 1584,1930 1584,1584 1930,1584 1930,1507 1584,1507 "/>
+ </g>
+</svg>

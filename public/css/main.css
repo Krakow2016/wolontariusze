@@ -11,13 +11,19 @@ table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section, summary,
 time, mark, audio, video {
-		margin: 0;
-		padding: 0;
-		border: 0;
-		outline: 0;
-		font-size: 100%;
-		vertical-align: baseline;
-		background: transparent;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+	box-sizing:border-box;
+}
+a, a:focus, a:hover, a:active,
+button, button:focus, button:hover, button:active, button:checked, button:visited,
+input, input:focus, input:hover, input:active{
+	outline: 0;
 }
 /* -----------GRID---------------------*/
 .section {
@@ -59,17 +65,16 @@ html {
 	}
 h1 {
 	margin: 1rem 0 1rem 0;
-	font-size: 2.75rem;
+	font-size: 2.5rem;
 }
 h2 {
 	margin: 1rem 0 0 0;
 }
-h2,p,b,a,ul,span{
-	font-size: 1.4rem;
+h2,p,b,a,ul,span,label,button,input[type="submit"],legend{
+	font-size: 1.25rem;
 }
-h2,a{
-	color:#0082BD;
-	font-weight: 600;
+small{
+	font-size: 0.5rem;
 }
 p,ul,span {
 	font-weight: 400;
@@ -78,9 +83,13 @@ p,ul{
 	color:#000;
 	text-align: justify;
 }
-b,h1{
+b,h1,label,h2,a,legend{
 	color:#0082BD;
 	font-weight: 600;
+	text-decoration: none;
+}
+a:hover{
+	text-decoration: underline;
 }
 ul{
 	margin-left:5rem;
@@ -110,27 +119,50 @@ body {
 .THE-margin {
 	margin: auto;
 	width: 64rem;
+	padding: 0 1rem;
+	position: relative;
 }
-.logo {
-  font-size: 100%
+/*Content*/
+#THE-title{
+	margin: 2rem 0;
+	color:#fff;
+}
+#THE-body {
+	background-color: #fff;
+	border-radius: 2rem;
+	padding: 2rem 1rem;
+	min-height: 30rem;
+	box-sizing:border-box;
 }
 /*HEAD*/
 #logo {
 	margin: 2rem 0 2rem 0;
-	height: 8em;
+	height: 6.4em;
+	z-index: 1;
+}
+#egg {
+	height: 38rem;
+	position: absolute;
+	bottom: 0.25rem;
+	left:-20.5rem;
+	z-index: -1;
 }
 nav {
 	background-color: #f4f4f4;
 	width: 100%;
 	height: 5rem;
-  text-align: right
 }
+
 /*-------------------MENU---------------------*/
 nav ul {
 	list-style: outside none none;
-	float:right;
+	float:left;
+	margin: 0;
 }
-nav a {
+nav ul li {
+	float: left;
+}
+nav ul li a {
 	text-transform: uppercase;
 	text-decoration: none;
 	font-weight: 600;
@@ -138,32 +170,72 @@ nav a {
 	line-height: 5rem;
 	white-space: nowrap;
 }
-nav a:before {
+nav ul li:before {
 	content: '';
 }
-nav a:after {
+nav ul li:after {
 	content: '|';
 	color:#0082BD;
 	position: relative;
 	top:-3px;
-	margin: 0 0.15rem 0 0.15rem;
+	margin: 0 0.25rem 0 0.25rem;
 }
-nav a:last:after { content: ""; }
+nav ul li:last-child:after { content: ""; }
 /*---------------FORMS-----------------------*/
 
-.form {
+input, select, textarea,button {
+	width: 100%;
 	border: 1px solid #0082BD;
 	border-radius: 2rem;
 	height: 2rem;
 	display: inline-block;
-	line-height: 2rem;
 	padding: 0 1rem 0 1rem;
-	margin-top: 0.5rem;
+	margin: 0.5rem 0 0.5rem 0;
 	box-sizing:border-box;
 }
+input[type="checkbox"]{
+	width: auto;
+	height: auto;
+	margin: 1rem 0.5rem;
+}
+.form-radio{
+	display: inline-block;
+	width: auto;
+	line-height: 1.4rem;
+	margin: 0.5rem;
+}
+textarea{
+	height: 13rem;
+	padding: 1rem;
+}
+button, input[type="submit"]{
+	width: 50%;
+	height: 4rem;
+	color: #FFF;
+	background: #0082BD none repeat scroll 0% 0%;
+	border: medium none;
+	float: right;
+	margin: 2rem 0;
+}
+#searchBtn{
+	margin: 0;
+}
+#button-clear {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+	width: 100%;
+}
 #menu-search-submit {
+	width:auto;
+	border:none;
 	position: absolute;
-	top: 50%;
+	padding: 0;
+	margin: 0;
+	top:2.4rem;
 	right: 1rem;
 	-webkit-transform: translate(0%,-50%);
 	-ms-transform: translate(0%,-50%);
@@ -171,20 +243,9 @@ nav a:last:after { content: ""; }
 	transform: translate(0%,-50%);
 	height: 1rem;
 }
-#menu-search-box {
-	margin:1.4rem 0 1.5rem 0;
+.menu-search-box {
+	margin:1.4rem 0 0.5rem 0;
 }
-/*Content*/
-#THE-title{
-	margin: 2rem 0 2rem 0;
-	color:#fff;
-}
-#THE-body {
-	background-color: #fff;
-	border-radius: 2rem;
-	padding: 1rem;
-}
-
 /*FOOTER*/
 footer {
 	margin: 4rem 0 0 0;
@@ -211,10 +272,10 @@ footer {
 	background-color: #46A737;
 }
 #alert-cross {
-	height: 3rm;
+	height: 3rem;
 	position: absolute;
 	top:0px;
-	right:0px; 
+	right:0px;
 	margin:1rem;
 }
 #alert-err>h2, #alert-ok>h2 {
@@ -225,12 +286,17 @@ footer {
 	-webkit-transform:translate(0rem,5rem);
 	-ms-transform:translate(0rem,5rem);
 	-o-transform:translate(0rem,5rem);
-	transform:translate(0rem,5rem);	
+	transform:translate(0rem,5rem);
 	-webkit-transition: transform 0.5s ease;
 	-o-transition: transform 0.5s ease;
 	transition: transform 0.5s ease;
 }
 /*------RESPONSIVE---------------*/
+@media only screen and (min-width: 1600px) {
+	html{
+		font-size: 17px;
+	}
+}
 @media only screen and (max-width: 1200px) {
 	html{
 		font-size: 13px;
@@ -248,48 +314,24 @@ footer {
 	.span_2_of_4, .span_3_of_4, .span_4_of_4 { width: 100%; }
 	.span_1_of_4 { width: 50%; }
 	.THE-margin {margin: auto; width: 85%;}
-	nav {
-		height: inherit;
-		max-height: 50rem;
-		overflow: hidden;
-	}
-	nav ul {
-		float: left;
-		list-style: outside none none;
-		margin:2rem 0;
-		display: -ms-flexbox;
-		display: -webkit-flex;
-		display: flex;
-		-webkit-flex-direction: column-reverse;
-		-ms-flex-direction: column-reverse;
-		flex-direction: column-reverse;
-	}
-	nav ul li {height: 3rem;	}
-	nav ul li:before {
-		content: '';
-	}
-	nav ul li:after {
-		content: '';
-	}
-	nav ul li:first-child:after { content: ""; }
-
-  .search {
-    display: none;
-  }
+	nav {height: inherit;}
+	nav ul li a{line-height: 3rem;}
+	.menu-search-box{ margin: 0 0 0.5rem 0;}
+	#menu-search-submit { top: 1rem;}
 }
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 600px) {
 	html{
 		font-size: 11px;
 	}
 }
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 500px) {
 	html{
 		font-size: 9px;
 	}
 }
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 400px) {
 	html{
-		font-size: 5px;
+		font-size: 8px;
 	}
 }
 
@@ -319,7 +361,6 @@ footer {
 	position: absolute;
 	top: 4rem;
 	left: 50%;
-  text-align: center;
 	-webkit-transform: translate(-50%,0%);
 	-ms-transform: translate(-50%,0%);
 	-o-transform: translate(-50%,0%);
@@ -370,7 +411,7 @@ footer {
 	align-self: auto;
 	background-color: #00A8D8;
 	height: 4rem;
-	margin: 0 0 0 1.4%;
+	margin: 0;
 	position: relative;
 }
 .profile-ribon-cell:first-child{
@@ -439,12 +480,11 @@ footer {
     position: relative;
 }
 .search a {
-  position: absolute;
-  bottom: -100%;
-  right: 0;
   font-size: 12px;
   line-height: 12px;
   margin-bottom: 5px;
+	display: block;
+	text-align: center;
 }
 
 .search a:after {
@@ -476,7 +516,6 @@ textarea.settings {
 }
 
 .searchForm input:not([type]) {
-  padding: 5px;
   width: 100%
 }
 
@@ -544,4 +583,72 @@ textarea.settings {
 
 .leaflet-container {
   height: 300px
+}
+
+/* ---------------SETTINGS----------------*/
+
+
+.setting-hide {
+  max-height: 0px;
+  overflow: hidden;
+  -webkit-transition: max-height 1.5s cubic-bezier(0, 1.05, 0, 1);
+  -o-transition: max-height 1.5s cubic-bezier(0, 1.05, 0, 1);
+  transition: max-height 1.5s cubic-bezier(0, 1.05, 0, 1);
+}
+.setting-show {
+  overflow: hidden;
+  max-height: 20000px;
+  -webkit-transition: max-height 5s ease;
+  -o-transition: max-height 5s ease;
+  transition: max-height 5s ease;
+}
+#setting-title {
+  position: relative;
+}
+#setting-title h1 {
+  background-color: #fff;
+  display: inline-block;
+  padding-right: 20px;
+  position: relative;
+  z-index: 1;
+}
+.blue-line {
+  background: #00A8D8 none repeat scroll 0 0;
+  height: 1px;
+  position: absolute;
+  top: 3rem;
+  width: calc(100% - 3rem);
+  z-index: 0;
+  display: block;
+}
+.setting-arrow {
+  position: absolute;
+  top: 2rem;
+  height: 2rem;
+  right: 0rem;
+}
+.setting-arrow.up {
+  -webkit-transition: transform: rotate(0deg);
+  -o-transition: transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+.setting-arrow.down {
+  -webkit-transition: transform: rotate(-180deg);
+  -o-transition: transform: rotate(-180deg);
+  transform: rotate(-180deg);
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+.number-down, .number-up {
+  width: 1.5rem;
+  padding: 0.75rem 0;
+}
+.number-down {
+  -webkit-transition: transform: rotate(-180deg);
+  -o-transition: transform: rotate(-180deg);
+  transform: rotate(-180deg);
 }

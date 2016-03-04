@@ -30,7 +30,9 @@ var Instagram = React.createClass({
       .get('/instagram/'+ id)
       .end(function(err, resp){
         if(err) {
-          // Brak integracji
+          that.setState({
+            error: err
+          })
         } else {
           that.setState({
             media: resp.body.data
@@ -42,14 +44,27 @@ var Instagram = React.createClass({
   render: function(){
     var insta_content
 
-    if(this.state.media) { // Zapytanie wykonane poprawnie
+    if(this.state.error){
+
+      insta_content = (
+        <h3>Wystapił błąd podczas połączenia z Instagram.com</h3>
+      )
+
+    } else if(this.state.media) { // Zapytanie wykonane poprawnie
+      if(this.state.media.length > 10){
+        this.setState({
+          media: this.state.media.splice(9, this.state.media.length - 1)
+        })
+      }
       var media = this.state.media.map(function(img) {
         return (
-          <img src={img.images.low_resolution.url} key={img.id} />
+          <div className="col span_1_of_4">
+            <a href={img.link}><img src={img.images.low_resolution.url} key={img.id} className="profile-insta-photo"/></a>
+          </div>
         )
       })
       insta_content = (
-        <div id='instafeed'>{ media }</div>
+        <div className="section group">{ media }</div>
       )
     } else { // Użytkownik nie autoryzował nas do wykonywania zapytań
       insta_content = (
