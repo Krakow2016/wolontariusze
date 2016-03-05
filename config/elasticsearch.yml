@@ -1,0 +1,4 @@
+# ======================== Elasticsearch Configuration =========================
+
+network.host: 0.0.0.0
+script.engine.groovy.inline.update: true
