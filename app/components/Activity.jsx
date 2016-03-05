@@ -1,6 +1,7 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
-var ReactMarkdown = require('react-markdown')
+var backdraft = require('backdraft-js')
+var Draft = require('draft-js')
 
 var ActivityStore = require('../stores/Activity')
 var TimeService = require('../modules/time/TimeService.js')
@@ -155,6 +156,14 @@ var Activity = React.createClass({
 
     var volonteersLimit = (activity.limit == 0) ? 'Brak' : activity.limit
 
+    var raw = Draft.convertToRaw(activity.description.getCurrentContent())
+    var html = backdraft(raw, {
+      'BOLD': ['<strong>', '</strong>'],
+      'ITALIC': ['<i>', '</i>'],
+      'UNDERLINE': ['<u>', '</u>'],
+      'CODE': ['<span style="font-family: monospace">', '</span>'],
+    })
+
     // TODO
     //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>
     //<b>Ostatnia edycja:</b> {TimeService.showTime(activity.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.editor.id}>{activity.editor.name}</a></span>
@@ -177,7 +186,7 @@ var Activity = React.createClass({
         { this.map() }
         <b>Prorytet:</b> {priority}
         <br></br>
-        <ReactMarkdown source={activity.description} />
+        <div dangerouslySetInnerHTML={{__html: html}} />
         <br></br>
         <b>Wolontariusze, którzy biorą udział:</b> {activeVolonteersList}
         <br></br>

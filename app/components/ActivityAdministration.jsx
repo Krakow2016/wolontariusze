@@ -14,7 +14,8 @@ var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
 var Tags = require('./Tags/Tags.jsx')
 
 var MyTextField = require('./Formsy/MyTextField.jsx')
-var MyTextarea = require('./Formsy/MyTextarea.jsx')
+var Editor = require('./Editor.jsx')
+var Draft = require('draft-js')
 
 var actions = require('../actions')
 var updateAction = actions.updateActivity
@@ -134,6 +135,14 @@ var ActivityAdministration = React.createClass({
     }))
   },
 
+  onChange: function(editorState) {
+    this.setState(update(this.state, {
+      activity: {
+        description: {$set: editorState}
+      }
+    }))
+  },
+
   handleAddPositionChange: function(evt) {
     var value = evt.target.checked
     this.setState(update(this.state, {
@@ -211,8 +220,13 @@ var ActivityAdministration = React.createClass({
   update: function () {
     var state = this.state
     var context = this.props.context
+
+    var activity = Object.assign({}, this.state.activity, {
+      description: Draft.convertToRaw(this.state.activity.description.getCurrentContent())
+    })
+
       // Aktualizuje parametry aktywności
-    context.executeAction(updateAction, state.activity)
+    context.executeAction(updateAction, activity)
 
       // Usuwa wolontariuszy z aktywności
     var removed = state._volunteers.filter(function(i) {
@@ -241,10 +255,14 @@ var ActivityAdministration = React.createClass({
   },
 
   create: function () {
-    /*Dla testów
-    this.state.volunteers = [ {user_id: '1'}, {user_id: '2'}]
-    */
-    this.props.context.executeAction(createAction, this.state)
+
+    var activity = Object.assign({}, this.state.activity, {
+      description: Draft.convertToRaw(this.state.activity.description.getCurrentContent())
+    })
+
+    var payload = Object.assign({}, this.state, { activity: activity })
+
+    this.props.context.executeAction(createAction, payload)
   },
 
   remove: function () {
@@ -491,7 +509,8 @@ var ActivityAdministration = React.createClass({
           <b>Treść </b>
           <br></br>
 
-          <MyTextarea id="activityContentTextarea" name="description" placeholder="Dodaj treść wiadomości" value={this.state.activity.description} onChange={this.handleChange} />
+          <Editor editorState={this.state.activity.description} onChange={this.onChange} />
+
           <br></br>
 
           <b>Wolontariusze, którzy biorą udział:</b>
@@ -520,9 +539,6 @@ var ActivityAdministration = React.createClass({
           <br></br>
           <br></br>
           <div id="activityEditToolbar">
-            <a href="https://guides.github.com/features/mastering-markdown/">
-                <input type="button" value="Markdown" />
-            </a>
             {removeButton}
             {updateButton}
             {createButton}

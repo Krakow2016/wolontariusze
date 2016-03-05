@@ -176,6 +176,13 @@ module.exports = {
       else {
         //var change = data.changes[0]
         //if(change) {
+        // TODO tymczasowe rozwiązanie
+
+        var Draft = require('draft-js')
+        var blocks = Draft.convertFromRaw(payload.description)
+        var contentState = Draft.ContentState.createFromBlockArray(blocks)
+        payload.description = Draft.EditorState.createWithContent(contentState)
+
           context.dispatch('ACTIVITY_UPDATED', payload)
         //}
       }

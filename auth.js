@@ -20,7 +20,7 @@ passport.use(new LocalStrategy(
     // Próba logowania
     Volunteers.read({force_admin: true}, 'Volunteers', { key: username }, { index: 'email' }, function (err, users) {
       // Wystąpił niespodziewany błąd
-      if (err) { return done(err) }
+      if (err) { return done(null, false, err) }
       var user = users[0]
       // Nie znaleziono użytkownika o danym loginie
       if (!user) {

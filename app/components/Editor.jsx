@@ -68,7 +68,7 @@ var Editor = React.createClass({
           editorState={this.props.editorState}
           onToggle={this.toggleInlineStyle} />
 
-        <div style={{ border: '1px solid #ccc', cursor: 'text', padding: 10 }}>
+        <div style={{ border: '1px solid #ccc', cursor: 'text', padding: 10, 'min-height': 140 }}>
           <Draft.Editor
             placeholder="Wpisz komentarz..."
             editorState={this.props.editorState}

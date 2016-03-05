@@ -1,6 +1,7 @@
-
 'use strict'
+
 var createStore  = require('fluxible/addons').createStore
+var Draft = require('draft-js')
 
 var ActivityStore = createStore({
   storeName: 'Activity',
@@ -18,7 +19,7 @@ var ActivityStore = createStore({
       act_type: '',
       duration: '',
       place: '',
-      description: '',
+      description: Draft.EditorState.createEmpty(),
       limit: 5
     }
     this.volunteers = []
@@ -30,6 +31,11 @@ var ActivityStore = createStore({
     delete data.volunteers
     this.activity = data
     this.volunteers = volunteers
+
+    var blocks = Draft.convertFromRaw(data.description)
+    var contentState = Draft.ContentState.createFromBlockArray(blocks)
+    this.activity.description = Draft.EditorState.createWithContent(contentState)
+
     this.emitChange()
   },
 
@@ -71,13 +77,27 @@ var ActivityStore = createStore({
   },
 
   dehydrate: function () {
-    return this.getState()
+
+    var activity = Object.assign({}, this.activity, {
+      description: Draft.convertToRaw(this.activity.description.getCurrentContent())
+    })
+
+    return {
+      activity: activity,
+      volunteers: this.volunteers,
+      invalidSnackBar: this.invalidSnackBar,
+    }
   },
 
   rehydrate: function (state) {
+
     this.activity = state.activity
     this.volunteers = state.volunteers
     this.invalidSnackBar = state.invalidSnackBar
+
+    var blocks = Draft.convertFromRaw(this.activity.description)
+    var contentState = Draft.ContentState.createFromBlockArray(blocks)
+    this.activity.description = Draft.EditorState.createWithContent(contentState)
   }
 
 })

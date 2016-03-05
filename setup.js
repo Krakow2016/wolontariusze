@@ -103,9 +103,12 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
       async.each(Object.keys(tables), function(table, done) {
         // Utwórz indeksy dla tabel w bazie danych
         async.each(tables[table], function(index, cb) {
-          r.table(table).indexCreate(index).run(conn, cb)
+          r.table(table).indexCreate(index).run(conn, function(err){
+            if(err) { console.log(err) }
+            cb()
+          })
         }, done)
-      }, function() {
+      }, function(err) {
         // Specjalny index dla tokenów dostępu
         r.table('Volunteers').indexCreate("token", function(user) {
           return user('access_tokens').map(function(token) {
