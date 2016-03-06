@@ -19,7 +19,7 @@ gulp.task('app', function () {
       basedir: './app/',
       debug: !production // dołącza source mapy
     }).transform("babelify", {
-      presets: ["react"]
+      presets: ["es2015", "react"]
     })
 
     b.bundle(function(err, res){

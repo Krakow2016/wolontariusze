@@ -303,7 +303,7 @@ var ActivityAdministration = React.createClass({
     var that = this
 
     request
-      .get('http://nominatim.openstreetmap.org/search.php')
+      .get('https://nominatim.openstreetmap.org/search.php')
       .query({
         q: this.state.activity.place,
         format: 'json'
