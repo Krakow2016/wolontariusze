@@ -56,6 +56,7 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
         if(err) {
           reject('Błąd: wystąpił problem przy wgrywaniu mappingu wolontariusza do ElasticSearch.')
         } else {
+          console.log(json)
           resolve(conn)
         }
       })
