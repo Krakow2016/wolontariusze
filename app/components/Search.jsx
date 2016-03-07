@@ -68,14 +68,20 @@ var Search = React.createClass({
   render: function() {
 
     var consent = (
-      <p>
-        Uprawnienia dostępu do bazy wyszukiwarki masz jedynie jako
-        koordynator. Korzystając z niej zobowiązujesz się do zachowania w
-        tajemnicy i nie ujawniania osobom trzecim otrzymanych tu
-        informacji i danych o charakterze poufnym, w tym danych
-        osobowych. Administratorem powyższych danych jest Archidiecezja
-        Krakowska. Potwierdź swoje uprawnienia: <input type="button" value="Potwierdzam, kontynuuj..." onClick={this.consent} />
-      </p>
+      <div className="alert alert--warning">
+        <p>
+          <strong>Uwaga:</strong> uprawnienia dostępu do bazy wyszukiwarki masz
+          jedynie jako koordynator. Korzystając z niej zobowiązujesz się do
+          zachowania w tajemnicy i nie ujawniania osobom trzecim otrzymanych tu
+          informacji i danych o charakterze poufnym, w tym danych osobowych.
+          Administratorem powyższych danych jest Archidiecezja Krakowska.
+          Potwierdź swoje uprawnienia:
+        </p>
+
+        <p>
+          <input type="button" className="button button--bordered border--warning" value="Potwierdzam, kontynuuj..." onClick={this.consent} />
+        </p>
+      </div>
     )
 
     var form = (

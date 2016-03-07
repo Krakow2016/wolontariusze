@@ -172,10 +172,12 @@ var ProfileComments = React.createClass({
     return (
       <div className="profileComments">
 
-        <p>
-          Komentarze, które możesz dodawać są widoczne tylko i wyłącznie dla
-          innych koordynatorów - nie są widoczne dla właściciela profilu.
-        </p>
+        <div className="alert">
+          <p>
+            Komentarze, które możesz dodawać są widoczne tylko i wyłącznie dla
+            innych koordynatorów - nie są widoczne dla właściciela profilu.
+          </p>
+        </div>
 
         <div id="profileCommentsAddTitle">
           <b>Dodaj komentarz</b>

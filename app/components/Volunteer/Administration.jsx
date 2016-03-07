@@ -169,12 +169,14 @@ var VolunteerAdministration = React.createClass({
     return (
       <VolunteerShell context={this.props.context} profile={this.state.profile}>
 
-        <p>
-          Ta strona jest do wglądu wyłącznie dla koordynatorów.
-          Korzystając z niej zobowiązujesz się do zachowania w tajemnicy i nie
-          ujawniania osobom trzecim otrzymanych tu informacji i danych
-          osobowych o charakterze poufnym.
-        </p>
+        <div className="alert alert--warning">
+          <p>
+            <strong>Uwaga!</strong> Ta strona jest do wglądu wyłącznie dla
+            koordynatorów.  Korzystając z niej zobowiązujesz się do zachowania w
+            tajemnicy i nie ujawniania osobom trzecim otrzymanych tu informacji i
+            danych osobowych o charakterze poufnym.
+          </p>
+        </div>
 
         {papers}
 
