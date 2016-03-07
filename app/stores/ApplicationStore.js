@@ -8,7 +8,8 @@ var ApplicationStore = createStore({
     'UPDATE_PAGE_TITLE'    : 'updatePageTitle',
     'SAVE_FLASH_SUCCESS'   : 'saveSuccess',
     'SAVE_FLASH_FAILURE'   : 'saveFailure',
-    'INSTAGRAM_CONFIG'     : 'setInstagram'
+    'INSTAGRAM_CONFIG'     : 'setInstagram',
+    'ADMIN_CONSENT'        : 'setConsent'
   },
 
   initialize: function () {
@@ -44,6 +45,11 @@ var ApplicationStore = createStore({
 
   setInstagram: function(instagram_client_id) {
     this.instagram_client_id = instagram_client_id
+    this.emitChange()
+  },
+
+  setConsent: function() {
+    this.consent = true
     this.emitChange()
   },
 

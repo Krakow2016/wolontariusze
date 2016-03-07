@@ -155,8 +155,7 @@ var VolunteerAdministration = React.createClass({
       )
     }
 
-    if(this.state.profile.is_admin) {
-    } else {
+    if(!this.state.profile.is_admin) {
       papers.push(
         <div className="paper" key="admin">
           <p>Użytkownik nie posiada przywilejów administratora</p>
@@ -169,6 +168,13 @@ var VolunteerAdministration = React.createClass({
 
     return (
       <VolunteerShell context={this.props.context} profile={this.state.profile}>
+
+        <p>
+          Ta strona jest do wglądu wyłącznie dla koordynatorów.
+          Korzystając z niej zobowiązujesz się do zachowania w tajemnicy i nie
+          ujawniania osobom trzecim otrzymanych tu informacji i danych
+          osobowych o charakterze poufnym.
+        </p>
 
         {papers}
 

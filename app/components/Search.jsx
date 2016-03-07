@@ -5,26 +5,40 @@ var actions = require('../actions')
 var SearchForm = require('./SearchForm.jsx')
 var SearchResults = require('./SearchResults.jsx')
 var ResultsStore = require('../stores/Results')
+var ApplicationStore = require('../stores/ApplicationStore')
 
 var Search = React.createClass({
   getInitialState: function() {
-    return this.props.context.getStore(ResultsStore).dehydrate()
+    var state = this.props.context.getStore(ResultsStore).dehydrate()
+    state.consent = this.props.context.getStore(ApplicationStore).consent
+    return state
   },
 
   componentDidMount: function componentDidMount() {
     // Nasłuchuj zmian w wynikach wyszukiwania
     this.props.context.getStore(ResultsStore)
       .addChangeListener(this._onStoreChange)
+    // Nasłuchuj zgody na warunki
+    this.props.context.getStore(ApplicationStore)
+      .addChangeListener(this._onConsent)
   },
 
   componentWillUnmount: function componentWillUnmount() {
-    // Usuń funkcję nasłychującą
+    // Usuń funkcje nasłychujące
     this.props.context.getStore(ResultsStore)
       .removeChangeListener(this._onStoreChange)
+    this.props.context.getStore(ApplicationStore)
+      .removeChangeListener(this._onConsent)
   },
 
   _onStoreChange: function() {
     this.setState(this.props.context.getStore(ResultsStore).dehydrate())
+  },
+
+  _onConsent: function() {
+    this.setState({
+      consent: this.props.context.getStore(ApplicationStore).consent
+    })
   },
 
   handleChange: function(event) {
@@ -47,8 +61,24 @@ var Search = React.createClass({
     this.props.context.executeAction(actions.showResults, this.state.query)
   },
 
+  consent: function() {
+    this.props.context.executeAction(actions.adminConsent)
+  },
+
   render: function() {
-    return (
+
+    var consent = (
+      <p>
+        Uprawnienia dostępu do bazy wyszukiwarki masz jedynie jako
+        koordynator. Korzystając z niej zobowiązujesz się do zachowania w
+        tajemnicy i nie ujawniania osobom trzecim otrzymanych tu
+        informacji i danych o charakterze poufnym, w tym danych
+        osobowych. Administratorem powyższych danych jest Archidiecezja
+        Krakowska. Potwierdź swoje uprawnienia: <input type="button" value="Potwierdzam, kontynuuj..." onClick={this.consent} />
+      </p>
+    )
+
+    var form = (
       <div>
         <SearchForm
           query={this.state.query}
@@ -58,6 +88,8 @@ var Search = React.createClass({
         <SearchResults results={this.state.all} />
       </div>
     )
+
+    return this.state.consent ? form : consent
   }
 })
 

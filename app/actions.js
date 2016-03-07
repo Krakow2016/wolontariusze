@@ -329,6 +329,11 @@ module.exports = {
     })
   },
 
+  // Koordynator wyraził zgodę na warunki użytkowania
+  adminConsent: function(context) {
+    context.dispatch('ADMIN_CONSENT')
+  },
+
   showResults: function(context, state, cb) {
 
     //var age_from = parseInt(state['age-from'])
