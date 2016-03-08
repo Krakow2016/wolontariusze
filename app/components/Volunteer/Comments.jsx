@@ -43,16 +43,12 @@ var EditedProfileComment = React.createClass({
 
   render: function () {
     return (
-      <tr>
-        <td colSpan="3">
-          <Editor editorState={this.state.editorState} onChange={this.onChange}>
-            <div>
-              <input type="submit" onClick={this.handleSave} value="Aktualizuj" />
-              <span onClick={this.props.cancel}>Anuluj</span>
-            </div>
-          </Editor>
-        </td>
-      </tr>
+      <Editor editorState={this.state.editorState} onChange={this.onChange}>
+        <div>
+          <input type="submit" onClick={this.handleSave} value="Aktualizuj" />
+          <span onClick={this.props.cancel}>Anuluj</span>
+        </div>
+      </Editor>
     )
   }
 })
@@ -88,18 +84,17 @@ var ProfileComment = React.createClass ({
         'CODE': ['<span style="font-family: monospace">', '</span>'],
       })
       return (
-        <tr>
-          <td dangerouslySetInnerHTML={{__html: html}} />
-          <td>{TimeService.showTime(this.props.comment.creationTimestamp)}</td>
-          <td>
+<div>
+          <p dangerouslySetInnerHTML={{__html: html}} />
+          <div>
             <NavLink href={'/wolontariusz/'+this.props.comment.adminId}>
               {this.full_name()}
             </NavLink>
-            <br></br>
+            {TimeService.showTime(this.props.comment.creationTimestamp)}
+          </div>
             <input type="button" onClick={this.editComment} value="Edytuj" />
             <input type="button" onClick={this.deleteComment} value="Usuń" />
-          </td>
-        </tr>
+          </div>
       )
     }
   },
@@ -179,16 +174,9 @@ var ProfileComments = React.createClass({
           </p>
         </div>
 
-        <div id="profileCommentsAddTitle">
-          <b>Dodaj komentarz</b>
-        </div>
         <NewComment context={this.props.context} />
 
-        <br></br>
-        <div id="profileCommentsListTitle">
-          <b>Lista komentarzy</b>
-        </div>
-        <table><tbody>{comments}</tbody></table>
+        {comments}
       </div>
     )
   }

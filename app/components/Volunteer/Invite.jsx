@@ -1,6 +1,4 @@
 var React = require('react')
-var Button = require('material-ui/lib/raised-button')
-var Dialog = require('material-ui/lib/dialog')
 
 var actions = require('../../actions')
 
@@ -22,7 +20,7 @@ var Invite = React.createClass({
     this.props.context.executeAction(actions.inviteUser, {
       id: this.props.id
     })
-    this._handleRequestClose()
+    window.location.hash = "close"
   },
 
   render: function() {
@@ -30,18 +28,31 @@ var Invite = React.createClass({
       <div>
         <p>Profil jest nieaktywny do czasu, aż wolontariusz nie zostanie zaproszony do serwisu.</p>
         <div style={{textAlign: 'center'}}>
-          <Button label="Wyślij zaproszenie" secondary={true} onClick={this.showDialog} />
+          <a href="#invite" className="button">Wyślij zaproszenie</a>
         </div>
 
-        <Dialog
-           ref="dialog"
-          title="Potwierdź"
-          actions={[ { text: 'Cancel' }, { text: 'Submit', onTouchTap: this._onDialogSubmit, ref: 'submit' } ]}
-          actionFocus="submit"
-          open={this.state.openDialog}
-          onRequestClose={this._handleRequestClose} >
-          Czy jesteś pewnien aby to zrobić?
-        </Dialog>
+        <div id="invite" className="modal">
+          <div className="modal-container">
+            <div className="modal-header">
+              Potwierdzenie wymagane
+
+              <a href="#close" className="modal-close">&times;</a>
+            </div>
+
+            <div className="modal-body">
+              <p>
+                Czy jesteś pewien aby zaprosić tego wolontariusza do portalu?
+              </p>
+            </div>
+
+            <div className="modal-footer">
+              <p>
+                <button onClick={this._onDialogSubmit}>Tak</button>
+                <a href="#close" className="button">Anuluj</a>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }

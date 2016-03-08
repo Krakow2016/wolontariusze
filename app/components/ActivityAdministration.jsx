@@ -3,7 +3,6 @@ var NavLink = require('fluxible-router').NavLink
 var request = require('superagent')
 var Formsy = require('formsy-react')
 
-var Snackbar = require('material-ui/lib/snackbar')
 var DateTime = require('react-datetime')
 var moment = require('moment')
 

@@ -1,6 +1,5 @@
 var React = require('react')
 var Formsy = require('formsy-react')
-var TextField = require('material-ui/lib/text-field')
 
 var VolunteerStore = require('../stores/Volunteer')
 var createVolunteer = require('../actions').createVolunteer

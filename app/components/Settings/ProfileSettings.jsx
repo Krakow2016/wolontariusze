@@ -1,7 +1,5 @@
 var React = require('react')
-var Snackbar = require('material-ui/lib/snackbar')
 
-var Settings = require('./Settings.jsx')
 var updateVolunteer = require('../../actions').updateVolunteer
 
 var ProfileSettings = React.createClass({
@@ -31,34 +29,43 @@ var ProfileSettings = React.createClass({
 
   render: function() {
     return (
-      <Settings>
-        <Formsy.Form className="settingsForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
+      <Formsy.Form className="settingsForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
 
-          {this.props.children}
+        <h1>
+          Informacje publiczne
+        </h1>
 
-          <div className="pure-g">
-            <div className="pure-u-1 pure-u-md-1-3"></div>
-            <div className="pure-u-1 pure-u-md-2-3">
-              <button type="submit" className="button" disabled={!this.state.canSubmit}>
-                Zmień
-              </button>
-              <div id="button-clear"></div>
-            </div>
+        <div className="alert">
+          <p>
+            Informacja o tym gdzie będą się te dane wyświetlać. I dlaczego warto uzupełnić.
+          </p>
+        </div>
+
+        {this.props.children}
+
+        <div className="pure-g">
+          <div className="pure-u-1 pure-u-md-1-3"></div>
+          <div className="pure-u-1 pure-u-md-2-3">
+            <button type="submit" className="button" disabled={!this.state.canSubmit}>
+              Zmień
+            </button>
+            <div id="button-clear"></div>
           </div>
-        </Formsy.Form>
-        <Snackbar
-          open={!!this.props.success}
-          message="Zapisano"
-          autoHideDuration={5000}
-          onRequestClose={this.props.handleSuccessSnackbarClose} />
-        <Snackbar
-          open={!!this.props.error}
-          message="Wystąpił błąd"
-          autoHideDuration={5000}
-          onRequestClose={this.props.handleErrorSnackbarClose} />
-      </Settings>
+        </div>
+      </Formsy.Form>
     )
   }
 })
 
 module.exports = ProfileSettings
+
+        //<Snackbar
+          //open={!!this.props.success}
+          //message="Zapisano"
+          //autoHideDuration={5000}
+          //onRequestClose={this.props.handleSuccessSnackbarClose} />
+        //<Snackbar
+          //open={!!this.props.error}
+          //message="Wystąpił błąd"
+          //autoHideDuration={5000}
+          //onRequestClose={this.props.handleErrorSnackbarClose} />

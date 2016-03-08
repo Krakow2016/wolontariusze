@@ -11,7 +11,7 @@ var Tags = React.createClass({
             return (
               <li key={li}>
                 <span>{li}</span>
-                <input type="button" value="usuń" data-tag={li} onClick={that.props.onRemove} />
+                <button className="button--xsm" data-tag={li} onClick={that.props.onRemove}>usuń</button>
               </li>
               )
           })}

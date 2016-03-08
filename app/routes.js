@@ -150,49 +150,18 @@ module.exports = {
     }
   },
 
-  account_settings: {
-    path: '/ustawienia/konto',
+  settings: {
+    path: '/ustawienia',
     method: 'get',
-    handler: require('./components/Settings/Basic.jsx'),
+    handler: require('./components/Settings/Settings.jsx'),
     action: function (context, payload, done) {
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Ustawienia' })
       var user = context.getUser()
       if(user) {
         context.executeAction(actions.showVolunteer, { id: user.id }, function() {
-          done()
-        })
-      } else {
-        done()
-      }
-    }
-  },
-
-  profil_settings: {
-    path: '/ustawienia/profil',
-    method: 'get',
-    handler: require('./components/Settings/Info.jsx'),
-    action: function (context, payload, done) {
-      var user = context.getUser()
-      if(user) {
-        context.executeAction(actions.showVolunteer, { id: user.id }, function() {
-          done()
-        })
-      } else {
-        done()
-      }
-    }
-  },
-
-  applications_settings: {
-    path: '/ustawienia/aplikacje',
-    method: 'get',
-    handler: require('./components/Settings/Integrations.jsx'),
-    action: function (context, payload, done) {
-      var user = context.getUser()
-      if(user) {
-        context.dispatch('UPDATE_PAGE_TITLE', { title: 'Aplikacje' })
-        context.executeAction(actions.showIntegrations, { user_id: user.id }, function() {
-          done()
+          context.executeAction(actions.showIntegrations, { user_id: user.id }, function() {
+            done()
+          })
         })
       } else {
         done()

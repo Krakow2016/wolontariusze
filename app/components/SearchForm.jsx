@@ -1,7 +1,5 @@
 var React = require('react')
 
-var RaisedButton = require('material-ui/lib/raised-button')
-
 var SearchForm = React.createClass({
 
   render: function() {

@@ -1,8 +1,6 @@
 var React = require('react')
 var Formsy = require('formsy-react')
 
-var TextField = require('material-ui/lib/text-field')
-
 var MyTextField = React.createClass({
 
   // Add the Formsy Mixin
@@ -34,7 +32,7 @@ var MyTextField = React.createClass({
     var errorMessage = this.getErrorMessage()
 
     return (
-      <TextField
+      <input
         name={this.props.name}
         type={this.props.type}
         className={className}

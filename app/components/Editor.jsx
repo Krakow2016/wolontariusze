@@ -61,6 +61,10 @@ var Editor = React.createClass({
     )
   },
 
+  focus: function() {
+//this.refs.editor.focus()
+  },
+
   render: function() {
     return (
       <div>
@@ -68,8 +72,9 @@ var Editor = React.createClass({
           editorState={this.props.editorState}
           onToggle={this.toggleInlineStyle} />
 
-        <div style={{ border: '1px solid #ccc', cursor: 'text', padding: 10, 'min-height': 140 }}>
+        <div onClick={this.focus} style={{ border: '1px solid #ccc', cursor: 'text', padding: 10, 'min-height': 140 }}>
           <Draft.Editor
+            ref="editor"
             placeholder="Wpisz komentarz..."
             editorState={this.props.editorState}
             onChange={this.props.onChange} />

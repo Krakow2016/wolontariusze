@@ -70,12 +70,6 @@ h1 {
 h2 {
 	margin: 1rem 0 0 0;
 }
-h2,p,b,a,ul,span,label,button,input[type="submit"],legend{
-	font-size: 1.25rem;
-}
-small{
-	font-size: 0.5rem;
-}
 p,ul{
 	color:#000;
 }
@@ -179,39 +173,11 @@ nav ul li:after {
 nav ul li:last-child:after { content: ""; }
 /*---------------FORMS-----------------------*/
 
-input, select, textarea,button {
-	width: 100%;
-	border: 1px solid #0082BD;
-	border-radius: 2rem;
-	height: 2rem;
-	display: inline-block;
-	padding: 0 1rem 0 1rem;
-	margin: 0.5rem 0 0.5rem 0;
-	box-sizing:border-box;
-}
-input[type="checkbox"]{
-	width: auto;
-	height: auto;
-	margin: 1rem 0.5rem;
-}
 .form-radio{
 	display: inline-block;
 	width: auto;
 	line-height: 1.4rem;
 	margin: 0.5rem;
-}
-textarea{
-	height: 13rem;
-	padding: 1rem;
-}
-button, input[type="submit"]{
-	width: 50%;
-	height: 4rem;
-	color: #FFF;
-	background: #0082BD none repeat scroll 0% 0%;
-	border: medium none;
-	float: right;
-	margin: 2rem 0;
 }
 #searchBtn{
 	margin: 0;
@@ -287,22 +253,6 @@ footer {
 	-o-transition: transform 0.5s ease;
 	transition: transform 0.5s ease;
 }
-/*------RESPONSIVE---------------*/
-@media only screen and (min-width: 1600px) {
-	html{
-		font-size: 17px;
-	}
-}
-@media only screen and (max-width: 1200px) {
-	html{
-		font-size: 13px;
-	}
-}
-@media only screen and (max-width: 1024px) {
-	html{
-		font-size: 12px;
-	}
-}
 
 @media only screen and (max-width: 840px) {
 	body {background-image:url("../img/bgcutmob.svg"),url("../img/bg.svg");background-position:0% 15em, center top; background-color:#00A8D8; }
@@ -314,22 +264,6 @@ footer {
 	nav ul li a{line-height: 3rem;}
 	.menu-search-box{ margin: 0 0 0.5rem 0;}
 	#menu-search-submit { top: 1rem;}
-}
-
-@media only screen and (max-width: 600px) {
-	html{
-		font-size: 11px;
-	}
-}
-@media only screen and (max-width: 500px) {
-	html{
-		font-size: 9px;
-	}
-}
-@media only screen and (max-width: 400px) {
-	html{
-		font-size: 8px;
-	}
 }
 
 #prolife-photo {

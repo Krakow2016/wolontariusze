@@ -3,9 +3,6 @@ var VolunteerShell = require('./Shell.jsx')
 var Comments = require('./Comments.jsx')
 var update = require('react-addons-update')
 
-var Button = require('material-ui/lib/raised-button')
-var Dialog = require('material-ui/lib/dialog')
-
 var VolunteerStore = require('../../stores/Volunteer')
 var XlsStore = require('../../stores/Xls')
 var updateVolunteer = require('../../actions').updateVolunteer
@@ -82,20 +79,12 @@ var VolunteerAdministration = React.createClass({
       .removeChangeListener(this._changeListener2)
   },
 
-  showRejectionDialog: function() {
-    this.setState({openRejectionDialog: true})
-  },
-
-  showAdminDialog: function() {
-    this.setState({openAdminDialog: true})
-  },
-
   _onRejectionDialogSubmit: function() {
     this.props.context.executeAction(updateVolunteer, {
       id: this.state.profile.id,
       approved: false
     })
-    this._handleRequestClose()
+    window.location.hash = "close"
   },
 
   _onAdminDialogSubmit: function() {
@@ -103,14 +92,7 @@ var VolunteerAdministration = React.createClass({
       id: this.state.profile.id,
       is_admin: true
     })
-    this._handleRequestClose()
-  },
-
-  _handleRequestClose: function() {
-    this.setState({
-      openRejectionDialog: false,
-      openAdminDialog: false
-    })
+    window.location.hash = "close"
   },
 
   saveTag: function(tag) {
@@ -145,7 +127,7 @@ var VolunteerAdministration = React.createClass({
         <div className="paper" key="rejection">
           <p>Profil jest aktywny</p>
           <div style={{textAlign: 'center'}}>
-            <Button label="Zablokuj profil" secondary={true} onClick={this.showRejectionDialog} />
+            <a href="#confirm" className="button">Zablokuj profil</a>
           </div>
         </div>
       )
@@ -160,7 +142,7 @@ var VolunteerAdministration = React.createClass({
         <div className="paper" key="admin">
           <p>Użytkownik nie posiada przywilejów administratora</p>
           <div style={{textAlign: 'center'}}>
-            <Button label="Awansuj do rangi administratora" primary={true} onClick={this.showAdminDialog} />
+            <a href="#admin" className="button">Awansuj do rangi administratora</a>
           </div>
         </div>
       )
@@ -178,35 +160,71 @@ var VolunteerAdministration = React.createClass({
           </p>
         </div>
 
-        {papers}
+        <div ref={node => node && node.setAttribute('container', '')}>
+          <div ref={node => node && node.setAttribute('row', '')}>
+            <div ref={node => node && node.setAttribute('column', '7')}>
 
-        <Dialog
-          ref="rejection_dialog"
-          title="Potwierdź"
-          actions={[ { text: 'Cancel' }, { text: 'Submit', onTouchTap: this._onRejectionDialogSubmit, ref: 'submit' } ]}
-          actionFocus="submit"
-          open={this.state.openRejectionDialog}
-          onRequestClose={this._handleRequestClose} >
-          Czy jesteś pewnien aby to zrobić?
-        </Dialog>
+              {papers}
 
-        <Dialog
-          ref="admin_dialog"
-          title="Potwierdź"
-          actions={[ { text: 'Cancel' }, { text: 'Submit', onTouchTap: this._onAdminDialogSubmit, ref: 'submit' } ]}
-          actionFocus="submit"
-          open={this.state.openAdminDialog}
-          onRequestClose={this._handleRequestClose} >
-          Czy jesteś pewnien aby to zrobić?
-        </Dialog>
+              <Details {...this.state.details} />
 
-        <Details {...this.state.details} />
+              <b>Projekty: </b>
+              <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
 
-        <b>Projekty: </b>
+            </div>
+            <div ref={node => node && node.setAttribute('column', '5')}>
+              <Comments context={this.props.context} />
+            </div>
 
-        <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
+          </div>
+        </div>
 
-        <Comments context={this.props.context} />
+        <div id="confirm" className="modal">
+          <div className="modal-container">
+            <div className="modal-header">
+              Potwierdzenie wymagane
+
+              <a href="#close" className="modal-close">&times;</a>
+            </div>
+
+            <div className="modal-body">
+              <p>
+                Czy jesteś pewien?
+              </p>
+            </div>
+
+            <div className="modal-footer">
+              <p>
+                <button onClick={this._onRejectionDialogSubmit}>Tak</button>
+                <a href="#close" className="button">Anuluj</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div id="admin" className="modal">
+          <div className="modal-container">
+            <div className="modal-header">
+              Czy jesteś pewien?
+
+              <a href="#close" className="modal-close">&times;</a>
+            </div>
+
+            <div className="modal-body">
+              <p>
+                <strong>{this.state.profile.first_name} {this.state.profile.last_name}</strong> zyska prawa administratora. Czy jesteś pewien że chcesz to zrobić?
+              </p>
+            </div>
+
+            <div className="modal-footer">
+              <p>
+                <button className="bg--error" onClick={this._onAdminDialogSubmit}>Tak, nadaj prawa administratora</button>
+                <a href="#close" className="button">Anuluj</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
       </VolunteerShell>
     )
   }

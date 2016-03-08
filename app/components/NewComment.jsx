@@ -47,7 +47,7 @@ var NewComment = React.createClass ({
   render: function() {
     return (
       <Editor editorState={this.state.editorState} onChange={this.onChange}>
-        <input type="submit" onClick={this.handleSave} value="Dodaj" />
+        <input type="submit" onClick={this.handleSave} value="Dodaj komentarz" />
       </Editor>
     )
   }
