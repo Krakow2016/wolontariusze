@@ -2,6 +2,7 @@ var React = require('react')
 var Snackbar = require('material-ui/lib/snackbar')
 
 var Settings = require('./Settings.jsx')
+var ApplicationStore = require('../../stores/ApplicationStore')
 var updateVolunteer = require('../../actions').updateVolunteer
 
 var ProfileSettings = React.createClass({
@@ -30,9 +31,16 @@ var ProfileSettings = React.createClass({
   },
 
   render: function() {
+  
+    var errorMessage = this.props.context.getStore(ApplicationStore).getFailure()
+    errorMessage = (("" !== errorMessage) ? (<div class="message-error">{errorMessage}</div>) : "")  
+    
+  
     return (
       <Settings>
         <Formsy.Form className="settingsForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
+
+          {errorMessage}
 
           {this.props.children}
 

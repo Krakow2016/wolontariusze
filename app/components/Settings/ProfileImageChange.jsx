@@ -14,6 +14,7 @@ var ProfileImageChange = React.createClass({
   multiple : false,
 
   onDrop: function (files) {
+    this.props.context.executeAction(actions.addFailureMessage, "Np. błąd zapisu plików. > ProfileimageChange.jsx")
     this.props.context.executeAction(actions.updateProfilePicture, files)
   },
 

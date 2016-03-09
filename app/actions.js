@@ -564,5 +564,13 @@ module.exports = {
     }
 
     request.send(JSON.stringify(query))
+  },
+  
+  addFailureMessage: function(context, payload, cb) {
+    context.service.create('ApplicationStore', {}, payload, function (err) {
+      context.dispatch('SAVE_FLASH_FAILURE', [payload])
+      cb()
+    })
   }
+  
 }
