@@ -50,6 +50,8 @@ var Activities = module.exports = {
               })
             })
         })
+      } else {
+          callback(400)
       }
     })
   },
