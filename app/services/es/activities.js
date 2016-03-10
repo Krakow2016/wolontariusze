@@ -9,6 +9,8 @@ var client = new elasticsearch.Client({
 
 var Activities = module.exports = {
   name: 'ActivitiesES',
+
+  // Używamy create ze względu na potrzebę przesyłu zapytania w ciele zapytania POST
   create: function(req, resource, params, body, config, callback) {
 
     var query = {

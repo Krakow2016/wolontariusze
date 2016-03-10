@@ -2,15 +2,24 @@ var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var backdraft = require('backdraft-js')
 var Draft = require('draft-js')
+var update = require('react-addons-update')
 
+var Editor = require('./Editor.jsx')
 var ActivityStore = require('../stores/Activity')
 var TimeService = require('../modules/time/TimeService.js')
 var actions = require('../actions')
+var updateAction = actions.updateActivity
 
 var Activity = React.createClass({
 
   getInitialState: function () {
-    return this.props.context.getStore(ActivityStore).getState()
+    var state = this.props.context.getStore(ActivityStore).getState()
+
+    if(this.user().is_admin) {
+      state.editorState = Draft.EditorState.createEmpty()
+    }
+
+    return state
   },
 
   _changeListener: function() {
@@ -89,6 +98,25 @@ var Activity = React.createClass({
     return this.props.context.getUser()
   },
 
+  onChange: function(editorState) {
+    this.setState({
+      editorState: editorState
+    })
+  },
+
+  handleNewUpdate: function() {
+
+    var rawState = Draft.convertToRaw(this.state.editorState.getCurrentContent())
+    var updates = this.state.activity.updates || []
+    updates.push(rawState)
+
+
+    // Aktualizuje parametry aktywności
+    context.executeAction(updateAction, {
+      updates: updates
+    })
+  },
+
   render: function () {
 
     var user = this.user()
@@ -164,13 +192,28 @@ var Activity = React.createClass({
       'CODE': ['<span style="font-family: monospace">', '</span>'],
     })
 
+    var updateForm
+    if(this.state.editorState) {
+      updateForm = (
+        <Editor editorState={this.state.editorState} onChange={this.onChange}>
+          <div>
+            <input type="submit" onClick={this.handleNewUpdate} value="Dodaj aktualizacje" />
+          </div>
+        </Editor>
+      )
+    }
+
     // TODO
     //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>
     //<b>Ostatnia edycja:</b> {TimeService.showTime(activity.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.editor.id}>{activity.editor.name}</a></span>
     return (
       <div>
         {editLink}
-        <h2>{activity.name}</h2>
+
+        <p dangerouslySetInnerHTML={{__html: html}} />
+
+        {updateForm}
+
         <br></br>
         <br></br>
         <b>Typ:</b> {actType}
@@ -185,8 +228,7 @@ var Activity = React.createClass({
         <br></br>
         { this.map() }
         <b>Prorytet:</b> {priority}
-        <br></br>
-        <div dangerouslySetInnerHTML={{__html: html}} />
+
         <br></br>
         <b>Wolontariusze, którzy biorą udział:</b> {activeVolonteersList}
         <br></br>

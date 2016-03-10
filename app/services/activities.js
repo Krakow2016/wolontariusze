@@ -2,7 +2,7 @@ module.exports = function(service) {
   var service = require('./'+ service +'/activities')
   var restrict = require('./helpers/restrict')
   var protect = require('./helpers/protect')
-  var newFields = require('./helpers/newFields')
+  var timestamp = require('./helpers/timestamp')
 
   var create = service.create
   service.create = function(req, resource, params, body, config, callback) {
@@ -11,5 +11,5 @@ module.exports = function(service) {
     create(req, resource, params, body, config, callback)
   }
 
-  return restrict(protect(newFields(service)))
+  return restrict(protect(timestamp(service)))
 }
