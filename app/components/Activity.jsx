@@ -224,35 +224,57 @@ var Activity = React.createClass({
     //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>
     //<b>Ostatnia edycja:</b> {TimeService.showTime(activity.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.editor.id}>{activity.editor.name}</a></span>
     return (
-      <div>
-        {editLink}
+        <div ref={node => node && node.setAttribute('container', '')}>
+          <div ref={node => node && node.setAttribute('row', '')}>
+            <div ref={node => node && node.setAttribute('column', '7')}>
 
-        <p dangerouslySetInnerHTML={{__html: html}} />
+              <p dangerouslySetInnerHTML={{__html: html}} />
 
-        {updates}
-        {updateForm}
+              {updates}
 
-        <br></br>
-        <br></br>
-        <b>Typ:</b> {actType}
-        <br></br>
-        <b>Kategorie:</b> {tagsList}
-        <br></br>
-        <b>Czas rozpoczęcia:</b> {startTime} <b>Czas trwania:</b> {activity.duration}
-        <br></br>
-        <b>Jest w archiwum?:</b> {is_archived}
-        <br></br>
-        <b>Miejsce wydarzenia:</b> {activity.place}
-        <br></br>
+              <div className="alert alert--warning">
+                <p>
+                  Jako administrator masz możliwość dodawania aktualiacji do
+                  zadania, które oprócz tego, że wyświetli się pod treścią
+                  zadania, będzie wysłane drogą e-mailową do wsyzstkich
+                  zgłoszonych do zadania wolontariuszy.
+                </p>
+              </div>
+
+              {updateForm}
+
+            </div>
+            <div ref={node => node && node.setAttribute('column', '5')}>
+              <img src={activity.profile_picture} />
+              <b>Autor:</b> {activity.first_name} {activity.last_name}
+              <br></br>
+              <b>Typ:</b> {actType}
+              <br></br>
+              <b>Kategorie:</b> {tagsList}
+              <br></br>
+              <b>Miejsce wydarzenia:</b> {activity.place}
+              <br></br>
+              <b>Czas rozpoczęcia:</b> {startTime} <b>Czas trwania:</b> {activity.duration}
+              <br></br>
+              <b>Jest w archiwum?:</b> {is_archived}
+              <br></br>
+              <b>Prorytet:</b> {priority}
+
+              <br></br>
+              <br></br>
+              <b>Limit(maksymalna liczba wolontariuszy):</b> {volonteersLimit}
+              <br></br>
+
+              {buttons}
+
+              {editLink}
+
+          </div>
+        </div>
+
         { this.map() }
-        <b>Prorytet:</b> {priority}
 
-        <br></br>
         <b>Wolontariusze, którzy biorą udział:</b> {activeVolonteersList}
-        <br></br>
-        <b>Limit(maksymalna liczba wolontariuszy):</b> {volonteersLimit}
-        <br></br>
-        {buttons}
       </div>
     )
   }

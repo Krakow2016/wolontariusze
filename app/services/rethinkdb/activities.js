@@ -18,7 +18,12 @@ var Activities = module.exports = {
       }
 
       if(params.id) { // Pobierz krotkę o danym numerze id
-        r.table(tableName).get(params.id.toString()).run(conn, function(err, activity){
+        r.table(tableName)
+          .get(params.id.toString())
+          .merge(function(activity){
+            return r.db("sdm").table("Volunteers").get(activity('created_by')).pluck(["first_name", "last_name", "profile_picture"])
+          })
+          .run(conn, function(err, activity){
 
           if(err) {
             return callback(err)

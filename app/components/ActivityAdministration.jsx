@@ -547,11 +547,6 @@ var ActivityAdministration = React.createClass({
         </Formsy.Form>
 
 
-          <Snackbar
-          open={!!this.state.invalidSnackBar}
-          message={this.state.invalidSnackBar}
-          autoHideDuration={5000}
-          onRequestClose={this.handleInvalidSnackbarClose} />
       </div>
     )
   }
@@ -559,3 +554,10 @@ var ActivityAdministration = React.createClass({
 
 /* Module.exports instead of normal dom mounting */
 module.exports = ActivityAdministration
+
+
+          //<Snackbar
+          //open={!!this.state.invalidSnackBar}
+          //message={this.state.invalidSnackBar}
+          //autoHideDuration={5000}
+          //onRequestClose={this.handleInvalidSnackbarClose} />
