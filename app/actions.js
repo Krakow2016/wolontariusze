@@ -110,7 +110,7 @@ module.exports = {
 
     if(state.created_by) {
       must.push({
-        term: { 'doc.creator': state.created_by }
+        term: { 'doc.created_by': state.created_by }
       })
     }
 
@@ -183,10 +183,20 @@ module.exports = {
         var contentState = Draft.ContentState.createFromBlockArray(blocks)
         payload.description = Draft.EditorState.createWithContent(contentState)
 
-          context.dispatch('ACTIVITY_UPDATED', payload)
+        context.dispatch('ACTIVITY_UPDATED', payload)
         //}
       }
       cb()
+    })
+  },
+
+  postActivityUpdate: function(context, payload, cb) {
+    context.service.update('Activities', {}, payload, function (err, data) {
+      if(err) { debug(err) }
+      else {
+        context.dispatch('UPDATE_ADDED', payload.updates)
+        cb()
+      }
     })
   },
 
