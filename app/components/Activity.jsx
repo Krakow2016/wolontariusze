@@ -2,23 +2,16 @@ var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var backdraft = require('backdraft-js')
 var Draft = require('draft-js')
-var update = require('react-addons-update')
 
 var Editor = require('./Editor.jsx')
 var ActivityStore = require('../stores/Activity')
 var TimeService = require('../modules/time/TimeService.js')
 var actions = require('../actions')
-var updateAction = actions.updateActivity
 
 var Activity = React.createClass({
 
   getInitialState: function () {
     var state = this.props.context.getStore(ActivityStore).getState()
-
-    if(this.user().is_admin) {
-      state.editorState = Draft.EditorState.createEmpty()
-    }
-
     return state
   },
 
@@ -108,11 +101,15 @@ var Activity = React.createClass({
 
     var rawState = Draft.convertToRaw(this.state.editorState.getCurrentContent())
     var updates = this.state.activity.updates || []
-    updates.push(rawState)
-
+    updates.push({
+      raw: rawState,
+      created_at: new Date(),
+      created_by: this.user().id
+    })
 
     // Aktualizuje parametry aktywności
-    context.executeAction(updateAction, {
+    context.executeAction(actions.postActivityUpdate, {
+      id: this.state.activity.id,
       updates: updates
     })
   },
@@ -193,7 +190,7 @@ var Activity = React.createClass({
     })
 
     var updateForm
-    if(this.state.editorState) {
+    if(this.user().is_admin) {
       updateForm = (
         <Editor editorState={this.state.editorState} onChange={this.onChange}>
           <div>
@@ -201,6 +198,26 @@ var Activity = React.createClass({
           </div>
         </Editor>
       )
+    }
+
+    var updates = []
+    if(this.state.activity.updates) {
+      updates = this.state.activity.updates.map(function(update) {
+        var html = backdraft(update.raw, {
+          'BOLD': ['<strong>', '</strong>'],
+          'ITALIC': ['<i>', '</i>'],
+          'UNDERLINE': ['<u>', '</u>'],
+          'CODE': ['<span style="font-family: monospace">', '</span>'],
+        })
+        return (
+          <div className="activityUpdate">
+            <p dangerouslySetInnerHTML={{__html: html}} />
+            <p>
+              Dodano: {update.created_at.toString()}
+            </p>
+          </div>
+        )
+      })
     }
 
     // TODO
@@ -212,6 +229,7 @@ var Activity = React.createClass({
 
         <p dangerouslySetInnerHTML={{__html: html}} />
 
+        {updates}
         {updateForm}
 
         <br></br>

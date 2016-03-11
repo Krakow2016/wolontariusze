@@ -7,7 +7,7 @@ module.exports = function(service) {
   var create = service.create
   service.create = function(req, resource, params, body, config, callback) {
     // Zapisz identyfikator użytkownika który stworzy aktywność
-    body.user_id = req.user.id
+    body.created_by = req.user.id
     create(req, resource, params, body, config, callback)
   }
 
