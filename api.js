@@ -15,6 +15,7 @@ var oauth2 = require('./oauth/oauth2')
 
 var Volunteers = require('./app/services/volunteers')(config.service)
 var Activities = require('./app/services/activities')(config.service)
+var ActivitiesES = require('./app/services/es/activities')
 var Joints = require('./app/services/joints')(config.service)
 
 // Służy do zapisywania sesji użytkowników w bazie danych
@@ -180,7 +181,7 @@ server.post('/api/v2/volunteers/:id', bearer, function(req, res) {
 // Dodawanie aktywności
 server.post('/api/v2/activities', bearer, function(req, res) {
   Activities.create(req, 'Activities', {}, req.body, {}, function (err, result) {
-    if(err) { res.send(501) }
+    if(err) { res.status(500).send(error(err)) }
     else {
       var activity = result.changes[0].new_val
       res.status(201).send(success({activity: activity}))
@@ -190,8 +191,18 @@ server.post('/api/v2/activities', bearer, function(req, res) {
 
 // Lista aktywności
 server.get('/api/v2/activities', bearer, function(req, res) {
-  Activities.read(req, 'Activities', {}, req.query, function (err, activities) {
-    res.send(success({activities: activities}))
+  ActivitiesES.create(req, 'ActivitiesES', {}, req.query, {}, function (err, activities) {
+    if(err) { res.status(500).send(error(err)) }
+    else {
+      res.send(success({
+        activities: activities.map(function(activity) {
+          var source = activity._source
+          return Object.assign(source.doc, {
+            volunteers: source.volunteers
+          })
+        })
+      }))
+    }
   })
 })
 
@@ -306,6 +317,7 @@ server.use(function(err, req, res, next) {
   if(err.status) {
     res.status(err.status).send(error(err.name, err.message))
   } else {
+      console.log(err)
     res.status(500).send(error('UnknownError', err))
   }
 })

@@ -84,7 +84,7 @@ module.exports = {
         if (params.type === 'adminTasks') {
           
           results = results.filter(function (task) {
-            return task.creator == (params.user_id+'')
+            return task.created_by == (params.user_id+'')
           })
         }
       

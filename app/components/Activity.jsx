@@ -3,6 +3,7 @@ var NavLink = require('fluxible-router').NavLink
 var backdraft = require('backdraft-js')
 var Draft = require('draft-js')
 
+var Editor = require('./Editor.jsx')
 var ActivityStore = require('../stores/Activity')
 var TimeService = require('../modules/time/TimeService.js')
 var actions = require('../actions')
@@ -10,7 +11,8 @@ var actions = require('../actions')
 var Activity = React.createClass({
 
   getInitialState: function () {
-    return this.props.context.getStore(ActivityStore).getState()
+    var state = this.props.context.getStore(ActivityStore).getState()
+    return state
   },
 
   _changeListener: function() {
@@ -89,6 +91,29 @@ var Activity = React.createClass({
     return this.props.context.getUser()
   },
 
+  onChange: function(editorState) {
+    this.setState({
+      editorState: editorState
+    })
+  },
+
+  handleNewUpdate: function() {
+
+    var rawState = Draft.convertToRaw(this.state.editorState.getCurrentContent())
+    var updates = this.state.activity.updates || []
+    updates.push({
+      raw: rawState,
+      created_at: new Date(),
+      created_by: this.user().id
+    })
+
+    // Aktualizuje parametry aktywności
+    context.executeAction(actions.postActivityUpdate, {
+      id: this.state.activity.id,
+      updates: updates
+    })
+  },
+
   render: function () {
 
     var user = this.user()
@@ -164,13 +189,49 @@ var Activity = React.createClass({
       'CODE': ['<span style="font-family: monospace">', '</span>'],
     })
 
+    var updateForm
+    if(this.user().is_admin) {
+      updateForm = (
+        <Editor editorState={this.state.editorState} onChange={this.onChange}>
+          <div>
+            <input type="submit" onClick={this.handleNewUpdate} value="Dodaj aktualizacje" />
+          </div>
+        </Editor>
+      )
+    }
+
+    var updates = []
+    if(this.state.activity.updates) {
+      updates = this.state.activity.updates.map(function(update) {
+        var html = backdraft(update.raw, {
+          'BOLD': ['<strong>', '</strong>'],
+          'ITALIC': ['<i>', '</i>'],
+          'UNDERLINE': ['<u>', '</u>'],
+          'CODE': ['<span style="font-family: monospace">', '</span>'],
+        })
+        return (
+          <div className="activityUpdate">
+            <p dangerouslySetInnerHTML={{__html: html}} />
+            <p>
+              Dodano: {update.created_at.toString()}
+            </p>
+          </div>
+        )
+      })
+    }
+
     // TODO
     //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>
     //<b>Ostatnia edycja:</b> {TimeService.showTime(activity.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.editor.id}>{activity.editor.name}</a></span>
     return (
       <div>
         {editLink}
-        <h2>{activity.name}</h2>
+
+        <p dangerouslySetInnerHTML={{__html: html}} />
+
+        {updates}
+        {updateForm}
+
         <br></br>
         <br></br>
         <b>Typ:</b> {actType}
@@ -185,8 +246,7 @@ var Activity = React.createClass({
         <br></br>
         { this.map() }
         <b>Prorytet:</b> {priority}
-        <br></br>
-        <div dangerouslySetInnerHTML={{__html: html}} />
+
         <br></br>
         <b>Wolontariusze, którzy biorą udział:</b> {activeVolonteersList}
         <br></br>

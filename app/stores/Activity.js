@@ -11,6 +11,7 @@ var ActivityStore = createStore({
     'ACTIVITY_UPDATED': 'update',
     'JOINT_CREATED': 'join',
     'JOINT_DELETED': 'leave',
+    'UPDATE_ADDED': 'update_published'
   },
 
   initialize: function () {
@@ -24,6 +25,7 @@ var ActivityStore = createStore({
     }
     this.volunteers = []
     this.invalidSnackBar = ''
+    this.editorState = Draft.EditorState.createEmpty()
   },
 
   load: function(data) {
@@ -68,11 +70,18 @@ var ActivityStore = createStore({
     this.emitChange()
   },
 
+  update_published: function(updates) {
+    this.activity.updates = updates
+    this.editorState = Draft.EditorState.createEmpty()
+    this.emitChange()
+  },
+
   getState: function () {
     return {
       activity: this.activity,
       volunteers: this.volunteers,
       invalidSnackBar: this.invalidSnackBar,
+      editorState: this.editorState
     }
   },
 
@@ -86,6 +95,7 @@ var ActivityStore = createStore({
       activity: activity,
       volunteers: this.volunteers,
       invalidSnackBar: this.invalidSnackBar,
+      editorState: Draft.convertToRaw(this.editorState.getCurrentContent())
     }
   },
 
@@ -98,6 +108,10 @@ var ActivityStore = createStore({
     var blocks = Draft.convertFromRaw(this.activity.description)
     var contentState = Draft.ContentState.createFromBlockArray(blocks)
     this.activity.description = Draft.EditorState.createWithContent(contentState)
+
+    var blocks2 = Draft.convertFromRaw(state.editorState)
+    var contentState2 = Draft.ContentState.createFromBlockArray(blocks2)
+    this.editorState = Draft.EditorState.createWithContent(contentState2)
   }
 
 })
@@ -105,23 +119,23 @@ var ActivityStore = createStore({
 ActivityStore.attributes = function() {
   return [
     'id',
-    'name',
     'act_type',
-    'description',
     'created_at',
-    'updated_at',
+    'created_by',
     'datetime',
+    'description',
     'duration',
-    'place',
     'is_archived',
     'is_urgent',
-    'creator',
-    'editor',
-    'limit',
-    'volunteers',
     'lat_lon',
-    'volunteerNumber',
-    'tags'
+    'limit',
+    'name',
+    'place',
+    'starts_at',
+    'tags',
+    'updated_at',
+    'updates',
+    'volunteers',
   ]
 }
 

@@ -263,14 +263,33 @@ Przykłady użycia są zawarte w pliku:
 | Klucz         | Pomijalny | Opis                                                                       |
 | ---           | ---       | ---                                                                        |
 | `id`          | Nie       |                                                                            |
-| `description` | Nie       | Opis aktywności.                                                           |
+| `created_at`  | Nie       | Czas utworzenia aktywności.                                                |
+| `created_by`  | Nie       | Identyfikator użytkownika dodającego zadanie.                              |
+| `description` | Nie       | Opis aktywności. Format: *RawDraftContentState* (patrz niżej).             |
 | `name`        | Nie       | Nazwa aktywności.                                                          |
-| `volunteers`  | Nie       | Tablica wolontariuszy zgłoszonych do wykonania zadania.                    |
-| `datetime`    | Tak       | Data i czas rozpoczęcia zadania.                                           |
+| `volunteers`  | Nie       | Tablica `id` wolontariuszy zgłoszonych do wykonania zadania.               |
+| `duration`    | Tak       | Opis słowny czasu trwania zadania.                                         |
+| `starts_at`   | Tak       | Data i czas rozpoczęcia zadania. Np. ""                                    |
 | `is_urgent`   | Tak       | `true` dla zadań oznaczonych jako pilne.                                   |
 | `lat_lon`     | Tak       | Współrzędne geograficzne miejsca wykonywania aktywności. Np. `[0.0, 0.0]`. |
 | `limit`       | Tak       | Limit osób które mogą zgłosić się do zadania. Np. `10`.                    |
 | `place`       | Tak       | Opis miejsca wykonywania zadania. Np. `"Sankruarium św. Jana Pawła II"`.   |
+| `updates`     | Tak       | Tablica aktualizacji do treści zadania.                                    |
+
+### Opis obiektu aktualizacji zadania:
+
+| Klucz        | Opis                                                            |
+| ---          | ---                                                             |
+| `created_by` | Identyfikator użytkownika dodającego aktualizację.              |
+| `created_at` | Czas dodania aktualizacji.                                      |
+| `body`       | Treść aktualości. Format: *RawDraftContentState* (patrz niżej). |
+
+### Opis obiektu typu *RawDraftContentState*:
+
+| Klucz           | Opis                                                                                |
+| ---             | ---                                                                                 |
+| `blocks`        | Lista obiektów typu `ContentBlock` reprezentujących stan pojedynczego bloku tekstu. |
+| `blocks[].text` | Czysty tekst bloku.                                                                 |
 
 ### Tworzenie obiektu aktywności
 
