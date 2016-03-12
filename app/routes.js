@@ -244,5 +244,5 @@ module.exports = {
     action: function(context, payload, done) {
       done()
     }
-  },
+  }
 }
