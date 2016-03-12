@@ -136,6 +136,10 @@ ActivityStore.attributes = function() {
     'updated_at',
     'updates',
     'volunteers',
+    // dane autora (pochodzą z joina)
+    'first_name',
+    'last_name',
+    'profile_picture'
   ]
 }
 

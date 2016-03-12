@@ -44,7 +44,7 @@ var Activities = module.exports = {
                   return {'right': {'user_id': doc('right')('id')}}
                 })
               })
-            .pluck({'left': ['id'], 'right': ['user_id', 'first_name', 'last_name']})
+            .pluck({'left': ['id'], 'right': ['user_id', 'first_name', 'last_name', 'profile_picture']})
             .zip()
             .run(conn, function(err, cursor){
               if (err) { return callback(500) }

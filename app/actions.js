@@ -97,8 +97,13 @@ module.exports = {
     context.service.read('Activities', payload, {
       store: 'Activity'
     }, function (err, data) {
-      if(err) { debug(err) }
-      else { context.dispatch('LOAD_ACTIVITY', data) }
+      if(err) {
+        debug(err)
+      } else if(!data) {
+        debug('Błąd ładowania aktywności')
+      } else {
+        context.dispatch('LOAD_ACTIVITY', data)
+      }
       cb(data)
     })
   },
@@ -184,6 +189,7 @@ module.exports = {
         payload.description = Draft.EditorState.createWithContent(contentState)
 
         context.dispatch('ACTIVITY_UPDATED', payload)
+        context.executeAction(navigateAction, {url: '/zadania/'+payload.id})
         //}
       }
       cb()

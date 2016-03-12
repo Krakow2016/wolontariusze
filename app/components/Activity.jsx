@@ -162,7 +162,9 @@ var Activity = React.createClass({
     var activeVolonteersList = volunteers.map(function(volunteer) {
       return (
         <span className="volonteerLabel" key={volunteer.id}>
-          <NavLink href={'/wolontariusz/'+volunteer.user_id}>{volunteer.first_name} {volunteer.last_name}</NavLink>
+          <NavLink href={'/wolontariusz/'+volunteer.user_id} className="tooltip--bottom" data-hint={volunteer.first_name +" "+ volunteer.last_name} >
+            <img src={volunteer.profile_picture} className='profileThumbnail' />
+          </NavLink>
         </span>
       )
     })
@@ -192,11 +194,21 @@ var Activity = React.createClass({
     var updateForm
     if(this.user().is_admin) {
       updateForm = (
-        <Editor editorState={this.state.editorState} onChange={this.onChange}>
-          <div>
-            <input type="submit" onClick={this.handleNewUpdate} value="Dodaj aktualizacje" />
-          </div>
-        </Editor>
+        <div className="alert alert--warning">
+          <p>
+            Jako administrator masz możliwość dodawania aktualiacji do
+            zadania, które oprócz tego, że wyświetli się pod treścią
+            zadania, będzie wysłane drogą e-mailową do wszystkich
+            zgłoszonych do zadania wolontariuszy.
+          </p>
+          <Editor editorState={this.state.editorState} onChange={this.onChange} style={{'min-height': 'initial'}}>
+            <p className="clearfix">
+              <button className="bg--warning float--right" onClick={this.handleNewUpdate} style={{'margin-top': 10}}>
+                Dodaj aktualizacje
+              </button>
+            </p>
+          </Editor>
+        </div>
       )
     }
 
@@ -211,10 +223,10 @@ var Activity = React.createClass({
         })
         return (
           <div className="activityUpdate">
-            <p dangerouslySetInnerHTML={{__html: html}} />
-            <p>
-              Dodano: {update.created_at.toString()}
+            <p className="italic">
+              Aktualizacja z dnia: {update.created_at.toString()}
             </p>
+            <p dangerouslySetInnerHTML={{__html: html}} />
           </div>
         )
       })
@@ -231,36 +243,29 @@ var Activity = React.createClass({
               <p dangerouslySetInnerHTML={{__html: html}} />
 
               {updates}
-
-              <div className="alert alert--warning">
-                <p>
-                  Jako administrator masz możliwość dodawania aktualiacji do
-                  zadania, które oprócz tego, że wyświetli się pod treścią
-                  zadania, będzie wysłane drogą e-mailową do wsyzstkich
-                  zgłoszonych do zadania wolontariuszy.
-                </p>
-              </div>
-
               {updateForm}
 
             </div>
             <div ref={node => node && node.setAttribute('column', '5')}>
-              <img src={activity.profile_picture} />
-              <b>Autor:</b> {activity.first_name} {activity.last_name}
-              <br></br>
+              <p className="text--center">
+                <img src={activity.profile_picture} className="profileMedium" /><br />
+                <span>
+                  {activity.first_name} {activity.last_name}
+                </span>
+              </p>
               <b>Typ:</b> {actType}
               <br></br>
               <b>Kategorie:</b> {tagsList}
               <br></br>
               <b>Miejsce wydarzenia:</b> {activity.place}
               <br></br>
-              <b>Czas rozpoczęcia:</b> {startTime} <b>Czas trwania:</b> {activity.duration}
+              <b>Czas rozpoczęcia:</b> {startTime}
+              <br></br>
+              <b>Czas trwania:</b> {activity.duration}
               <br></br>
               <b>Jest w archiwum?:</b> {is_archived}
               <br></br>
               <b>Prorytet:</b> {priority}
-
-              <br></br>
               <br></br>
               <b>Limit(maksymalna liczba wolontariuszy):</b> {volonteersLimit}
               <br></br>
@@ -274,7 +279,10 @@ var Activity = React.createClass({
 
         { this.map() }
 
-        <b>Wolontariusze, którzy biorą udział:</b> {activeVolonteersList}
+        <b>Wolontariusze, którzy biorą udział:</b>
+        <p>
+          {activeVolonteersList}
+        </p>
       </div>
     )
   }
