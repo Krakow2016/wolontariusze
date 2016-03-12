@@ -22,7 +22,7 @@ COPY . /opt/wolontariusze
 
 ENV NODE_ENV production
 
-RUN ./node_modules/gulp/bin/gulp.js app
+RUN ./node_modules/webpack/bin/webpack.js --config webpack.config.prod.js
 
 COPY config/nginx.conf /etc/nginx/nginx.conf
 
