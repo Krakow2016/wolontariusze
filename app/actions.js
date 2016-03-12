@@ -190,7 +190,6 @@ module.exports = {
 
         context.dispatch('ACTIVITY_UPDATED', payload)
         context.executeAction(navigateAction, {url: '/zadania/'+payload.id})
-        //}
       }
       cb()
     })

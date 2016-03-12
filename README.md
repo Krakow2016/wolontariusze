@@ -79,21 +79,13 @@ podążaj za wskazówkami na stronie [iojs.org](https://iojs.org/en/index.html).
 Upewnij się, że instalacja przebiegła poprawnie wykonując polecenie:
 
     $ node --version
-    v2.1.0
+    v5.3.0
 
 Wraz z poleceniem `node` zainstalowane zostanie narzędzie do zarządzania
 zależnościami `npm`.
 
     $ npm --version
-    2.10.1
-
-Korzystając z niego możemy zainstalować naszą pierwszą zależność:
-
-    $ npm install -g gulp
-
-Flaga `-g` oznacza, że pakiet zostanie zainstalowany globalnie - dzięki temu
-będziemy mieli do niego dostęp z poziomu komendy systemowej (w naszym wypadku
-`gulp`).
+    3.5.3
 
 ## Baza danych
 
@@ -111,7 +103,7 @@ W pliku konfiguracyjnym możesz zdefiniować m.in. adres do bazy danych i port n
 
 Następnie wykonaj komendę:
 
-    $ gulp
+    $ node dev.js
 
 i skieruj się pod adres <http://127.0.0.1:7000>. Powinieneś teraz zobacz stronę
 główną naszego serwisu. A teraz czas na programowanie :)
