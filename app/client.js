@@ -1,8 +1,5 @@
 'use strict'
 
-// Polyfill dla fluxible-router
-//Object.assign = require('object.assign/polyfill')()
-
 var React = require('react');
 var ReactDOM = require('react-dom');
 var debug = require('debug');

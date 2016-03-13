@@ -29,7 +29,6 @@
     "moment": "2.11.2",
     "node-jsx": "0.13.3",
     "oauth2orize": "^1.2.0",
-    "object.assign": "*",
     "passport": "*",
     "passport-http": "^0.3.0",
     "passport-http-bearer": "^1.0.1",
@@ -55,7 +54,6 @@
     "session-rethinkdb": "1.0.10",
     "sharp": "0.13.0",
     "superagent": "^1.7.2",
-    "through2": "*",
     "universal-analytics": "^0.3.10"
   },
   "devDependencies": {
