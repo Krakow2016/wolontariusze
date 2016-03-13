@@ -75,83 +75,82 @@ var Settings = React.createClass({
           success={this.state.success}
           error={this.state.error}>
 
-          <div className="pure-g">
-            <div className="pure-u-1 pure-u-md-1-3">
-              <label htmlFor="first_name">
-                <h2>Kim jestem?</h2>
-              </label>
-            </div>
-            <div className="pure-u-1 pure-u-md-2-3">
-              <MyTextarea
-                id="who_question"
-                name="who_question"
-                placeholder=""
-                value={this.state.profile.who_question}
-                validations={{
-                  maxLength: 500
-                }}
-                validationErrors={{
-                  maxLength: 'Limit znaków wynosi 500.'
-                }} />
-            </div>
-          </div>
+          <label htmlFor="first_name">
+            <h2>Kim jestem?</h2>
+          </label>
 
-          <div className="pure-g">
-            <div className="pure-u-1 pure-u-md-1-3">
-              <label htmlFor="first_name">
-                <h2>Co chciałbym robić w życiu najbardziej?</h2>
-              </label>
-            </div>
-            <div className="pure-u-1 pure-u-md-2-3">
-              <MyTextarea
-                id="what_question"
-                name="what_question"
-                placeholder=""
-                value={this.state.profile.what_question}
-                validations={{
-                  maxLength: 500
-                }}
-                validationErrors={{
-                  maxLength: 'Limit znaków wynosi 500.'
-                }} />
-            </div>
-          </div>
+          <MyTextarea
+            id="who_question"
+            name="who_question"
+            placeholder=""
+            value={this.state.profile.who_question}
+            validations={{
+              maxLength: 500
+            }}
+            validationErrors={{
+              maxLength: 'Limit znaków wynosi 500.'
+            }} />
 
-          <div className="pure-g">
-            <div className="pure-u-1 pure-u-md-1-3">
-              <label htmlFor="first_name">
-                <h2>Dlaczego angażuję się w wolontariat ŚDM?</h2>
-              </label>
-            </div>
-            <div className="pure-u-1 pure-u-md-2-3">
-              <MyTextarea
-                id="why_question"
-                name="why_question"
-                placeholder=""
-                value={this.state.profile.why_question}
-                validations={{
-                  maxLength: 500
-                }}
-                validationErrors={{
-                  maxLength: 'Limit znaków wynosi 500.'
-                }} />
-            </div>
-          </div>
+          <label htmlFor="first_name">
+            <h2>Co chciałbym robić w życiu najbardziej?</h2>
+          </label>
+
+          <MyTextarea
+            id="what_question"
+            name="what_question"
+            placeholder=""
+            value={this.state.profile.what_question}
+            validations={{
+              maxLength: 500
+            }}
+            validationErrors={{
+              maxLength: 'Limit znaków wynosi 500.'
+            }} />
+
+          <label htmlFor="first_name">
+            <h2>Dlaczego angażuję się w wolontariat ŚDM?</h2>
+          </label>
+
+          <MyTextarea
+            id="why_question"
+            name="why_question"
+            placeholder=""
+            value={this.state.profile.why_question}
+            validations={{
+              maxLength: 500
+            }}
+            validationErrors={{
+              maxLength: 'Limit znaków wynosi 500.'
+            }} />
+
         </ProfileSettings>
 
         <h1>
           Aplikacje
         </h1>
 
-        <p>Lista integracji:</p>
-        <ul>
-          <li><InstagramSetting context={this.props.context} /></li>
-        </ul>
-        <p>Lista aplikacji:</p>
-        <ul>
-          {integrations}
-        </ul>
-        <NavLink href="/ustawienia/developer">Dla deweloperów</NavLink>
+        <div ref={node => node && node.setAttribute('container', '')}>
+          <div ref={node => node && node.setAttribute('row', '')}>
+            <div ref={node => node && node.setAttribute('column', '7')}>
+              <p>Lista integracji:</p>
+              <ul>
+                <li><InstagramSetting context={this.props.context} /></li>
+              </ul>
+              <p>Lista aplikacji:</p>
+              <ul>
+                {integrations}
+              </ul>
+              <NavLink href="/ustawienia/developer">Dla deweloperów</NavLink>
+            </div>
+            <div ref={node => node && node.setAttribute('column', '5')}>
+              <div className="alert">
+                <p>
+                  Informacja o tym jakie są możliwe integracje.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
     )

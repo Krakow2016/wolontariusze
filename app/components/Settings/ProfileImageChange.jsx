@@ -17,6 +17,10 @@ var ProfileImageChange = React.createClass({
     this.props.context.executeAction(actions.updateProfilePicture, files)
   },
 
+  onOpenClick: function() {
+    this.refs.dropzone.open()
+  },
+
   render: function () {
     var classNameBtn = 'btn-change-avatar' + (this.state.showDropzone && " hidden"),
         classNameWrapper = 'avatar-change avatar-change-size-'+this.props.size,
@@ -25,9 +29,8 @@ var ProfileImageChange = React.createClass({
 
     return (
       <div className={classNameWrapper}>
-        <ProfileImage src={this.props.src} />
-
-        <Dropzone onDrop={this.onDrop} className={classDropzone}>
+        <ProfileImage src={this.props.src} onClick={this.onOpenClick} />
+        <Dropzone ref="dropzone" onDrop={this.onDrop} className={classDropzone}>
           <div>Kliknij aby wybrać lub upuść tu zdjęcie.</div>
         </Dropzone>
       </div>

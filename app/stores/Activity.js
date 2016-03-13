@@ -139,7 +139,7 @@ ActivityStore.attributes = function() {
     // dane autora (pochodzą z joina)
     'first_name',
     'last_name',
-    'profile_picture'
+    'profile_picture_url'
   ]
 }
 

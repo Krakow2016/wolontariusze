@@ -9,6 +9,7 @@ var ProfileImage = React.createClass({
     return (
         <img
           src={this.props.src}
+          onClick={this.props.onClick}
           className='avatar-img'
           alt=""/>
     )

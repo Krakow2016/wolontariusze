@@ -21,7 +21,7 @@ var Activities = module.exports = {
         r.table(tableName)
           .get(params.id.toString())
           .merge(function(activity){
-            return r.db("sdm").table("Volunteers").get(activity('created_by')).pluck(["first_name", "last_name", "profile_picture"])
+            return r.db("sdm").table("Volunteers").get(activity('created_by')).pluck(["first_name", "last_name", "profile_picture_url"])
           })
           .run(conn, function(err, activity){
 
@@ -44,7 +44,7 @@ var Activities = module.exports = {
                   return {'right': {'user_id': doc('right')('id')}}
                 })
               })
-            .pluck({'left': ['id'], 'right': ['user_id', 'first_name', 'last_name', 'profile_picture']})
+            .pluck({'left': ['id'], 'right': ['user_id', 'first_name', 'last_name', 'profile_picture_url']})
             .zip()
             .run(conn, function(err, cursor){
               if (err) { return callback(500) }

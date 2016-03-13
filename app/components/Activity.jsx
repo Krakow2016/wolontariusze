@@ -163,7 +163,7 @@ var Activity = React.createClass({
       return (
         <span className="volonteerLabel" key={volunteer.id}>
           <NavLink href={'/wolontariusz/'+volunteer.user_id} className="tooltip--bottom" data-hint={volunteer.first_name +" "+ volunteer.last_name} >
-            <img src={volunteer.profile_picture} className='profileThumbnail' />
+            <img src={volunteer.profile_picture_url} className='profileThumbnail' />
           </NavLink>
         </span>
       )
@@ -248,7 +248,7 @@ var Activity = React.createClass({
             </div>
             <div ref={node => node && node.setAttribute('column', '5')}>
               <p className="text--center">
-                <img src={activity.profile_picture} className="profileMedium" /><br />
+                <img src={activity.profile_picture_url} className="profileMedium" /><br />
                 <span>
                   {activity.first_name} {activity.last_name}
                 </span>

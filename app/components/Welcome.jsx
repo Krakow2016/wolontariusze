@@ -19,7 +19,7 @@ var Welcome = React.createClass({
       // Hasło zostało zmienione
       this.props.context.executeAction(navigateAction, {
         type: 'replacestate',
-        url: '/ustawienia/profil'
+        url: '/ustawienia'
       })
     }
   },
