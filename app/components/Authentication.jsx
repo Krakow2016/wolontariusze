@@ -13,9 +13,9 @@ var Authentication = React.createClass({
     }
 
     return (
-      <span className="loginBar">
+      <div className="navBar">
         {loginButton}
-      </span>
+      </div>
     )
   },
 })
