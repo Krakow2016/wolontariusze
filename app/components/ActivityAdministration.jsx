@@ -25,7 +25,7 @@ var deleteAction = actions.deleteActivity
 
 //Formsy
 Formsy.addValidationRule('isDuration', function (values, value) {
-  if (value == '') {
+  if (!value || value == '') {
     return true
   } else {
     var min = value.match(new RegExp ('([0-9]+m){1}', 'g'))
