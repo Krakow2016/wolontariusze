@@ -39,7 +39,7 @@
         "is_urgent" : {
             "type" : "boolean"
         },
-        "creator" : {
+        "created_by" : {
             "type" : "string",
             "index": "not_analyzed"
         },
