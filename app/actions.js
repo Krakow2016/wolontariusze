@@ -146,13 +146,7 @@ module.exports = {
     }
 
     var params = {
-      query : {
-        function_score: {
-          query: query,
-          functions: [],
-          score_mode: 'avg'
-        }
-      }
+      query : query
     }
 
     var payload = {

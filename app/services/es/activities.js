@@ -13,6 +13,21 @@ var Activities = module.exports = {
   // Używamy create ze względu na potrzebę przesyłu zapytania w ciele zapytania POST
   create: function(req, resource, params, body, config, callback) {
 
+    body.sort = [{
+      "doc.is_urgent" : {
+        "order" : "desc",
+        "nested_path" : "doc",
+        "missing" : 0
+      }
+    },
+    {
+      "doc.datetime" : {
+        "order" : "asc",
+        "nested_path" : "doc",
+        "missing" : "_last"
+      }
+    }]
+
     var query = {
       index: 'sdm',
       type: 'activity',
