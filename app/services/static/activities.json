@@ -12,8 +12,8 @@
         "lat_lon": [50.0565, 19.9376],
         "is_archived": false,
         "is_urgent": true,
-        "creator": "1",
-        "editor": "1",
+        "created_by": "1",
+        "updated_by": "1",
         "limit": 5,
         "tags": []
      },
@@ -30,8 +30,8 @@
         "place": "Sankuarium Bożego Miłosierdzia",
         "lat_lon": [50.0200, 19.9376],
         "is_urgent": false,
-        "creator": "2",
-        "editor": "1",
+        "created_by": "2",
+        "updated_by": "1",
         "limit": 1,
         "tags": ["Wolontariat+"]
      },
@@ -48,8 +48,8 @@
         "place": "Myślenice",
         "is_archived": false,
         "is_urgent": false,
-        "creator": "1",
-        "editor": "2",
+        "created_by": "1",
+        "updated_by": "2",
         "limit": 10,
         "tags": ["Wolontariat+", "Tłumaczenia"]
      }

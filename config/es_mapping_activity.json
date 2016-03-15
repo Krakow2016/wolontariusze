@@ -43,7 +43,7 @@
             "type" : "string",
             "index": "not_analyzed"
         },
-        "editor" : {
+        "updated_by" : {
             "type" : "string",
             "index": "not_analyzed"
         },
