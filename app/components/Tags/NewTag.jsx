@@ -61,7 +61,7 @@ var NewTag = React.createClass({
   render: function() {
 
     var inputProps = {
-      placeholder: 'Dodaj projekt...',
+      placeholder: 'Dodaj projekt, kategorię...',
       value: this.state.value,
       onChange: this.onChange
     }

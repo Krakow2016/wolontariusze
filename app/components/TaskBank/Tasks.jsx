@@ -35,11 +35,26 @@ var Tasks = React.createClass({
       query: query
     })
   },
+  
+  setQuery: function (query) {
+      this.setState({
+        query: query
+      })
+  },
 
-  onSubmit: function(){
+  onSubmit: function(query){
 
-    var state = this.state.query
-
+    var state
+    if (query) {
+      state = query
+      this.setState({
+        query: query
+      })
+    } else {
+      state = this.state.query
+    }
+    console.log("State query", state)
+    
     this.props.context.executeAction(actions.loadActivities, state)
 
     // Zapisuje zapytanie w adresie url
@@ -104,6 +119,11 @@ if(!task) { return }
               {tabs}
             </div>
           </div>
+          <TaskFilters filterFunction={this.onSubmit}
+            setQuery={this.setQuery}
+            query={this.state.query}
+            context={this.props.context}
+            />
           <ActivitiesSearchForm query={this.state.query} handleChange={this.handleChange} submit={this.onSubmit} />
           <table className="tasks-table">
             <tbody>

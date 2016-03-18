@@ -1,27 +1,12 @@
 var React = require('react')
 var update = require('react-addons-update')
-
 var MyTextField = require('../Formsy/MyTextField.jsx')
-
-var AddedTag = React.createClass({
-  //onClick: function () {
-  //  this.props.onRemoveButtonClick(this.props.tag.id)
-  //},
-  //<input type="button" className="addedTagRemoveButton" onClick={this.onClick} value="Usuń"/> Przyda się, jeśli będzie więcej kategorii
-  name: function() {
-    var t = this.props.tag
-    return t.display_name || t.name
-  },
-  render: function () {
-    return (
-        <div className="addedTag" >(Wybrana kategoria: {this.name()} )</div>
-    )
-  }
-})
+var Tags = require('../Tags/Tags.jsx')
 
 var TaskFilters = React.createClass({
 
   getInitialState: function () {
+    var that = this
     return {
       open: false,
       checkboxes: {
@@ -33,8 +18,8 @@ var TaskFilters = React.createClass({
         availabilityStateCheckbox: false
       },
       selects: {
-        typeSelect: '',
-        prioritySelect: 'NORMALNE',
+        act_type: 'niezdefiniowany',
+        is_urgent: '0',
         timeStateSelect: 'trwajace',
         availabilityStateSelect: 'wolne'
       },
@@ -44,8 +29,7 @@ var TaskFilters = React.createClass({
         lon: 20.0986,
       },
       //placeAddress: 'Dobczyce',
-      category: {}
-
+      tags: ['Wolontariat+']
     }
   },
 
@@ -60,6 +44,7 @@ var TaskFilters = React.createClass({
     //tak jak w ActivityAdministration
     var checkboxes = {}
     var value = evt.target.checked
+    console.log('Value', value)
     checkboxes[evt.target.name] = {$set: value}
     this.setState(update(this.state, {
       checkboxes: checkboxes
@@ -106,16 +91,23 @@ var TaskFilters = React.createClass({
     }))
   },
   
-  addCategory: function (category) {
+  saveTag: function(tag) {
+    this.state.tags = this.state.tags || []
     this.setState(update(this.state, {
-      category: {$set: category}
+        tags: {$push: [tag]}
+    }))
+  },
+
+  removeTag: function(e) {
+    var tag = e.target.dataset.tag
+    var index = this.state.tags.indexOf(tag)
+    this.setState(update(this.state, {
+        tags: {$splice: [[index, 1]]}
     }))
   },
 
   filter: function () {
-    var filteredData = this.props.data
-    var that = this
-
+    /*
     //Typ
     if (this.state.checkboxes.typeCheckbox) {
       filteredData = filteredData.filter(function (task) {
@@ -191,11 +183,27 @@ var TaskFilters = React.createClass({
           return false
             
       })
-    }
+    }*/
     
+    var query = this.props.query
+    var checkboxes = this.state.checkboxes
+    var selects = this.state.selects
+    var place = this.state.place
     
+    checkboxes.typeCheckbox ? (query.act_type = selects.act_type) : (delete query.act_type)
+    checkboxes.priorityCheckbox ? (query.is_urgent = selects.is_urgent) : (delete query.is_urgent)
     
-    this.props.filterFunction(filteredData)
+    checkboxes.placeCheckbox ? (query.placeDistance = place.distance) : (delete query.placeDistance)
+    checkboxes.placeCheckbox ? (query.placeLat = place.lat) : (delete query.placeLat)
+    checkboxes.placeCheckbox ? (query.placeLon = place.lon) : (delete query.placeLon)
+    
+    checkboxes.categoryCheckbox ? (query.tags = this.state.tags.join(';') ) : (delete query.tags)
+    checkboxes.timeStateCheckbox ? (query.timeState = selects.timeState) : (delete query.timeState)
+    checkboxes.availabilityStateCheckbox ? (query.availabilityState = selects.availabilityState) : (delete query.availabilityState)
+    
+    console.log(query)
+    //this.props.setQuery(query)
+    this.props.filterFunction(query)
     
 
   },
@@ -203,26 +211,27 @@ var TaskFilters = React.createClass({
   render: function () {
 
     var filterByType = <div>
-                        <input type="checkbox" name="typeCheckbox" checked={this.state.checkboxes.typeCheckbox} onChange={this.handleCheckboxChange} />
-                        <span className="tasks-filters-filterType">Typ</span>
-                        <select name="typeSelect" selected={this.state.selects.typeSelect}  onChange={this.handleSelectChange} >
-                          <option value="">Niezdefiniowany</option>
+                        <input id="typeCheckbox" type="checkbox" name="typeCheckbox" checked={this.state.checkboxes.typeCheckbox} onChange={this.handleCheckboxChange} />
+                        <label htmlFor="typeCheckbox">Typ</label>
+                        <br></br>
+                        <select name="act_type" selected={this.state.selects.act_type}  onChange={this.handleSelectChange} >
+                          <option value="niezdefiniowany">Niezdefiniowany</option>
                           <option value="dalem_dla_sdm">Dałem dla ŚDM</option>
                           <option value="wzialem_od_sdm">Wziąłęm od ŚDM</option>
                         </select>
                        </div>
     var filterByPriority = <div>
-                              <input type="checkbox" name="priorityCheckbox" checked={this.state.checkboxes.priorityCheckbox} onChange={this.handleCheckboxChange} />
-                              <span className="tasks-filters-filterType">Priorytet</span>
-                              <select name="prioritySelect" selected={this.state.selects.prioritySelect} onChange={this.handleSelectChange}>
-                                <option value="NORMALNE">NORMALNE</option>
-                                <option value="PILNE">PILNE</option>
+                              <input id="priorityCheckbox" type="checkbox" name="priorityCheckbox" checked={this.state.checkboxes.priorityCheckbox} onChange={this.handleCheckboxChange} />
+                              <label htmlFor="priorityCheckbox">Priorytet</label>
+                              <select name="is_urgent" selected={this.state.selects.is_urgent} onChange={this.handleSelectChange}>
+                                <option value="0">NORMALNE</option>
+                                <option value="1">PILNE</option>
                               </select>
                             </div>
     var filterByPlace = <div>
                           <Formsy.Form>
-                            <input type="checkbox" name="placeCheckbox" checked={this.state.checkboxes.placeCheckbox} onChange={this.handleCheckboxChange} />
-                            <span className="tasks-filters-filterType">Miejsce</span>
+                            <input id="placeCheckbox" type="checkbox" name="placeCheckbox" checked={this.state.checkboxes.placeCheckbox} onChange={this.handleCheckboxChange} />
+                            <label htmlFor="placeCheckbox">Miejsce</label>
                             <span className="tasks-filters-filterType"><br></br> Oddalone o</span>
                               <MyTextField id='distance'
                                           name='distance'
@@ -253,27 +262,26 @@ var TaskFilters = React.createClass({
                               <span>, współrzędne wzięte z OSM, © autorzy <a href="//www.openstreetmap.org/copyright">OpenStreetMap</a></span>
                           </Formsy.Form>
                         </div>
-    
+    var tags = this.state.tags || []
     var filterByCategory = <div>
-                              <input type="checkbox" name="categoryCheckbox" checked={this.state.checkboxes.categoryCheckbox} onChange={this.handleCheckboxChange} />
-                              <span className="tasks-filters-filterType">Kategoria</span>
-                              TODO
-                              <AddedTag tag={this.state.category} />
+                              <input id="categoryCheckbox" type="checkbox" name="categoryCheckbox" checked={this.state.checkboxes.categoryCheckbox} onChange={this.handleCheckboxChange} />
+                              <label htmlFor="categoryCheckbox">Kategoria</label>
+                              <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
                             </div>
     var filterByTimeState
     var filterByAvailabilityState
-    if (this.props.type == 'admin') {
+    if (this.props.query.created_by) {
       filterByTimeState = <div>
-                              <input type="checkbox" name="timeStateCheckbox" checked={this.state.checkboxes.timeStateCheckbox} onChange={this.handleCheckboxChange} />
-                              <span className="tasks-filters-filterType">Stan czasowy</span>
+                              <input id="timeStateCheckbox" type="checkbox" name="timeStateCheckbox" checked={this.state.checkboxes.timeStateCheckbox} onChange={this.handleCheckboxChange} />
+                              <label htmlFor="timeStateCheckbox">Stan czasowy</label>
                               <select name="timeStateSelect" selected={this.state.selects.timeStateSelect} onChange={this.handleSelectChange} >
                                 <option value="trwajace">Trwające</option>
                                 <option value="zakonczone">Zakończone</option>
                               </select>
                             </div>
       filterByAvailabilityState = <div>
-                                <input type="checkbox" name="availabilityStateCheckbox" checked={this.state.checkboxes.availabilityStateCheckbox} onChange={this.handleCheckboxChange} />
-                                <span className="tasks-filters-filterType">Dostępność</span>
+                                <input id="availabilityStateCheckbox" type="checkbox" name="availabilityStateCheckbox" checked={this.state.checkboxes.availabilityStateCheckbox} onChange={this.handleCheckboxChange} />
+                                <label htmlFor="availabilityStateCheckbox">Dostępność</label>
                                 <select name="availabilityStateSelect" selected={this.state.selects.availabilityStateSelect} onChange={this.handleSelectChange}>
                                   <option value="wolne">Wolne</option>
                                   <option value="pelne">Pełne</option>
