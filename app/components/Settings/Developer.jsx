@@ -1,7 +1,7 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 
-var Settings = require('./Settings.jsx')
+var Develop = require('./Develop.jsx')
 var APIClientsStore = require('../../stores/APIClients')
 
 var APIClient = function(props) {
@@ -66,15 +66,18 @@ var Developer = React.createClass({
     })
 
     return (
-      <Settings>
+      <div>
         <p>Lista moich aplikacji:</p>
         <ul>
           {integrations}
         </ul>
-        <NavLink href="/ustawienia/developer/utworz">Zarejestruj nową aplikację</NavLink>
-      </Settings>
+        <h2>Zarejestruj nową aplikację</h2>
+
+        <Develop context={this.props.context} />
+      </div>
     )
   }
 })
 
 module.exports = Developer
+

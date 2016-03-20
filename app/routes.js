@@ -185,15 +185,6 @@ module.exports = {
     }
   },
 
-  develop_settings: {
-    path: '/ustawienia/developer/utworz',
-    method: 'get',
-    handler: require('./components/Settings/Develop.jsx'),
-    action: function (context, payload, done) {
-      done()
-    }
-  },
-
   search: {
     path: '/wyszukiwarka',
     method: 'get',
