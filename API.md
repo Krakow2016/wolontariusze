@@ -159,7 +159,8 @@ Przykłady użycia są zawarte w pliku:
 | `is_approved`         | Tak       | 'true' jeżeli użytkownik może logować się w systemie.   |
 | `phone`               | Tak       | Numer telefonu kontaktowego. Np. `"+48 123456789"`.     |
 | `profile_picture_url` | Tak       | Adres url do zdjęcia profilowego.                       |
-| `thumb_picture_url`   | Tak       | Adres url do miniatury zdjęcia profilowego.                       |
+| `tags`                | Tak       | Lista grup do których wolontariusz został przypisany.   |
+| `thumb_picture_url`   | Tak       | Adres url do miniatury zdjęcia profilowego.             |
 
 ### Tworzenie obiektu wolontariusza
 
