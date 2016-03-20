@@ -411,8 +411,8 @@ var ActivityAdministration = React.createClass({
                      onValidSubmit={this.onValidSubmit}
                      onInvalidSubmit={this.onInvalidSubmit}>
 
-          <div row>
-            <div column="6">
+          <div ref={node => node && node.setAttribute('row', '')}>
+            <div ref={node => node && node.setAttribute('column', '6')}>
               <b>Tytuł</b>
               <MyTextField required
                 id='name'
@@ -423,69 +423,69 @@ var ActivityAdministration = React.createClass({
                 disabled={false}
                 value={this.state.activity.name}
                 onChange={this.handleChange} />
+              <br/>
+              <br/>
+              <b>Kategorie:</b>
+              <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
+              <div className="pure-u-1 pure-u-md-1-3">
+                <b>Czas trwania</b>
+              </div>
+              <div className="pure-u-1 pure-u-md-2-3">
+                <MyTextField
+                  id='duration'
+                  name='duration'
+                  placeholder=''
+                  validations='isDuration'
+                  validationError='Format to np. pusty string, "1d 3h 30m", "15m"'
+                  disabled={false}
+                  value={this.state.activity.duration}
+                  onChange={this.handleChange} />
+              </div>
             </div>
-            <div column="6">
+            <div ref={node => node && node.setAttribute('column', '6')}>
               <b>Typ</b>
               <select name="act_type" selected={this.state.activity.act_type} onChange={this.handleChange}>
                 <option value="dalem_dla_sdm">Niezdefiniowany</option>
                 <option value="dalem_dla_sdm">Dałem dla ŚDM</option>
                 <option value="wzialem_od_sdm">Wziąłęm od ŚDM</option>
               </select>
+              <br/>
+              <br/>
+              <input id="datetime" type="checkbox" name="addDatetime" checked={!!this.state.activity.datetime} onChange={this.handleAddDatetimeChange} />
+              <label htmlFor="datetime">Czas rozpoczęcia</label>
+              <br/>
+              <input id="is_archived" type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
+              <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
+              {startTime}
+              <br/>
+              <br/>
+              <div className="pure-u-1 pure-u-md-1-3">
+                <b>Miejsce</b>
+              </div>
+              <div className="pure-u-1 pure-u-md-2-3">
+                <MyTextField
+                  id='place'
+                  name='place'
+                  placeholder=''
+                  validations='minLength:3'
+                  validationError='Miejsce jest wymagane'
+                  disabled={false}
+                  value={this.state.activity.place}
+                  onChange={this.handleChange} />
+
+                <input type="button" value="Wyszukaj..." onClick={this.findCoordinates} disabled={this.state.activity.place === ''} />
+              </div>
+
+              <input id="position" type="checkbox" name="addPosition" checked={!!this.state.activity.lat_lon} onChange={this.handleAddPositionChange} />
+              <label htmlFor="position">Współrzędne geograficzne</label>
             </div>
           </div>
 
           <br/>
-          <b>Kategorie:</b>
-
-          <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
-          <br/>
           <br/>
 
-          <input id="datetime" type="checkbox" name="addDatetime" checked={!!this.state.activity.datetime} onChange={this.handleAddDatetimeChange} />
-          <label htmlFor="datetime">Czas rozpoczęcia</label>
-          {startTime}
-          <br/>
-          <input id="is_archived" type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
-          <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
 
-          <br/>
-          <br/>
-          <div className="pure-u-1 pure-u-md-1-3">
-            <b>Czas trwania</b>
-          </div>
-          <div className="pure-u-1 pure-u-md-2-3">
-            <MyTextField
-              id='duration'
-              name='duration'
-              placeholder=''
-              validations='isDuration'
-              validationError='Format to np. pusty string, "1d 3h 30m", "15m"'
-              disabled={false}
-              value={this.state.activity.duration}
-              onChange={this.handleChange} />
-          </div>
 
-          <div className="pure-u-1 pure-u-md-1-3">
-            <b>Miejsce</b>
-          </div>
-          <div className="pure-u-1 pure-u-md-2-3">
-            <MyTextField
-              id='place'
-              name='place'
-              placeholder=''
-              validations='minLength:3'
-              validationError='Miejsce jest wymagane'
-              disabled={false}
-              value={this.state.activity.place}
-              onChange={this.handleChange} />
-
-            <input type="button" value="Wyszukaj..." onClick={this.findCoordinates} disabled={this.state.activity.place === ''} />
-          </div>
-          <br/>
-          <br/>
-
-          <input id="position" type="checkbox" name="addPosition" checked={!!this.state.activity.lat_lon} onChange={this.handleAddPositionChange} />
-          <label htmlFor="position">Współrzędne geograficzne</label>
           { this.map() }
           <input id="urgent" type="checkbox" name="is_urgent" checked={this.state.activity.is_urgent} onChange={this.handleChange} />
           <label htmlFor="urgent">Zadanie jest PILNE ?</label>

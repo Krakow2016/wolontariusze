@@ -251,6 +251,12 @@ input.menu-search-box {
 .rdtYear,
 .rdtSwitch{
 	cursor: pointer;
+	text-align: center;
+	padding: 0;
+}
+.rdtDays table{
+	margin: 50px 0;
+	widows: 100%;
 }
 
 
@@ -323,11 +329,164 @@ input.menu-search-box {
 [type="checkbox"]:not(:checked):focus + label:before {
   border: 1px dotted blue;
 }
+input[type="checkbox"] + label{
+	margin: 2px 0;
+}
 
 /* hover style just for information */
 label:hover:before {
   border: 1px solid #4778d9!important;
 }
+
+/*--------GROUP INPUTS----------*/
+
+.category-add{
+	position: relative;
+	display: table;
+	border-collapse: separate;
+	margin: 10px 0;
+}
+.input-category-add,
+.btn-category-add{
+	display: table-cell;
+	height: 34px !important;
+}
+.react-autosuggest__container{
+	position: relative;
+	z-index: 2;
+	float: left;
+	width: 100%;
+	margin-bottom: 0;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: #555;
+}
+.input-category-add{
+	padding: 6px 12px;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+.btn-category-add{
+	position: relative;
+	font-size: 0;
+	white-space: nowrap;
+	width: 1%;
+	vertical-align: middle;
+}
+.btn-category-add > button{
+	position: relative;
+	z-index: 2;
+	margin-left: -1px;
+	display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+	-ms-touch-action: manipulation;
+	touch-action: manipulation;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	background-image: none;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.btn-category-remove{
+	height: 20px;
+  line-height: 20px;
+  padding: 0 10px;
+  margin-left: 20px;
+  border-radius: 4px;
+}
+
+/*--------AUTO COMPLETE-------*/
+
+.react-autosuggest__container {
+  position: relative;
+  display: inline-block;
+}
+
+.react-autosuggest__input {
+  width: 240px;
+  height: 30px;
+  padding: 10px 20px;
+  font-family: Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+}
+
+.react-autosuggest__input:focus {
+  outline: none;
+}
+
+.react-autosuggest__container--open .react-autosuggest__input {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.react-autosuggest__suggestions-container + input{
+	border-bottom: 0;
+}
+
+.react-autosuggest__suggestions-container {
+  position: absolute;
+  top: 30px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  border: 1px solid #74cbe8;
+	border-top: 0;
+  background-color: #fff;
+  font-family: Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  z-index: 2;
+	font-size: 1em;
+}
+
+.react-autosuggest__suggestion {
+  cursor: pointer;
+	-webkit-transition: .2s;
+	-o-transition: .2s;
+	transition: .2s;
+	padding: 5px;
+}
+.react-autosuggest__suggestion:hover{
+	background-color: #F4F4F4;
+}
+.react-autosuggest__suggestion::before{
+	content: '';
+}
+.form.menu-search-box + .react-autosuggest__suggestions-container{
+	top: 53px;
+	left: 50%;
+	-webkit-transform: translateX(-50%);
+	-o-transform: translateX(-50%);
+	transform: translateX(-50%);
+  width: 70%;
+  border-color: #0082BD;
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+.form.menu-search-box + .react-autosuggest__suggestions-container .react-autosuggest__suggestion{
+	width: 100%;
+}
+.form.menu-search-box + .react-autosuggest__suggestions-container .react-autosuggest__suggestion:last-child{
+	border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+
 
 /*--------FOOTER----------*/
 
@@ -580,50 +739,6 @@ textarea.settings {
   margin: 10px
 }
 
-.react-autosuggest__container {
-  position: relative;
-  display: inline-block;
-}
-
-.react-autosuggest__input {
-  width: 240px;
-  height: 30px;
-  padding: 10px 20px;
-  font-family: Helvetica, sans-serif;
-  font-weight: 300;
-  font-size: 16px;
-}
-
-.react-autosuggest__input:focus {
-  outline: none;
-}
-
-.react-autosuggest__container--open .react-autosuggest__input {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.react-autosuggest__suggestions-container {
-  position: absolute;
-  top: 51px;
-  width: 280px;
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-  border: 1px solid #aaa;
-  background-color: #fff;
-  font-family: Helvetica, sans-serif;
-  font-weight: 300;
-  font-size: 16px;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-  z-index: 2;
-}
-
-.react-autosuggest__suggestion {
-  cursor: pointer;
-}
-
 .message {
   position: absolute;
   left: 0;
@@ -778,16 +893,16 @@ textarea.settings {
   right: 0rem;
 }
 .setting-arrow.up {
-  -webkit-transition: transform: rotate(0deg);
-  -o-transition: transform: rotate(0deg);
+  -webkit-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
   transform: rotate(0deg);
   -webkit-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
   transition: all 0.5s ease;
 }
 .setting-arrow.down {
-  -webkit-transition: transform: rotate(-180deg);
-  -o-transition: transform: rotate(-180deg);
+  -webkit-transform: rotate(-180deg);
+  -o-transform: rotate(-180deg);
   transform: rotate(-180deg);
   -webkit-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -798,8 +913,8 @@ textarea.settings {
   padding: 0.75rem 0;
 }
 .number-down {
-  -webkit-transition: transform: rotate(-180deg);
-  -o-transition: transform: rotate(-180deg);
+  -webkit-transform: rotate(-180deg);
+  -o-transform: rotate(-180deg);
   transform: rotate(-180deg);
 }
 
