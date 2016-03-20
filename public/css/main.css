@@ -142,15 +142,15 @@ nav {
 }
 
 /*-------------------MENU---------------------*/
-nav ul {
+.navbar ul {
 	list-style: outside none none;
 	float:left;
 	margin: 0;
 }
-nav ul li {
+.navbar li {
 	float: left;
 }
-nav ul li a {
+.navbar a {
 	text-transform: uppercase;
 	text-decoration: none;
 	font-weight: 600;
@@ -158,17 +158,17 @@ nav ul li a {
 	line-height: 5rem;
 	white-space: nowrap;
 }
-nav ul li:before {
+.navbar li:before {
 	content: '';
 }
-nav ul li:after {
+.navbar li:after {
 	content: '|';
 	color:#0082BD;
 	position: relative;
 	top:-3px;
 	margin: 0 0.25rem 0 0.25rem;
 }
-nav ul li:last-child:after { content: ""; }
+.navbar li:last-child:after { content: ""; }
 .navBar{
 	font-size: 1.25rem;
 }
@@ -474,10 +474,7 @@ label:hover:before {
 	-webkit-transform: translateX(-50%);
 	-o-transform: translateX(-50%);
 	transform: translateX(-50%);
-  width: 70%;
   border-color: #0082BD;
-  border-bottom-right-radius: 1rem;
-  border-bottom-left-radius: 1rem;
 }
 .form.menu-search-box + .react-autosuggest__suggestions-container .react-autosuggest__suggestion{
 	width: 100%;
@@ -925,6 +922,14 @@ textarea.settings {
   min-height: 140px;
   background-color: #fff;
   color: initial
+}
+
+.profileSuggestion {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 10px
 }
 
 .profileThumbnail {
