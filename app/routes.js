@@ -13,6 +13,16 @@ module.exports = {
     }
   },
 
+  terms: {
+    path: '/regulamin',
+    method: 'get',
+    handler: require('./components/Terms.jsx'),
+    action: function (context, payload, done) {
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Regulamin' })
+      done()
+    }
+  },
+
   registration: {
     path: '/rejestracja',
     method: 'get',
