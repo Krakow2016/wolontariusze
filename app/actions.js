@@ -264,7 +264,7 @@ module.exports = {
       if(err) { debug(err) }
       else {
         context.dispatch('ACTIVITY_DELETED', data)
-        context.executeAction(navigateAction, {url: '/'})
+        context.executeAction(navigateAction, {url: '/zadania'})
       }
       cb()
     })

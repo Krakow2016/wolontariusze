@@ -108,7 +108,18 @@ var Activities = module.exports = {
           callback(err1, resp1)
         }
         r.table(tableName).get(params.id).delete().run(conn, function (err2, resp2) {
-          callback(err2, resp2)
+          if(err2) {
+            callback(err2)
+            return
+          }
+          // Usuń wszystkie zgłoszenia do aktywności
+          r.table('Joints')
+            .getAll(params.id, {index: 'activity_id'})
+            .delete()
+            .run(conn, function(err3){
+                // ok
+                callback(err3, resp2)
+            })
         })
       })
     })
