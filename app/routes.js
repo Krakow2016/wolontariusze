@@ -18,6 +18,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Registration.jsx'),
     action: function (context, payload, done) {
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Dodaj nowe konto w systemie' })
       done()
     }
   },
