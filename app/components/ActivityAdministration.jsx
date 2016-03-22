@@ -340,6 +340,14 @@ var ActivityAdministration = React.createClass({
     }))
   },
 
+  createPrivate: function() {
+    this.setState(update(this.state, {
+      activity: {is_private: {$set: true}}
+    }), function() {
+        this.refs.formsy.submit()
+    })
+  },
+
   render: function() {
     var startTime
     if (typeof (this.state.activity.datetime) != 'undefined')  {
@@ -372,7 +380,12 @@ var ActivityAdministration = React.createClass({
 
     var createButton = []
     if (this.props.creationMode == true) {
-      createButton = <input type="submit" value="Utwórz" disabled={!this.state.canSubmit} />
+      createButton = <button className={this.state.canSubmit ? "bg--warning" : ""} disabled={!this.state.canSubmit} onClick={this.createPrivate}>Utwórz prywatne zadanie</button>
+    }
+
+    var createButton2 = []
+    if (this.props.creationMode == true) {
+      createButton2 = <input type="submit" value="Utwórz publiczne zadanie" disabled={!this.state.canSubmit} />
     }
 
     var removeButton = []
@@ -407,10 +420,12 @@ var ActivityAdministration = React.createClass({
 
     return (
       <div>
-        <Formsy.Form className="settingsForm"
-                     onValidSubmit={this.onValidSubmit}
-                     onValid={this.enableButton}
-                     onInvalid={this.disableButton} >
+        <Formsy.Form
+          ref="formsy"
+          className="settingsForm"
+          onValidSubmit={this.onValidSubmit}
+          onValid={this.enableButton}
+          onInvalid={this.disableButton} >
 
           <div row>
             <div column="6">
@@ -529,6 +544,7 @@ var ActivityAdministration = React.createClass({
             {removeButton}
             {updateButton}
             {createButton}
+            {createButton2}
             {showButton}
           </div>
           <br/>

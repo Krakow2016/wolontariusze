@@ -127,6 +127,7 @@ ActivityStore.attributes = function() {
     'description',
     'duration',
     'is_archived',
+    'is_private',
     'is_urgent',
     'lat_lon',
     'limit',

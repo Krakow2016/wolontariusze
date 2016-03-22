@@ -237,6 +237,15 @@ var Activity = React.createClass({
       })
     }
 
+    var warning = []
+    if(this.state.activity.is_private === true) {
+      warning = (
+        <div className="alert alert--warning">
+          <strong>Uwaga!</strong> Uważaj z kim się dzielisz tą stroną. Została ona oznaczona jako prywatna i jest widoczna tylko dla osób które otrzymały tajny link.
+        </div>
+      )
+    }
+
     // TODO
     //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>
     //<b>Ostatnia edycja:</b> {TimeService.showTime(activity.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.editor.id}>{activity.editor.name}</a></span>
@@ -244,6 +253,8 @@ var Activity = React.createClass({
         <div ref={node => node && node.setAttribute('container', '')}>
           <div ref={node => node && node.setAttribute('row', '')}>
             <div ref={node => node && node.setAttribute('column', '7')}>
+
+              {warning}
 
               {html}
 
