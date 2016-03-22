@@ -21,7 +21,8 @@ var ActivityStore = createStore({
       duration: '',
       place: '',
       description: Draft.EditorState.createEmpty(),
-      limit: 5
+      limit: 5,
+      profile_picture_url: '/img/profile/face.svg'
     }
     this.volunteers = []
     this.invalidSnackBar = ''

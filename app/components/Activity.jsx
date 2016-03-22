@@ -4,6 +4,7 @@ var backdraft = require('backdraft-js')
 var Draft = require('draft-js')
 
 var Editor = require('./Editor.jsx')
+var ProfilePic = require('./ProfilePic.jsx')
 var ActivityStore = require('../stores/Activity')
 var TimeService = require('../modules/time/TimeService.js')
 var actions = require('../actions')
@@ -163,7 +164,7 @@ var Activity = React.createClass({
       return (
         <span className="volonteerLabel" key={volunteer.id}>
           <NavLink href={'/wolontariusz/'+volunteer.user_id} className="tooltip--bottom" data-hint={volunteer.first_name +" "+ volunteer.last_name} >
-            <img src={volunteer.profile_picture_url} className='profileThumbnail' />
+            <ProfilePic src={volunteer.profile_picture_url} className='profileThumbnail' />
           </NavLink>
         </span>
       )
