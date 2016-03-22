@@ -190,12 +190,12 @@ var ActivityAdministration = React.createClass({
 
   onValidSubmit: function () {
 
-    if (this.state.volunteers.length > this.state.activity.limit) {
-      this.setState(update(this.state, {
-        invalidSnackBar: {$set: 'Ustaw większy limit wolontariuszy'}
-      }))
-      return
-    }
+    //if (this.state.volunteers.length > this.state.activity.limit) {
+      //this.setState(update(this.state, {
+        //invalidSnackBar: {$set: 'Ustaw większy limit wolontariuszy'}
+      //}))
+      //return
+    //}
 
     if (this.props.creationMode == false) {
       this.update()
@@ -204,16 +204,16 @@ var ActivityAdministration = React.createClass({
     }
   },
 
-  onInvalidSubmit: function () {
-    this.setState(update(this.state, {
-      invalidSnackBar: {$set: 'Potrzeba wypełnić Tytuł, Czas Rozpoczęcia, Limit Wolontariuszy'}
-    }))
+  enableButton: function () {
+    this.setState({
+      canSubmit: true
+    })
   },
 
-  handleInvalidSnackbarClose: function () {
-    this.setState(update(this.state, {
-      invalidSnackBar: {$set: ''}
-    }))
+  disableButton: function () {
+    this.setState({
+      canSubmit: false
+    })
   },
 
   update: function () {
@@ -367,12 +367,12 @@ var ActivityAdministration = React.createClass({
 
     var updateButton = []
     if (this.props.creationMode == false) {
-      updateButton = <input type="submit" value="Zapisz" />
+      updateButton = <input type="submit" value="Zapisz" disabled={!this.state.canSubmit} />
     }
 
     var createButton = []
     if (this.props.creationMode == true) {
-      createButton = <input type="submit" value="Utwórz" />
+      createButton = <input type="submit" value="Utwórz" disabled={!this.state.canSubmit} />
     }
 
     var removeButton = []
@@ -409,7 +409,8 @@ var ActivityAdministration = React.createClass({
       <div>
         <Formsy.Form className="settingsForm"
                      onValidSubmit={this.onValidSubmit}
-                     onInvalidSubmit={this.onInvalidSubmit}>
+                     onValid={this.enableButton}
+                     onInvalid={this.disableButton} >
 
           <div row>
             <div column="6">
