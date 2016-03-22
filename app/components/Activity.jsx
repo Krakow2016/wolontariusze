@@ -189,6 +189,8 @@ var Activity = React.createClass({
       'ITALIC': ['<i>', '</i>'],
       'UNDERLINE': ['<u>', '</u>'],
       'CODE': ['<span style="font-family: monospace">', '</span>'],
+    }).map(function(block) {
+      return (<p dangerouslySetInnerHTML={{__html: block}} />)
     })
 
     var updateForm
@@ -220,13 +222,15 @@ var Activity = React.createClass({
           'ITALIC': ['<i>', '</i>'],
           'UNDERLINE': ['<u>', '</u>'],
           'CODE': ['<span style="font-family: monospace">', '</span>'],
+        }).map(function(block) {
+          return (<p dangerouslySetInnerHTML={{__html: block}} />)
         })
         return (
           <div className="activityUpdate">
             <p className="italic">
               Aktualizacja z dnia: {update.created_at.toString()}
             </p>
-            <p dangerouslySetInnerHTML={{__html: html}} />
+            {html}
           </div>
         )
       })
@@ -240,7 +244,7 @@ var Activity = React.createClass({
           <div ref={node => node && node.setAttribute('row', '')}>
             <div ref={node => node && node.setAttribute('column', '7')}>
 
-              <p dangerouslySetInnerHTML={{__html: html}} />
+              {html}
 
               {updates}
               {updateForm}
