@@ -36,24 +36,9 @@ var Tasks = React.createClass({
     })
   },
   
-  setQuery: function (query) {
-      this.setState({
-        query: query
-      })
-  },
+  onSubmit: function(){
 
-  onSubmit: function(query){
-
-    var state
-    if (query) {
-      state = query
-      this.setState({
-        query: query
-      })
-    } else {
-      state = this.state.query
-    }
-    console.log("State query", state)
+    var state = this.state.query
     
     this.props.context.executeAction(actions.loadActivities, state)
 
@@ -96,14 +81,14 @@ var Tasks = React.createClass({
 
     var tasks = this.state.all.map(function (doc) {
       var source = doc._source
-var task = source.doc
-if(!task) { return }
+      var task = source.doc
+      if(!task) { return }
       var priorityClass = task.is_urgent ? 'tasks-priority-urgent-tr' : 'tasks-priority-normal-tr'
       return (
         <tr key={task.id} className={priorityClass}>
           <td className="tasks-name-td"><NavLink href={'/zadania/'+task.id}>{task.name}</NavLink></td>
           <td className="tasks-categories-td"><span>{ (task.tags || []).join(', ') }</span></td>
-          <td className="tasks-volunteerNumber-td"><span>{ (source.volunteers || []).length }</span></td>
+          <td className="tasks-volunteerNumber-td"><span>{ (task.volunteers || []).length }</span></td>
           <td className="tasks-volunteerLimit-td"><span>{task.limit != 0 ? task.limit : 'Brak'}</span></td>
           <td className="tasks-creationDate-td"><span>{TimeService.showTime(task.created_at)}</span></td>
           <th className="tasks-expirationDate-td"><span>{(typeof (task.datetime) != 'undefined') ? TimeService.showTime(task.datetime) : 'Brak'}</span></th>
@@ -120,9 +105,7 @@ if(!task) { return }
             </div>
           </div>
           <TaskFilters filterFunction={this.onSubmit}
-            setQuery={this.setQuery}
             query={this.state.query}
-            context={this.props.context}
             />
           <ActivitiesSearchForm query={this.state.query} handleChange={this.handleChange} submit={this.onSubmit} />
           <table className="tasks-table">

@@ -17,10 +17,11 @@ var ActivityStore = createStore({
   initialize: function () {
     this.activity = {
       name: '',
-      act_type: '',
+      act_type: 'niezdefiniowany',
       duration: '',
       place: '',
       description: Draft.EditorState.createEmpty(),
+      is_urgent: false,
       limit: 5
     }
     this.volunteers = []

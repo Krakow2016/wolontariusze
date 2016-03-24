@@ -111,7 +111,51 @@ module.exports = {
   loadActivities: function(context, state, cb) {
 
     var must = []
-    var must2 = []
+    var must_not = []
+    
+    var finishedQuery = {
+      or: [
+        {
+          term: {
+            'doc.is_archived': true
+          }
+        },
+        {
+          range: { 
+            'doc.datetime': {
+              "lte": "now/s"
+            }
+          }
+        }
+      ]
+    }
+    
+    var availableQuery = {
+      script: {
+        script: "doc['doc.limit'].value == 0 || doc['doc.limit'].value > (doc['doc.volunteers'].values.size())"
+      }
+    }
+    
+    
+    //Jeżeli otwarta jest zakładka Bank Pracy, Biorę Udział w w to potrzeba zwrócić trwające i wolne zadania
+    //a w zakładce Moje Zadania zwracamy wszystkie lub wybrane
+    
+    if(!state.created_by) {
+      must_not.push(finishedQuery)
+      must.push(availableQuery)
+    } else {
+      if(state.timeState == 'trwajace') {
+        must_not.push(finishedQuery)
+      } else if (state.timeState == 'zakonczone') {
+        must.push(finishedQuery)
+      }
+      
+      if(state.availabilityState == 'wolne') {
+        must.push(availableQuery)
+      } else if (state.availabilityState == 'pelne') {
+        must_not.push(availableQuery)
+      }
+    }
 
     if(state.created_by) {
       must.push({
@@ -120,27 +164,49 @@ module.exports = {
     }
 
     if(state.volunteer) {
-      must2.push({
-        term: { 'volunteers': state.volunteer }
+      must.push({
+        term: { 'doc.volunteers': state.volunteer }
       })
     }
-
+    
+    if(state.act_type) {
+      must.push({
+        term: { 'doc.act_type': state.act_type }
+      })
+    }
+    
+    if(state.priority) {
+      var is_urgent = (state.priority == 'PILNE') ? true : false
+      must.push({
+        term: { 'doc.is_urgent': is_urgent }
+      })
+    }
+    
+    //geo_point w elastic search ma współrzędne [LON, LAT] w przeciwieństwie do [LAT, LON]
+    //nowe pole tworzone jest za pomocą logstash
+    if(state.placeDistance) {
+      must.push({
+        "geo_distance": {
+          "distance": state.placeDistance+"km",
+          "doc.lon_lat": [parseFloat(state.placeLon), parseFloat(state.placeLat)]
+        }
+      })
+    }
+    
+    if(state.tags) {
+      must.push({
+        terms: { 'doc.tags': state.tags.split(';') }
+      })
+    }
+    
     var query = {
       nested: {
         path: 'doc',
         query: {
           bool: {
-            must: must
+            must: must,
+            must_not: must_not
           }
-        }
-      }
-    }
-
-    if(must2.length) {
-      must2.push(query)
-      query = {
-        bool: {
-          must: must2
         }
       }
     }

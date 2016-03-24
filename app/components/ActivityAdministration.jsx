@@ -427,7 +427,7 @@ var ActivityAdministration = React.createClass({
             <div column="6">
               <b>Typ</b>
               <select name="act_type" selected={this.state.activity.act_type} onChange={this.handleChange}>
-                <option value="dalem_dla_sdm">Niezdefiniowany</option>
+                <option value="niezdefiniowany">Niezdefiniowany</option>
                 <option value="dalem_dla_sdm">Dałem dla ŚDM</option>
                 <option value="wzialem_od_sdm">Wziąłęm od ŚDM</option>
               </select>
