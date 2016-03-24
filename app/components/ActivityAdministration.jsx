@@ -190,12 +190,12 @@ var ActivityAdministration = React.createClass({
 
   onValidSubmit: function () {
 
-    if (this.state.volunteers.length > this.state.activity.limit) {
-      this.setState(update(this.state, {
-        invalidSnackBar: {$set: 'Ustaw większy limit wolontariuszy'}
-      }))
-      return
-    }
+    //if (this.state.volunteers.length > this.state.activity.limit) {
+      //this.setState(update(this.state, {
+        //invalidSnackBar: {$set: 'Ustaw większy limit wolontariuszy'}
+      //}))
+      //return
+    //}
 
     if (this.props.creationMode == false) {
       this.update()
@@ -204,16 +204,16 @@ var ActivityAdministration = React.createClass({
     }
   },
 
-  onInvalidSubmit: function () {
-    this.setState(update(this.state, {
-      invalidSnackBar: {$set: 'Potrzeba wypełnić Tytuł, Czas Rozpoczęcia, Limit Wolontariuszy'}
-    }))
+  enableButton: function () {
+    this.setState({
+      canSubmit: true
+    })
   },
 
-  handleInvalidSnackbarClose: function () {
-    this.setState(update(this.state, {
-      invalidSnackBar: {$set: ''}
-    }))
+  disableButton: function () {
+    this.setState({
+      canSubmit: false
+    })
   },
 
   update: function () {
@@ -340,6 +340,14 @@ var ActivityAdministration = React.createClass({
     }))
   },
 
+  createPrivate: function() {
+    this.setState(update(this.state, {
+      activity: {is_private: {$set: true}}
+    }), function() {
+        this.refs.formsy.submit()
+    })
+  },
+
   render: function() {
     var startTime
     if (typeof (this.state.activity.datetime) != 'undefined')  {
@@ -367,12 +375,17 @@ var ActivityAdministration = React.createClass({
 
     var updateButton = []
     if (this.props.creationMode == false) {
-      updateButton = <input type="submit" value="Zapisz" />
+      updateButton = <input type="submit" value="Zapisz" disabled={!this.state.canSubmit} />
     }
 
     var createButton = []
     if (this.props.creationMode == true) {
-      createButton = <input type="submit" value="Utwórz" />
+      createButton = <button className={this.state.canSubmit ? "bg--warning" : ""} disabled={!this.state.canSubmit} onClick={this.createPrivate}>Utwórz prywatne zadanie</button>
+    }
+
+    var createButton2 = []
+    if (this.props.creationMode == true) {
+      createButton2 = <input type="submit" value="Utwórz publiczne zadanie" disabled={!this.state.canSubmit} />
     }
 
     var removeButton = []
@@ -407,49 +420,27 @@ var ActivityAdministration = React.createClass({
 
     return (
       <div>
-        <Formsy.Form className="settingsForm"
-                     onValidSubmit={this.onValidSubmit}
-                     onInvalidSubmit={this.onInvalidSubmit}>
+        <Formsy.Form
+          ref="formsy"
+          className="settingsForm"
+          onValidSubmit={this.onValidSubmit}
+          onValid={this.enableButton}
+          onInvalid={this.disableButton} >
 
-          <div row>
-            <div column="6">
-              <b>Tytuł</b>
-              <MyTextField required
-                id='name'
-                name='name'
-                placeholder=''
-                validations='minLength:3'
-                validationError='Tytuł jest wymagany'
-                disabled={false}
-                value={this.state.activity.name}
-                onChange={this.handleChange} />
-            </div>
-            <div column="6">
-              <b>Typ</b>
-              <select name="act_type" selected={this.state.activity.act_type} onChange={this.handleChange}>
-                <option value="niezdefiniowany">Niezdefiniowany</option>
-                <option value="dalem_dla_sdm">Dałem dla ŚDM</option>
-                <option value="wzialem_od_sdm">Wziąłęm od ŚDM</option>
-              </select>
-            </div>
-          </div>
-
+          <b>Tytuł</b>
+          <MyTextField required
+            id='name'
+            name='name'
+            placeholder=''
+            validations='minLength:3'
+            validationError='Tytuł jest wymagany'
+            disabled={false}
+            value={this.state.activity.name}
+            onChange={this.handleChange} />
+          <br/>
           <br/>
           <b>Kategorie:</b>
-
           <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
-          <br/>
-          <br/>
-
-          <input id="datetime" type="checkbox" name="addDatetime" checked={!!this.state.activity.datetime} onChange={this.handleAddDatetimeChange} />
-          <label htmlFor="datetime">Czas rozpoczęcia</label>
-          {startTime}
-          <br/>
-          <input id="is_archived" type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
-          <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
-
-          <br/>
-          <br/>
           <div className="pure-u-1 pure-u-md-1-3">
             <b>Czas trwania</b>
           </div>
@@ -465,6 +456,22 @@ var ActivityAdministration = React.createClass({
               onChange={this.handleChange} />
           </div>
 
+          <b>Typ</b>
+          <select name="act_type" selected={this.state.activity.act_type} onChange={this.handleChange}>
+            <option value="niezdefiniowany">Niezdefiniowany</option>
+            <option value="dalem_dla_sdm">Dałem dla ŚDM</option>
+            <option value="wzialem_od_sdm">Wziąłęm od ŚDM</option>
+          </select>
+          <br/>
+          <br/>
+          <input id="datetime" type="checkbox" name="addDatetime" checked={!!this.state.activity.datetime} onChange={this.handleAddDatetimeChange} />
+          <label htmlFor="datetime">Czas rozpoczęcia</label>
+          <br/>
+          <input id="is_archived" type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
+          <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
+          {startTime}
+          <br/>
+          <br/>
           <div className="pure-u-1 pure-u-md-1-3">
             <b>Miejsce</b>
           </div>
@@ -481,11 +488,15 @@ var ActivityAdministration = React.createClass({
 
             <input type="button" value="Wyszukaj..." onClick={this.findCoordinates} disabled={this.state.activity.place === ''} />
           </div>
-          <br/>
-          <br/>
 
           <input id="position" type="checkbox" name="addPosition" checked={!!this.state.activity.lat_lon} onChange={this.handleAddPositionChange} />
           <label htmlFor="position">Współrzędne geograficzne</label>
+
+          <br/>
+          <br/>
+
+
+
           { this.map() }
           <input id="urgent" type="checkbox" name="is_urgent" checked={this.state.activity.is_urgent} onChange={this.handleChange} />
           <label htmlFor="urgent">Zadanie jest PILNE ?</label>
@@ -528,6 +539,7 @@ var ActivityAdministration = React.createClass({
             {removeButton}
             {updateButton}
             {createButton}
+            {createButton2}
             {showButton}
           </div>
           <br/>

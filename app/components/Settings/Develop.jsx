@@ -1,6 +1,5 @@
 var React = require('react')
 
-var Settings = require('./Settings.jsx')
 var MyTextField = require('./../Formsy/MyTextField.jsx')
 var createAPIClient = require('../../actions').createAPIClient
 
@@ -26,12 +25,13 @@ var Develop = React.createClass({
 
   handleSubmit: function(data) {
     this.props.context.executeAction(createAPIClient, data)
+    this.refs.form.reset()
   },
 
   render: function() {
     return (
-      <Settings>
-        <Formsy.Form className="settingsForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
+      <div>
+        <Formsy.Form ref="form" className="settingsForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
           <div className="pure-g">
             <div className="pure-u-1 pure-u-md-1-3">
               <label htmlFor="first_name">Nazwa</label>
@@ -64,7 +64,7 @@ var Develop = React.createClass({
             Stwórz
           </button>
         </Formsy.Form>
-      </Settings>
+      </div>
     )
   }
 })

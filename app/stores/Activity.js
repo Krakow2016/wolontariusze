@@ -22,7 +22,8 @@ var ActivityStore = createStore({
       place: '',
       description: Draft.EditorState.createEmpty(),
       is_urgent: false,
-      limit: 5
+      limit: 5,
+      profile_picture_url: '/img/profile/face.svg'
     }
     this.volunteers = []
     this.invalidSnackBar = ''
@@ -127,6 +128,7 @@ ActivityStore.attributes = function() {
     'description',
     'duration',
     'is_archived',
+    'is_private',
     'is_urgent',
     'lat_lon',
     'limit',

@@ -1,4 +1,5 @@
 var r = require('rethinkdb')
+var request = require('superagent')
 var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
 // Połączenie z sendgrid daje nam możliwość wysyłania emaili
@@ -74,4 +75,20 @@ r.connect(config.rethinkdb, function(err, conn) {
         })
       })
   })
+
+  // Informuje API Eventory o zmianach w grupach wolontariusza
+  r.table('Volunteers').changes()
+    .filter( r.row('new_val')('tags').eq(r.row('old_val')('tags')).not())
+    .run(conn, function(err, cursor) {
+      cursor.each(function(err, change){
+        var row = change.new_val
+        request
+          .put('http://eventory-beta.coders-mill.com/webapi/v1/sdm/sync')
+          .send({volunteer_id: row.id, groups: row.tags})
+          .set('X-Operator-Api-Token', process.env.EVENTORY_API)
+          .end(function(err, resp){
+            //console.log(err, resp)
+          })
+      })
+    })
 })

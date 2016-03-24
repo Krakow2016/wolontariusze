@@ -13,11 +13,22 @@ module.exports = {
     }
   },
 
+  terms: {
+    path: '/regulamin',
+    method: 'get',
+    handler: require('./components/Terms.jsx'),
+    action: function (context, payload, done) {
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Regulamin' })
+      done()
+    }
+  },
+
   registration: {
     path: '/rejestracja',
     method: 'get',
     handler: require('./components/Registration.jsx'),
     action: function (context, payload, done) {
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Dodaj nowe konto w systemie' })
       done()
     }
   },
@@ -121,7 +132,9 @@ module.exports = {
     action: function (context, payload, done) {
       var activityId  = payload.params.id
       context.executeAction(actions.showActivity, { id: activityId }, function(activity) {
-        context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
+        if(activity) {
+          context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
+        }
         done()
       })
     }
@@ -182,15 +195,6 @@ module.exports = {
       } else {
         done()
       }
-    }
-  },
-
-  develop_settings: {
-    path: '/ustawienia/developer/utworz',
-    method: 'get',
-    handler: require('./components/Settings/Develop.jsx'),
-    action: function (context, payload, done) {
-      done()
     }
   },
 

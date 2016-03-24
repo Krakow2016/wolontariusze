@@ -116,5 +116,19 @@ module.exports = function(service) {
     }
   }
 
+  var del = service.delete
+  service.delete = function(req, resource, params, config, callback) {
+    var user = req.user
+    // Flaga przywilejów administratora
+    var is_admin = (user && user.is_admin) || req.force_admin
+
+    if(is_admin) {
+      // Wykonaj oryginalną metodę `delete`
+      del(req, resource, params, config, callback)
+    } else {
+      return callback('403') // Brak uprawnień
+    }
+  }
+
   return service
 }

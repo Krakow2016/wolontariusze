@@ -36,7 +36,8 @@ var ActivityVolonteersList = React.createClass ({
         var suggestions = json.suggest[0].options.map (function (option) {
           return {
             display_name: option.text,
-            user_id: option.payload.id
+            user_id: option.payload.id,
+            profile_picture_url: option.payload.profile_picture_url
           }
         }).filter(function (volunteer) {
           var excludedVolunteers = that.props.excludedVolunteers || []
@@ -65,7 +66,10 @@ var ActivityVolonteersList = React.createClass ({
 
   renderSuggestion: function (suggestion, input) {
     return (
-      <span>{suggestion.display_name}</span>
+      <div>
+        <img src={suggestion.profile_picture_url} className="profileSuggestion" />
+        <span>{suggestion.display_name}</span>
+      </div>
     )
   },
 

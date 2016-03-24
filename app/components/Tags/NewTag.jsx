@@ -63,11 +63,12 @@ var NewTag = React.createClass({
     var inputProps = {
       placeholder: 'Dodaj projekt, kategorię...',
       value: this.state.value,
-      onChange: this.onChange
+      onChange: this.onChange,
+      className: 'input-category-add'
     }
 
     return (
-      <div>
+      <div className="category-add">
         <Autosuggest
           suggestions={this.state.suggestions}
           onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
@@ -75,7 +76,9 @@ var NewTag = React.createClass({
           getSuggestionValue={this.getSuggestionValue}
           onSuggestionSelected={this.handleSave}
           inputProps={inputProps} />
-        <input type="button" value="Dodaj" onClick={this.handleSave} />
+        <div className="btn-category-add">
+          <button className="bg--primary" onClick={this.handleSave}>Dodaj</button>
+        </div>
       </div>
     )
   }

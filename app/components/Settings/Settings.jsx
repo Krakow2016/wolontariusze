@@ -3,7 +3,7 @@ var NavLink = require('fluxible-router').NavLink
 
 var VolunteerStore = require('../../stores/Volunteer')
 var IntegrationsStore = require('../../stores/Integrations')
-var BasicForm = require('./BasicForm.jsx')
+var BasicInfo = require('./BasicInfo.jsx')
 var ProfileSettings = require('./ProfileSettings.jsx')
 var MyTextarea = require('./../Formsy/MyTextarea.jsx')
 var InstagramSetting = require('./InstagramSetting.jsx')
@@ -67,7 +67,7 @@ var Settings = React.createClass({
     return (
       <div>
 
-        <BasicForm {...this.state.profile} context={this.props.context} />
+        <BasicInfo {...this.state.profile} context={this.props.context} />
 
         <ProfileSettings
           profileId={this.state.profile.id}
