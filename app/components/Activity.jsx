@@ -195,7 +195,7 @@ var Activity = React.createClass({
     })
 
     var updateForm
-    if(this.user().is_admin) {
+    if(this.user() && this.user().is_admin) {
       updateForm = (
         <div className="alert alert--warning">
           <p>
@@ -228,6 +228,7 @@ var Activity = React.createClass({
         })
         return (
           <div className="activityUpdate">
+            <hr />
             <p className="italic">
               Aktualizacja z dnia: {update.created_at.toString()}
             </p>
