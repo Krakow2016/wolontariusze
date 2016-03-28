@@ -344,9 +344,7 @@ var ActivityAdministration = React.createClass({
   createPrivate: function() {
     this.setState(update(this.state, {
       activity: {is_private: {$set: true}}
-    }), function() {
-        this.refs.formsy.submit()
-    })
+    }))
   },
 
   render: function() {
