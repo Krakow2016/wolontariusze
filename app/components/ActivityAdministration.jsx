@@ -72,12 +72,9 @@ var ActivityAdministration = React.createClass({
   },
 
   _changeListener: function() {
-    // Interesują nas tylko zmiany w obiekcie activity. Aktualizacją obiektu
-    // volunteers zajmujemy się sami.
-    //this.setState(this.props.context.getStore(ActivityStore).getState())
-    this.setState(update(this.state, {
-      activity: {$set: this.props.context.getStore(ActivityStore).getState().activity}
-    }))
+    var state = this.props.context.getStore(ActivityStore).getState()
+    this.setState(state)
+    state._volunteers = Object.assign({}, state).volunteers
   },
 
   componentDidMount: function() {
@@ -224,12 +221,14 @@ var ActivityAdministration = React.createClass({
       description: Draft.convertToRaw(this.state.activity.description.getCurrentContent())
     })
 
-      // Aktualizuje parametry aktywności
+    // Aktualizuje parametry aktywności
     context.executeAction(updateAction, activity)
 
-      // Usuwa wolontariuszy z aktywności
+    // Usuwa wolontariuszy z aktywności
     var removed = state._volunteers.filter(function(i) {
-      return state.volunteers.indexOf(i) < 0
+      return state.volunteers.findIndex(function(el){
+        return el.id === i.id
+      }) < 0
     }).reduce(function(sum, joint) {
       return sum.concat([joint.id])
     }, [])
@@ -244,9 +243,11 @@ var ActivityAdministration = React.createClass({
       context.executeAction(leaveActivityAction, payload)
     }
 
-      // Dodaje nowych wolontariuszy do aktywności
+    // Dodaje nowych wolontariuszy do aktywności
     var added = state.volunteers.filter(function(i) {
-      return state._volunteers.indexOf(i) < 0
+      return state._volunteers.findIndex(function(el){
+        return el.id === i.id
+      }) < 0
     })
     if(added.length) {
       context.executeAction(actions.assignActivity, added)

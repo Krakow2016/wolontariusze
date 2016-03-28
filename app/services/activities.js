@@ -11,5 +11,11 @@ module.exports = function(service) {
     create(req, resource, params, body, config, callback)
   }
 
+  var update = module.update
+  module.update = function(req, resource, params, body, config, callback) {
+    delete body.created_by
+    update(req, resource, params, body, config, callback)
+  }
+
   return restrict(protect(timestamp(module)))
 }
