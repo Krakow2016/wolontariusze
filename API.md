@@ -265,10 +265,10 @@ Przykłady użycia są zawarte w pliku:
 | ---           | ---       | ---                                                                        |
 | `id`          | Nie       |                                                                            |
 | `created_at`  | Nie       | Czas utworzenia aktywności.                                                |
-| `created_by`  | Nie       | Identyfikator użytkownika dodającego zadanie.                              |
+| `created_by`  | Nie       | Obiekt użytkownika dodającego zadanie.                                     |
 | `description` | Nie       | Opis aktywności. Format: *RawDraftContentState* (patrz niżej).             |
 | `name`        | Nie       | Nazwa aktywności.                                                          |
-| `volunteers`  | Nie       | Tablica `id` wolontariuszy zgłoszonych do wykonania zadania.               |
+| `volunteers`  | Nie       | Tablica wolontariuszy zgłoszonych do wykonania zadania.                    |
 | `duration`    | Tak       | Opis słowny czasu trwania zadania.                                         |
 | `starts_at`   | Tak       | Data i czas rozpoczęcia zadania. Np. ""                                    |
 | `is_urgent`   | Tak       | `true` dla zadań oznaczonych jako pilne.                                   |
