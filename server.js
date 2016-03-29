@@ -524,8 +524,8 @@ module.exports = function(server) {
             res.status(500).send(err)
           } else {
             var changes = {
-              profile_picture_url: data[1].Location +'?'+ data[0].ETag.replace('\"', ''),
-              thumb_picture_url: data[2].Location +'?'+ data[1].ETag.replace('\"', '')
+              profile_picture_url: data[1].Location +'?'+ data[0].ETag.replace('\"', '', 'g'),
+              thumb_picture_url: data[2].Location +'?'+ data[1].ETag.replace('\"', '', 'g')
             }
             Volunteers.update({force_admin: true}, 'Volunteers', {id: req.user.id}, changes, {returnChanges: true}, function(err, result) {
               res.status(201).send(result.changes[0].new_val)

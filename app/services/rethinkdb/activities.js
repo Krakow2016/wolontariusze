@@ -21,7 +21,9 @@ var Activities = module.exports = {
         r.table(tableName)
           .get(params.id.toString())
           .merge(function(activity){
-            return r.db("sdm").table("Volunteers").get(activity('created_by')).pluck(["first_name", "last_name", "profile_picture_url"])
+            return {
+              created_by: r.db("sdm").table("Volunteers").get(activity('created_by')).pluck(["id", "first_name", "last_name", "profile_picture_url"])
+            }
           })
           .run(conn, function(err, activity){
 
@@ -31,7 +33,6 @@ var Activities = module.exports = {
             return callback(404)
           }
 
-          console.log(params, activity)
           r.table('Joints')
             .getAll(params.id, {index: 'activity_id'})
             .filter(function(x){

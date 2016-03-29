@@ -123,8 +123,10 @@ var Activity = React.createClass({
 
     var editLink
     if(is_admin) {
-      editLink = <div className="adminToolbar">
-        <NavLink href={'/zadania/'+ activity.id +'/edytuj'}>Edytuj</NavLink>
+      editLink = <div className="alert alert--warning clearfix">
+        <p>
+          Jako koordynator masz prawo do edycji treści i parametrów zadań. <NavLink href={'/zadania/'+ activity.id +'/edytuj'}>Kliknij edytuj</NavLink> aby przejść do strony edycji.
+        </p>
       </div>
     }
 
@@ -195,7 +197,7 @@ var Activity = React.createClass({
     })
 
     var updateForm
-    if(this.user().is_admin) {
+    if(this.user() && this.user().is_admin) {
       updateForm = (
         <div className="alert alert--warning">
           <p>
@@ -228,6 +230,7 @@ var Activity = React.createClass({
         })
         return (
           <div className="activityUpdate">
+            <hr />
             <p className="italic">
               Aktualizacja z dnia: {update.created_at.toString()}
             </p>
@@ -253,6 +256,8 @@ var Activity = React.createClass({
         <div ref={node => node && node.setAttribute('container', '')}>
           <div ref={node => node && node.setAttribute('row', '')}>
             <div ref={node => node && node.setAttribute('column', '7')}>
+
+              {editLink}
 
               {warning}
 
@@ -287,8 +292,6 @@ var Activity = React.createClass({
               <br></br>
 
               {buttons}
-
-              {editLink}
 
           </div>
         </div>

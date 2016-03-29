@@ -2,7 +2,19 @@
     "1": {
         "id": "1",
         "name": "Pierwsza Aktywność",
-        "description": "Treść pierwszej aktywności",
+        "description": {
+          "blocks": [
+          {
+            "depth": 0,
+            "entityRanges": [],
+            "inlineStyleRanges": [],
+            "key": "a9be4",
+            "text": "tre\u015b\u0107 pierwszej aktywno\u015bci",
+            "type": "unstyled"
+          }
+          ],
+            "entityMap": {}
+        },
         "act_type": "dalem_dla_sdm",
         "created_at": "2009-01-01T00:20:00.200Z",
         "updated_at": "2010-01-01T00:20:00.200Z",
@@ -13,7 +25,6 @@
         "is_archived": false,
         "is_urgent": true,
         "created_by": "1",
-        "updated_by": "1",
         "limit": 5,
         "tags": []
      },
@@ -21,7 +32,19 @@
     "2": {
         "id": "2",
         "name": "Druga Aktywność",
-        "description": "Treść drugiej aktywności",
+        "description": {
+          "blocks": [
+          {
+            "depth": 0,
+            "entityRanges": [],
+            "inlineStyleRanges": [],
+            "key": "a9be4",
+            "text": "tre\u015b\u0107 drugiej aktywno\u015bci",
+            "type": "unstyled"
+          }
+          ],
+            "entityMap": {}
+        },
         "act_type": "wzialem_od_sdm",
         "created_at": "2016-01-01T00:20:00.200Z",
         "updated_at": "2016-02-01T00:20:00.200Z",      
@@ -31,7 +54,6 @@
         "lat_lon": [50.0200, 19.9376],
         "is_urgent": false,
         "created_by": "2",
-        "updated_by": "1",
         "limit": 1,
         "tags": ["Wolontariat+"]
      },
@@ -39,7 +61,19 @@
     "3": {     
         "id": "3",
         "name": "Trzecia Aktywność",
-        "description": "Treść trzeciej aktywności",
+        "description": {
+          "blocks": [
+          {
+            "depth": 0,
+            "entityRanges": [],
+            "inlineStyleRanges": [],
+            "key": "a9be4",
+            "text": "tre\u015b\u0107 trzeciej aktywno\u015bci",
+            "type": "unstyled"
+          }
+          ],
+            "entityMap": {}
+        },
         "act_type": "dalem_dla_sdm",
         "created_at": "2016-01-03T00:20:00.200Z",
         "updated_at": "2016-02-03T00:20:00.200Z", 
@@ -49,7 +83,6 @@
         "is_archived": false,
         "is_urgent": false,
         "created_by": "1",
-        "updated_by": "2",
         "limit": 10,
         "tags": ["Wolontariat+", "Tłumaczenia"]
      }
