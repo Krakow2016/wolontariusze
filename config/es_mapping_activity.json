@@ -54,13 +54,16 @@
         "limit" : {
             "type" : "integer"
         },
+        "limit_reached" : {
+            "type" : "boolean"
+        },
         "tags" : {
             "type" : "string",
             "index": "not_analyzed"
         },
         "volunteers" : {
-          "type" : "string",
-          "index": "not_analyzed"
+            "type" : "string",
+            "index": "not_analyzed"
         }
       }
     }

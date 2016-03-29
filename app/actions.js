@@ -131,11 +131,10 @@ module.exports = {
     }
     
     var availableQuery = {
-      script: {
-        script: "doc['doc.limit'].value == 0 || doc['doc.limit'].value > (doc['doc.volunteers'].values.size())"
+      term: {
+        'doc.limit_reached': false
       }
     }
-    
     
     //Jeżeli otwarta jest zakładka Bank Pracy, Biorę Udział w w to potrzeba zwrócić trwające i wolne zadania
     //a w zakładce Moje Zadania zwracamy wszystkie lub wybrane

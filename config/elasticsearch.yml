@@ -2,4 +2,3 @@
 
 network.host: 0.0.0.0
 script.engine.groovy.inline.update: true
-script.engine.groovy.inline.search: true
