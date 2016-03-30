@@ -947,3 +947,50 @@ textarea.settings {
   max-width: 600px;
   margin: auto;
 }
+
+#status h2 {
+  font-size: 1.4rem;
+  text-align: center;
+  margin: 0 0 1rem 0;
+}
+#status h3 {
+  font-size: 1.25rem;
+  margin: 20px 0;
+}
+#status i {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+#status span {
+  clear: both;
+  display: block;
+  margin: 15px 0;
+}
+#status ol {
+  font-size: 1.25rem;
+  padding: 0 0 0 20px;
+  text-align: justify;
+}
+#status ol li::before,
+.private ol li::before {
+  content: none;
+}
+#status ol li ol li,
+.private ol li ol li {
+  list-style: none;
+}
+.private {
+  margin-top: 50px;
+}
+.private h2 {
+  text-align: center;
+}
+.private ol li {
+  font-size: 1.25rem;
+}
+.private span {
+  clear: both;
+  display: block;
+  font-weight: bold;
+  text-align: center;
+}
