@@ -48,8 +48,7 @@
           "analyzer": "polish"
         },
         "languages" : {
-          "type":     "object",
-          "dynamic":  true
+          "type":     "string"
         },
         "last_name" : {
           "type" : "string"
