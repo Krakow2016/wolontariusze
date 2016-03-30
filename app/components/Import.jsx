@@ -15,8 +15,7 @@ var Search = React.createClass({
       var files = e.target.files
 
       for (var i = 0; i < files.length; i++) {
-          file = files[i];
-          r.attach('image', file)
+          r.attach('image', files[i])
       }
 
       r.end(function(err, response){
