@@ -201,7 +201,7 @@ var Activity = React.createClass({
       updateForm = (
         <div className="alert alert--warning">
           <p>
-            Jako administrator masz możliwość dodawania aktualiacji do
+            Jako koordynator masz możliwość dodawania aktualiacji do
             zadania, które oprócz tego, że wyświetli się pod treścią
             zadania, będzie wysłane drogą e-mailową do wszystkich
             zgłoszonych do zadania wolontariuszy.
@@ -269,9 +269,11 @@ var Activity = React.createClass({
             </div>
             <div ref={node => node && node.setAttribute('column', '5')}>
               <p className="text--center">
-                <img src={activity.profile_picture_url} className="profileMedium" /><br />
+                <img src={activity.created_by.profile_picture_url} className="profileMedium" /><br />
                 <span>
-                  {activity.first_name} {activity.last_name}
+                  <NavLink href={"/wolontariusz/"+ activity.created_by.id}>
+                    {activity.created_by.first_name} {activity.created_by.last_name}
+                  </NavLink>
                 </span>
               </p>
               <b>Typ:</b> {actType}
