@@ -7,29 +7,29 @@ var NavLink = require('fluxible-router').NavLink
 var TaskFilters = React.createClass({
 
   getInitialState: function () {
-    var that = this
+    //var that = this
     return {
       open: false,
       checkboxes: {
-        typeCheckbox: false,
-        priorityCheckbox: false,
-        placeCheckbox: false,
-        categoryCheckbox: false,
-        timeStateCheckbox: false,
-        availabilityStateCheckbox: false
+        //typeCheckbox: false,
+        //priorityCheckbox: false,
+        //placeCheckbox: false,
+        //categoryCheckbox: false,
+        //timeStateCheckbox: false,
+        //availabilityStateCheckbox: false
       },
       selects: {
-        act_type: 'niezdefiniowany',
-        priority: 'NORMALNE',
-        timeState: 'trwajace',
-        availabilityState: 'wolne'
+        //act_type: 'niezdefiniowany',
+        //priority: 'NORMALNE',
+        //timeState: 'trwajace',
+        //availabilityState: 'wolne'
       },
       place: {
-        distance: 10.0,  //km
-        lat: 49.8883,   //wspolrzedne z Open Street Map
-        lon: 20.0986,
+        //distance: 10.0,  //km
+        //lat: 49.8883,   //wspolrzedne z Open Street Map
+        //lon: 20.0986,
       },
-      //placeAddress: 'Dobczyce',
+      ////placeAddress: 'Dobczyce',
       tags: ['Wolontariat+']
     }
   },
@@ -43,93 +43,52 @@ var TaskFilters = React.createClass({
 
   handleCheckboxChange: function (evt) {
     //tak jak w ActivityAdministration
-    var checkboxes = {}
-    var value = evt.target.checked
-    checkboxes[evt.target.name] = {$set: value}
-    this.setState(update(this.state, {
-      checkboxes: checkboxes
-    }))
+    //var checkboxes = {}
+    //var value = evt.target.checked
+    //checkboxes[evt.target.name] = {$set: value}
+    //this.setState(update(this.state, {
+      //checkboxes: checkboxes
+    //}))
   },
 
   handleSelectChange: function (evt) {
-    var selects = {}
-    var value = evt.target.value
-    selects[evt.target.name] = {$set: value}
-    this.setState(update(this.state, {
-      selects: selects
-    }))
+    //var selects = {}
+    //var value = evt.target.value
+    //selects[evt.target.name] = {$set: value}
+    //this.setState(update(this.state, {
+      //selects: selects
+    //}))
   },
 
   handlePlaceChange: function (evt) {
-    var place = {}
-    var value = evt.target.value
-    value = parseFloat(value)
-    place[evt.target.name] = {$set: value}
-    if (isNaN(value)) {
-      return
-    }
-    this.setState(update(this.state, {
-      place: place
-    }))
+    //var place = {}
+    //var value = evt.target.value
+    //value = parseFloat(value)
+    //place[evt.target.name] = {$set: value}
+    //if (isNaN(value)) {
+      //return
+    //}
+    //this.setState(update(this.state, {
+      //place: place
+    //}))
   },
   
   
   handlePlaceSelectChange: function (evt) {
-    var place = {}
-    var value = evt.target.value
-    var lat_lon = value.split(',')
-    if (isNaN(lat_lon[0]) || isNaN(lat_lon[1]) ) {
-      return
-    }
-    place['lat'] = {$set: parseFloat(lat_lon[0])}
-    place['lon'] = {$set: parseFloat(lat_lon[1])}
+    //var place = {}
+    //var value = evt.target.value
+    //var lat_lon = value.split(',')
+    //if (isNaN(lat_lon[0]) || isNaN(lat_lon[1]) ) {
+      //return
+    //}
+    //place['lat'] = {$set: parseFloat(lat_lon[0])}
+    //place['lon'] = {$set: parseFloat(lat_lon[1])}
 
-    this.setState(update(this.state, {
-      place: place
-    }))
+    //this.setState(update(this.state, {
+      //place: place
+    //}))
   },
   
-  saveTag: function(tag) {
-    this.state.tags = this.state.tags || []
-    this.setState(update(this.state, {
-        tags: {$push: [tag]}
-    }))
-  },
-
-  removeTag: function(e) {
-    var tag = e.target.dataset.tag
-    var index = this.state.tags.indexOf(tag)
-    this.setState(update(this.state, {
-        tags: {$splice: [[index, 1]]}
-    }))
-  },
-
-  getUrl: function () {
-    var query = this.props.query
-    var checkboxes = this.state.checkboxes
-    var selects = this.state.selects
-    var place = this.state.place
-    
-    checkboxes.typeCheckbox ? (query.act_type = selects.act_type) : (delete query.act_type)
-    checkboxes.priorityCheckbox ? (query.priority = selects.priority) : (delete query.priority)
-    
-    checkboxes.placeCheckbox ? (query.placeDistance = place.distance) : (delete query.placeDistance)
-    checkboxes.placeCheckbox ? (query.placeLat = place.lat) : (delete query.placeLat)
-    checkboxes.placeCheckbox ? (query.placeLon = place.lon) : (delete query.placeLon)
-    
-    checkboxes.categoryCheckbox ? (query.tags = this.state.tags.map(function (tag) {return encodeURIComponent(tag)}).join(';') ) : (delete query.tags)
-    checkboxes.timeStateCheckbox && query.created_by ? (query.timeState = selects.timeState) : (delete query.timeState)
-    checkboxes.availabilityStateCheckbox && query.created_by  ? (query.availabilityState = selects.availabilityState) : (delete query.availabilityState)
-    
-    // Zapisuje zapytanie w adresie url
-    var attributes = Object.keys(query).filter(function(key) {
-      return query[key]
-    }).map(function(key) {
-      return key + '=' + query[key]
-    }).join('&')
-    return '/zadania?'+ attributes
-  },
-
   render: function () {
 
     var filterByType = <div>
@@ -184,11 +143,10 @@ var TaskFilters = React.createClass({
                               <span>, współrzędne wzięte z OSM, © autorzy <a href="//www.openstreetmap.org/copyright">OpenStreetMap</a></span>
                           </Formsy.Form>
                         </div>
-    var tags = this.state.tags || []
+    var tags = this.props.query.tags || []
     var filterByCategory = <div>
-                              <input id="categoryCheckbox" type="checkbox" name="categoryCheckbox" checked={this.state.checkboxes.categoryCheckbox} onChange={this.handleCheckboxChange} />
-                              <label htmlFor="categoryCheckbox">Kategoria</label>
-                              <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
+                              <strong>Kategoria</strong>
+                              <Tags data={tags} onSave={this.props.saveTag} onRemove={this.props.removeTag} />
                             </div>
     var filterByTimeState
     var filterByAvailabilityState
@@ -211,9 +169,8 @@ var TaskFilters = React.createClass({
                               </div>
     }
 
-    var filterLink = <NavLink href={this.getUrl()}>Filtruj</NavLink>
+    var filterLink = <button onClick={this.props.onSubmit}>Szukaj</button>
 
-    
     var filters
     if (!this.state.open) {
       filters = <div className="tasks-filters-closed">

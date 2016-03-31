@@ -11,7 +11,9 @@ var ActivitiesStore = createStore({
 
   initialize: function () {
     this.all = []
-    this.query = {}
+    this.query = {
+      tags: []
+    }
   },
 
   loadAll: function(data) {
@@ -33,8 +35,11 @@ var ActivitiesStore = createStore({
   },
 
   rehydrate: function (state) {
+    var query = state.query
+    query.tags = query.tags.split(',')
+
     this.all = state.all
-    this.query = state.query
+    this.query = query
   }
 })
 

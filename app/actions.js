@@ -194,7 +194,7 @@ module.exports = {
     
     if(state.tags) {
       must.push({
-        terms: { 'doc.tags': state.tags.split(';') }
+        terms: { 'doc.tags': state.tags }
       })
     }
     
@@ -232,6 +232,16 @@ module.exports = {
       }
       cb()
     })
+
+    // Zapisuje zapytanie w adresie url
+    var base = window.location.toString().replace(new RegExp('[?](.*)$'), '')
+    var attributes = Object.keys(state).filter(function(key) {
+      return state[key]
+    }).map(function(key) {
+      return key + '=' + state[key]
+    }).join('&')
+
+    history.replaceState({}, '', base +'?'+ attributes)
   },
 
   updateActivity: function(context, payload, cb) {

@@ -108,6 +108,7 @@ module.exports = {
     handler: require('./components/TaskBank/OpenTasks.jsx'),
     action: function(context, payload, done) {
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy' })
+      context.dispatch('LOAD_ACTIVITIES_QUERY', payload.query)
       context.executeAction(actions.loadActivities, payload.query, function() {
         done()
       })

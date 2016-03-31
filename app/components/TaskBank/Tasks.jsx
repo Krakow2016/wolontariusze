@@ -35,22 +35,29 @@ var Tasks = React.createClass({
       query: query
     })
   },
-  
+
+  saveTag: function(tag) {
+    var query = this.state.query
+    query.tags = query.tags || []
+    this.setState(update(this.state, {
+        query: {tags: {$push: [tag]}}
+    }))
+  },
+
+  removeTag: function(e) {
+    var query = this.state.query
+    var tag = e.target.dataset.tag
+    var index = query.tags.indexOf(tag)
+    this.setState(update(this.state, {
+        query: {tags: {$splice: [[index, 1]]}}
+    }))
+  },
+
   onSubmit: function(){
 
     var state = this.state.query
     
     this.props.context.executeAction(actions.loadActivities, state)
-
-    // Zapisuje zapytanie w adresie url
-    var base = window.location.toString().replace(new RegExp('[?](.*)$'), '')
-    var attributes = Object.keys(state).filter(function(key) {
-      return state[key]
-    }).map(function(key) {
-      return key + '=' + state[key]
-    }).join('&')
-
-    history.replaceState({}, '', base +'?'+ attributes)
 
   },
 
@@ -104,10 +111,14 @@ var Tasks = React.createClass({
               {tabs}
             </div>
           </div>
-          <TaskFilters filterFunction={this.onSubmit}
-            query={this.state.query}
-            />
-          <ActivitiesSearchForm query={this.state.query} handleChange={this.handleChange} submit={this.onSubmit} />
+
+          <TaskFilters
+              handleChange={this.handleChange}
+              saveTag={this.saveTag}
+              removeTag={this.removeTag}
+              onSubmit={this.onSubmit}
+              query={this.state.query} />
+
           <table className="tasks-table">
             <tbody>
               <tr>
