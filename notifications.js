@@ -70,8 +70,8 @@ r.connect(config.rethinkdb, function(err, conn) {
                 }
               }
             })
-            email.addSection(':has_joined', 'Właśnie przypisałeś/aś się do zadania <a href="https://wolontariusze.krakow2016.com/aktywnosci/'+ activity.id +'">'+ activity.name +'</a> i bierzesz w nim udział. Dziękujemy.')
-            email.addSection(':was_joined', author.first_name +' '+ author.last_name +' - przypisał/a Cię do zadania <a href="https://wolontariusze.krakow2016.com/aktywnosci/'+ activity.id +'">'+ activity.name +'</a>. Prosimy, potwierdź w nim swój udział mailem zwrotnym. Dziękujemy.')
+            email.addSection(':has_joined', 'Właśnie przypisałeś/aś się do zadania <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ activity.name +'</a> i bierzesz w nim udział. Dziękujemy.')
+            email.addSection(':was_joined', author.first_name +' '+ author.last_name +' - przypisał/a Cię do zadania <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ activity.name +'</a>. Prosimy, potwierdź w nim swój udział mailem zwrotnym. Dziękujemy.')
 
             sendgrid.send(email, function(err, json) {
               console.log('sendgrid:', err, json)
@@ -92,7 +92,7 @@ r.connect(config.rethinkdb, function(err, conn) {
         var activity = change.new_val
         var update = activity.updates.pop()
         var title = activity.name
-        var html = '<p>Nastąpiła najnowsza aktualizacja zadania <a href="https://wolontariusze.krakow2016.com/aktywnosci/'+ activity.id +'">'+ title +'</a>, w którym uczestniczysz:</p>'
+        var html = '<p>Nastąpiła najnowsza aktualizacja zadania <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ title +'</a>, w którym uczestniczysz:</p>'
         html += backdraft(update.raw, {
           'BOLD': ['<strong>', '</strong>'],
           'ITALIC': ['<i>', '</i>'],
