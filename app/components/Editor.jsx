@@ -62,7 +62,7 @@ var Editor = React.createClass({
   },
 
   focus: function() {
-//this.refs.editor.focus()
+    this.refs.editor.focus()
   },
 
   render: function() {

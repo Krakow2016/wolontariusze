@@ -52,9 +52,11 @@ var app = require('./app/fluxible')
 var fetchrPlugin = app.getPlugin('FetchrPlugin')
 
 // Konfiguracja zapisu danych sesji w bazie danych
-var session_store = {
-  servers: [ config.rethinkdb ]
-}
+var rdbdash = require('rethinkdbdash')({
+    servers: [
+      config.rethinkdb
+    ]
+})
 
 // Get information from html forms
 var jsonParser = bodyParser.json()
@@ -122,7 +124,7 @@ module.exports = function(server) {
 
     server.use(session({
       secret: 'secret',
-      store: config.service === 'rethinkdb' ? new RDBStore(session_store) : new session.MemoryStore()
+      store: config.service === 'rethinkdb' ? new RDBStore(rdbdash, {}) : new session.MemoryStore()
     }))
     // Middleware służący do wyświetlania komunikatów flash
     server.use(flash())
