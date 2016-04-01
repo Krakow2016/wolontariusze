@@ -148,11 +148,11 @@ var Activity = React.createClass({
       )
     })
     
-    var startTime
+    var applicationTime
     if (typeof (this.state.activity.datetime) != 'undefined')  {
-      startTime = TimeService.showTime(activity.datetime) 
+      applicationTime = TimeService.showTime(activity.datetime) 
     } else {
-      startTime = 'Nieokreślony'
+      applicationTime = 'Nieokreślony'
     }
     
     var is_archived = (activity.is_archived) ? 'Tak' : 'Nie'
@@ -282,7 +282,7 @@ var Activity = React.createClass({
               <br></br>
               <b>Miejsce wydarzenia:</b> {activity.place}
               <br></br>
-              <b>Czas rozpoczęcia:</b> {startTime}
+              <b>Czas zakończenia zgłoszeń do zadania:</b> {applicationTime}
               <br></br>
               <b>Czas trwania:</b> {activity.duration}
               <br></br>
