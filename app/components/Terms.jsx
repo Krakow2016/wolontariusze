@@ -2,8 +2,8 @@ var React = require('react')
 
 module.exports = function() {
 return (
-<article>
-    <div className="THE-margin" id="THE-body">
+<article className="main-content">
+    <div className="container">
       <div className="section group" id="status">
         <h2>REGULAMIN PORTALU „GÓRA DOBRA”</h2>
         <h3>Warunki użytkowania portalu GÓRA DOBRA</h3>

@@ -84,6 +84,7 @@ var Application = React.createClass({
     var advancedSearch
     var infoMessage
     var errorMessage
+    var article
 
     if(this.user()) {
 
@@ -97,11 +98,25 @@ var Application = React.createClass({
       }
 
       searchForm = (
-        <div className="col span_1_of_4 search" style={searchStyle}>
+        <div className="col col3" style={searchStyle}>
           <ActivityVolonteersList id="form" addActiveVolonteer={this.addActiveVolonteer} className="form menu-search-box" />
           <input src="/img/search.svg" id="menu-search-submit" type="image" />
           {advancedSearch}
         </div>
+      )
+    }
+
+    if(this.props.currentRoute.name == "home" || this.props.currentRoute.name == "login"){
+      article = (
+        <article>
+          <Handler context={this.context} />
+        </article>
+      )
+    }else{
+      article = (
+        <article className="main-content">
+          <Handler context={this.context} />
+        </article>
       )
     }
 
@@ -123,41 +138,38 @@ var Application = React.createClass({
 
     //render content
     return (
-      <div>
+      <div id="">
         <header>
-          <div className="THE-margin">
-            <NavLink className="logo" href="/">
-              <img src="/img/egg.svg" id="egg" />
-              <img src="/img/logo.png" id="logo" />
-            </NavLink>
+          <div className="head-photo">
+            <span id="head-txt">You are the saltof the earth...You arethe light of the world. Mt 5:13,14</span>
+            <img src="/img/homepage/1.svg" id="head-img" alt="" draggable="false" />
           </div>
-          <nav>
-            <div className="THE-margin">
-              <div className="section group">
-                <div className="col span_3_of_4">
-                  <Authentication user_id={this.user_id()} user_name={this.user_name()} />
-                </div>
-                  {searchForm}
-              </div>
-            </div>
+          <nav id="head-nav" className="row">
+            <Authentication user_id={this.user_id()} user_name={this.user_name()} search_status={searchForm || false} />
+            {searchForm}
           </nav>
+          <section className="inspiration">
+            <h2 className="text--center">Do not be afraid</h2>
+            <p className="text--center">St John Paul II</p>
+          </section>
         </header>
-        <article>
-          <header className="THE-margin">
-            <h1 id="THE-title">{this.state.title}</h1>
-          </header>
-          <div className="THE-margin" id="THE-body">
-            <Handler context={this.context} />
-          </div>
-        </article>
+
+        {article}
         {infoMessage}
         {errorMessage}
         <footer>
+          <ul id="footer-menu">
+            <li>GÓRA DOBRA</li>
+            <li>JOIN US</li>
+            <li>CONTACT</li>
+          </ul>
         </footer>
       </div>
     )
   },
-
+  // <header>
+  //    <h1 id="THE-title">{this.state.title}</h1>
+  //  </header>
   //<Snackbar
     //open={!!this.state.infoSnack}
     //message={this.state.infoSnack || ''}

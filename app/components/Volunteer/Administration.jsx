@@ -160,9 +160,9 @@ var VolunteerAdministration = React.createClass({
           </p>
         </div>
 
-        <div ref={node => node && node.setAttribute('container', '')}>
-          <div ref={node => node && node.setAttribute('row', '')}>
-            <div ref={node => node && node.setAttribute('column', '7')}>
+        <div className="container">
+          <div className="row">
+            <div className="col col7">
 
               {papers}
 
@@ -172,7 +172,7 @@ var VolunteerAdministration = React.createClass({
               <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
 
             </div>
-            <div ref={node => node && node.setAttribute('column', '5')}>
+            <div className="col col5">
               <Comments context={this.props.context} />
             </div>
 

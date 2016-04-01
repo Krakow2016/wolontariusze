@@ -34,9 +34,9 @@ var ProfileSettings = React.createClass({
           Informacje publiczne
         </h1>
 
-        <div ref={node => node && node.setAttribute('container', '')}>
-          <div ref={node => node && node.setAttribute('row', '')}>
-            <div ref={node => node && node.setAttribute('column', '7')}>
+        <div className="container">
+          <div className="row">
+            <div className="col col7">
 
               <Formsy.Form className="settingsForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
 
@@ -53,7 +53,7 @@ var ProfileSettings = React.createClass({
                 </div>
               </Formsy.Form>
             </div>
-            <div ref={node => node && node.setAttribute('column', '5')}>
+            <div className="col col5">
               <div className="alert">
                 <p>
                   Informacja o tym gdzie będą się te dane wyświetlać. I dlaczego warto uzupełnić.

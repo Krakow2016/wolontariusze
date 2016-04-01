@@ -92,9 +92,136 @@ var App = React.createClass({
 
     return (
       <div>
-        <p>
-          To jest strona główna. Za jej stworzenie odpowiada Martin ☺
-        </p>
+        <img src="/img/homepage/graph.png" style={{width: "100%"}} alt="" />
+        <div className="graph-filter">
+          <div className="row">
+            <div className="col col4">
+              <div className="row">
+                <div className="col col6">
+                  <img src="/img/homepage/VOLUNTEERS.svg" alt="" />
+                  <p>VOLUNTEERS</p>
+                </div>
+                <div className="col col6 graph-filter-input-container">
+                  <input type="text" className="graph-filter-input" placeholder="NAME" />
+                  <input type="text" className="graph-filter-input" placeholder="ID NUMBER" />
+                </div>
+              </div>
+            </div>
+            <div className="col col4"><img src="/img/homepage/HOUR.svg" alt="" /><p>HOUR</p></div>
+            <div className="col col4"><img src="/img/homepage/LOCATION.svg" alt="" /><p>LOCATION</p></div>
+          </div>
+        </div>
+
+        <section className="volunteer-dashboard">
+          <div className="dashboard-container">
+            <div className="row">
+              <div className="col col4">
+                <img src="/img/homepage/bialy_chlopek.svg" alt="" />
+                <img src="/img/homepage/biala_babka.svg" alt="" />
+                <p>VOLUNTEERS</p>
+                <p className="dashboard-hours">22000</p>
+              </div>
+              <div className="col col4">
+                <img src="/img/homepage/biale_buty.svg" alt="" />
+                <p>JOBS COMPLETED</p>
+                <p className="dashboard-hours">3400</p>
+              </div>
+              <div className="col col4">
+                <img src="/img/homepage/bialy_zegar.svg" alt="" />
+                <p>VOLUNTEER HOURS</p>
+                <p className="dashboard-hours">340000</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="tiles-container why-and-what">
+          <div className="row">
+            <div className="col col6">
+              <h1 className="text--center">WHY GÓRA DOBRA?</h1>
+              <div className="row">
+                <div className="col col6"><img src="http://lorempixel.com/256/215" alt="" /></div>
+                <div className="col col6">
+                  <p>
+                    World Youth Day Krakow 2016
+                    is an event of huge scale, for
+                    which will arrive more than 2
+                    million pilgrims and approx
+                    25,000 volunteers.
+                  </p>
+                  <a href="#">READ MORE...</a>
+
+                </div>
+              </div>
+            </div>
+
+            <div className="col col6">
+              <h1 className="text--center">WHAT IS GÓRA DOBRA?</h1>
+              <div className="row">
+                <div className="col col6"><img src="http://lorempixel.com/256/215" alt="" /></div>
+                <div className="col col6">
+                  <p>
+                    World Youth Day Krakow 2016
+                    is an event of huge scale, for
+                    which will arrive more than 2
+                    million pilgrims and approx
+                    25,000 volunteers.
+                  </p>
+                  <a href="#">READ MORE...</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="tiles-container how-and-who">
+          <div className="row">
+            <div className="col col6">
+              <h1 className="text--center">HOW IT WORKS?</h1>
+              <div className="row">
+                <div className="col col6"><img src="http://lorempixel.com/256/215" alt="" /></div>
+                <div className="col col6">
+                  <p>
+                    World Youth Day Krakow 2016
+                    is an event of huge scale, for
+                    which will arrive more than 2
+                    million pilgrims and approx
+                    25,000 volunteers.
+                  </p>
+                  <a href="#">READ MORE...</a>
+                </div>
+              </div>
+            </div>
+
+            <div className="col col6">
+              <h1 className="text--center">WHO IS INVOLVED?</h1>
+              <div className="row">
+                <div className="col col6"><img src="http://lorempixel.com/256/215" alt="" /></div>
+                <div className="col col6">
+                  <p>
+                    World Youth Day Krakow 2016
+                    is an event of huge scale, for
+                    which will arrive more than 2
+                    million pilgrims and approx
+                    25,000 volunteers.
+                  </p>
+                  <a href="#">READ MORE...</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="insta">
+          <div className="insta-header">
+            <img src="/img/homepage/aparacik.svg" alt="" />
+            <span>#GÓRADOBRA</span>
+          </div>
+          <div className="insta-content">
+            <img src="http://lorempixel.com/292/292" alt="" /><img src="http://lorempixel.com/292/292/sports" alt="" /><img src="http://lorempixel.com/292/292/city" alt="" /><img src="http://lorempixel.com/292/292/food" alt="" /><img src="http://lorempixel.com/292/292/cats" alt="" /><img src="http://lorempixel.com/292/292/people" alt="" /><img src="http://lorempixel.com/292/292/nature" alt="" /><img src="http://lorempixel.com/292/292/technics" alt="" />
+          </div>
+        </div>
+
         {stats}
       </div>
     )

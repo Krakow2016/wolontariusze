@@ -35,8 +35,8 @@ var Shell = React.createClass({
             <p>{this.state.why_question}</p>
         </div>
 
-        <div className="section group">
-          <div className="col span_4_of_4">
+        <div className="section row">
+          <div className="col col12">
             <img src="/img/profile/insta.svg" id="profilie-insta-ico" /><h1>#WYD2016</h1>
           </div>
         </div>
