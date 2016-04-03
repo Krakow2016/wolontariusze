@@ -352,7 +352,7 @@ label:hover:before {
 }
 #alert-cross {
 	height: 3rem;
-	position: absolute;
+	position: fixed;
 	top:0px;
 	right:0px;
 	margin:1rem;
@@ -369,6 +369,13 @@ label:hover:before {
 	-webkit-transition: transform 0.5s ease;
 	-o-transition: transform 0.5s ease;
 	transition: transform 0.5s ease;
+}
+
+.alert{
+  background-color: rgba(113, 191, 223, 0.22);
+  padding: 10px;
+  font-size: 1rem;
+  font-family: "Gloriola-Regular";
 }
 
 @media only screen and (max-width: 840px) {
@@ -576,13 +583,15 @@ textarea.settings {
 }
 
 .message {
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #fff;
-  color: #000;
+  background-color: #416A7D;
+  color: white;
   text-align: center;
+  font-size: 1.5rem;
+  font-family: 'GloriolaMedium';
 }
 
 .tasks-filters-filterType {
@@ -601,6 +610,7 @@ textarea.settings {
   font-weight: 600;
   font-size: 1.4rem;
   cursor: pointer;
+  padding: 0;
 }
 .tasks-priority-urgent-tr  {
   color: red
@@ -853,7 +863,7 @@ body{
 article.main-content{
 	background-color: white;
 	color: #003753;
-	padding: 0 1rem;
+	padding: 1rem 1rem 3rem 1rem;
 }
 article.main-content a{
 	color:#003753;
@@ -914,7 +924,7 @@ ul#nav-list li{
   padding: 0 1.5rem;
   text-transform: uppercase;
   font-family: "GloriolaMedium";
-  font-size: 21px;
+  font-size: 17px;
   border-left: 0.1rem solid white;
 }
 ul#nav-list li:first-child{
@@ -952,16 +962,16 @@ header section.inspiration{
   width: 100%;
 }
 section:after{
-  content: url('../img/homepage/biala_gorka.svg');
+  content: '';
+  background-image: url('../img/homepage/biala_gorka.svg');
+  background-size: 8rem;
+  background-position: center center;
+  background-repeat: no-repeat;
+  height: 25px;
   width: 100%;
   position: absolute;
-  bottom: 3.3px;
+  bottom: 0;
   left: 0;
-  text-align: center;
-  -webkit-transform: scale(1.5);
-  -ms-transform: scale(1.5);
-  -o-transform: scale(1.5);
-  transform: scale(1.5);
 }
 section:last-of-type{
   border: none;
@@ -1017,13 +1027,13 @@ input.graph-filter-input{
   background-color: #003753;
 }
 .dashboard-container{
-  padding: 3rem 12rem;
+  padding: 3rem 10rem;
   text-align: center;
   font-family: 'GloriolaMedium';
   font-size: 18px;
 }
 .dashboard-container img{
-  height: 7rem;
+  height: 6rem;
 }
 .dashboard-container .dashboard-hours{
   font-size: 60px;
@@ -1096,6 +1106,8 @@ input.graph-filter-input{
 .insta-content img{
   margin: 0;
   padding: 0;
+  height: 271px;
+  width: 271px;
 }
 .insta{
   margin-bottom: 4rem;

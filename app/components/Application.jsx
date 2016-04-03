@@ -142,7 +142,7 @@ var Application = React.createClass({
         <header>
           <div className="head-photo">
             <span id="head-txt">You are the saltof the earth...You arethe light of the world. Mt 5:13,14</span>
-            <img src="/img/homepage/1.svg" id="head-img" alt="" draggable="false" />
+            <NavLink href="/"><img src="/img/homepage/1.svg" id="head-img" alt="" draggable="false" /></NavLink>
           </div>
           <nav id="head-nav" className="row">
             <Authentication user_id={this.user_id()} user_name={this.user_name()} search_status={searchForm || false} />
