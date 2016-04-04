@@ -108,12 +108,12 @@ if(!task) { return }
           <table className="tasks-table">
             <tbody>
               <tr>
-                <th className="tasks-th" onClick={this.sortByName}>Tytuł</th>
-                <th className="tasks-th" onClick={this.sortByCategories}>Kategorie</th>
-                <th className="tasks-th" onClick={this.sortByVolunteerNumber}>Ilość osób</th>
-                <th className="tasks-th" onClick={this.sortByVolunteerLimit}>Limit osób</th>
-                <th className="tasks-th" onClick={this.sortByCreationDate}>Czas utworzenia</th>
-                <th className="tasks-th" onClick={this.sortByExpirationDate}>Czas wygaśnięcia</th>
+                <th className="tasks-th" >Tytuł</th>
+                <th className="tasks-th" >Kategorie</th>
+                <th className="tasks-th" >Liczba osób</th>
+                <th className="tasks-th" >Limit osób</th>
+                <th className="tasks-th" >Zakończenie zgłoszeń do zadania</th>
+                <th className="tasks-th" >Czas wygaśnięcia</th>
               </tr>
               {tasks}
             </tbody>
