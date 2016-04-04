@@ -108,7 +108,7 @@ var ActivityAdministration = React.createClass({
     if (!value) {
       delete activity.datetime
     } else {
-      activity.datetime = new Date().getTime()
+      activity.datetime = new Date()
     }
 
     this.setState(update(this.state, {
