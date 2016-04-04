@@ -364,39 +364,6 @@ label:hover:before {
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 }
-.btn-category-add{
-	position: relative;
-	font-size: 0;
-	white-space: nowrap;
-	width: 1%;
-	vertical-align: middle;
-}
-.btn-category-add > button{
-	position: relative;
-	z-index: 2;
-	margin-left: -1px;
-	display: inline-block;
-  padding: 6px 12px;
-  margin-bottom: 0;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.42857143;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-	-ms-touch-action: manipulation;
-	touch-action: manipulation;
-	cursor: pointer;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	background-image: none;
-	border: 1px solid transparent;
-	border-radius: 4px;
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-}
 
 .btn-category-remove{
 	height: 20px;
@@ -946,4 +913,51 @@ textarea.settings {
 .settingsForm {
   max-width: 600px;
   margin: auto;
+}
+
+#status h2 {
+  font-size: 1.4rem;
+  text-align: center;
+  margin: 0 0 1rem 0;
+}
+#status h3 {
+  font-size: 1.25rem;
+  margin: 20px 0;
+}
+#status i {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+#status span {
+  clear: both;
+  display: block;
+  margin: 15px 0;
+}
+#status ol {
+  font-size: 1.25rem;
+  padding: 0 0 0 20px;
+  text-align: justify;
+}
+#status ol li::before,
+.private ol li::before {
+  content: none;
+}
+#status ol li ol li,
+.private ol li ol li {
+  list-style: none;
+}
+.private {
+  margin-top: 50px;
+}
+.private h2 {
+  text-align: center;
+}
+.private ol li {
+  font-size: 1.25rem;
+}
+.private span {
+  clear: both;
+  display: block;
+  font-weight: bold;
+  text-align: center;
 }

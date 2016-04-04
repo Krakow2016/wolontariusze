@@ -128,6 +128,12 @@ var Tasks = React.createClass({
                 <th className="tasks-th" onClick={this.sortByVolunteerLimit}>Limit osób</th>
                 <th className="tasks-th" onClick={this.sortByCreationDate}>Czas utworzenia</th>
                 <th className="tasks-th" onClick={this.sortByExpirationDate}>Czas wygaśnięcia</th>
+                <th className="tasks-th" >Tytuł</th>
+                <th className="tasks-th" >Kategorie</th>
+                <th className="tasks-th" >Liczba osób</th>
+                <th className="tasks-th" >Limit osób</th>
+                <th className="tasks-th" >Czas utworzenia</th>
+                <th className="tasks-th" >Czas wygaśnięcia</th>
               </tr>
               {tasks}
             </tbody>

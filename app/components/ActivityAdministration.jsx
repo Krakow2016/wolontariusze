@@ -108,7 +108,7 @@ var ActivityAdministration = React.createClass({
     if (!value) {
       delete activity.datetime
     } else {
-      activity.datetime = new Date().getTime()
+      activity.datetime = new Date()
     }
 
     this.setState(update(this.state, {
@@ -464,7 +464,7 @@ var ActivityAdministration = React.createClass({
           <br/>
           <br/>
           <input id="datetime" type="checkbox" name="addDatetime" checked={!!this.state.activity.datetime} onChange={this.handleAddDatetimeChange} />
-          <label htmlFor="datetime">Czas rozpoczęcia</label>
+          <label htmlFor="datetime">Czas zakończenia zgłoszeń do zadania</label>
           <br/>
           <input id="is_archived" type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
           <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
