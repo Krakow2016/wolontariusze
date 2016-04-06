@@ -146,6 +146,38 @@ r.connect(config.rethinkdb, function(err, conn) {
         })
       })
   })
+  r.table('Volunteers').changes()
+    .filter(r.row('old_val')('approved').eq(true).not().and(r.row('new_val')('approved').eq(true)))
+    .run(conn, function(err, cursor) {
+      cursor.each(function(err, change){ // Wolontariusz został "approved"
+        var row = change.new_val
+        var token = row.access_tokens[row.access_tokens.length-1]
+        var url = '/invitation?apikey='+ token.token
+        var html = '<p>Chcemy zaprosić Cię do Góry Dobra - portalu dla wolontariuszy, który będzie równocześnie naszą główną platformą komunikacji podczas Światowych Dni Młodzieży w Krakowie oraz narzędziem do organizacji projektów i wydarzeń.</p><p>To tutaj chcemy stworzyć środowisko młodych i zaangażowanych ludzi, dzielić się tym, co robimy i przekazywać Ci ważne informacje o ŚDM i zadaniach, jakie czekają na realizację.</p><p>Dzięki Górze Dobra będziesz mógł pochwalić się efektami swojej pracy. W tym też miejscu będziesz miał możliwość zobaczenia i dzielenia się z innymi informacjami o tym, jak dużo serca, i aktywności wolontariackiej dajesz na rzecz Światowych Dni Młodzieży w Krakowie.</p><p>Aby aktywować swoje konto kliknij w poniższy link:</p><p>https://wolontariusze.krakow2016.com'+ url +'</p><p>WAŻNE! Link, jaki otrzymujesz teraz do zalogowania, jest aktywny tylko przez 72h. W wypadku jakichkolwiek problemów bądź pytań, prosimy o kontakt na: goradobra2016@gmail.com.</p><p>Nie zwlekaj ani chwili dłużej i zostań już dziś Wolontariuszem ŚDM Kraków 2016.</p>'
+
+        var email = new sendgrid.Email({
+          to:       row.email,
+          from:     'goradobra@krakow2016.com',
+          fromname: 'Góra Dobra',
+          subject:  'Zaproszenie do Góry Dobra!',
+          html:     html
+        })
+
+        email.addSubstitution(':name', row.first_name)
+        email.setFilters({
+          'templates': {
+            'settings': {
+              'enable': 1,
+              'template_id' : 'b716bb89-8416-4a44-a59f-edce76134f66',
+            }
+          }
+        })
+
+        sendgrid.send(email, function(err, json) {
+          console.log('sendgrid:', err, json)
+        })
+      })
+    })
 
   // Informuje API Eventory o zmianach w grupach wolontariusza
   r.table('Volunteers').changes()

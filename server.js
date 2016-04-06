@@ -86,7 +86,7 @@ passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
         }
 
         if(!token) { return done(500) } // Brak tokena - nie powinno się zdarzyć
-        var expiration_date = token.generated_at + 48*60*60*1000 // +48h
+        var expiration_date = token.generated_at + 72*60*60*1000 // +72h
 
         if(token.used) { // Sprawdź czy token nie został już użyty
           return done(null, false, {message: 'Token already used. You must generate a new one.'})
@@ -300,22 +300,9 @@ module.exports = function(server) {
               access_tokens: tokens
             }, {}, function (err) {
               if(err) {
-                res.send(err)
+                res.status(500).send(err)
               } else {
-                var url = '/invitation?apikey='+ token
-
-                var text = 'Wolontariuszu!\n\nChcemy zaprosić Cię do Góry Dobra - portalu dla wolontariuszy, który będzie równocześnie naszą główną platformą komunikacji podczas Światowych Dni Młodzieży w Krakowie oraz narzędziem do organizacji projektów i wydarzeń.\n\nTo tutaj chcemy stworzyć środowisko młodych i zaangażowanych ludzi, dzielić się tym, co robimy i przekazywać Ci ważne informacje o ŚDM i zadaniach, jakie czekają na realizację.\n\nDzięki Górze Dobra będziesz mógł pochwalić się efektami swojej pracy. W tym też miejscu będziesz miał możliwość zobaczenia i dzielenia się z innymi informacjami o tym, jak dużo serca, i aktywności wolontariackiej dajesz na rzecz Światowych Dni Młodzieży w Krakowie.\n\nAby aktywować swoje konto kliknij w poniższy link:\n\nhttps://wolontariusze.krakow2016.com'+ url +'\n\nWAŻNE! Link, jaki otrzymujesz teraz do zalogowania, jest aktywny tylko przez 48h. W wypadku jakichkolwiek problemów bądź pytań, prosimy o kontakt na: goradobra2016@gmail.com.\n\nNie zwlekaj ani chwili dłużej i zostań już dziś Wolontariuszem ŚDM Kraków 2016.'
-
-                var email = new sendgrid.Email({
-                  to:       user.email,
-                  from:     'goradobra@krakow2016.com',
-                  subject:  'Zaproszenie do Góry Dobra!',
-                  text:     text
-                })
-                sendgrid.send(email, function(err, json) {
-                  console.log('sendgrid:', err, url, json)
-                  res.send(err || json)
-                })
+                res.send({"status": "success"})
               }
             })
           })

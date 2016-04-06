@@ -620,10 +620,7 @@ module.exports = {
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
-        var resp = request.responseText
-        var json = JSON.parse(resp)
-
-        context.dispatch('INVITATION_SEND', json)
+        context.dispatch('INVITATION_SEND')
       //} else {
       // We reached our target server, but it returned an error
       }
