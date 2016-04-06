@@ -21,7 +21,7 @@ return (
         <br />
         Komitet Organizacyjny ŚDM Kraków 2016<br />
 Phone: +48 533 114 474<br />
-E-mail: wolontariat@krakow2016.com.
+E-mail: goradobra@krakow2016.com.
 </p>
 </div>
 )

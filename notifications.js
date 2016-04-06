@@ -52,7 +52,7 @@ r.connect(config.rethinkdb, function(err, conn) {
           r.table('Volunteers').get(change.new_val.user_id).run(conn, function(err, volunteer) {
             var email = new sendgrid.Email({
               to:       volunteer.email,
-              from:     'wolontariat@krakow2016.com',
+              from:     'goradobra@krakow2016.com',
               fromname: 'Góra Dobra',
               replyto:  author.email,
               subject:  'Zadanie: '+ activity.name,
@@ -120,7 +120,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                 var to = volunteer.right.email
                 var email = new sendgrid.Email({
                   to:       to,
-                  from:     'wolontariat@krakow2016.com',
+                  from:     'goradobra@krakow2016.com',
                   fromname: 'Góra Dobra',
                   replyto:  author.email,
                   subject:  'Zadanie: '+ title,

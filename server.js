@@ -308,7 +308,7 @@ module.exports = function(server) {
 
                 var email = new sendgrid.Email({
                   to:       user.email,
-                  from:     'wolontariat@krakow2016.com',
+                  from:     'goradobra@krakow2016.com',
                   subject:  'Zaproszenie do Góry Dobra!',
                   text:     text
                 })
