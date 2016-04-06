@@ -23,6 +23,9 @@ var ActivitiesStore = createStore({
   },
 
   loadQuery: function(data) {
+    if(data.tags) {
+      data.tags = data.tags.split(',')
+    }
     this.query = data
     this.emitChange()
   },
@@ -36,8 +39,6 @@ var ActivitiesStore = createStore({
 
   rehydrate: function (state) {
     var query = state.query
-    query.tags = query.tags.split(',')
-
     this.all = state.all
     this.query = query
   }

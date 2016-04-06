@@ -4,10 +4,11 @@ var NewTag = require('./NewTag.jsx')
 var Tags = React.createClass({
   render: function() {
     var that = this
+    var data = this.props.data || []
     return (
       <div>
         <ul>
-          {this.props.data.map(function(li) {
+          {data.map(function(li) {
             return (
               <li key={li}>
                 <span>{li}</span>

@@ -58,7 +58,17 @@ var Search = React.createClass({
   },
 
   search: function(){
-    this.props.context.executeAction(actions.showResults, this.state.query)
+    var state = this.state.query
+    this.props.context.executeAction(actions.showResults, state)
+
+    var base = window.location.toString().replace(new RegExp('[?](.*)$'), '')
+    var attributes = Object.keys(state).filter(function(key) {
+      return state[key]
+    }).map(function(key) {
+      return key + '=' + state[key]
+    }).join('&')
+
+    history.replaceState({}, '', base +'?'+ attributes)
   },
 
   consent: function() {

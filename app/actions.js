@@ -123,7 +123,7 @@ module.exports = {
         {
           range: { 
             'doc.datetime': {
-              "lte": "now/s"
+              "lte": "now"
             }
           }
         }
@@ -132,7 +132,7 @@ module.exports = {
     
     var availableQuery = {
       term: {
-        'doc.limit_reached': false
+        'doc.limit_reached': true
       }
     }
     
@@ -141,7 +141,7 @@ module.exports = {
     
     if(!state.created_by) {
       must_not.push(finishedQuery)
-      must.push(availableQuery)
+      must_not.push(availableQuery)
     } else {
       if(state.timeState == 'trwajace') {
         must_not.push(finishedQuery)
@@ -150,9 +150,9 @@ module.exports = {
       }
       
       if(state.availabilityState == 'wolne') {
-        must.push(availableQuery)
-      } else if (state.availabilityState == 'pelne') {
         must_not.push(availableQuery)
+      } else if (state.availabilityState == 'pelne') {
+        must.push(availableQuery)
       }
     }
 
@@ -173,14 +173,19 @@ module.exports = {
         term: { 'doc.act_type': state.act_type }
       })
     }
-    
+
     if(state.priority) {
-      var is_urgent = (state.priority == 'PILNE') ? true : false
-      must.push({
-        term: { 'doc.is_urgent': is_urgent }
-      })
+      if (state.priority === 'PILNE') {
+        must.push({
+          term: { 'doc.is_urgent': true }
+        })
+      } else {
+        must_not.push({
+          term: { 'doc.is_urgent': true }
+        })
+      }
     }
-    
+
     //geo_point w elastic search ma współrzędne [LON, LAT] w przeciwieństwie do [LAT, LON]
     //nowe pole tworzone jest za pomocą logstash
     if(state.placeDistance) {
@@ -192,7 +197,7 @@ module.exports = {
       })
     }
     
-    if(state.tags) {
+    if(state.tags && state.tags.length) {
       must.push({
         terms: { 'doc.tags': state.tags }
       })
@@ -232,16 +237,6 @@ module.exports = {
       }
       cb()
     })
-
-    // Zapisuje zapytanie w adresie url
-    var base = window.location.toString().replace(new RegExp('[?](.*)$'), '')
-    var attributes = Object.keys(state).filter(function(key) {
-      return state[key]
-    }).map(function(key) {
-      return key + '=' + state[key]
-    }).join('&')
-
-    history.replaceState({}, '', base +'?'+ attributes)
   },
 
   updateActivity: function(context, payload, cb) {
@@ -615,15 +610,6 @@ module.exports = {
     }
 
     request.send(JSON.stringify(params))
-
-    var base = window.location.toString().replace(new RegExp('[?](.*)$'), '')
-    var attributes = Object.keys(state).filter(function(key) {
-      return state[key]
-    }).map(function(key) {
-      return key + '=' + state[key]
-    }).join('&')
-
-    history.replaceState({}, '', base +'?'+ attributes)
   },
 
   inviteUser: function(context, user) {

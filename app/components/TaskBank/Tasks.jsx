@@ -54,11 +54,18 @@ var Tasks = React.createClass({
   },
 
   onSubmit: function(){
-
     var state = this.state.query
-    
     this.props.context.executeAction(actions.loadActivities, state)
 
+    // Zapisuje zapytanie w adresie url
+    var base = window.location.toString().replace(new RegExp('[?](.*)$'), '')
+    var attributes = Object.keys(state).filter(function(key) {
+      return state[key]
+    }).map(function(key) {
+      return key + '=' + state[key]
+    }).join('&')
+
+    history.replaceState({}, '', base +'?'+ attributes)
   },
 
   render: function () {
