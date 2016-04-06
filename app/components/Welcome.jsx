@@ -1,4 +1,5 @@
 var React = require('react')
+var NavLink = require('fluxible-router').NavLink
 var navigateAction = require('fluxible-router').navigateAction
 
 var Password = require('./Settings/Password.jsx')
@@ -74,7 +75,7 @@ var Welcome = React.createClass({
                 id="cb1"
                 name="cb1" value={false} />
               <label htmlFor="cb1">
-                Regulamin serwisu Góra Dobra
+                Regulamin serwisu Góra Dobra <NavLink href="/regulamin">(kliknij tutaj aby przeczytać)</NavLink>
               </label>
 
             </div>

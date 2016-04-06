@@ -9,6 +9,19 @@ var ActivityStore = require('../stores/Activity')
 var TimeService = require('../modules/time/TimeService.js')
 var actions = require('../actions')
 
+var ProfileDetails = function(props) {
+  return (
+    <p className="text--center">
+      <img src={props.profile_picture_url} className="profileMedium" /><br />
+      <span>
+        <NavLink href={"/wolontariusz/"+ props.id}>
+          {props.first_name} {props.last_name}
+        </NavLink>
+      </span>
+    </p>
+  )
+}
+
 var Activity = React.createClass({
 
   getInitialState: function () {
@@ -148,11 +161,11 @@ var Activity = React.createClass({
       )
     })
     
-    var startTime
+    var applicationTime
     if (typeof (this.state.activity.datetime) != 'undefined')  {
-      startTime = TimeService.showTime(activity.datetime) 
+      applicationTime = TimeService.showTime(activity.datetime)
     } else {
-      startTime = 'Nieokreślony'
+      applicationTime = 'Nieokreślony'
     }
     
     var is_archived = (activity.is_archived) ? 'Tak' : 'Nie'
@@ -192,8 +205,8 @@ var Activity = React.createClass({
       'ITALIC': ['<i>', '</i>'],
       'UNDERLINE': ['<u>', '</u>'],
       'CODE': ['<span style="font-family: monospace">', '</span>'],
-    }).map(function(block) {
-      return (<p dangerouslySetInnerHTML={{__html: block}} />)
+    }).map(function(block, i) {
+      return (<p key={'block_'+i} dangerouslySetInnerHTML={{__html: block}} />)
     })
 
     var updateForm
@@ -219,14 +232,14 @@ var Activity = React.createClass({
 
     var updates = []
     if(this.state.activity.updates) {
-      updates = this.state.activity.updates.map(function(update) {
+      updates = this.state.activity.updates.map(function(update, i) {
         var html = backdraft(update.raw, {
           'BOLD': ['<strong>', '</strong>'],
           'ITALIC': ['<i>', '</i>'],
           'UNDERLINE': ['<u>', '</u>'],
           'CODE': ['<span style="font-family: monospace">', '</span>'],
-        }).map(function(block) {
-          return (<p dangerouslySetInnerHTML={{__html: block}} />)
+        }).map(function(block, j) {
+          return (<p key={'update_'+i+'_'+j} dangerouslySetInnerHTML={{__html: block}} />)
         })
         return (
           <div className="activityUpdate">
@@ -268,21 +281,14 @@ var Activity = React.createClass({
 
             </div>
             <div ref={node => node && node.setAttribute('column', '5')}>
-              <p className="text--center">
-                <img src={activity.created_by.profile_picture_url} className="profileMedium" /><br />
-                <span>
-                  <NavLink href={"/wolontariusz/"+ activity.created_by.id}>
-                    {activity.created_by.first_name} {activity.created_by.last_name}
-                  </NavLink>
-                </span>
-              </p>
+              <ProfileDetails {...activity.created_by} />
               <b>Typ:</b> {actType}
               <br></br>
               <b>Kategorie:</b> {tagsList}
               <br></br>
               <b>Miejsce wydarzenia:</b> {activity.place}
               <br></br>
-              <b>Czas rozpoczęcia:</b> {startTime}
+              <b>Czas zakończenia zgłoszeń do zadania:</b> {applicationTime}
               <br></br>
               <b>Czas trwania:</b> {activity.duration}
               <br></br>
