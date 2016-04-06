@@ -1,22 +1,30 @@
 'use strict'
 
+var fromJS = require('immutable').fromJS
+
+var Plugins = require('draft-js-plugins-editor').default
+var createMentionsPlugin = require('draft-js-mention-plugin')
+
 var React = require('react')
 var Draft = require('draft-js')
+
+var AppStore = require('../stores/ApplicationStore')
 
 var INLINE_STYLES = [
     {label: 'Bold', style: 'BOLD'},
     {label: 'Italic', style: 'ITALIC'},
     {label: 'Underline', style: 'UNDERLINE'},
     {label: 'Monospace', style: 'CODE'},
-];
+]
 
 class StyleButton extends React.Component {
+
   constructor() {
-    super();
+    super()
     this.onToggle = (e) => {
       e.preventDefault();
       this.props.onToggle(this.props.style);
-    };
+    }
   }
 
   render() {
@@ -52,6 +60,14 @@ const InlineStyleControls = (props) => {
 
 var Editor = React.createClass({
 
+  getInitialState: function() {
+    const mentions = fromJS(this.props.context.getStore(AppStore).autocomplete)
+    var mentionsPlugin = createMentionsPlugin.default({mentions: mentions})
+    return {
+      plugins: [ mentionsPlugin ]
+    }
+  },
+
   toggleInlineStyle: function(inlineStyle) {
     this.props.onChange(
       Draft.RichUtils.toggleInlineStyle(
@@ -62,7 +78,7 @@ var Editor = React.createClass({
   },
 
   focus: function() {
-    this.refs.editor.focus()
+    //this.refs.editor.focus()
   },
 
   render: function() {
@@ -73,8 +89,9 @@ var Editor = React.createClass({
           onToggle={this.toggleInlineStyle} />
 
         <div onClick={this.focus} className="myEditor" style={this.props.style}>
-          <Draft.Editor
+          <Plugins
             ref="editor"
+            plugins={this.state.plugins}
             placeholder="Wpisz komentarz..."
             editorState={this.props.editorState}
             onChange={this.props.onChange} />

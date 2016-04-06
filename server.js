@@ -549,6 +549,25 @@ module.exports = function(server) {
       // Ustaw konfigurację integracji z Instagramem
       context.getActionContext().dispatch('INSTAGRAM_CONFIG',  process.env.INSTAGRAM_CLIENT_ID)
 
+      r.connect(config.rethinkdb, function(err, conn) {
+          r.table('Volunteers').filter({approved: true}).pluck(['first_name', 'last_name'])
+              .run(conn, function(err, cursor) {
+
+                  cursor.toArray(function(err, result) {
+                      context.getActionContext().dispatch('LOAD_AUTOCOMPLETE', result.map(function(user) {
+                          return {
+                              name: user.first_name +' '+ user.last_name,
+                              link: '',
+                              avatar: ''
+                          }
+                      }))
+                  })
+                      //name: 'Stanisław Wasiutyński',
+                      //link: 'https://twitter.com/mrussell247',
+                      //avatar: 'https://pbs.twimg.com/profile_images/517863945/mattsailing_400x400.jpg',
+          })
+      })
+
       // Google Analytics Measurement Protocol
       if(req.visitor) {
         req.visitor.pageview({

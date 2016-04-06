@@ -505,7 +505,10 @@ var ActivityAdministration = React.createClass({
           <b>Treść </b>
           <br/>
 
-          <Editor editorState={this.state.activity.description} onChange={this.onChange} />
+          <Editor
+            context={this.props.context}
+            editorState={this.state.activity.description}
+            onChange={this.onChange} />
 
           <br/>
 

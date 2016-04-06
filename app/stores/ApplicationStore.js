@@ -9,7 +9,8 @@ var ApplicationStore = createStore({
     'SAVE_FLASH_SUCCESS'   : 'saveSuccess',
     'SAVE_FLASH_FAILURE'   : 'saveFailure',
     'INSTAGRAM_CONFIG'     : 'setInstagram',
-    'ADMIN_CONSENT'        : 'setConsent'
+    'ADMIN_CONSENT'        : 'setConsent',
+    'LOAD_AUTOCOMPLETE'    : 'autocomplete'
   },
 
   initialize: function () {
@@ -53,6 +54,10 @@ var ApplicationStore = createStore({
     this.emitChange()
   },
 
+  autocomplete: function(data) {
+    this.autocomplete = data
+  },
+
   getState: function () {
     return {
       currentPageName: this.currentPageName,
@@ -62,7 +67,8 @@ var ApplicationStore = createStore({
       title: this.title,
       flashSuccess: this.flashSuccess,
       flashFailure: this.flashFailure,
-      instagram_client_id: this.instagram_client_id
+      instagram_client_id: this.instagram_client_id,
+      autocomplete: this.autocomplete
     }
   },
 
@@ -79,6 +85,7 @@ var ApplicationStore = createStore({
     this.flashSuccess = state.flashSuccess
     this.flashFailure = state.flashFailure
     this.instagram_client_id = state.instagram_client_id
+    this.autocomplete = state.autocomplete
   }
 })
 
