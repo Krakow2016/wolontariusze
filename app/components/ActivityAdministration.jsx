@@ -96,9 +96,17 @@ var ActivityAdministration = React.createClass({
   },
 
   handleDatetimeChange: function (m) {
-    this.setState(update(this.state, {
-      activity: {datetime: {$set: m}}
-    }))
+    if (typeof m  == 'string' && !moment(m, 'YYYY/M/D HH:mm', true).isValid()) {
+      this.setState(update(this.state, {
+        invalidDatetime: {$set: 'Format daty niepoprawny'},
+        activity: {datetime: {$set: m}}
+      }))
+    } else {
+      this.setState(update(this.state, {
+        invalidDatetime: {$set: ''},
+        activity: {datetime: {$set: m}}
+      }))
+    }
   },
 
   handleAddDatetimeChange: function(evt) {
@@ -349,16 +357,23 @@ var ActivityAdministration = React.createClass({
 
   render: function() {
     var startTime
-    if (typeof (this.state.activity.datetime) != 'undefined')  {
-      var startEventDate = new Date(this.state.activity.datetime)
+    if (typeof (this.state.activity.datetime) != 'undefined') {
       var startEventDateHint
       if (this.props.taskMode) {
         startEventDateHint = <span> Dla zadania data powinna być w przyszłości </span>
       } else {
         startEventDateHint = <span> Dla aktywności data powinna być w przeszłości </span>
       }
-
+      
+      var startEventDate
+      if(!this.state.invalidDatetime)  {
+        startEventDate = new Date(this.state.activity.datetime)
+      } else {
+        startEventDate = this.state.activity.datetime
+      }
+      
       startTime = <div className="pure-u-1 pure-u-md-2-3">
+                    {this.state.invalidDatetime}
                     <DateTime open={false}
                       dateFormat={'YYYY/M/D'}
                       timeFormat={'HH:mm'}
@@ -368,9 +383,6 @@ var ActivityAdministration = React.createClass({
                     {startEventDateHint}
                 </div>
     }
-
-
-
 
     var updateButton = []
     if (this.props.creationMode == false) {
