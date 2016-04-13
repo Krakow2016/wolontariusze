@@ -184,18 +184,10 @@ module.exports = function(server) {
 
     // Końcówka zwrotna dla API instagrama po udanym uwierzytelnieniu
     server.get('/instagram', function(req, res){
-      if(req.user) {
-        if(req.query.code) {
+      if(req.query.username) {
           request({
-            method: 'POST',
-            url: 'https://api.instagram.com/oauth/access_token',
-            formData: {
-              client_id: process.env.INSTAGRAM_CLIENT_ID,
-              client_secret: process.env.INSTAGRAM_SECRET,
-              code: req.query.code,
-              grant_type: 'authorization_code',
-              redirect_uri: 'https://wolontariusze.krakow2016.com/instagram'
-            }
+            method: 'GET',
+            url: 'https://api.instagram.com/v1/users/search?q='+ req.query.username +'&access_token=' + process.env.INSTAGRAM_TOKEN,
           }, function(err, resp, body) {
 
             if (err) {
@@ -206,39 +198,85 @@ module.exports = function(server) {
 
             if (resp.statusCode !== 200) { return res.send(500) }
 
-            var json = JSON.parse(body)
+            var json = JSON.parse(body).data[0];
             Volunteers.update(req, 'Volunteers', {id: req.user.id}, {
               instagram: {
-                id: json.user.id,
-                access_token: json.access_token,
-                username: json.user.username
+                id: json.id,
+                username: json.username
               }
             }, {}, function(err, data){
               if(err) { return res.send(500) }
-              req.flash('success', 'Integracja z Instagramem zakończona pomyślnie.')
+              req.flash('success', 'Integracja z Instagramem zakończona pomyślnie.');
               res.redirect('/wolontariusz/'+ req.user.id)
             })
           })
-        }
       } else {
         res.send(403)
       }
     })
 
+
+    // server.get('/instagram', function(req, res){
+    //   if(req.user) {
+    //     if(req.query.code) {
+    //       request({
+    //         method: 'POST',
+    //         url: 'https://api.instagram.com/oauth/access_token',
+    //         formData: {
+    //           client_id: process.env.INSTAGRAM_CLIENT_ID,
+    //           client_secret: process.env.INSTAGRAM_SECRET,
+    //           code: req.query.code,
+    //           grant_type: 'authorization_code',
+    //           redirect_uri: 'https://wolontariusze.krakow2016.com/instagram'
+    //         }
+    //       }, function(err, resp, body) {
+    //
+    //         if (err) {
+    //           req.flash('error', 'Integracja z Instagramem nie powiodła się.')
+    //           res.redirect('/wolontariusz/'+ req.user.id)
+    //           return
+    //         }
+    //
+    //         if (resp.statusCode !== 200) { return res.send(500) }
+    //
+    //         var json = JSON.parse(body)
+    //         Volunteers.update(req, 'Volunteers', {id: req.user.id}, {
+    //           instagram: {
+    //             id: json.user.id,
+    //             access_token: json.access_token,
+    //             username: json.user.username
+    //           }
+    //         }, {}, function(err, data){
+    //           if(err) { return res.send(500) }
+    //           req.flash('success', 'Integracja z Instagramem zakończona pomyślnie.')
+    //           res.redirect('/wolontariusz/'+ req.user.id)
+    //         })
+    //       })
+    //     }
+    //   } else {
+    //     res.send(403)
+    //   }
+    // })
+
     // Pobiera zdjęcia dla danego usera
     server.get('/instagram/:id', function(req, res){
       var id = req.params.id
+
+      var tags = ['wyd2016', 'sdm2016', 'jmj2016', 'gmg2016', 'сдм2016', 'wjt2016', 'вдм2016'];
+
       Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function (err, user) {
         if(err) { return res.send(500) }
         var instagram = user.instagram
         if(!instagram) { return res.send(404) }
 
-        var token = instagram.access_token
         request({
-          url: 'https://api.instagram.com/v1/users/'+ instagram.id +'/media/recent/',
-          qs: { access_token: token },
+          url: 'https://api.instagram.com/v1/users/'+ instagram.id +'/media/recent/?access_token='+ process.env.INSTAGRAM_TOKEN,
           json: true
         }, function(err, req, resp) {
+          var data = JSON.parse(resp);
+          for(var img in data.data){
+
+          }
           res.send(resp)
         })
       })
