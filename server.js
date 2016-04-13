@@ -273,11 +273,18 @@ module.exports = function(server) {
           url: 'https://api.instagram.com/v1/users/'+ instagram.id +'/media/recent/?access_token='+ process.env.INSTAGRAM_TOKEN,
           json: true
         }, function(err, req, resp) {
-          var data = JSON.parse(resp);
-          for(var img in data.data){
+          var data = resp;
+          var resp_tags = {data: []};
 
+          for(var img in data.data){
+            for(var tag in data.data[img].tags){
+              if(tags.indexOf(data.data[img].tags[tag]) != -1){
+                resp_tags.data.push(data.data[img]);
+                break;
+              }
+            }
           }
-          res.send(resp)
+          res.send(resp_tags);
         })
       })
     })
