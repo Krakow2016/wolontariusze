@@ -80,22 +80,18 @@ var Tasks = React.createClass({
 
     // TABS
     var tabs = [
-      <NavLink href={"/zadania" } className="profile-ribon-cell">
-        <b>Bank pracy</b>
-      </NavLink>
+      <li>
+        <NavLink href={"/zadania"} className="profile-ribon-cell">Bank pracy</NavLink>
+      </li>
     ]
 
     if(user) {
       tabs.push(
-        <NavLink href={'/zadania?volunteer='+user.id} className="profile-ribon-cell">
-          <b>Biorę udział w</b>
-        </NavLink>
+        <li><NavLink href={"/zadania?volunteer="+user.id} className="profile-ribon-cell">Biorę udział w</NavLink></li>
       )
       if(user.is_admin) {
         tabs.push(
-          <NavLink href={'/zadania?created_by='+user.id} className="profile-ribon-cell">
-            <b>Moje zadania</b>
-          </NavLink>
+          <li><NavLink href={"/zadania?created_by="+user.id} className="profile-ribon-cell">Moje zadania</NavLink></li>
         )
       }
     }
@@ -105,54 +101,43 @@ var Tasks = React.createClass({
       var task = source.doc
       if(!task) { return }
       var priorityClass = task.is_urgent ? 'tasks-priority-urgent-tr' : 'tasks-priority-normal-tr'
+      var tresc = [(task.description.length > 200) ? task.description.substring(0,200) : task.description]
+      if (task.description.length > 200){
+        tresc.push(<a href={'/zadania/'+task.id}> ...więcej</a>)
+      }
       return (
-        <tr key={task.id} className={priorityClass}>
-          <td className="tasks-name-td"><NavLink href={'/zadania/'+task.id}>{task.name}</NavLink></td>
-          <td className="tasks-categories-td"><span>{ (task.tags || []).join(', ') }</span></td>
-          <td className="tasks-volunteerNumber-td"><span>{ (task.volunteers || []).length }</span></td>
-          <td className="tasks-volunteerLimit-td"><span>{task.limit != 0 ? task.limit : 'Brak'}</span></td>
-          <td className="tasks-creationDate-td"><span>{TimeService.showTime(task.created_at)}</span></td>
-          <th className="tasks-expirationDate-td"><span>{(typeof (task.datetime) != 'undefined') ? TimeService.showTime(task.datetime) : 'Brak'}</span></th>
-        </tr>
+        <div className="row task">
+          <div className="col col1 task-color">
+            <img src="/img/flaga.png"></img>
+          </div>
+
+          <div className="col col11 task-content">
+            <h1><NavLink href={'/zadania/'+task.id}>{task.name}</NavLink></h1>
+            <span className="task-meta">{}Autor</span>
+            <span className="task-meta">Ilość osób: {(source.volunteers || []).length }/{ task.limit != 0 ? task.limit : 'Brak'}</span>
+            <span className="task-meta">{((task.tags || []).length != 0) ? (task.tags || []).join(', ') : 'Brak kategorii' }</span>
+            <span className="task-meta">{(typeof (task.datetime) != 'undefined') ? TimeService.showTime(task.datetime) : 'Brak'}</span>
+            <p>
+              {tresc}
+            </p>
+            <div className="task-volunteers">
+              Janusz
+            </div>
+          </div>
+        </div>
       )
     })
 
     if (user) {
       return (
-        <div className="taskBank">
-          <div className="row">
-            <div className="col col12 profile-ribon">
+        <div className="task-bank">
+          <nav id="task-nav">
+            <ul id="nav-list">
               {tabs}
-            </div>
-          </div>
-
-          <TaskFilters
-              handleChange={this.handleChange}
-              saveTag={this.saveTag}
-              removeTag={this.removeTag}
-              onSubmit={this.onSubmit}
-              query={this.state.query} />
-
-          <table className="tasks-table">
-            <tbody>
-              <tr>
-                <th className="tasks-th" onClick={this.sortByName}>Tytuł</th>
-                <th className="tasks-th" onClick={this.sortByCategories}>Kategorie</th>
-                <th className="tasks-th" onClick={this.sortByVolunteerNumber}>Liczba osób</th>
-                <th className="tasks-th" onClick={this.sortByVolunteerLimit}>Limit osób</th>
-                <th className="tasks-th" onClick={this.sortByCreationDate}>Czas utworzenia</th>
-                <th className="tasks-th" onClick={this.sortByExpirationDate}>Czas wygaśnięcia</th>
-                <th className="tasks-th" >Tytuł</th>
-                <th className="tasks-th" >Kategorie</th>
-                <th className="tasks-th" >Liczba osób</th>
-                <th className="tasks-th" >Limit osób</th>
-                <th className="tasks-th" >Czas utworzenia</th>
-                <th className="tasks-th" >Czas wygaśnięcia</th>
-              </tr>
-              {tasks}
-            </tbody>
-          </table>
-
+            </ul>
+          </nav>
+          <ActivitiesSearchForm query={this.state.query} handleChange={this.handleChange} submit={this.onSubmit} />
+            {tasks}
           <NavLink href="/zadania/nowe">Dodaj zadanie</NavLink>
         </div>
       )
@@ -167,6 +152,12 @@ var Tasks = React.createClass({
   }
 })
 
+          //<TaskFilters
+              //handleChange={this.handleChange}
+              //saveTag={this.saveTag}
+              //removeTag={this.removeTag}
+              //onSubmit={this.onSubmit}
+              //query={this.state.query} />
 
 /* Module.exports instead of normal dom mounting */
 module.exports = Tasks
