@@ -1220,19 +1220,7 @@ article ul#nav-list a{
 footer{
   width: 100%;
   background-color: #001A2D;
-  line-height: 5rem;
-}
-footer #footer-menu{
-  list-style: none;
+  padding: 40px;
   text-align: center;
-  margin: 0;
-  padding: 0;
-  font-size: 1.5rem;
-}
-footer #footer-menu li{
-  display: inline-block;
-  margin-left: 2rem;
-}
-footer #footer-menu li:first-child{
-  margin-left: 0;
+
 }

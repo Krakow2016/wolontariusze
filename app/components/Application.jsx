@@ -138,7 +138,7 @@ var Application = React.createClass({
 
     //render content
     return (
-      <div id="">
+      <div>
         <header>
           <div className="head-photo">
             <span id="head-txt">You are the saltof the earth...You arethe light of the world. Mt 5:13,14</span>
@@ -148,21 +148,18 @@ var Application = React.createClass({
             <Authentication user_id={this.user_id()} user_name={this.user_name()} search_status={searchForm || false} />
             {searchForm}
           </nav>
-          <section className="inspiration">
-            <h2 className="text--center">Do not be afraid</h2>
-            <p className="text--center">St John Paul II</p>
-          </section>
         </header>
 
         {article}
         {infoMessage}
         {errorMessage}
+
         <footer>
-          <ul id="footer-menu">
-            <li>GÓRA DOBRA</li>
-            <li>JOIN US</li>
-            <li>CONTACT</li>
-          </ul>
+          <p>
+            Strona została zbudowana przez wolontariuszy ŚDM w Krakowie w 2016r.
+            <br />
+            <a href="mailto:goradobra@krakow2016.com" target="_balnk">Kontakt</a> | <NavLink href="/regulamin">Regulamin</NavLink> | <a href="https://github.com/Krakow2016/wolontariusze">Dla programistów</a>
+          </p>
         </footer>
       </div>
     )

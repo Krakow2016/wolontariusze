@@ -92,6 +92,10 @@ var App = React.createClass({
 
     return (
       <div>
+        <section className="inspiration">
+          <h2 className="text--center">Do not be afraid</h2>
+          <p className="text--center">St John Paul II</p>
+        </section>
         <img src="/img/homepage/graph.png" style={{width: "100%"}} alt="" />
         <div className="graph-filter">
           <div className="row">
@@ -215,7 +219,7 @@ var App = React.createClass({
         <div className="insta">
           <div className="insta-header">
             <img src="/img/homepage/aparacik.svg" alt="" />
-            <span>#GÓRADOBRA</span>
+            <span>#Krakow2016</span>
           </div>
           <div className="insta-content">
             <img src="http://lorempixel.com/292/292" alt="" /><img src="http://lorempixel.com/292/292/sports" alt="" /><img src="http://lorempixel.com/292/292/city" alt="" /><img src="http://lorempixel.com/292/292/food" alt="" /><img src="http://lorempixel.com/292/292/cats" alt="" /><img src="http://lorempixel.com/292/292/people" alt="" /><img src="http://lorempixel.com/292/292/nature" alt="" /><img src="http://lorempixel.com/292/292/technics" alt="" />
