@@ -1,3 +1,7 @@
+:root {
+  font-family: 'Open Sans', Arial
+}
+
 a, a:focus, a:hover, a:active,
 button, button:focus, button:hover, button:active, button:checked, button:visited,
 input, input:focus, input:hover, input:active{
@@ -375,7 +379,6 @@ label:hover:before {
   background-color: rgba(113, 191, 223, 0.22);
   padding: 10px;
   font-size: 1rem;
-  font-family: "Gloriola-Regular";
 }
 
 @media only screen and (max-width: 840px) {
@@ -592,7 +595,6 @@ textarea.settings {
   color: white;
   text-align: center;
   font-size: 1.5rem;
-  font-family: 'GloriolaMedium';
 }
 
 .tasks-filters-filterType {
@@ -858,7 +860,6 @@ body{
   height: 100%;
   color: white;
   background-color: #416A7D;
-	font-family: "GloriolaMedium";
 }
 
 article.main-content{
@@ -894,7 +895,6 @@ article.main-content a{
   width: 100%;
 }
 #head-txt{
-  font-family: "Gloriola-Italic2";
   font-size: 13pt;
   position: absolute;
   top: 20px;
@@ -924,7 +924,6 @@ ul#nav-list li{
   display: inline-block;
   padding: 0 1.5rem;
   text-transform: uppercase;
-  font-family: "GloriolaMedium";
   font-size: 17px;
   border-left: 0.1rem solid white;
 }
@@ -981,11 +980,7 @@ section:last-of-type{
 .inspiration{
   padding: 3.5rem;
 }
-.inspiration p{
-  font-family: 'GloriolaMedium';
-}
 .inspiration *{
-  font-family: 'Gloriola-Bold';
   color: white;
 }
 .inspiration *:first-child{
@@ -1009,12 +1004,10 @@ section:last-of-type{
 .graph-filter p{
   margin-bottom: -6px;
   font-size: 10pt;
-  font-family: 'GloriolaMedium';
 }
 input.graph-filter-input{
   border-radius: 50px;
   height: 1rem;
-  font-family: 'GloriolaMedium';
 }
 .graph-filter-input-container{
   position: relative;
@@ -1030,7 +1023,6 @@ input.graph-filter-input{
 .dashboard-container{
   padding: 3rem 10rem;
   text-align: center;
-  font-family: 'GloriolaMedium';
   font-size: 18px;
 }
 .dashboard-container img{
@@ -1055,17 +1047,14 @@ input.graph-filter-input{
 
 .tiles-container h1{
   color: #FFFFFF;
-  font-family: 'GloriolaMedium';
   font-weight: lighter;
 }
 
 .tiles-container p{
-  font-family: 'GloriolaMedium';
   font-size: 1.2rem;
 }
 
 .tiles-container a{
-  font-family: 'GloriolaMedium';
   color: #A4C8E6;
   font-weight: bold;
   font-size: 1.3rem;
@@ -1129,20 +1118,17 @@ nav#task-nav{
 
 
 .task h1{
-  /*font-family: 'GloriolaMedium';*/
   font-size: 2rem;
   color: #006492;
 	margin-bottom: 0.2rem;
 }
 
 .task p{
-  /*font-family: 'Gloriola-Regular';*/
 	font-size: 1.5rem;
 	min-height: 6rem;
 }
 
 .task-meta{
-  /*font-family: 'Gloriola-Italic';*/
 	font-style: italic;
 	display: inline;
   color: #416A7D;
@@ -1242,7 +1228,6 @@ footer #footer-menu{
   margin: 0;
   padding: 0;
   font-size: 1.5rem;
-  font-family: 'GloriolaMedium';
 }
 footer #footer-menu li{
   display: inline-block;
