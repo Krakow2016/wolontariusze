@@ -155,17 +155,17 @@ var App = React.createClass({
                 <img src="/img/homepage/bialy_chlopek.svg" alt="" />
                 <img src="/img/homepage/biala_babka.svg" alt="" />
                 <p>WOLONTARIUSZE</p>
-                <p className="dashboard-hours">22000</p>
+                <p className="dashboard-hours">?</p>
               </div>
               <div className="col col4">
                 <img src="/img/homepage/biale_buty.svg" alt="" />
                 <p>WYKONANE ZADANIA</p>
-                <p className="dashboard-hours">3400</p>
+                <p className="dashboard-hours">?</p>
               </div>
               <div className="col col4">
                 <img src="/img/homepage/bialy_zegar.svg" alt="" />
                 <p>POŚWIĘCONY CZAS</p>
-                <p className="dashboard-hours">340000</p>
+                <p className="dashboard-hours">?</p>
               </div>
             </div>
           </div>
