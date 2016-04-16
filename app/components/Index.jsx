@@ -92,10 +92,7 @@ var App = React.createClass({
 
     return (
       <div>
-        <section className="inspiration">
-          <h2 className="text--center">Do not be afraid</h2>
-          <p className="text--center">St John Paul II</p>
-        </section>
+        <img src="/img/homepage/inspiration.svg" id="inspiration-img" />
         <img src="/img/homepage/graph.png" style={{width: "100%"}} alt="" />
         <div className="graph-filter">
           <div className="row">
@@ -103,16 +100,16 @@ var App = React.createClass({
               <div className="row">
                 <div className="col col6">
                   <img src="/img/homepage/VOLUNTEERS.svg" alt="" />
-                  <p>VOLUNTEERS</p>
+                  <p>WOLONTARIUSZE</p>
                 </div>
                 <div className="col col6 graph-filter-input-container">
-                  <input type="text" className="graph-filter-input" placeholder="NAME" />
-                  <input type="text" className="graph-filter-input" placeholder="ID NUMBER" />
+                  <input type="text" className="graph-filter-input" placeholder="NAZWA" />
+                  <input type="text" className="graph-filter-input" placeholder="NUMER ID" />
                 </div>
               </div>
             </div>
-            <div className="col col4"><img src="/img/homepage/HOUR.svg" alt="" /><p>HOUR</p></div>
-            <div className="col col4"><img src="/img/homepage/LOCATION.svg" alt="" /><p>LOCATION</p></div>
+            <div className="col col4"><img src="/img/homepage/HOUR.svg" alt="" /><p>GODZINA</p></div>
+            <div className="col col4"><img src="/img/homepage/LOCATION.svg" alt="" /><p>LOKALIZACJA</p></div>
           </div>
         </div>
 
@@ -122,17 +119,17 @@ var App = React.createClass({
               <div className="col col4">
                 <img src="/img/homepage/bialy_chlopek.svg" alt="" />
                 <img src="/img/homepage/biala_babka.svg" alt="" />
-                <p>VOLUNTEERS</p>
+                <p>WOLONTARIUSZE</p>
                 <p className="dashboard-hours">22000</p>
               </div>
               <div className="col col4">
                 <img src="/img/homepage/biale_buty.svg" alt="" />
-                <p>JOBS COMPLETED</p>
+                <p>WYKONANE ZADANIA</p>
                 <p className="dashboard-hours">3400</p>
               </div>
               <div className="col col4">
                 <img src="/img/homepage/bialy_zegar.svg" alt="" />
-                <p>VOLUNTEER HOURS</p>
+                <p>POŚWIĘCONY CZAS</p>
                 <p className="dashboard-hours">340000</p>
               </div>
             </div>
@@ -142,36 +139,31 @@ var App = React.createClass({
         <section className="tiles-container why-and-what">
           <div className="row">
             <div className="col col6">
-              <h1 className="text--center">WHY GÓRA DOBRA?</h1>
+              <h1 className="text--center">CZEMU GÓRA DOBRA?</h1>
               <div className="row">
-                <div className="col col6"><img src="http://lorempixel.com/256/215" alt="" /></div>
+                <div className="col col6"><img src="/img/homepage/why.jpg" alt="" /></div>
                 <div className="col col6">
                   <p>
-                    World Youth Day Krakow 2016
-                    is an event of huge scale, for
-                    which will arrive more than 2
-                    million pilgrims and approx
-                    25,000 volunteers.
+                  Na pewno zdarzyło Ci się kiedyś patrzeć na góry. 
+                  Nieważne czy lubisz zdobywać szczyty czy nie, spojrzałeś w górę i ogarnął Cię ich ogrom. 
+                  Możesz to sobie w każdej chwili wyobrazić...
                   </p>
-                  <a href="#">READ MORE...</a>
+                  <a href="/czemu-gora-dobra">CZYTAJ WIĘCEJ</a>
 
                 </div>
               </div>
             </div>
 
             <div className="col col6">
-              <h1 className="text--center">WHAT IS GÓRA DOBRA?</h1>
+              <h1 className="text--center">CZYM JEST GÓRA DOBRA?</h1>
               <div className="row">
-                <div className="col col6"><img src="http://lorempixel.com/256/215" alt="" /></div>
+                <div className="col col6"><img src="/img/homepage/what.jpg" alt="" /></div>
                 <div className="col col6">
                   <p>
-                    World Youth Day Krakow 2016
-                    is an event of huge scale, for
-                    which will arrive more than 2
-                    million pilgrims and approx
-                    25,000 volunteers.
+                   „Góra Dobra to portal dla Wolontariuszy Światowych Dni Młodzieży Kraków 2016 w całości przygotowywany przez nich. 
+                   Góra Dobra to też wspólnota młodych i zaangażowanych osób pełnych pasji...
                   </p>
-                  <a href="#">READ MORE...</a>
+                  <a href="/czym-jest-gora-dobra">CZYTAJ WIĘCEJ</a>
                 </div>
               </div>
             </div>
@@ -181,35 +173,29 @@ var App = React.createClass({
         <section className="tiles-container how-and-who">
           <div className="row">
             <div className="col col6">
-              <h1 className="text--center">HOW IT WORKS?</h1>
+              <h1 className="text--center">JAK TO DZIAŁA?</h1>
               <div className="row">
-                <div className="col col6"><img src="http://lorempixel.com/256/215" alt="" /></div>
+                <div className="col col6"><img src="/img/homepage/how.jpg" alt="" /></div>
                 <div className="col col6">
-                  <p>
-                    World Youth Day Krakow 2016
-                    is an event of huge scale, for
-                    which will arrive more than 2
-                    million pilgrims and approx
-                    25,000 volunteers.
+                  <p>Indywidualne profile dają możliwość udziału w wydarzeniach, umieszczania wpisów czy  dzielenia się efektami swojej pracy. Połączenie z Instagramem pomoże w uwiecznianiu najwspanialszych momentów...
                   </p>
-                  <a href="#">READ MORE...</a>
+                  <a href="/jak-dziala-gora-dobra">CZYTAJ WIĘCEJ</a>
                 </div>
               </div>
             </div>
 
             <div className="col col6">
-              <h1 className="text--center">WHO IS INVOLVED?</h1>
+              <h1 className="text--center">KTO TWORZY GD?</h1>
               <div className="row">
-                <div className="col col6"><img src="http://lorempixel.com/256/215" alt="" /></div>
+                <div className="col col6"><img src="/img/homepage/who.jpg" alt="" /></div>
                 <div className="col col6">
                   <p>
-                    World Youth Day Krakow 2016
-                    is an event of huge scale, for
-                    which will arrive more than 2
-                    million pilgrims and approx
-                    25,000 volunteers.
+                    Górę Dobra tworzą:<br/>
+                    Wolontariusze ŚDM Kraków 2016<br/>
+                    Koordynatorzy wolontariatu<br/>
+                    Potrzebujemy osób takich jak Ty- chętnych do współpracy ...
                   </p>
-                  <a href="#">READ MORE...</a>
+                  <a href="/kto-jest-zaangazowany">CZYTAJ WIĘCEJ</a>
                 </div>
               </div>
             </div>
