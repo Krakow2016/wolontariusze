@@ -182,32 +182,31 @@ module.exports = function(server) {
       res.redirect('/')
     })
 
-    // Końcówka zwrotna dla API instagrama po udanym uwierzytelnieniu
-    server.get('/instagram', function(req, res){
-      if(req.query.username) {
+    // Zamienia nazwę użytkownika na id i zapisuje w bazie
+    server.post('/instagram', jsonParser, function(req, res){
+      if(req.body.username) {
           request({
             method: 'GET',
-            url: 'https://api.instagram.com/v1/users/search?q='+ req.query.username +'&access_token=' + process.env.INSTAGRAM_TOKEN,
+            url: 'https://api.instagram.com/v1/users/search?q='+ req.body.username +'&access_token=' + process.env.INSTAGRAM_TOKEN,
           }, function(err, resp, body) {
 
-            if (err) {
-              req.flash('error', 'Integracja z Instagramem nie powiodła się.')
-              res.redirect('/wolontariusz/'+ req.user.id)
-              return
+            if (err || resp.statusCode !== 200) {
+              return res.status(500).send({'status': 'error'})
             }
 
-            if (resp.statusCode !== 200) { return res.send(500) }
-
-            var json = JSON.parse(body).data[0];
-            Volunteers.update(req, 'Volunteers', {id: req.user.id}, {
+            var json = JSON.parse(body).data[0]
+            var instagram = {
               instagram: {
                 id: json.id,
                 username: json.username
               }
-            }, {}, function(err, data){
-              if(err) { return res.send(500) }
-              req.flash('success', 'Integracja z Instagramem zakończona pomyślnie.');
-              res.redirect('/wolontariusz/'+ req.user.id)
+            }
+            Volunteers.update(req, 'Volunteers', {id: req.user.id}, instagram, {}, function(err, data){
+              if(err) { return res.status(500) }
+              return res.send({
+                'status': 'ok',
+                'result': instagram.instagram
+              })
             })
           })
       } else {
@@ -215,54 +214,11 @@ module.exports = function(server) {
       }
     })
 
-
-    // server.get('/instagram', function(req, res){
-    //   if(req.user) {
-    //     if(req.query.code) {
-    //       request({
-    //         method: 'POST',
-    //         url: 'https://api.instagram.com/oauth/access_token',
-    //         formData: {
-    //           client_id: process.env.INSTAGRAM_CLIENT_ID,
-    //           client_secret: process.env.INSTAGRAM_SECRET,
-    //           code: req.query.code,
-    //           grant_type: 'authorization_code',
-    //           redirect_uri: 'https://wolontariusze.krakow2016.com/instagram'
-    //         }
-    //       }, function(err, resp, body) {
-    //
-    //         if (err) {
-    //           req.flash('error', 'Integracja z Instagramem nie powiodła się.')
-    //           res.redirect('/wolontariusz/'+ req.user.id)
-    //           return
-    //         }
-    //
-    //         if (resp.statusCode !== 200) { return res.send(500) }
-    //
-    //         var json = JSON.parse(body)
-    //         Volunteers.update(req, 'Volunteers', {id: req.user.id}, {
-    //           instagram: {
-    //             id: json.user.id,
-    //             access_token: json.access_token,
-    //             username: json.user.username
-    //           }
-    //         }, {}, function(err, data){
-    //           if(err) { return res.send(500) }
-    //           req.flash('success', 'Integracja z Instagramem zakończona pomyślnie.')
-    //           res.redirect('/wolontariusz/'+ req.user.id)
-    //         })
-    //       })
-    //     }
-    //   } else {
-    //     res.send(403)
-    //   }
-    // })
-
     // Pobiera zdjęcia dla danego usera
     server.get('/instagram/:id', function(req, res){
       var id = req.params.id
 
-      var tags = ['wyd2016', 'sdm2016', 'jmj2016', 'gmg2016', 'сдм2016', 'wjt2016', 'вдм2016'];
+      var tags = ['krakow2016', 'wyd2016', 'sdm2016', 'jmj2016', 'gmg2016', 'сдм2016', 'wjt2016', 'вдм2016']
 
       Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function (err, user) {
         if(err) { return res.send(500) }
@@ -273,18 +229,18 @@ module.exports = function(server) {
           url: 'https://api.instagram.com/v1/users/'+ instagram.id +'/media/recent/?access_token='+ process.env.INSTAGRAM_TOKEN,
           json: true
         }, function(err, req, resp) {
-          var data = resp;
-          var resp_tags = {data: []};
+          var data = resp
+          var resp_tags = {data: []}
 
           for(var img in data.data){
             for(var tag in data.data[img].tags){
               if(tags.indexOf(data.data[img].tags[tag]) != -1){
-                resp_tags.data.push(data.data[img]);
-                break;
+                resp_tags.data.push(data.data[img])
+                break
               }
             }
           }
-          res.send(resp_tags);
+          res.send(resp_tags)
         })
       })
     })
@@ -601,9 +557,6 @@ module.exports = function(server) {
       } else if(failure) { // Błąd
         context.getActionContext().dispatch('SAVE_FLASH_FAILURE', failure)
       }
-
-      // Ustaw konfigurację integracji z Instagramem
-      context.getActionContext().dispatch('INSTAGRAM_CONFIG',  process.env.INSTAGRAM_CLIENT_ID)
 
       // Google Analytics Measurement Protocol
       if(req.visitor) {
