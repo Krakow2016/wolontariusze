@@ -176,12 +176,12 @@ var Activity = React.createClass({
 
     //acceptButton
     if (!has_joined && (volunteers.length < activity.limit || activity.limit==0)) {
-      buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" key="join" />)
+      buttons.push(<input type="button" className="activity-help" onClick={this.onAcceptButtonClick} value="Zgłaszam się" key="join" />)
     }
 
     //canceButton
     if (has_joined) {
-      buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" key="leave" />)
+      buttons.push(<input type="button" className="activity-help" onClick={this.onCancelButtonClick} value="Wypisz mnie" key="leave" />)
     }
 
     var volonteersLimit = (activity.limit == 0) ? 'Brak' : activity.limit
@@ -253,9 +253,9 @@ var Activity = React.createClass({
     //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>
     //<b>Ostatnia edycja:</b> {TimeService.showTime(activity.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.editor.id}>{activity.editor.name}</a></span>
     return (
-        <div ref={node => node && node.setAttribute('container', '')}>
-          <div ref={node => node && node.setAttribute('row', '')}>
-            <div ref={node => node && node.setAttribute('column', '7')}>
+        <div className="container">
+          <div className="row">
+            <div className="col col7">
 
               {editLink}
 
@@ -267,7 +267,7 @@ var Activity = React.createClass({
               {updateForm}
 
             </div>
-            <div ref={node => node && node.setAttribute('column', '5')}>
+            <div className="col col5">
               <p className="text--center">
                 <img src={activity.created_by.profile_picture_url} className="profileMedium" /><br />
                 <span>

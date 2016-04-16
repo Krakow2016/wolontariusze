@@ -1,5 +1,5 @@
 :root {
-  font-family: 'Open Sans', Arial
+  	font-family: 'Open Sans', Arial
 }
 
 a, a:focus, a:hover, a:active,
@@ -1035,6 +1035,15 @@ input.graph-filter-input{
   margin-top: 5px;
 }
 
+/*------VOLUNTEER-DASHBOARD------*/
+
+.questions > h1{
+	font-size: 2rem;
+}
+.questions > p{
+	font-size: 1.5rem;
+}
+
 /*------HOW-AND-WHO------*/
 
 .tiles-container{
@@ -1095,11 +1104,16 @@ input.graph-filter-input{
 .insta-content img{
   margin: 0;
   padding: 0;
-  height: 271px;
-  width: 271px;
+  width: 293px;
 }
 .insta{
   margin-bottom: 4rem;
+}
+
+/*---------ACTIVITY--------*/
+
+.activity-help{
+	margin: 5px 0 5px 0;
 }
 
 /*----------------FOOTER----------------*/
