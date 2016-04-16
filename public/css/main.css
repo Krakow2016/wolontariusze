@@ -1,5 +1,5 @@
 :root {
-  font-family: 'Open Sans', Arial
+  	font-family: 'Open Sans', Arial
 }
 
 a, a:focus, a:hover, a:active,
@@ -988,6 +988,10 @@ section:last-of-type{
   margin-bottom: 5px;
   font-size: 3.5rem;
 }
+#inspiration-img{
+	border-bottom: 12px solid white;
+	width: 100%;
+}
 
 /*--------GRAPH--------*/
 
@@ -1044,7 +1048,6 @@ input.graph-filter-input{
 .questions > p{
 	font-size: 1.5rem;
 }
-
 
 /*------HOW-AND-WHO------*/
 
@@ -1195,10 +1198,6 @@ article ul#nav-list a{
 	color: white;
 }
 
-
-
-
-
 /*------INSTA------*/
 
 .insta-header{
@@ -1233,6 +1232,20 @@ article ul#nav-list a{
 	margin: 5px 0 5px 0;
 }
 
+/*--------TEXTS--------*/
+
+.content-texts-container{
+	margin: 0 -1rem;
+}
+.content-texts-container > img{
+	width: 100%;
+}
+.content-texts p{
+	font-size: 1.5rem;
+}
+.content-texts{
+	padding: 1rem 1rem 3rem 1rem;
+}
 
 /*----------------FOOTER----------------*/
 

@@ -26,7 +26,7 @@ var Shell = React.createClass({
   render: function() {
     return (
       <VolunteerShell context={this.props.context} profile={this.state}>
-        <div className="section group">
+        <div className="section group questions">
             <h1>Kim jestem?</h1>
             <p>{this.state.who_question}</p>
             <h1>Co chciałbym robić w życiu najbardziej?</h1>

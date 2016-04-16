@@ -138,22 +138,21 @@ var Application = React.createClass({
 
     //render content
     return (
-      <div>
+      <div id="">
         <header>
           <div className="head-photo">
-            <span id="head-txt">You are the saltof the earth...You arethe light of the world. Mt 5:13,14</span>
             <NavLink href="/"><img src="/img/homepage/1.svg" id="head-img" alt="" draggable="false" /></NavLink>
           </div>
           <nav id="head-nav" className="row">
             <Authentication user_id={this.user_id()} user_name={this.user_name()} search_status={searchForm || false} />
             {searchForm}
           </nav>
+          
         </header>
 
         {article}
         {infoMessage}
         {errorMessage}
-
         <footer>
           <p>
             Strona została zbudowana przez wolontariuszy ŚDM w Krakowie w 2016r.
@@ -164,6 +163,10 @@ var Application = React.createClass({
       </div>
     )
   },
+          //   <section className="inspiration">
+          //   <h2 className="text--center">Do not be afraid</h2>
+          //   <p className="text--center">St John Paul II</p>
+          // </section>
   // <header>
   //    <h1 id="THE-title">{this.state.title}</h1>
   //  </header>
