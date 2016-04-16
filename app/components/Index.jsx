@@ -1,5 +1,6 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
+var request = require('superagent')
 
 var IndexStore = require('../stores/Index')
 var actions = require('../actions')
@@ -15,6 +16,7 @@ var App = React.createClass({
   },
 
   componentDidMount: function() {
+    this.loadInsta();
     this.props.context.getStore(IndexStore)
       .addChangeListener(this._changeListener)
 
@@ -25,12 +27,45 @@ var App = React.createClass({
   },
 
   componentWillUnmount: function() {
+    this.loadInsta();
     this.props.context.getStore(IndexStore)
       .removeChangeListener(this._changeListener)
   },
 
+  loadInsta: function(){
+    var that = this
+    request
+      .get('/instagram/all')
+      .end(function(err, resp){
+        if(err) {
+          that.setState({
+            error: err,
+            media: null
+          })
+        } else {
+          that.setState({
+            error: null,
+            media: resp.body.data
+          })
+        }
+      })
+  },
+
   render: function () {
     var stats
+
+    var insta_content
+
+    if(this.state.media){
+      var media = this.state.media.map(function(img) {
+        return (
+          <a href={img.link}><img src={img.images.low_resolution.url} key={img.id}/></a>
+        )
+      })
+      insta_content = (
+        <div className="row">{ media }</div>
+      )
+    }
 
     var user = this.props.context.getUser()
     if(user && user.is_admin) {
@@ -205,10 +240,10 @@ var App = React.createClass({
         <div className="insta">
           <div className="insta-header">
             <img src="/img/homepage/aparacik.svg" alt="" />
-            <span>#Krakow2016</span>
+            <span>#krakow2016</span>
           </div>
           <div className="insta-content">
-            <img src="http://lorempixel.com/292/292" alt="" /><img src="http://lorempixel.com/292/292/sports" alt="" /><img src="http://lorempixel.com/292/292/city" alt="" /><img src="http://lorempixel.com/292/292/food" alt="" /><img src="http://lorempixel.com/292/292/cats" alt="" /><img src="http://lorempixel.com/292/292/people" alt="" /><img src="http://lorempixel.com/292/292/nature" alt="" /><img src="http://lorempixel.com/292/292/technics" alt="" />
+            {insta_content}
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 :root {
-  font-family: 'Open Sans', Arial
+  	font-family: 'Open Sans', Arial
 }
 
 a, a:focus, a:hover, a:active,
@@ -1049,7 +1049,6 @@ input.graph-filter-input{
 	font-size: 1.5rem;
 }
 
-
 /*------HOW-AND-WHO------*/
 
 .tiles-container{
@@ -1247,7 +1246,6 @@ article ul#nav-list a{
 .content-texts{
 	padding: 1rem 1rem 3rem 1rem;
 }
-
 /*----------------FOOTER----------------*/
 
 footer{
