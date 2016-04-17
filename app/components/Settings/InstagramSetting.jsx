@@ -52,27 +52,6 @@ var InstagramSetting = React.createClass({
       })
   },
 
-  handleSubmit: function(data){
-    var that = this;
-    request
-      .get('/instagram')
-      .query({username: data.name })
-      .end(function(err, resp){
-        console.log(resp);
-        if(resp.status == 200){
-          that.setState({
-            'insta_state': true
-          });
-        }else{
-          that.setState({
-            'insta_state': false
-          });
-          that.refs.form.reset();
-        }
-
-      })
-  },
-
   render: function() {
     var insta_state
     var config = this.props.context.getStore(ApplicationStore)

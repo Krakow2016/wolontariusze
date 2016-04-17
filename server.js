@@ -218,7 +218,7 @@ module.exports = function(server) {
 
     server.get('/instagram/all', function(req, res){
       request({
-        url: 'https://api.instagram.com/v1/tags/'+ tags[0] +'/media/recent?access_token='+ process.env.INSTAGRAM_TOKEN+'&count=8',
+        url: 'https://api.instagram.com/v1/tags/krakow2016/media/recent?access_token='+ process.env.INSTAGRAM_TOKEN+'&count=8',
         json: true
       }, function(err, req, resp){
         res.send(resp);
