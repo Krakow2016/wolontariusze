@@ -1,5 +1,128 @@
 var React = require('react')
+var ReactSelect = require('react-select')
+var ReactFilteredMultiselect = require('react-filtered-multiselect')
 
+var allLanguages = {
+  arabic: "Arabski",
+  azerbaijani: "Azerski",
+  belarusian: "Białoruski",
+  bulgarian: "Bułgarski",
+  bengali: "Bengalski",
+  bosnian: "Bośniacki",
+  czech: "Czeski",
+  
+  english: "Angielski",
+  german: "Niemiecki",
+  polish: "Polski",
+  other: "Inny"
+}
+
+var allLanguages2 = [
+  {value: 'arabic', text: 'Arabski'},
+  {value: 'azerbaijani', text: 'Azerski'},
+  
+  {value: 'english', text: 'Angielski'},
+  {value: 'german', text: 'Niemiecki'},
+  {value: 'polish', text: 'Polski'},
+  {value: 'other', text: 'Inny'}
+]
+
+var allLanguages22 = [
+  {value: 'arabic_arbitrary', text: 'Arabski - poziom dowolny'},
+  {value: 'arabic_basic', text: 'Arabski - podstawowy'},
+  {value: 'arabic_good', text: 'Arabski - dobry'},
+  {value: 'arabic_excellent', text: 'Arabski - bardzo dobry'},
+  {value: 'arabic_interpreter', text: 'Arabski - tłumacz zawodowy'},
+  {value: 'arabic_mother', text: 'Arabski - ojczysty'},
+  
+  {value: 'azerbaijani', text: 'Azerski'},
+  {value: 'azerbaijani_arbitrary', text: 'Azerski - poziom dowolny'},
+  {value: 'azerbaijani_basic', text: 'Azerski - podstawowy'},
+  {value: 'azerbaijani_good', text: 'Azerski - dobry'},
+  {value: 'azerbaijani_excellent', text: 'Azerski - bardzo dobry'},
+  {value: 'azerbaijani_interpreter', text: 'Azerski - tłumacz zawodowy'},
+  {value: 'azerbaijani_mother', text: 'Azerski - ojczysty'},
+  
+  {value: 'english', text: 'Angielski'},
+  {value: 'english_arbitrary', text: 'Angielski - poziom dowolny'},
+  {value: 'english_basic', text: 'Angielski - podstawowy'},
+  {value: 'english_good', text: 'Angielski - dobry'},
+  {value: 'english_excellent', text: 'Angielski - bardzo dobry'},
+  {value: 'english_interpreter', text: 'Angielski - tłumacz zawodowy'},
+  {value: 'english_mother', text: 'Angielski - ojczysty'},
+  
+  {value: 'german_arbitrary', text: 'Niemiecki - poziom dowolny'},
+  {value: 'german_basic', text: 'Niemiecki - podstawowy'},
+  {value: 'german_good', text: 'Niemiecki - dobry'},
+  {value: 'german_excellent', text: 'Niemiecki - bardzo dobry'},
+  {value: 'german_interpreter', text: 'Niemiecki - tłumacz zawodowy'},
+  {value: 'german_mother', text: 'Niemiecki - ojczysty'},
+  
+  {value: 'polish_arbitrary', text: 'Polski - poziom dowolny'},
+  {value: 'polish_basic', text: 'Polski - podstawowy'},
+  {value: 'polish_good', text: 'Polski - dobry'},
+  {value: 'polish_excellent', text: 'Polski - bardzo dobry'},
+  {value: 'polish_interpreter', text: 'Polski - tłumacz zawodowy'},
+  {value: 'polish_mother', text: 'Polski - ojczysty'},
+   
+  {value: 'other', text: 'Inny'}
+]
+
+var allLanguages3 = [
+  {value: 'arabic', label: 'Arabski'},
+  {value: 'azerbaijani', label: 'Azerski'},
+  
+  {value: 'english', label: 'Angielski'},
+  {value: 'german', label: 'Niemiecki'},
+  {value: 'polish', label: 'Polski'},
+  {value: 'other', label: 'Inny'}
+]
+
+/*
+var NewLanguage = React.createClass({
+  render: function() {
+
+    var that = this
+    var data = this.props.data || []
+    return (
+      <div>
+        <ul>
+          {data.map(function(li) {
+            return (
+              <li key={li}>
+                <span>{li}</span>
+                <input type="button" value="usuń" className="button--xsm btn-category-remove bg--error" data-tag={li} onClick={that.props.onRemove} />
+              </li>
+              )
+          })}
+        </ul>
+        <NewLanguage onSave={this.props.onSave} />
+      </div>
+    )
+  }
+)}
+
+var Languages = React.createClass({
+  render: function() {
+    var that = this
+    var data = this.props.data || []
+    return (
+      <div>
+        <ul>
+          {data.map(function(li) {
+            return (
+              <li key={li}>
+                <span>{li}</span>
+                <input type="button" value="usuń" className="button--xsm btn-category-remove bg--error" data-tag={li} onClick={that.props.onRemove} />
+              </li>
+              )
+          })}
+        </ul>
+        <NewLanguage onSave={this.props.onSave} />
+      </div>
+    )
+  }
+})*/
 var SearchForm = React.createClass({
 
   render: function() {
@@ -56,7 +179,15 @@ var SearchForm = React.createClass({
             <input name="departments" value={this.props.query.departments} onChange={this.props.handleChange} />
           </div>
         </div>
+        
+        <div className="pure-g">
+          <div className="pure-u-1-3"> Języki </div>
+          <div className="pure-u-2-3">
+            <Languages />
+          </div>
+        </div>
 
+        <br></br>
         <div className="pure-g">
           <div className="pure-u-1-3"> </div>
           <div className="pure-u-2-3">
