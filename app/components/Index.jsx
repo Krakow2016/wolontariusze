@@ -70,7 +70,7 @@ var App = React.createClass({
     var user = this.props.context.getUser()
     if(user && user.is_admin) {
       stats = (
-        <table>
+        <table style={{width: "100%"}}>
           <tr>
             <td>
               Liczba kont w systemie:
@@ -240,7 +240,7 @@ var App = React.createClass({
         <div className="insta">
           <div className="insta-header">
             <img src="/img/homepage/aparacik.svg" alt="" />
-            <span>#krakow2016</span>
+            <span>#KRAKOW2016</span>
           </div>
           <div className="insta-content">
             {insta_content}

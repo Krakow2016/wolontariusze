@@ -5,16 +5,13 @@ var update = require('react-addons-update')
 var TaskFilters = require('./TaskFilters.jsx')
 var TimeService = require('../../modules/time/TimeService.js')
 var ActivitiesStore = require('../../stores/Activities.js')
-var ActivityStore = require('../../stores/Activity')
 var ActivitiesSearchForm = require('./Search.jsx')
 var actions = require('../../actions')
 
 var Tasks = React.createClass({
 
-  getInitialState: function () {
-    var state = this.props.context.getStore(ActivitiesStore).dehydrate()
-    state.activity = this.props.context.getStore(ActivityStore).getState()
-    return state
+  getInitialState: function () { 
+    return this.props.context.getStore(ActivitiesStore).dehydrate()
   },
 
   _changeListener: function() {
@@ -24,14 +21,10 @@ var Tasks = React.createClass({
   componentDidMount: function() {
     this.props.context.getStore(ActivitiesStore)
       .addChangeListener(this._changeListener)
-    this.props.context.getStore(ActivityStore)
-      .addChangeListener(this._changeListener)
   },
 
   componentWillUnmount: function() {
     this.props.context.getStore(ActivitiesStore)
-      .removeChangeListener(this._changeListener)
-    this.props.context.getStore(ActivityStore)
       .removeChangeListener(this._changeListener)
   },
 

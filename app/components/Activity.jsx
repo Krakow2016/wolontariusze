@@ -157,7 +157,7 @@ var Activity = React.createClass({
     
     var is_archived = (activity.is_archived) ? 'Tak' : 'Nie'
     
-    var priority = (activity.is_urgent) ? 'PILNE' : 'NORMALNE'
+    var priority = (activity.is_urgent) ? (<span className="urgent">PILNE</span>) : (<span clssName="normal">NORMALNE</span>)
 
     var volunteers = this.state.volunteers
     var has_joined = !!this.mine()
@@ -254,6 +254,9 @@ var Activity = React.createClass({
     //<b>Ostatnia edycja:</b> {TimeService.showTime(activity.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.editor.id}>{activity.editor.name}</a></span>
     return (
         <div className="container">
+          <div className="text--center activity-header">
+            <h1>{this.state.activity.name}<small>{tagsList}</small></h1>
+          </div>
           <div className="row">
             <div className="col col7">
 
@@ -268,30 +271,48 @@ var Activity = React.createClass({
 
             </div>
             <div className="col col5">
-              <p className="text--center">
-                <img src={activity.created_by.profile_picture_url} className="profileMedium" /><br />
-                <span>
-                  <NavLink href={"/wolontariusz/"+ activity.created_by.id}>
-                    {activity.created_by.first_name} {activity.created_by.last_name}
-                  </NavLink>
-                </span>
+              <p className="text--center activity-image">
+                <img src={activity.created_by.profile_picture_url} /><br />
+                <NavLink href={"/wolontariusz/"+ activity.created_by.id}>
+                  {activity.created_by.first_name} {activity.created_by.last_name}
+                </NavLink>
               </p>
-              <b>Typ:</b> {actType}
-              <br></br>
-              <b>Kategorie:</b> {tagsList}
-              <br></br>
-              <b>Miejsce wydarzenia:</b> {activity.place}
-              <br></br>
-              <b>Czas rozpoczęcia:</b> {startTime}
-              <br></br>
-              <b>Czas trwania:</b> {activity.duration}
-              <br></br>
-              <b>Jest w archiwum?:</b> {is_archived}
-              <br></br>
-              <b>Prorytet:</b> {priority}
-              <br></br>
-              <b>Limit(maksymalna liczba wolontariuszy):</b> {volonteersLimit}
-              <br></br>
+              <table className="table--hoverRow activity-table">
+                <tbody>
+                  <tr>
+                    <td scope="Typ">Typ</td>
+                    <td>{actType}</td>
+                  </tr>
+                  <tr>
+                    <td scope="Kategorie">Kategorie</td>
+                    <td>{tagsList}</td>
+                  </tr>
+                  <tr>
+                    <td scope="Miejsce">Miejsce</td>
+                    <td>{activity.place}</td>
+                  </tr>
+                  <tr>
+                    <td scope="Rozpoczęcie">Rozpoczęcie</td>
+                    <td>{startTime}</td>
+                  </tr>
+                  <tr>
+                    <td scope="Czas">Czas</td>
+                    <td>{activity.duration}</td>
+                  </tr>
+                  <tr>
+                    <td scope="Archiwum ?">Archwium ?</td>
+                    <td>{is_archived}</td>
+                  </tr>
+                  <tr>
+                    <td scope="Prorytet">Prorytet</td>
+                    <td>{priority}</td>
+                  </tr>
+                  <tr>
+                    <td scope="Limit(maksymalna liczba wolontariuszy)">Limit osób</td>
+                    <td>{volonteersLimit}</td>
+                  </tr>
+                </tbody>
+              </table>
 
               {buttons}
 
@@ -308,6 +329,22 @@ var Activity = React.createClass({
     )
   }
 })
+              // <b>Typ:</b> {actType}
+              // <br></br>
+              // <b>Kategorie:</b> {tagsList}
+              // <br></br>
+              // <b>Miejsce wydarzenia:</b> {activity.place}
+              // <br></br>
+              // <b>Czas rozpoczęcia:</b> {startTime}
+              // <br></br>
+              // <b>Czas trwania:</b> {activity.duration}
+              // <br></br>
+              // <b>Jest w archiwum?:</b> {is_archived}
+              // <br></br>
+              // <b>Prorytet:</b> {priority}
+              // <br></br>
+              // <b>Limit(maksymalna liczba wolontariuszy):</b> {volonteersLimit}
+              // <br></br>
 
 /* Module.exports instead of normal dom mounting */
 module.exports = Activity
