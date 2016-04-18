@@ -885,6 +885,11 @@
       "from": "detective@>=4.3.1 <5.0.0",
       "resolved": "https://registry.npmjs.org/detective/-/detective-4.3.1.tgz"
     },
+    "diff": {
+      "version": "2.2.2",
+      "from": "diff@latest",
+      "resolved": "https://registry.npmjs.org/diff/-/diff-2.2.2.tgz"
+    },
     "dispatchr": {
       "version": "0.3.3",
       "from": "dispatchr@>=0.3.1 <0.4.0",
