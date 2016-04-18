@@ -48,7 +48,7 @@
     "react-markdown": "2.0.0",
     "react-tap-event-plugin": "0.2.2",
     "request": "*",
-    "rethinkdb": "*",
+    "rethinkdb": "2.2.3",
     "sendgrid": "2.0.0",
     "serialize-javascript": "^1.0.0",
     "session-rethinkdb": "1.0.10",
