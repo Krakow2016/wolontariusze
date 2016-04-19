@@ -1,14 +1,8 @@
 rethinkdb:
   image: rethinkdb:2.2
-  ports:
-    - "28015:28015"
-    - "29015:29015"
-    - "8080:8080"
 
 es:
   image: krakow2016/elasticsearch
-  ports:
-    - "9200:9200"
 
 logstash:
   image: krakow2016/logstash
@@ -16,3 +10,16 @@ logstash:
     - es
     - rethinkdb
 
+wolontariusze:
+  image: krakow2016/wolontariusze
+  environment:
+    - NODE_ENV=production
+  volumes:
+    #- ./app:/opt/wolontariusze/app:ro
+    - ./logs:/opt/wolontariusze/logs:rw
+  links:
+    - es
+    - rethinkdb
+  ports:
+    - "80:80"
+    - "443:443"

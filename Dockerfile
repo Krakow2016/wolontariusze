@@ -15,6 +15,7 @@ WORKDIR /opt/wolontariusze
 
 COPY config.json.example config.json
 COPY package.json .
+COPY npm-shrinkwrap.json .
 
 RUN npm install
 
