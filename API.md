@@ -489,12 +489,6 @@ noclegowe wszyskich pielgrzymów należących do danej grupy. Baza danych jest
 tylko do odczytu. Przykładu użycia są zawarte w pliku:
 <https://github.com/Krakow2016/wolontariusze/blob/master/spec/api_pilgrims_spec.js>.
 
-**Wymagane uprawnienia:**
-
-Poniższe ścieżki są dostępne jedynie dla użytkowników którzy są
-administratorami w systemie (flaga `is_admin` jest `true`). Zapytania
-użytkowników bez odpowiednich uprawnień zwrócą błąd `403` (brak dostępu).
-
 ### Atrybuty
 
 | Identyfikator | Opis                                                             |
@@ -506,6 +500,9 @@ użytkowników bez odpowiednich uprawnień zwrócą błąd `403` (brak dostępu)
 | `lat_lon`     | Współrzędne geograficzne miejsca w którym znajduje się parafia.  |
 
 ### Pobieranie całej bazy danych
+
+Zwraca najnowszą wersję pełnej bazy danych. To jest: wszystkich grup
+pielgrzymów z miejscami noclegowymi. Uwaga: odpowiedź może być duża.
 
 **Ścieżka:**  
 ```
@@ -538,6 +535,9 @@ GET https://wolontariusze.krakow2016.com/api/v2/pilgrims
 ```
 
 ### Pobieranie aktualizacji do bazy danych (wersjonowanie)
+
+Zwraca zmiany które nastąpiły od ostatniej aktualizacji (numer wersji należy
+podać w parametrze `from`) w formacie path na bazie w formacie pretty json.
 
 **Ścieżka:**  
 ```
