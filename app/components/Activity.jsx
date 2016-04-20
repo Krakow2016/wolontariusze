@@ -262,6 +262,8 @@ var Activity = React.createClass({
       )
     }
 
+    var creator = activity.created_by || {}
+
     // TODO
     //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>
     //<b>Ostatnia edycja:</b> {TimeService.showTime(activity.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.editor.id}>{activity.editor.name}</a></span>
@@ -282,7 +284,7 @@ var Activity = React.createClass({
             </div>
 
             <div className="col col5">
-              <ProfileDetails {...activity.created_by} />
+              <ProfileDetails {...creator} />
               <b>Typ:</b> {actType}
               <br></br>
               <b>Kategorie:</b> {tagsList}

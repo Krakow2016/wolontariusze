@@ -172,7 +172,7 @@ module.exports = function(server) {
     // W pierwszej kolejności sprawdź ścieżki z poza single-page
     // application
     server.post('/login', jsonParser, urlencodedParser, passport.authenticate('local', {
-      successRedirect: '/',
+      successReturnToOrRedirect: '/',
       failureRedirect: '/login',
       failureFlash: true,
       successFlash: true
