@@ -1,0 +1,72 @@
+@font-face {
+  font-family: 'Gloriola-Bold';
+  src: url('../fonts/Gloriola-Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Gloriola-Italic';
+  src: url('../fonts/Gloriola-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Gloriola-Italic2';
+  src: url('../fonts/Gloriola-Italic2.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Gloriola-Regular';
+  src: url('../fonts/Gloriola-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Gloriola-Regular2';
+  src: url('../fonts/Gloriola-Regular2.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'GloriolaDisplayThin';
+  src: url('../fonts/GloriolaDisplayThin.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'GloriolaLight';
+  src: url('../fonts/GloriolaLight.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'GloriolaMedium-Italic';
+  src: url('../fonts/GloriolaMedium-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'GloriolaMedium-Italic2';
+  src: url('../fonts/GloriolaMedium-Italic2.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'GloriolaMedium';
+  src: url('../fonts/GloriolaMedium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'GloriolaMedium2';
+  src: url('../fonts/GloriolaMedium2.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'GloriolaSemiBold-Regular';
+  src: url('../fonts/GloriolaSemiBold-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}

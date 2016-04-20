@@ -18,7 +18,7 @@ var Volunteer = React.createClass({
       <NavLink key="activities" href={"/wolontariusz/" + this.props.profile.id +'/aktywnosci'} className="profile-ribon-cell">
         <b id="profile-ribon-txt">Aktywności</b>
       </NavLink>
-    ]
+    ] 
 
     if(user) {
       tabs.push(
@@ -53,11 +53,11 @@ var Volunteer = React.createClass({
 
     return (
       <div className="volonteer">
-        <div className="section group">
-          <div className="col span_2_of_4">
+        <div className="section row">
+          <div className="col col6">
             <img src={this.props.profile.profile_picture_url} id="prolife-photo" />
           </div>
-          <div className="col span_2_of_4">
+          <div className="col col6">
             <h1 className="profile-name">{this.name()}</h1>
             <h2><b>Kraj:</b> <span>{ this.props.profile.nationality || 'Polska' }</span></h2>
             {tags}
@@ -65,8 +65,8 @@ var Volunteer = React.createClass({
           </div>
         </div>
 
-        <div className="section group">
-          <div className="col span_4_of_4 profile-ribon">
+        <div className="section row">
+          <div className="col col12 profile-ribon">
             {tabs}
           </div>
         </div>
@@ -212,4 +212,3 @@ var ExtraAttributesVisible = React.createClass({
 
 // Module.exports instead of normal dom mounting
 module.exports = Volunteer
-

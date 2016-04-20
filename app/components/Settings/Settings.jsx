@@ -129,9 +129,9 @@ var Settings = React.createClass({
           Aplikacje
         </h1>
 
-        <div ref={node => node && node.setAttribute('container', '')}>
-          <div ref={node => node && node.setAttribute('row', '')}>
-            <div ref={node => node && node.setAttribute('column', '7')}>
+        <div className="container">
+          <div className="row">
+            <div className="col col7">
               <p>Lista integracji:</p>
               <ul>
                 <li><InstagramSetting context={this.props.context} /></li>
@@ -142,7 +142,7 @@ var Settings = React.createClass({
               </ul>
               <NavLink href="/ustawienia/developer">Dla deweloperów</NavLink>
             </div>
-            <div ref={node => node && node.setAttribute('column', '5')}>
+            <div className="col col5">
               <div className="alert">
                 <p>
                   Informacja o tym jakie są możliwe integracje.

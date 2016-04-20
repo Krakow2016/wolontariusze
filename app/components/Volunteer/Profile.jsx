@@ -26,7 +26,7 @@ var Shell = React.createClass({
   render: function() {
     return (
       <VolunteerShell context={this.props.context} profile={this.state}>
-        <div className="section group">
+        <div className="section group questions">
             <h1>Kim jestem?</h1>
             <p>{this.state.who_question}</p>
             <h1>Co chciałbym robić w życiu najbardziej?</h1>
@@ -35,8 +35,8 @@ var Shell = React.createClass({
             <p>{this.state.why_question}</p>
         </div>
 
-        <div className="section group">
-          <div className="col span_4_of_4">
+        <div className="section row">
+          <div className="col col12">
             <img src="/img/profile/insta.svg" id="profilie-insta-ico" /><h1>#WYD2016</h1>
           </div>
         </div>
