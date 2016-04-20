@@ -96,8 +96,9 @@ var ActivityAdministration = React.createClass({
   },
 
   handleDatetimeChange: function (m) {
+    var datetime = new Date(m)
     this.setState(update(this.state, {
-      activity: {datetime: {$set: m}}
+      activity: {datetime: {$set: datetime}}
     }))
   },
 
