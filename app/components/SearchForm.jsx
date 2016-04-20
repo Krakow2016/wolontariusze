@@ -2,127 +2,155 @@ var React = require('react')
 var ReactSelect = require('react-select')
 var ReactFilteredMultiselect = require('react-filtered-multiselect')
 
-var allLanguages = {
-  arabic: "Arabski",
-  azerbaijani: "Azerski",
-  belarusian: "Białoruski",
-  bulgarian: "Bułgarski",
-  bengali: "Bengalski",
-  bosnian: "Bośniacki",
-  czech: "Czeski",
-  
-  english: "Angielski",
-  german: "Niemiecki",
-  polish: "Polski",
-  other: "Inny"
-}
 
-var allLanguages2 = [
-  {value: 'arabic', text: 'Arabski'},
-  {value: 'azerbaijani', text: 'Azerski'},
-  
-  {value: 'english', text: 'Angielski'},
-  {value: 'german', text: 'Niemiecki'},
-  {value: 'polish', text: 'Polski'},
-  {value: 'other', text: 'Inny'}
-]
-
-var allLanguages22 = [
-  {value: 'arabic_arbitrary', text: 'Arabski - poziom dowolny'},
-  {value: 'arabic_basic', text: 'Arabski - podstawowy'},
-  {value: 'arabic_good', text: 'Arabski - dobry'},
-  {value: 'arabic_excellent', text: 'Arabski - bardzo dobry'},
-  {value: 'arabic_interpreter', text: 'Arabski - tłumacz zawodowy'},
+var allLanguages = [
+  {value: 'arabic_basic', text: 'Arabski - min. poziom podstawowy'},
+  {value: 'arabic_good', text: 'Arabski - min. poziom dobry'},
+  {value: 'arabic_excellent', text: 'Arabski - min. poziom bardzo dobry'},
+  {value: 'arabic_interpreter', text: 'Arabski - min. poziom tłumacz zawodowy'},
   {value: 'arabic_mother', text: 'Arabski - ojczysty'},
   
-  {value: 'azerbaijani', text: 'Azerski'},
-  {value: 'azerbaijani_arbitrary', text: 'Azerski - poziom dowolny'},
-  {value: 'azerbaijani_basic', text: 'Azerski - podstawowy'},
-  {value: 'azerbaijani_good', text: 'Azerski - dobry'},
-  {value: 'azerbaijani_excellent', text: 'Azerski - bardzo dobry'},
-  {value: 'azerbaijani_interpreter', text: 'Azerski - tłumacz zawodowy'},
+  {value: 'azerbaijani_basic', text: 'Azerski - min. poziom podstawowy'},
+  {value: 'azerbaijani_good', text: 'Azerski - min. poziom dobry'},
+  {value: 'azerbaijani_excellent', text: 'Azerski - min. poziom bardzo dobry'},
+  {value: 'azerbaijani_interpreter', text: 'Azerski - min. poziom tłumacz zawodowy'},
   {value: 'azerbaijani_mother', text: 'Azerski - ojczysty'},
   
-  {value: 'english', text: 'Angielski'},
-  {value: 'english_arbitrary', text: 'Angielski - poziom dowolny'},
-  {value: 'english_basic', text: 'Angielski - podstawowy'},
-  {value: 'english_good', text: 'Angielski - dobry'},
-  {value: 'english_excellent', text: 'Angielski - bardzo dobry'},
-  {value: 'english_interpreter', text: 'Angielski - tłumacz zawodowy'},
+  {value: 'english_basic', text: 'Angielski - min. poziom podstawowy'},
+  {value: 'english_good', text: 'Angielski - min. poziom dobry'},
+  {value: 'english_excellent', text: 'Angielski - min. poziom bardzo dobry'},
+  {value: 'english_interpreter', text: 'Angielski - min. poziom tłumacz zawodowy'},
   {value: 'english_mother', text: 'Angielski - ojczysty'},
   
-  {value: 'german_arbitrary', text: 'Niemiecki - poziom dowolny'},
-  {value: 'german_basic', text: 'Niemiecki - podstawowy'},
-  {value: 'german_good', text: 'Niemiecki - dobry'},
-  {value: 'german_excellent', text: 'Niemiecki - bardzo dobry'},
-  {value: 'german_interpreter', text: 'Niemiecki - tłumacz zawodowy'},
+  {value: 'french_basic', text: 'Francuski - min. poziom podstawowy'},
+  {value: 'french_good', text: 'Francuski - min. poziom dobry'},
+  {value: 'french_excellent', text: 'Francuski - min. poziom bardzo dobry'},
+  {value: 'french_interpreter', text: 'Francuski - min. poziom tłumacz zawodowy'},
+  {value: 'french_mother', text: 'Francuski - ojczysty'},
+  
+  {value: 'german_basic', text: 'Niemiecki - min. poziom podstawowy'},
+  {value: 'german_good', text: 'Niemiecki - min. poziom dobry'},
+  {value: 'german_excellent', text: 'Niemiecki - min. poziom bardzo dobry'},
+  {value: 'german_interpreter', text: 'Niemiecki - min. poziom tłumacz zawodowy'},
   {value: 'german_mother', text: 'Niemiecki - ojczysty'},
   
-  {value: 'polish_arbitrary', text: 'Polski - poziom dowolny'},
-  {value: 'polish_basic', text: 'Polski - podstawowy'},
-  {value: 'polish_good', text: 'Polski - dobry'},
-  {value: 'polish_excellent', text: 'Polski - bardzo dobry'},
-  {value: 'polish_interpreter', text: 'Polski - tłumacz zawodowy'},
+  {value: 'polish_basic', text: 'Polski - min. poziom podstawowy'},
+  {value: 'polish_good', text: 'Polski - min. poziom dobry'},
+  {value: 'polish_excellent', text: 'Polski - min. poziom bardzo dobry'},
+  {value: 'polish_interpreter', text: 'Polski - min. poziom tłumacz zawodowy'},
   {value: 'polish_mother', text: 'Polski - ojczysty'},
+  
+  {value: 'portuguese_basic', text: 'Portugalski - min. poziom podstawowy'},
+  {value: 'portuguese_good', text: 'Portugalski - min. poziom dobry'},
+  {value: 'portuguese_excellent', text: 'Portugalski - min. poziom bardzo dobry'},
+  {value: 'portuguese_interpreter', text: 'Portugalski - min. poziom tłumacz zawodowy'},
+  {value: 'portuguese_mother', text: 'Portugalski - ojczysty'},
    
   {value: 'other', text: 'Inny'}
 ]
 
-var allLanguages3 = [
-  {value: 'arabic', label: 'Arabski'},
-  {value: 'azerbaijani', label: 'Azerski'},
-  
-  {value: 'english', label: 'Angielski'},
-  {value: 'german', label: 'Niemiecki'},
-  {value: 'polish', label: 'Polski'},
-  {value: 'other', label: 'Inny'}
-]
-
-/*
-var NewLanguage = React.createClass({
-  render: function() {
-
-    var that = this
-    var data = this.props.data || []
-    return (
-      <div>
-        <ul>
-          {data.map(function(li) {
-            return (
-              <li key={li}>
-                <span>{li}</span>
-                <input type="button" value="usuń" className="button--xsm btn-category-remove bg--error" data-tag={li} onClick={that.props.onRemove} />
-              </li>
-              )
-          })}
-        </ul>
-        <NewLanguage onSave={this.props.onSave} />
-      </div>
-    )
-  }
-)}
-
 var Languages = React.createClass({
-  render: function() {
-    var that = this
-    var data = this.props.data || []
-    return (
+  getInitialState() {
+    return {
+      selectedOptions: [{value: 'change', text: 'change'}],
+      selectedLanguages: []
+    }
+  },
+  
+  deselectLanguage(index) {
+    var selectedOptions = this.state.selectedOptions
+    var selectedLanguages = this.state.selectedLanguages
+    var language = selectedLanguages[index]
+    selectedLanguages.splice(index,1)
+    
+    if (language.value != 'other') {
+      var language_value = language.value.split('_')[0]
+      var basic = language_value+'_basic' 
+      for(var j = 0; j < selectedOptions.length; j++) {
+        var opt = selectedOptions[j]
+        if (opt.value == basic) {
+          selectedOptions.splice(j, 5)
+        }
+      }
+    } else {
+      for(var j = 0; j < selectedOptions.length; j++) {
+        var opt = selectedOptions[j]
+        if (opt.value == 'other') {
+          selectedOptions.splice(j, 1)
+        }
+      }
+    }
+        
+    this.props.handleLanguagesChange(selectedLanguages)    
+    this.setState ( {
+      selectedOptions: selectedOptions,
+      selectedLanguages: selectedLanguages
+    })
+  },
+  handleChange(selected) {
+    var selectedLength = selected.length
+    var new_language =  selected[selectedLength-1]
+    
+    var selectedOptions = this.state.selectedOptions
+    var selectedLanguages = this.state.selectedLanguages
+    
+    selectedLanguages.push(new_language)
+    
+    if (new_language.value != 'other') {
+    console.log(new_language.value)
+      var language_value = new_language.value.split('_')[0]
+      var levels = [language_value+'_basic', 
+        language_value+'_good',
+        language_value+'_excellent',
+        language_value+'_interpreter',
+        language_value+'_mother']
+        
+      for (var i = 0; i < levels.length; i++) {
+        var opt
+        for (var j=0; j<allLanguages.length; j++) {
+          if (allLanguages[j].value == levels[i]) {
+            opt = allLanguages[j]
+            break
+          }
+        }
+        selectedOptions.push(opt)
+      }
+    } else {
+      selectedOptions.push(new_language)
+    }
+    
+    this.props.handleLanguagesChange(selectedLanguages)
+    this.setState ( {
+      selectedOptions: selectedOptions,
+      selectedLanguages: selectedLanguages
+    })
+    
+  },
+  
+  
+  render() {
+    //console.log('STATE', this.state)
+    var selectedLanguages = this.state.selectedLanguages
+    var selectedOptions = this.state.selectedOptions.map(function (opt) {return opt}) 
+    return ( 
       <div>
-        <ul>
-          {data.map(function(li) {
-            return (
-              <li key={li}>
-                <span>{li}</span>
-                <input type="button" value="usuń" className="button--xsm btn-category-remove bg--error" data-tag={li} onClick={that.props.onRemove} />
-              </li>
-              )
-          })}
-        </ul>
-        <NewLanguage onSave={this.props.onSave} />
+        <ReactFilteredMultiselect
+          onChange={this.handleChange}
+          options={allLanguages}
+          selectedOptions={selectedOptions}
+          buttonText={'Wybierz'}
+        />
+        {selectedLanguages.length > 0 && <ul>
+          {selectedLanguages.map((language, i) => <li key={language.value}>
+            {language.text}
+            <button type="button" onClick={this.deselectLanguage.bind(null,i)}>Usuń</button>
+          </li>)}
+        </ul>}
       </div>
     )
   }
-})*/
+})
+
 var SearchForm = React.createClass({
 
   render: function() {
@@ -183,7 +211,7 @@ var SearchForm = React.createClass({
         <div className="pure-g">
           <div className="pure-u-1-3"> Języki </div>
           <div className="pure-u-2-3">
-            <Languages />
+            <Languages handleLanguagesChange={this.props.handleLanguagesChange}/>
           </div>
         </div>
 

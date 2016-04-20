@@ -56,6 +56,14 @@ var Search = React.createClass({
       query: query
     })
   },
+  
+  handleLanguagesChange: function(languages) {
+    var query = this.state.query
+    query['languages'] = languages.map(function (lang) {return lang.value})
+    this.setState({
+      query: query
+    })
+  },
 
   search: function(){
     var state = this.state.query
@@ -100,7 +108,8 @@ var Search = React.createClass({
           query={this.state.query}
           search={this.search}
           handleChange={this.handleChange}
-          handleCheckboxChange={this.handleCheckboxChange} />
+          handleCheckboxChange={this.handleCheckboxChange} 
+          handleLanguagesChange={this.handleLanguagesChange}/>
         <SearchResults results={this.state.all} />
       </div>
     )
