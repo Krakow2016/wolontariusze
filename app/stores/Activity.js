@@ -18,7 +18,6 @@ var ActivityStore = createStore({
     this.activity = {
       name: '',
       act_type: 'niezdefiniowany',
-      duration: '',
       place: '',
       description: Draft.EditorState.createEmpty(),
       is_urgent: false,
@@ -27,6 +26,7 @@ var ActivityStore = createStore({
     }
     this.volunteers = []
     this.invalidDatetime = ''
+    this.invalidEndtime = ''
     this.editorState = Draft.EditorState.createEmpty()
   },
 
@@ -83,6 +83,7 @@ var ActivityStore = createStore({
       activity: this.activity,
       volunteers: this.volunteers,
       invalidDatetime: this.invalidDatetime,
+      invalidEndtime: this.invalidEndtime,
       editorState: this.editorState
     }
   },
@@ -97,6 +98,7 @@ var ActivityStore = createStore({
       activity: activity,
       volunteers: this.volunteers,
       invalidDatetime: this.invalidDatetime,
+      invalidEndtime: this.invalidEndtime,
       editorState: Draft.convertToRaw(this.editorState.getCurrentContent())
     }
   },
@@ -106,6 +108,7 @@ var ActivityStore = createStore({
     this.activity = state.activity
     this.volunteers = state.volunteers
     this.invalidDatetime = state.invalidDatetime
+    this.invalidEndtime = state.invalidEndtime
 
     var blocks = Draft.convertFromRaw(this.activity.description)
     var contentState = Draft.ContentState.createFromBlockArray(blocks)
@@ -126,7 +129,7 @@ ActivityStore.attributes = function() {
     'created_by',
     'datetime',
     'description',
-    'duration',
+    'endtime',
     'is_archived',
     'is_private',
     'is_urgent',

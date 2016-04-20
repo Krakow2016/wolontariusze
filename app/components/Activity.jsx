@@ -168,6 +168,13 @@ var Activity = React.createClass({
       applicationTime = 'Nieokreślony'
     }
     
+    var endTime
+    if (typeof (this.state.activity.endtime) != 'undefined')  {
+      endTime = TimeService.showTime(activity.endtime)
+    } else {
+      endTime = 'Nieokreślona'
+    }
+    
     var is_archived = (activity.is_archived) ? 'Tak' : 'Nie'
     
     var priority = (activity.is_urgent) ? 'PILNE' : 'NORMALNE'
@@ -290,7 +297,7 @@ var Activity = React.createClass({
               <br></br>
               <b>Czas zakończenia zgłoszeń do zadania:</b> {applicationTime}
               <br></br>
-              <b>Czas trwania:</b> {activity.duration}
+              <b>Data zakończenia:</b> {endTime}
               <br></br>
               <b>Jest w archiwum?:</b> {is_archived}
               <br></br>

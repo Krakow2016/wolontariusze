@@ -91,7 +91,7 @@ var Activities = module.exports = {
       }
 
       // Wykonaj zapytanie do bazy danych
-      r.table(tableName).get(id).update(body, {returnChanges: true}).run(conn, function (err, resp) {
+      r.table(tableName).get(id).replace(body, {returnChanges: true}).run(conn, function (err, resp) {
         callback(err, resp)
       })
     })
