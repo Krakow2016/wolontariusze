@@ -105,7 +105,7 @@ var Tasks = React.createClass({
           <td className="tasks-volunteerNumber-td"><span>{ (task.volunteers || []).length }</span></td>
           <td className="tasks-volunteerLimit-td"><span>{task.limit != 0 ? task.limit : 'Brak'}</span></td>
           <td className="tasks-creationDate-td"><span>{TimeService.showTime(task.created_at)}</span></td>
-          <th className="tasks-expirationDate-td"><span>{(typeof (task.datetime) != 'undefined') ? TimeService.showTime(task.datetime) : 'Brak'}</span></th>
+          <th className="tasks-expirationDate-td"><span>{TimeService.isDate(task.datetime) ? TimeService.showTime(task.datetime) : 'Brak'}</span></th>
         </tr>
       )
     })

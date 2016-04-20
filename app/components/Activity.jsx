@@ -162,14 +162,14 @@ var Activity = React.createClass({
     })
     
     var applicationTime
-    if (typeof (this.state.activity.datetime) != 'undefined')  {
+    if (TimeService.isDate(this.state.activity.datetime))  {
       applicationTime = TimeService.showTime(activity.datetime)
     } else {
       applicationTime = 'Nieokreślony'
     }
     
     var endTime
-    if (typeof (this.state.activity.endtime) != 'undefined')  {
+    if (TimeService.isDate(this.state.activity.endtime))  {
       endTime = TimeService.showTime(activity.endtime)
     } else {
       endTime = 'Nieokreślona'

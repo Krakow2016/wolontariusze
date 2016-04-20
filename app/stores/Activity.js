@@ -2,6 +2,7 @@
 
 var createStore  = require('fluxible/addons').createStore
 var Draft = require('draft-js')
+var TimeService = require('../modules/time/TimeService.js')
 
 var ActivityStore = createStore({
   storeName: 'Activity',
@@ -19,7 +20,9 @@ var ActivityStore = createStore({
       name: '',
       act_type: 'niezdefiniowany',
       place: '',
+      datetime: TimeService.NO_DATE,
       description: Draft.EditorState.createEmpty(),
+      endtime: TimeService.NO_DATE,
       is_urgent: false,
       limit: 5,
       profile_picture_url: '/img/profile/face.svg'
