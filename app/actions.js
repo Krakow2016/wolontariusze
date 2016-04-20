@@ -467,6 +467,32 @@ module.exports = {
         match: { 'raw.sk_skills': state.skills }
       })
     }
+    
+    if(state.languages) {
+      var languages = state.languages
+      for (var i=0; i<languages.length; i++) {
+        var name = languages[i].split('_')[0]
+        var level = languages[i].split('_')[1]
+        var terms = function () {
+          switch (level) {
+            case 'basic':
+              return [name+'=basic', name+'=good', name+'=excellent', name+'=professional translator, interpreter']
+            case 'good':
+              return [name+'=good', name+'=excellent', name+'=professional translator, interpreter']
+            case 'excellent':
+              return [name+'=excellent', name+'=professional translator, interpreter']
+            case 'interpreter':
+              return [name+'=professional translator, interpreter']
+          }
+        }()
+        raw_must.push({
+          or: [
+                { term: {'raw.od_motherlanguage': name} },
+                { terms: { 'raw.od_languages': terms } }
+              ]
+        })
+      }
+    }
 
     var should = []
 

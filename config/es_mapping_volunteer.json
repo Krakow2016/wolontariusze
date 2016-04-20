@@ -132,6 +132,14 @@
         },
         "cd_sectors": {
           "type": "string"
+        },
+        "od_languages": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "od_motherlanguage": {
+          "type": "string",
+          "index": "not_analyzed"
         }
       }
     },
