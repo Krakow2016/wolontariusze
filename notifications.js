@@ -6,6 +6,7 @@ var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
 // Połączenie z sendgrid daje nam możliwość wysyłania emaili
 var sendgrid = require('sendgrid')(process.env.SENDGRID_APIKEY)
+var sendgrid_template = process.env.SENDGRID_TEMPLATE
 
 var to_text = function(state) {
   return state.blocks.map(function(block) {
@@ -66,7 +67,7 @@ r.connect(config.rethinkdb, function(err, conn) {
               'templates': {
                 'settings': {
                   'enable': 1,
-                  'template_id' : 'b716bb89-8416-4a44-a59f-edce76134f66',
+                  'template_id': sendgrid_template,
                 }
               }
             })
@@ -132,7 +133,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                   'templates': {
                     'settings': {
                       'enable': 1,
-                      'template_id' : 'b716bb89-8416-4a44-a59f-edce76134f66',
+                      'template_id': sendgrid_template,
                     }
                   }
                 })
@@ -168,7 +169,7 @@ r.connect(config.rethinkdb, function(err, conn) {
           'templates': {
             'settings': {
               'enable': 1,
-              'template_id' : 'b716bb89-8416-4a44-a59f-edce76134f66',
+              'template_id': sendgrid_template,
             }
           }
         })
