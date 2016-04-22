@@ -69,7 +69,7 @@ h2 {
 input.menu-search-box {
 	width: 100%;
 	border: 1px solid #0082BD;
-	border-radius: 2rem;
+	border-radius: 22px;
 	height: 2rem;
 	display: inline-block;
 	padding: 0 1rem 0 1rem;
@@ -208,10 +208,7 @@ label:hover:before {
 }
 .react-autosuggest__container{
 	position: relative;
-	z-index: 2;
-	float: left;
 	width: 100%;
-	margin-bottom: 0;
 	font-size: 14px;
 	line-height: 1.42857143;
 	color: #555;
@@ -319,25 +316,25 @@ label:hover:before {
 	padding: 5px;
 }
 .react-autosuggest__suggestion:hover{
-	background-color: #F4F4F4;
+	background-color: rgba(255, 154, 0, 0.26);
 }
 .react-autosuggest__suggestion::before{
 	content: '';
 }
 .form.menu-search-box + .react-autosuggest__suggestions-container{
-	top: 53px;
+	top: 30px;
 	left: 50%;
 	-webkit-transform: translateX(-50%);
 	-o-transform: translateX(-50%);
 	transform: translateX(-50%);
 	border-color: #0082BD;
 }
+.react-autosuggest__container--open > .form.menu-search-box{
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
 .form.menu-search-box + .react-autosuggest__suggestions-container .react-autosuggest__suggestion{
 	width: 100%;
-}
-.form.menu-search-box + .react-autosuggest__suggestions-container .react-autosuggest__suggestion:last-child{
-	border-bottom-right-radius: 1rem;
-	border-bottom-left-radius: 1rem;
 }
 
 /*--------ALERTY----------*/
@@ -920,6 +917,10 @@ nav#head-nav .head-section{
 }
 nav#head-nav #head-search{
 	text-align: center;
+}
+nav#head-nav #head-search > a{
+    margin-top: 6px;
+    display: block;
 }
 nav#head-nav #head-search #menu-search-submit{
 	top: 1rem;
