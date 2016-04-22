@@ -98,7 +98,7 @@ var Application = React.createClass({
       }
 
       searchForm = (
-        <div className="col col3" style={searchStyle}>
+        <div className="col col3 head-section" id="head-search" style={searchStyle}>
           <ActivityVolonteersList id="form" addActiveVolonteer={this.addActiveVolonteer} className="form menu-search-box" />
           <input src="/img/search.svg" id="menu-search-submit" type="image" />
           {advancedSearch}

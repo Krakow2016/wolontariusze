@@ -67,7 +67,6 @@ h2 {
 	font-size: auto;
 }
 input.menu-search-box {
-	margin:1.4rem 0 0.5rem 0;
 	width: 100%;
 	border: 1px solid #0082BD;
 	border-radius: 2rem;
@@ -269,6 +268,7 @@ label:hover:before {
 .react-autosuggest__container {
 	position: relative;
 	display: inline-block;
+	text-align: left;
 }
 
 .react-autosuggest__input {
@@ -379,12 +379,7 @@ label:hover:before {
 }
 
 .alert{
-	background-color: rgba(113, 191, 223, 0.22);
-	padding: 10px;
 	font-size: 1rem;
-}
-div.alert p a{
-	color: #3B98FF;
 }
 
 @media only screen and (max-width: 840px) {
@@ -908,16 +903,32 @@ article.main-content a{
 
 nav#head-nav{
 	width: 100%;
-	height: auto;
+	height: 5rem;
 	padding: 0 5px;
 	background-color: #006492;
 	margin-left: 0;
 	margin-right: 0;
+	position: relative;
+}
+nav#head-nav .head-section{
+	position: relative;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+nav#head-nav #head-search{
+	text-align: center;
+}
+nav#head-nav #head-search #menu-search-submit{
+	top: 1rem;
+	z-index: 12;
+	right: 2rem;
 }
 ul#nav-list{
 	list-style: outside none none;
 	margin: 0;
-	padding: 1.5rem;
 	text-align: center;
 	position: relative;
 }
