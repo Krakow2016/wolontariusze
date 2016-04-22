@@ -12,7 +12,7 @@
   overflow-y: scroll;
   text-size-adjust: 100%; }
 
-audio:not([controls]) {
+audio:not([controls]) { 
   display: none; }
 
 details {
