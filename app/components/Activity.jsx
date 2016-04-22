@@ -255,7 +255,7 @@ var Activity = React.createClass({
     return (
         <div className="container">
           <div className="text--center activity-header">
-            <h1>{this.state.activity.name}<small>{tagsList}</small></h1>
+            <h1>{this.state.activity.name}</h1>
           </div>
           <div className="row">
             <div className="col col7">
@@ -321,7 +321,7 @@ var Activity = React.createClass({
 
         { this.map() }
 
-        <b>Wolontariusze, którzy biorą udział:</b>
+        <b style={{"font-size": "1.8rem"}}>Wolontariusze, którzy biorą udział:</b>
         <p>
           {activeVolonteersList}
         </p>
