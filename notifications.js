@@ -180,6 +180,37 @@ r.connect(config.rethinkdb, function(err, conn) {
       })
     })
 
+  r.table('Volunteers').changes()
+    .filter(r.row('old_val')('is_admin').eq(true).not().and(r.row('new_val')('is_admin').eq(true)))
+    .run(conn, function(err, cursor) {
+      cursor.each(function(err, change){ // Wolontariusz został adminem
+        var row = change.new_val
+        var html = '<p>Właśnie otrzymałeś specjalne uprawnienia koordynatora, które dają Ci dostęp do danych wszystkich wolontariuszy w systemie.</p>'
+
+        var email = new sendgrid.Email({
+          to:       row.email,
+          from:     'goradobra@krakow2016.com',
+          fromname: 'Góra Dobra',
+          subject:  'Witaj w gronie koordynatorów wolontariuszy na Górze Dobra!',
+          html:     html
+        })
+
+        email.addSubstitution(':name', row.first_name)
+        email.setFilters({
+          'templates': {
+            'settings': {
+              'enable': 1,
+              'template_id': sendgrid_template,
+            }
+          }
+        })
+
+        sendgrid.send(email, function(err, json) {
+          console.log('sendgrid:', err, json)
+        })
+      })
+    })
+
   // Informuje API Eventory o zmianach w grupach wolontariusza
   r.table('Volunteers').changes()
     .filter( r.row('new_val')('tags').eq(r.row('old_val')('tags')).not())
