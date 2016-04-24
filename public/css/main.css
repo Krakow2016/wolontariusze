@@ -393,21 +393,6 @@ label:hover:before {
 	font-size: 1rem;
 }
 
-<<<<<<< HEAD
-=======
-@media only screen and (max-width: 840px) {
-	body {background-image:url("../img/bgcutmob.svg"),url("../img/bg.svg");background-position:0% 15em, center top; background-color:#00A8D8; }
-	.col { 	margin: 1% 0 1% 0%; }
-	.span_2_of_4, .span_3_of_4, .span_4_of_4 { width: 100%; }
-	.span_1_of_4 { width: 50%; }
-	.THE-margin {margin: auto; width: 85%;}
-	nav {height: inherit;}
-	nav ul li a{line-height: 3rem;}
-	.menu-search-box{ margin: 0 0 0.5rem 0;}
-	#menu-search-submit { top: 1rem;}
-}
->>>>>>> parent of a244ca6... Bank pracy, przerobiony na listę zadań
-
 #prolife-photo {
 	height:22rem;
 	display: block;
@@ -1116,7 +1101,6 @@ input.graph-filter-input{
 /*------INSTA------*/
 
 .insta-header{
-<<<<<<< HEAD
 	width: 100%;
 	text-align: center;
 	margin: 2rem 0;
@@ -1192,17 +1176,6 @@ input.graph-filter-input{
 .content-texts-container{
 	margin: 0 -1rem;
 	margin-bottom: -3rem;
-=======
-  width: 100%;
-  text-align: center;
-  margin: 2rem 0;
-}
-.insta-header span{
-  height: 100%;
-  line-height: 5rem;
-  font-size: 3rem;
-  margin-left: 22px;
->>>>>>> parent of a244ca6... Bank pracy, przerobiony na listę zadań
 }
 .content-texts-container > img{
 	width: 100%;
