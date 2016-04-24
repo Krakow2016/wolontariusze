@@ -59,16 +59,22 @@ var Tasks = React.createClass({
 
     // TABS
     var tabs = [
-      <li><NavLink href={"/zadania"}>Bank pracy</NavLink></li>
+      <NavLink href={"/zadania" } className="profile-ribon-cell">
+        <b id="profile-ribon-txt">Bank pracy</b>
+      </NavLink>
     ]
 
     if(user) {
       tabs.push(
-        <li><NavLink href={"/zadania?volunteer="+user.id}>Biorę udział w</NavLink></li>
+        <NavLink href={"/zadania?volunteer="+user.id} className="profile-ribon-cell">
+          <b id="profile-ribon-txt">Biorę udział w</b>
+        </NavLink>
       )
       if(user.is_admin) {
         tabs.push(
-        <li><NavLink href={"/zadania?created_by="+user.id}>Moje zadania</NavLink></li>
+          <NavLink href={"/zadania?created_by="+user.id} className="profile-ribon-cell">
+            <b id="profile-ribon-txt">Moje zadania</b>
+          </NavLink>
         )
       }
     }
@@ -80,45 +86,41 @@ var Tasks = React.createClass({
       var task = source.doc
       if(!task) { return }
       var priorityClass = task.is_urgent ? 'tasks-priority-urgent-tr' : 'tasks-priority-normal-tr'
-      var tresc = [(task.description.length > 200) ? task.description.substring(0,200) : task.description]
-      if (task.description.length > 200){
-        tresc.push(<a href={'/zadania/'+task.id}> ...więcej</a>)
-      }
       return (
-        <div className="row task">
-          <div className="col col1 task-color">
-            <img src="/img/flaga.png"></img>
-          </div>
-
-          <div className="col col11 task-content">
-            <h1><NavLink href={'/zadania/'+task.id}>{task.name}</NavLink></h1>
-            <span className="task-meta">{}Autor</span>
-            <span className="task-meta">Ilość osób: {(source.volunteers || []).length }/{ task.limit != 0 ? task.limit : 'Brak'}</span>
-            <span className="task-meta">{((task.tags || []).length != 0) ? (task.tags || []).join(', ') : 'Brak kategorii' }</span>
-            <span className="task-meta">{(typeof (task.datetime) != 'undefined') ? TimeService.showTime(task.datetime) : 'Brak'}</span>
-            <p>
-              {tresc}
-            </p>
-            <div className="task-volunteers">
-                  Janusz
-
-            </div>
-          </div>
-        </div>
+        <tr key={task.id} className={priorityClass}>
+          <td className="tasks-name-td"><NavLink href={'/zadania/'+task.id}>{task.name}</NavLink></td>
+          <td className="tasks-categories-td"><span>{ (task.tags || []).join(', ') }</span></td>
+          <td className="tasks-volunteerNumber-td"><span>{ (source.volunteers || []).length }</span></td>
+          <td className="tasks-volunteerLimit-td"><span>{task.limit != 0 ? task.limit : 'Brak'}</span></td>
+          <td className="tasks-creationDate-td"><span>{TimeService.showTime(task.created_at)}</span></td>
+          <th className="tasks-expirationDate-td"><span>{(typeof (task.datetime) != 'undefined') ? TimeService.showTime(task.datetime) : 'Brak'}</span></th>
+        </tr>
       )
     })
 
     if (user) {
       return (
-        <div className="task-bank">
-          <nav id="task-nav">
-            <ul id="nav-list">
+        <div className="taskBank">
+          <div className="section group">
+            <div className="col span_4_of_4 profile-ribon">
               {tabs}
-            </ul>
-          </nav>
+            </div>
+          </div>
           <ActivitiesSearchForm query={this.state.query} handleChange={this.handleChange} submit={this.onSubmit} />
-            {tasks}
-            
+          <table className="tasks-table">
+            <tbody>
+              <tr>
+                <th className="tasks-th" onClick={this.sortByName}>Tytuł</th>
+                <th className="tasks-th" onClick={this.sortByCategories}>Kategorie</th>
+                <th className="tasks-th" onClick={this.sortByVolunteerNumber}>Ilość osób</th>
+                <th className="tasks-th" onClick={this.sortByVolunteerLimit}>Limit osób</th>
+                <th className="tasks-th" onClick={this.sortByCreationDate}>Czas utworzenia</th>
+                <th className="tasks-th" onClick={this.sortByExpirationDate}>Czas wygaśnięcia</th>
+              </tr>
+              {tasks}
+            </tbody>
+          </table>
+
           <NavLink href="/zadania/nowe">Dodaj zadanie</NavLink>
         </div>
       )

@@ -393,6 +393,20 @@ label:hover:before {
 	font-size: 1rem;
 }
 
+<<<<<<< HEAD
+=======
+@media only screen and (max-width: 840px) {
+	body {background-image:url("../img/bgcutmob.svg"),url("../img/bg.svg");background-position:0% 15em, center top; background-color:#00A8D8; }
+	.col { 	margin: 1% 0 1% 0%; }
+	.span_2_of_4, .span_3_of_4, .span_4_of_4 { width: 100%; }
+	.span_1_of_4 { width: 50%; }
+	.THE-margin {margin: auto; width: 85%;}
+	nav {height: inherit;}
+	nav ul li a{line-height: 3rem;}
+	.menu-search-box{ margin: 0 0 0.5rem 0;}
+	#menu-search-submit { top: 1rem;}
+}
+>>>>>>> parent of a244ca6... Bank pracy, przerobiony na listę zadań
 
 #prolife-photo {
 	height:22rem;
@@ -1097,117 +1111,6 @@ input.graph-filter-input{
 
 .why-and-what{
 	background-color: #008AC3;
-}
-
-/*------TASK-BANK------*/
-.task-bank{
-	background-color: white;
-}
-
-.task-bank .row{
-	width: 100%;
-	margin: 0;
-}
-
-nav#task-nav{
-
-	height: auto;
-	padding: 0 5px;
-	background-color: #008AC3;
-}
-
-.task{
-	border-bottom: 0.5rem solid #008AC3;
-	color: #008AC3;
-}
-
-.task .image{
-	padding: 1rem;
-	/*border-right: 0.1rem solid #008AC3;*/
-}
-
-.mapka img{
-	width: 100%;
-}
-.task .mapka{
-	width: 100%;
-	box-shadow:0 0 6px black;
-}
-
-.mapka .leaflet-container{
-	height: auto;
-	position: relative;
-	width: 100%;
-	padding-top: 100%;
-}
-
-
-.task h1{
-	/*font-family: 'GloriolaMedium';*/
-	font-size: 2rem;
-	color: #006492;
-	margin-bottom: 0.2rem;
-}
-
-.task p{
-	/*font-family: 'Gloriola-Regular';*/
-	font-size: 1.5rem;
-	min-height: 6rem;
-}
-
-.task-meta{
-	/*font-family: 'Gloriola-Italic';*/
-	font-style: italic;
-	display: inline;
-	color: #416A7D;
-	border-right: 2px solid #578ea8;
-	padding: 0 0.5rem;
-}
-
-.task-meta:last-of-type{
-	border-right: none;
-}
-
-.task-meta:first-of-type{
-	padding-left: 0;
-}
-
-.task:last-of-type{
-	border: none;
-}
-
-.task-volunteers{
-	width: 100%;
-	border-top: 1px solid #578ea8;
-}
-
-.task-volunteers .profileThumbnail{
-	height: 50px;
-	width: 50px;
-	margin-right: 5px;
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-
-.task-color{
-	height: 200px;
-}
-
-.task-color img{
-	width: 100%;
-	margin-top: 1rem;
-}
-
-.task-content{
-	padding-right: 0;
-}
-.task-fotter{
-	background-color: #008AC3;
-	text-align: center;
-}
-
-article ul#nav-list a{
-	color: white;
 }
 
 /*------INSTA------*/
