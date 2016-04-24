@@ -197,6 +197,11 @@ module.exports = function(server) {
             }
 
             var json = JSON.parse(body).data[0]
+            if (!json) {
+              // Niepoprawny login
+              return
+            }
+
             var instagram = {
               instagram: {
                 id: json.id,

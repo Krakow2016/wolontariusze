@@ -31,7 +31,8 @@ var InstagramSetting = React.createClass({
 
   removeInstagram: function() {
     var profile = this.props.context.getStore(VolunteerStore).profile
-    this.props.context.executeAction(updateVolunteer, Object.assign(profile, {
+    this.props.context.executeAction(updateVolunteer, ({
+      id: profile.id,
       instagram: null
     }))
   },
@@ -44,6 +45,9 @@ var InstagramSetting = React.createClass({
         username: data.name
       })
       .end(function(err, resp){
+        if(err) {
+          return
+        }
         if (resp.status == 200) {
           that.setState({
             instagram: resp.body.result
