@@ -331,7 +331,7 @@ label:hover:before {
 .form.menu-search-box + .react-autosuggest__suggestions-container{
 	top: 30px;
 	left: 50%;
-	border-color: #008AC3;
+	border-color: #006492;
 	border-width: 5px;
 	-webkit-transform: translateX(-50%);
 	-moz-transform: translateX(-50%);
@@ -343,7 +343,7 @@ label:hover:before {
 .react-autosuggest__container--open > .form.menu-search-box{
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
-	border-color: #008AC3;
+	border-color: #006492;
 	border-width: 5px;
 	border-bottom: 0;
 }
