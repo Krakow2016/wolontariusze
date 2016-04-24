@@ -1116,6 +1116,7 @@ input.graph-filter-input{
 /*------INSTA------*/
 
 .insta-header{
+<<<<<<< HEAD
 	width: 100%;
 	text-align: center;
 	margin: 2rem 0;
@@ -1191,6 +1192,17 @@ input.graph-filter-input{
 .content-texts-container{
 	margin: 0 -1rem;
 	margin-bottom: -3rem;
+=======
+  width: 100%;
+  text-align: center;
+  margin: 2rem 0;
+}
+.insta-header span{
+  height: 100%;
+  line-height: 5rem;
+  font-size: 3rem;
+  margin-left: 22px;
+>>>>>>> parent of a244ca6... Bank pracy, przerobiony na listę zadań
 }
 .content-texts-container > img{
 	width: 100%;
