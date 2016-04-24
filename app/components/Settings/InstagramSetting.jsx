@@ -66,16 +66,20 @@ var InstagramSetting = React.createClass({
       )
     } else {
       insta_state = (
-          <Formsy.Form ref="form" className="settingsForm" onSubmit={this.handleSubmit}>
-            <MyTextField required
-              id="name"
-              name="name"
-              placeholder="Nazwa użytkownika"
-              validations="minLength:3"
-              validationError="Nazwa jest wymagana" />
-              <button type="submit" className="button">
+          <Formsy.Form ref="form" className="input-group-container" onSubmit={this.handleSubmit}>
+            <div className="input-group-text">
+              <MyTextField required
+                id="name"
+                name="name"
+                placeholder="Nazwa użytkownika"
+                validations="minLength:3"
+                validationError="Nazwa jest wymagana" />
+            </div>
+            <div className="input-group-btn">
+              <button type="submit" className="bg--primary">
                 Ustaw
               </button>
+            </div>
           </Formsy.Form>
       )
     }

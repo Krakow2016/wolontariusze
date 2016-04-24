@@ -155,7 +155,7 @@ var Application = React.createClass({
         {errorMessage}
         <footer>
           <p>
-            Strona została zbudowana przez wolontariuszy ŚDM w Krakowie w 2016r.
+            Strona została zbudowana przez wolontariuszy ŚDM KRAKÓW 2016.
             <br />
             <a href="mailto:goradobra@krakow2016.com" target="_balnk">Kontakt</a> | <NavLink href="/regulamin">Regulamin</NavLink> | <a href="https://github.com/Krakow2016/wolontariusze">Dla programistów</a>
           </p>

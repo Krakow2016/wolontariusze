@@ -40,7 +40,8 @@ var MyTextField = React.createClass({
         value={this.getValue()}
         hintText={this.props.placeholder}
         disabled={this.props.disabled}
-        errorText={errorMessage} />
+        errorText={errorMessage}
+        placeholder={this.props.placeholder} />
     )
   }
 })

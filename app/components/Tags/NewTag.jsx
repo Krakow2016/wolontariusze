@@ -64,11 +64,11 @@ var NewTag = React.createClass({
       placeholder: 'Dodaj projekt...',
       value: this.state.value,
       onChange: this.onChange,
-      className: 'input-category-add'
+      className: 'input-group-text'
     }
 
     return (
-      <div className="category-add">
+      <div className="input-group-container">
         <Autosuggest
           suggestions={this.state.suggestions}
           onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
@@ -76,7 +76,7 @@ var NewTag = React.createClass({
           getSuggestionValue={this.getSuggestionValue}
           onSuggestionSelected={this.handleSave}
           inputProps={inputProps} />
-        <div className="btn-category-add">
+        <div className="input-group-btn">
           <button className="bg--primary" onClick={this.handleSave}>Dodaj</button>
         </div>
       </div>

@@ -23,8 +23,9 @@ h1 {
 	margin: 1rem 0 1rem 0;
 	font:600 2.5rem/2.5rem "Open Sans", Arial;
 }
-h2 {
-	margin: 1rem 0 0 0;
+h2, h3, h4 {
+	font-family: "Open Sans",Arial;
+	font-weight: 600;
 }
 .p-space{
 	padding-left: 9rem;
@@ -68,7 +69,7 @@ h2 {
 }
 input.menu-search-box {
 	width: 100%;
-	border: 1px solid #0082BD;
+	border: 2px solid #008AC3;
 	border-radius: 22px;
 	height: 2rem;
 	display: inline-block;
@@ -76,6 +77,7 @@ input.menu-search-box {
 	box-sizing: border-box;
 	font-size: inherit;
 }
+
 .login-container{
 	text-align: center;
 }
@@ -195,16 +197,17 @@ label:hover:before {
 
 /*--------GROUP INPUTS----------*/
 
-.category-add{
+.input-group-container{
 	position: relative;
 	display: table;
 	border-collapse: separate;
 	margin: 10px 0;
 }
-.input-category-add,
-.btn-category-add{
+.input-group-text,
+.input-group-text > input,
+.input-group-btn{
 	display: table-cell;
-	height: 34px !important;
+	height: 36px !important;
 }
 .react-autosuggest__container{
 	position: relative;
@@ -213,19 +216,20 @@ label:hover:before {
 	line-height: 1.42857143;
 	color: #555;
 }
-.input-category-add{
-	padding: 6px 12px;
+.input-group-text,
+.input-group-text > input{
+	
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 }
-.btn-category-add{
+.input-group-btn{
 	position: relative;
 	font-size: 0;
 	white-space: nowrap;
 	width: 1%;
 	vertical-align: middle;
 }
-.btn-category-add > button{
+.input-group-btn > button{
 	position: relative;
 	z-index: 2;
 	margin-left: -1px;
@@ -284,6 +288,8 @@ label:hover:before {
 .react-autosuggest__container--open .react-autosuggest__input {
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
+	border-width: 5px;
+	border-bottom: 0;
 }
 .react-autosuggest__suggestions-container + input{
 	border-bottom: 0;
@@ -316,7 +322,8 @@ label:hover:before {
 	padding: 5px;
 }
 .react-autosuggest__suggestion:hover{
-	background-color: rgba(255, 154, 0, 0.26);
+	background-color: #008AC3;
+	color: white;
 }
 .react-autosuggest__suggestion::before{
 	content: '';
@@ -324,14 +331,21 @@ label:hover:before {
 .form.menu-search-box + .react-autosuggest__suggestions-container{
 	top: 30px;
 	left: 50%;
+	border-color: #008AC3;
+	border-width: 5px;
 	-webkit-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
 	-o-transform: translateX(-50%);
 	transform: translateX(-50%);
-	border-color: #0082BD;
+	animation-name: slide-down;
+	animation-duration: .5s;
 }
 .react-autosuggest__container--open > .form.menu-search-box{
 	border-bottom-left-radius: 0;
 	border-bottom-right-radius: 0;
+	border-color: #008AC3;
+	border-width: 5px;
+	border-bottom: 0;
 }
 .form.menu-search-box + .react-autosuggest__suggestions-container .react-autosuggest__suggestion{
 	width: 100%;
@@ -379,18 +393,6 @@ label:hover:before {
 	font-size: 1rem;
 }
 
-@media only screen and (max-width: 840px) {
-	body {background-image:url("../img/bgcutmob.svg"),url("../img/bg.svg");background-position:0% 15em, center top; background-color:#00A8D8; }
-	.col { 	margin: 1% 0 1% 0%; }
-	.span_2_of_4, .span_3_of_4, .span_4_of_4 { width: 100%; }
-	.span_1_of_4 { width: 50%; }
-	.THE-margin {margin: auto; width: 85%;}
-	nav {height: inherit;}
-	nav ul li a{line-height: 3rem;}
-	.menu-search-box{ margin: 0 0 0.5rem 0;}
-	#menu-search-submit { top: 1rem;}
-	.task p{height: auto;}
-}
 
 #prolife-photo {
 	height:22rem;
@@ -792,7 +794,10 @@ h1 small .activityTagLabel:first-child{
 	margin-top: 10px;
 }
 
-.settingsForm {
+.settingsForm.form-alert {
+	white-space: nowrap;
+}
+.settingsForm{
 	max-width: 600px;
 	margin: auto;
 }
@@ -864,20 +869,11 @@ article.main-content{
 article.main-content a{
 	color:#003753;
 }
-
-/*------------COLORS------------*/
-
-.dark-blue{
-	background-color:#003753;
-}
-.midium-blue{
-	background-color: #004F74;
-}
-.light-blue{
+.header-text{
+	margin: 1rem -1rem;
+	padding: 1rem;
 	background-color: #008AC3;
-}
-.footer-blue{
-	background-color: #001A2D;
+	color: white;
 }
 
 /*-------HEADER-------*/
@@ -931,6 +927,7 @@ nav#head-nav #head-search #menu-search-submit{
 ul#nav-list{
 	list-style: outside none none;
 	margin: 0;
+	padding: 0;
 	text-align: center;
 	position: relative;
 }
@@ -1055,7 +1052,7 @@ input.graph-filter-input{
 	margin-top: 5px;
 }
 
-/*------VOLUNTEER-DASHBOARD------*/
+/*------VOLUNTEER-PROFILE------*/
 
 .questions > h1{
 	font-size: 2rem;
@@ -1302,6 +1299,12 @@ article ul#nav-list a{
 	padding: 1rem 1rem 3rem 1rem;
 }
 
+/*-------BUTTONS------*/
+
+.btn-submit{
+	margin-top: 1rem;
+}
+
 /*----------------FOOTER----------------*/
 
 footer{
@@ -1312,3 +1315,97 @@ footer{
 
 }
 
+
+/*-----------------ANIMATION--------------------*/
+
+@keyframes slide-down{
+	from{
+		-webkit-transform: translate(-50%, -100%);
+		-moz-transform: translate(-50%, -100%);
+		-o-transform: translate(-50%, -100%);
+		transform: translate(-50%, -100%);
+		opacity: 0;
+	}
+	to{ 
+		-webkit-transform: translate(-50%, 0);
+		-moz-transform: translate(-50%, 0);
+		-o-transform: translate(-50%, 0);
+		transform: translate(-50%, 0);
+		opacity: 1;
+	}
+}
+@-webkit-keyframes slide-down{
+	from{ height: 0;}
+	to{ height: auto;}
+}
+
+/*-----------------RESPONSIVE--------------------*/
+
+@media only screen and (max-width: 821px) {
+	ul#nav-list li{
+		font-size: 0.9rem;
+	}
+	.graph-filter{
+		padding: 0.5rem 3rem;
+	}
+	.dashboard-container{
+		padding: 3rem 2rem;
+	}
+	.tiles-container p{
+		font-size: 0.8rem;
+	}
+	.tiles-container h1{
+		font-size: 1.8rem
+	}
+}
+@media only screen and (max-width: 768px) {
+	.col { 	margin: 1% 0 1% 0%; }
+	.span_2_of_4, .span_3_of_4, .span_4_of_4 { width: 100%; }
+	.span_1_of_4 { width: 50%; }
+	.THE-margin {margin: auto; width: 85%;}
+	nav {height: inherit;}
+	ul#nav-list li{
+		line-height: 1.5rem;
+		font-size: 0.7rem;
+		padding: 0.4rem;
+	}
+	nav#head-nav .head-section{
+		top: auto;
+		-webkit-transform: none;
+		-moz-transform: none;
+		-o-transform: none;
+		transform: none;
+	}
+	nav#head-nav{
+		height: auto;
+		padding: 0;
+	}
+	textarea.settings{
+		width: auto;
+	}
+	.settingsForm.form-alert{
+		white-space: normal;
+	}
+	.avatar-img{
+		width: 100%;
+	}
+	.graph-filter-input-container{
+		top: 0;
+	}
+	.dashboard-container{
+		padding: 3rem 0;
+	}
+	.insta-header span{
+		font-size: 2.5rem;
+	}
+	.graph-filter{
+		padding: 0.5rem 4rem;
+	}
+	#prolife-photo{
+		height: auto;
+		width: 100%;
+	}
+	.menu-search-box{ margin: 0 0 0.5rem 0;}
+	#menu-search-submit { top: 1rem;}
+	.task p{height: auto;}
+}
