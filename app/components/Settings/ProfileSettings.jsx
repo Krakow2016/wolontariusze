@@ -42,7 +42,7 @@ var ProfileSettings = React.createClass({
               Profil będzie Twoją wizytówką. Informacje, które tutaj zamieścisz będą widoczne dla wszystkich
               odwiedzających portal. Będziesz mieć możliwość dzielenia się z innymi swoimi doświadczeniami i
               zaangażowaniem w ŚDM. Pokażesz ogrom wniesionego wkładu i efektów pracy, które będą
-              tworzyć prawdziwą &quot;Górę Dobra&quot;. Zastanów się też nad tym, co chcesz upublicznić, a które
+              tworzyć prawdziwą &quot;Górę Dobra&quot;. Zastanów się też nad tym, co chcesz opublikować, a które
               informacje wolisz zostawić dla siebie. <br/><br/>
               <b>Daj się poznać i zainspiruj innych! Uzupełnij swój profil już dziś!</b>
             </p>

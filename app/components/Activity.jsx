@@ -336,7 +336,7 @@ var Activity = React.createClass({
 
         { this.map() }
 
-        <b style={{'font-size': '1.8rem'}}>Wolontariusze, którzy biorą udział:</b>
+        <b className="big-text">Wolontariusze, którzy biorą udział:</b>
         <p>
           {activeVolonteersList}
         </p>

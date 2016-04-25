@@ -30,6 +30,9 @@ h2, h3, h4 {
 .p-space{
 	padding-left: 9rem;
 }
+.big-text{
+	font-size: 1.8rem;
+}
 
 /*---------------FORMS-----------------------*/
 
@@ -441,7 +444,7 @@ label:hover:before {
 	margin: 0;
 }
 .profile-ribon {
-	margin: 1rem 0 0 0;
+	margin: 1rem 0 1rem 0;
 	display: -ms-flexbox;
 	display: -webkit-flex;
 	display: flex;
@@ -470,8 +473,11 @@ label:hover:before {
 	align-self: auto;
 	background-color: #00A8D8;
 	height: 4rem;
+	line-height: 4rem;
+	text-align: center;
 	margin: 0;
 	position: relative;
+	color: white !important;
 }
 .profile-ribon-cell:first-child{
 	border-radius: 2rem 0 0 2rem;
@@ -594,7 +600,7 @@ textarea.settings {
 }
 
 .tasks-table {
-	width: 90%;
+	width: 100%;
 }
 .tasks-table td, .tasks-table th{
 	text-align: left;

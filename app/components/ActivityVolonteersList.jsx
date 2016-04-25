@@ -37,7 +37,7 @@ var ActivityVolonteersList = React.createClass ({
           return {
             display_name: option.text,
             user_id: option.payload.id,
-            thumb_picture_url: option.payload.profile_picture_url
+            thumb_picture_url: option.payload.thumb_picture_url
           }
         }).filter(function (volunteer) {
           var excludedVolunteers = that.props.excludedVolunteers || []
