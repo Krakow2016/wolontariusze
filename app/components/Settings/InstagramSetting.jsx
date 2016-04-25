@@ -38,7 +38,7 @@ var InstagramSetting = React.createClass({
   },
 
   handleSubmit: function(data){
-    var that = this;
+    var that = this
     request
       .post('/instagram')
       .send({
@@ -63,22 +63,26 @@ var InstagramSetting = React.createClass({
     if (this.state.instagram && this.state.instagram.id) {
       insta_state = (
         <div>
-          <span><a href={"https://www.instagram.com"+this.state.instagram.username}>{this.state.instagram.username}</a></span>
+          <span><a href={'https://www.instagram.com'+this.state.instagram.username}>{this.state.instagram.username}</a></span>
           <input type="button" value="Usuń" onClick={this.removeInstagram} />
         </div>
       )
     } else {
       insta_state = (
-        <Formsy.Form ref="form" className="settingsForm" onSubmit={this.handleSubmit}>
-          <MyTextField required
-            id="name"
-            name="name"
-            placeholder="Nazwa użytkownika"
-            validations="minLength:3"
-            validationError="Nazwa jest wymagana" />
-            <button type="submit" className="button">
+        <Formsy.Form ref="form" className="input-group-container" onSubmit={this.handleSubmit}>
+          <div className="input-group-text">
+            <MyTextField required
+              id="name"
+              name="name"
+              placeholder="Nazwa użytkownika"
+              validations="minLength:3"
+              validationError="Nazwa jest wymagana" />
+          </div>
+          <div className="input-group-btn">
+            <button type="submit" className="bg--primary">
               Ustaw
             </button>
+          </div>
         </Formsy.Form>
       )
     }

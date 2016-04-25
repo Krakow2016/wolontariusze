@@ -47,7 +47,7 @@ var Tasks = React.createClass({
     var query = this.state.query
     query.tags = query.tags || []
     this.setState(update(this.state, {
-        query: {tags: {$push: [tag]}}
+      query: {tags: {$push: [tag]}}
     }))
   },
 
@@ -56,7 +56,7 @@ var Tasks = React.createClass({
     var tag = e.target.dataset.tag
     var index = query.tags.indexOf(tag)
     this.setState(update(this.state, {
-        query: {tags: {$splice: [[index, 1]]}}
+      query: {tags: {$splice: [[index, 1]]}}
     }))
   },
 
@@ -81,26 +81,24 @@ var Tasks = React.createClass({
     // TABS
     var tabs = [
       <NavLink href={"/zadania" } className="profile-ribon-cell">
-        <b id="profile-ribon-txt">Bank pracy</b>
+        <b>Bank pracy</b>
       </NavLink>
     ]
 
     if(user) {
       tabs.push(
-        <NavLink href={"/zadania?volunteer="+user.id} className="profile-ribon-cell">
-          <b id="profile-ribon-txt">Biorę udział w</b>
+        <NavLink href={'/zadania?volunteer='+user.id} className="profile-ribon-cell">
+          <b>Biorę udział w</b>
         </NavLink>
       )
       if(user.is_admin) {
         tabs.push(
-          <NavLink href={"/zadania?created_by="+user.id} className="profile-ribon-cell">
-            <b id="profile-ribon-txt">Moje zadania</b>
+          <NavLink href={'/zadania?created_by='+user.id} className="profile-ribon-cell">
+            <b>Moje zadania</b>
           </NavLink>
         )
       }
     }
-
-    console.log(this.state);
 
     var tasks = this.state.all.map(function (doc) {
       var source = doc._source
@@ -122,8 +120,8 @@ var Tasks = React.createClass({
     if (user) {
       return (
         <div className="taskBank">
-          <div className="section group">
-            <div className="col span_4_of_4 profile-ribon">
+          <div className="row">
+            <div className="col col12 profile-ribon">
               {tabs}
             </div>
           </div>

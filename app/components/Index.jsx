@@ -16,7 +16,7 @@ var App = React.createClass({
   },
 
   componentDidMount: function() {
-    this.loadInsta();
+    this.loadInsta()
     this.props.context.getStore(IndexStore)
       .addChangeListener(this._changeListener)
 
@@ -27,7 +27,7 @@ var App = React.createClass({
   },
 
   componentWillUnmount: function() {
-    this.loadInsta();
+    this.loadInsta()
     this.props.context.getStore(IndexStore)
       .removeChangeListener(this._changeListener)
   },
@@ -70,7 +70,7 @@ var App = React.createClass({
     var user = this.props.context.getUser()
     if(user && user.is_admin) {
       stats = (
-        <table>
+        <table style={{width: '100%'}}>
           <tr>
             <td>
               Liczba kont w systemie:
@@ -128,7 +128,7 @@ var App = React.createClass({
     return (
       <div>
         <img src="/img/homepage/inspiration.svg" id="inspiration-img" />
-        <img src="/img/homepage/graph.png" style={{width: "100%"}} alt="" />
+        <img src="/img/homepage/graph.png" style={{width: '100%'}} alt="" />
         <div className="graph-filter">
           <div className="row">
             <div className="col col4">
@@ -179,8 +179,8 @@ var App = React.createClass({
                 <div className="col col6"><img src="/img/homepage/why.jpg" alt="" /></div>
                 <div className="col col6">
                   <p>
-                  Na pewno zdarzyło Ci się kiedyś patrzeć na góry. 
-                  Nieważne czy lubisz zdobywać szczyty czy nie, spojrzałeś w górę i ogarnął Cię ich ogrom. 
+                  Na pewno zdarzyło Ci się kiedyś patrzeć na góry.
+                  Nieważne czy lubisz zdobywać szczyty czy nie, spojrzałeś w górę i ogarnął Cię ich ogrom.
                   Możesz to sobie w każdej chwili wyobrazić...
                   </p>
                   <a href="/czemu-gora-dobra">CZYTAJ WIĘCEJ</a>
@@ -195,7 +195,7 @@ var App = React.createClass({
                 <div className="col col6"><img src="/img/homepage/what.jpg" alt="" /></div>
                 <div className="col col6">
                   <p>
-                   „Góra Dobra to portal dla Wolontariuszy Światowych Dni Młodzieży Kraków 2016 w całości przygotowywany przez nich. 
+                   „Góra Dobra to portal dla Wolontariuszy Światowych Dni Młodzieży Kraków 2016 w całości przygotowywany przez nich.
                    Góra Dobra to też wspólnota młodych i zaangażowanych osób pełnych pasji...
                   </p>
                   <a href="/czym-jest-gora-dobra">CZYTAJ WIĘCEJ</a>
@@ -240,7 +240,7 @@ var App = React.createClass({
         <div className="insta">
           <div className="insta-header">
             <img src="/img/homepage/aparacik.svg" alt="" />
-            <span>#krakow2016</span>
+            <span>#KRAKOW2016</span>
           </div>
           <div className="insta-content">
             {insta_content}

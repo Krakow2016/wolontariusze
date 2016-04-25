@@ -9,7 +9,7 @@ var Instagram = React.createClass({
         	<h1 className="text--center">Kto Jest Zaangażowany?</h1>
         	<p>
 	        	Górę Dobra tworzą:<br/>
-	        	Wolontariusze ŚDM Kraków 2016<br/> 
+	        	Wolontariusze ŚDM Kraków 2016<br/>
 	        	Koordynatorzy wolontariatu<br/>
 	        	<br/>
 	        	Potrzebujemy osób takich jak Ty- chętnych do współpracy, z pasją i z otwartą głową pełną pomysłów. Osób lubiących nawiązywać nowe znajomości, chcących się rozwijać i dzielić się swoimi zdolnościami z innymi. Tworząc Górę Dobra pragniemy pokazać, że małymi krokami można tworzyć wielkie rzeczy. W książce “Zasada bambusowego krzewu” K. Lodi przytacza opowieść o trzech murarzach:<br/>

@@ -22,18 +22,18 @@ var Activities = module.exports = {
           .get(params.id.toString())
           .merge(function(activity){
             return {
-              created_by: r.db("sdm").table("Volunteers").get(activity('created_by')).pluck(["id", "first_name", "last_name", "profile_picture_url"])
+              created_by: r.db('sdm').table('Volunteers').get(activity('created_by')).pluck(['id', 'first_name', 'last_name', 'profile_picture_url'])
             }
           })
           .run(conn, function(err, activity){
 
-          if(err) {
-            return callback(err)
-          } else if (!activity) {
-            return callback(404)
-          }
+            if(err) {
+              return callback(err)
+            } else if (!activity) {
+              return callback(404)
+            }
 
-          r.table('Joints')
+            r.table('Joints')
             .getAll(params.id, {index: 'activity_id'})
             .filter(function(x){
               return x.hasFields('is_canceled').not()
@@ -55,9 +55,9 @@ var Activities = module.exports = {
                 callback(null, activity)
               })
             })
-        })
+          })
       } else {
-          callback(400)
+        callback(400)
       }
     })
   },
@@ -119,7 +119,7 @@ var Activities = module.exports = {
             .delete()
             .run(conn, function(err3){
                 // ok
-                callback(err3, resp2)
+              callback(err3, resp2)
             })
         })
       })

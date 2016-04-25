@@ -134,7 +134,7 @@ var ProfileComments = React.createClass({
     comment.editMode = true
 
     this.setState(update(this.state, {
-        comments: {$splice: [[index, 1, comment]]}
+      comments: {$splice: [[index, 1, comment]]}
     }))
   },
 
@@ -147,7 +147,7 @@ var ProfileComments = React.createClass({
     comment.editMode = false
 
     this.setState(update(this.state, {
-        comments: {$splice: [[index, 1, comment]]}
+      comments: {$splice: [[index, 1, comment]]}
     }))
   },
 

@@ -64,6 +64,11 @@ var Settings = React.createClass({
       return (<Integration name={integration.name} key={integration.id} />)
     })
 
+    var state_formsy = false
+    if(this.state.profile.who_question && this.state.profile.what_question && this.state.profile.why_question){
+      state_formsy = true
+    }
+
     return (
       <div>
 
@@ -73,7 +78,8 @@ var Settings = React.createClass({
           profileId={this.state.profile.id}
           context={this.props.context}
           success={this.state.success}
-          error={this.state.error}>
+          error={this.state.error}
+          state_formsy={state_formsy}>
 
           <label htmlFor="first_name">
             <h2>Kim jestem?</h2>
@@ -125,7 +131,7 @@ var Settings = React.createClass({
 
         </ProfileSettings>
 
-        <h1>
+        <h1 className="header-text">
           Aplikacje
         </h1>
 

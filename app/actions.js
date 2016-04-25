@@ -112,7 +112,7 @@ module.exports = {
 
     var must = []
     var must_not = []
-    
+
     var finishedQuery = {
       or: [
         {
@@ -121,24 +121,24 @@ module.exports = {
           }
         },
         {
-          range: { 
+          range: {
             'doc.datetime': {
-              "lte": "now"
+              'lte': 'now'
             }
           }
         }
       ]
     }
-    
+
     var availableQuery = {
       term: {
         'doc.limit_reached': true
       }
     }
-    
+
     //Jeżeli otwarta jest zakładka Bank Pracy, Biorę Udział w w to potrzeba zwrócić trwające i wolne zadania
     //a w zakładce Moje Zadania zwracamy wszystkie lub wybrane
-    
+
     if(!state.created_by) {
       must_not.push(finishedQuery)
       must_not.push(availableQuery)
@@ -148,7 +148,7 @@ module.exports = {
       } else if (state.timeState == 'zakonczone') {
         must.push(finishedQuery)
       }
-      
+
       if(state.availabilityState == 'wolne') {
         must_not.push(availableQuery)
       } else if (state.availabilityState == 'pelne') {
@@ -167,7 +167,7 @@ module.exports = {
         term: { 'doc.volunteers': state.volunteer }
       })
     }
-    
+
     if(state.act_type) {
       must.push({
         term: { 'doc.act_type': state.act_type }
@@ -190,19 +190,19 @@ module.exports = {
     //nowe pole tworzone jest za pomocą logstash
     if(state.placeDistance) {
       must.push({
-        "geo_distance": {
-          "distance": state.placeDistance+"km",
-          "doc.lon_lat": [parseFloat(state.placeLon), parseFloat(state.placeLat)]
+        'geo_distance': {
+          'distance': state.placeDistance+'km',
+          'doc.lon_lat': [parseFloat(state.placeLon), parseFloat(state.placeLat)]
         }
       })
     }
-    
+
     if(state.tags && state.tags.length) {
       must.push({
         terms: { 'doc.tags': state.tags }
       })
     }
-    
+
     var query = {
       nested: {
         path: 'doc',
@@ -500,7 +500,7 @@ module.exports = {
 
     // Nie wpisano żadnego zapytania
     if(!should.length) {
-        return
+      return
     }
 
     var query = {

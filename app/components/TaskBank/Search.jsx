@@ -44,7 +44,7 @@ var Search = React.createClass({
           type="hidden"
           name="tags"
           onChange={this.props.handleChange}
-          value={this.props.query.tags} />  
+          value={this.props.query.tags} />
         <input
           type="hidden"
           name="timeState"
@@ -54,7 +54,7 @@ var Search = React.createClass({
           type="hidden"
           name="availabilityState"
           onChange={this.props.handleChange}
-          value={this.props.query.availabilityState} />   
+          value={this.props.query.availabilityState} />
         <input type="hidden" value="Szukaj" onClick={this.props.submit} />
       </div>
     )

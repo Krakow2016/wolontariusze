@@ -5,24 +5,24 @@ var request = require('superagent')
 var Search = React.createClass({
   getInitialState: function() {
     return {
-      result: ""
+      result: ''
     }
   },
 
   onSelected: function(e) {
-      var that = this
-      var r = request.post('/import')
-      var files = e.target.files
+    var that = this
+    var r = request.post('/import')
+    var files = e.target.files
 
-      for (var i = 0; i < files.length; i++) {
-          r.attach('image', files[i])
-      }
+    for (var i = 0; i < files.length; i++) {
+      r.attach('image', files[i])
+    }
 
-      r.end(function(err, response){
-          that.setState({
-              result: response.body
-          })
+    r.end(function(err, response){
+      that.setState({
+        result: response.body
       })
+    })
 
   },
 
