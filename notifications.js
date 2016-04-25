@@ -185,28 +185,34 @@ r.connect(config.rethinkdb, function(err, conn) {
     .run(conn, function(err, cursor) {
       cursor.each(function(err, change){ // Wolontariusz został adminem
         var row = change.new_val
-        var html = '<p>Właśnie otrzymałeś specjalne uprawnienia koordynatora, które dają Ci dostęp do danych wszystkich wolontariuszy w systemie.</p>'
 
-        var email = new sendgrid.Email({
-          to:       row.email,
-          from:     'goradobra@krakow2016.com',
-          fromname: 'Góra Dobra',
-          subject:  'Witaj w gronie koordynatorów wolontariuszy na Górze Dobra!',
-          html:     html
-        })
+        r.table('Volunteers').get(row.promoted_by)
+          .run(conn, function(err, admin) { // Pobierz autora zmiany
 
-        email.addSubstitution(':name', row.first_name)
-        email.setFilters({
-          'templates': {
-            'settings': {
-              'enable': 1,
-              'template_id': sendgrid_template,
+          var html = '<p>'+ admin.first_name +' '+ admin.last_name +' właśnie nadał/a Ci specjalne uprawnienia koordynatora, dzięki którym masz obecnie dostęp do bazy danych wszystkich wolontariuszy w systemie m.in. danych kontaktowych, umiejętności, doświadczenie itp.</p><p> Równocześnie informujemy, że otrzymując dostęp jako koordynator, jesteś zobowiązany/a do zachowania w tajemnicy i nie ujawniania osobom trzecim otrzymanych tu informacji i danych o charakterze poufnym, w tym danych osobowych oraz sposobów ich zabezpieczenia, do których będziesz mieć dostęp w związku z wykonywaniem zadań koordynatora wolontariuszy ŚDM Kraków 2016 zarówno w trakcie ich wykonywania, jak i po ich ustaniu. *<br /> Administratorem powyższych danych jest Archidiecezja Krakowska.</p> <p>* Zgodnie z przepisami Rozdziału 8. Ustawy o ochronie danych osobowych (Dz. U. z 2002 r. Nr 101, poz. 926 ze zm.) w wypadku naruszenia powyższych przepisów ustawy, ponoszona jest odpowiedzialność karna.</p>'
+
+          var email = new sendgrid.Email({
+            to:       row.email,
+            bcc:      'goradobra@krakow2016.com',
+            from:     'goradobra@krakow2016.com',
+            fromname: 'Góra Dobra',
+            subject:  'Witaj w gronie koordynatorów wolontariuszy na Górze Dobra!',
+            html:     html
+          })
+
+          email.addSubstitution(':name', row.first_name)
+          email.setFilters({
+            'templates': {
+              'settings': {
+                'enable': 1,
+                'template_id': sendgrid_template,
+              }
             }
-          }
-        })
+          })
 
-        sendgrid.send(email, function(err, json) {
-          console.log('sendgrid:', err, json)
+          sendgrid.send(email, function(err, json) {
+            console.log('sendgrid:', err, json)
+          })
         })
       })
     })
