@@ -4,7 +4,7 @@
 var elasticsearch = require('elasticsearch')
 var client = new elasticsearch.Client({
   host: 'es:9200',
-  log: 'trace'
+  log: 'error'
 })
 
 var Activities = module.exports = {

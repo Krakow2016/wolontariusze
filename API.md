@@ -31,6 +31,13 @@ błędnie wprowadzonymi danymi (np. brak wymaganego parametru), a kody z zakresu
 | `type`        | Typ błędu. Np. `authentication_error`. |
 | `message`     | Słowny opis błędu.                     |
 
+## Cache
+
+Wszystkie zapytnia zwracają nagłówek `ETag`, który należy zapisywać po stronie
+klienta i przekazać go przy kolejnym zapytaniu w nagłówku `If-None-Match`.
+Jeżeli zasób się nie zmienił od czasu ostatniego zapytania, to zapytanie zwróci
+pustą odpowiedź ze statusem 304 (Not Modified).
+
 ## OAuth
 
 API serwisu wolontariuszy do autoryzacji zapytań API używa standardu OAuth 2.0.
@@ -476,4 +483,78 @@ $ curl -X DELETE https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98
 
 ## Baza noclegowa
 
-*TODO*
+Baza noclegowa pielgrzymów składa się listy grup pielgrzymów, do których
+przypisane są: opiekun grupy oraz parafia w której znajduje się miejsce
+noclegowe wszyskich pielgrzymów należących do danej grupy. Baza danych jest
+tylko do odczytu. Przykładu użycia są zawarte w pliku:
+<https://github.com/Krakow2016/wolontariusze/blob/master/spec/api_pilgrims_spec.js>.
+
+### Atrybuty
+
+| Identyfikator | Opis                                                             |
+| ---           | ---                                                              |
+| `id`          | Identyfikator grupy.                                             |
+| `guardian`    | Imię i nazwisko opiekuna grupy.                                  |
+| `phone`       | Numer telefonu do opiekuna.                                      |
+| `location`    | Słowny opis lokalizacji parafii do której przypisana jest grupa. |
+| `lat_lon`     | Współrzędne geograficzne miejsca w którym znajduje się parafia.  |
+
+### Pobieranie całej bazy danych
+
+Zwraca najnowszą wersję pełnej bazy danych. To jest: wszystkich grup
+pielgrzymów z miejscami noclegowymi. Uwaga: odpowiedź może być duża.
+
+**Ścieżka:**  
+```
+GET https://wolontariusze.krakow2016.com/api/v2/pilgrims
+```
+
+**Przykładowa odpowiedź:**  
+```
+{
+    "status": "success",
+    "data": {
+        "pilgrims": {
+            "created_at": 20160418,
+            "data": [
+                {
+                    "guardian": "Joanna Nowak",
+                    "id": "bar",
+                    "lat_lon": [
+                        0,
+                        0
+                    ],
+                    "location": "parafia \u015bw. Salawy",
+                    "phone": "+48111222333"
+                }
+            ],
+            "id": "c19a5c9c-da02-4aeb-b08b-558e83a27cbd"
+        }
+    }
+}
+```
+
+### Pobieranie aktualizacji do bazy danych (wersjonowanie)
+
+Zwraca zmiany które nastąpiły od ostatniej aktualizacji (numer wersji należy
+podać w parametrze `from`) w formacie path na bazie w formacie pretty json.
+
+**Ścieżka:**  
+```
+GET https://wolontariusze.krakow2016.com/api/v2/pilgrims?from=:date
+```
+
+**Przykładowe zapytanie:**  
+```
+$ curl https://wolontariusze.krakow2016.com/api/v2/pilgrims?from=20160416
+```
+
+**Przykładowa odpowiedź:**  
+```
+{
+    "status": "success",
+    "data": {
+        "patch": "Index: Pilgrims.json\n===================================================================\n--- Pilgrims.json\n+++ Pilgrims.json\n@@ -1,16 +1,16 @@\n {\n-  \"created_at\": 20160416,\n+  \"created_at\": 20160418,\n   \"data\": [\n     {\n-      \"guardian\": \"Jan Kowalski\",\n-      \"id\": \"foo\",\n+      \"guardian\": \"Joanna Nowak\",\n+      \"id\": \"bar\",\n       \"lat_lon\": [\n         0,\n         0\n       ],\n-      \"location\": \"parafia \u015bw. Szczepana\",\n-      \"phone\": \"+48123456789\"\n+      \"location\": \"parafia \u015bw. Salawy\",\n+      \"phone\": \"+48111222333\"\n     }\n   ],\n-  \"id\": \"eb63b33a-bd8d-4537-8b79-a29744b1f51c\"\n+  \"id\": \"c19a5c9c-da02-4aeb-b08b-558e83a27cbd\"\n }\n\\ No newline at end of file\n"
+    }
+}
+```

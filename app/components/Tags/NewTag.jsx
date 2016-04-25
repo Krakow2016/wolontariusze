@@ -61,7 +61,7 @@ var NewTag = React.createClass({
   render: function() {
 
     var inputProps = {
-      placeholder: 'Dodaj projekt...',
+      placeholder: 'Dodaj projekt, kategorię...',
       value: this.state.value,
       onChange: this.onChange,
       className: 'input-group-text'
@@ -76,8 +76,8 @@ var NewTag = React.createClass({
           getSuggestionValue={this.getSuggestionValue}
           onSuggestionSelected={this.handleSave}
           inputProps={inputProps} />
-        <div className="input-group-btn">
-          <button className="bg--primary" onClick={this.handleSave}>Dodaj</button>
+        <div>
+          <input type="button" className="bg--primary" value="Dodaj" onClick={this.handleSave} />
         </div>
       </div>
     )

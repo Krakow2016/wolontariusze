@@ -1,5 +1,5 @@
 :root {
-	font-family: 'Open Sans', Arial
+  font-family: 'Open Sans', Arial
 }
 
 a, a:focus, a:hover, a:active,
@@ -222,6 +222,7 @@ label:hover:before {
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 }
+
 .input-group-btn{
 	position: relative;
 	font-size: 0;
@@ -1003,6 +1004,10 @@ section:last-of-type{
 	border-bottom: 12px solid white;
 	width: 100%;
 }
+#inspiration-img{
+	border-bottom: 12px solid white;
+	width: 100%;
+}
 
 /*--------GRAPH--------*/
 
@@ -1172,7 +1177,6 @@ input.graph-filter-input{
 }
 
 /*--------TEXTS--------*/
-
 .content-texts-container{
 	margin: 0 -1rem;
 	margin-bottom: -3rem;
@@ -1193,6 +1197,18 @@ input.graph-filter-input{
 	margin-top: 1rem;
 }
 
+.content-texts-container{
+	margin: 0 -1rem;
+}
+.content-texts-container > img{
+	width: 100%;
+}
+.content-texts p{
+	font-size: 1.5rem;
+}
+.content-texts{
+	padding: 1rem 1rem 3rem 1rem;
+}
 /*----------------FOOTER----------------*/
 
 footer{

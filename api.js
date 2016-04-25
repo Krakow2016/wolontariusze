@@ -8,6 +8,7 @@ var passport = require('passport')
 var util = require('util')
 var bodyParser = require('body-parser')
 var expressSession = require('express-session')
+var JsDiff = require('diff')
 
 var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
@@ -17,6 +18,7 @@ var Volunteers = require('./app/services/volunteers')(config.service)
 var Activities = require('./app/services/activities')(config.service)
 var ActivitiesES = require('./app/services/es/activities')
 var Joints = require('./app/services/joints')(config.service)
+var Pilgrims = require('./app/services/pilgrims')(config.service)
 
 // Służy do zapisywania sesji użytkowników w bazie danych
 var RDBStore = require('session-rethinkdb')(expressSession)
@@ -305,6 +307,31 @@ server.post('/api/v2/joints/:id', is_admin, function(req, res) {
       res.send(success({joint: joint}))
     }
   })
+})
+
+// Lista noclegowa grup pielgrzymów
+server.get('/api/v2/pilgrims', bearer, function(req, res) {
+
+    Pilgrims.read(req, 'Pilgrims', {}, {}, function(err, result) {
+      if(err) {
+        res.status(500).send(error('DBError', err))
+      } else {
+        if(req.query.from) { // Pobierz diff
+          Pilgrims.read(req, 'Pilgrims', { key: parseInt(req.query.from, 10) }, {}, function(err, base) {
+            if(err) {
+              res.status(500).send(error('DBError', err))
+            } else {
+              var oldStr = JSON.stringify(base[0], null, 2)
+              var newStr = JSON.stringify(result[0], null, 2)
+              var patch = JsDiff.createPatch('Pilgrims.json', oldStr, newStr)
+              res.send(success({ patch: patch }))
+            }
+          })
+        } else { // Pobierz ostatnią wersję
+          res.send(success({ pilgrims: result[0] }))
+        }
+      }
+    })
 })
 
 // Domyślna ścieżka

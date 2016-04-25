@@ -93,10 +93,14 @@
           "type" : "string"
         },
         "lat_lon" : {
-            "type" : "float"
+            "type" : "geo_point"
+        },
+        "lon_lat" : {
+            "type" : "geo_point"
         },
         "is_archived" : {
-            "type" : "boolean"
+            "type" : "boolean",
+            "null_value": false
         },
         "is_urgent" : {
             "type" : "boolean"
@@ -111,7 +115,8 @@
             "type" : "integer"
         },
         "tags" : {
-            "type" : "string"
+            "type" : "string",
+             "index": "not_analyzed"
         },
         "volnteers" : {
           "type":     "object",

@@ -22,7 +22,7 @@ var Html = React.createClass({
     return (
       <html lang="pl">
         <head>
-          <title>Góra Dobra - Portal wolontariuszy Światowych Dni Młodzieży w Krakowie w 2016r. - {this.props.context.getStore(ApplicationStore).getPageTitle()}</title>
+          <title>Góra Dobra - Portal wolontariuszy ŚDM KRAKÓW 2016. - {this.props.context.getStore(ApplicationStore).getPageTitle()}</title>
           <meta charSet="UTF-8" />
           <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600&subset=latin-ext' rel='stylesheet' type='text/css' />
           <link rel="stylesheet" href="/css/concise.css" />

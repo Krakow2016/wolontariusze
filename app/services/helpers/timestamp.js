@@ -8,6 +8,7 @@ module.exports = function(service) {
 
   var update = service.update
   service.update = function(req, resource, params, body, config, callback) {
+    delete body.created_at
     body.updated_at = new Date()
     update(req, resource, params, body, config, callback)
   }

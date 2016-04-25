@@ -40,7 +40,7 @@ var VolunteerStore = createStore({
   },
 
   onInvited: function() {
-    this.profile.approved = true
+    this.profile = Object.assign({}, this.profile, {approved: true})
     this.emitChange()
   },
 

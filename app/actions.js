@@ -111,7 +111,50 @@ module.exports = {
   loadActivities: function(context, state, cb) {
 
     var must = []
-    var must2 = []
+    var must_not = []
+    
+    var finishedQuery = {
+      or: [
+        {
+          term: {
+            'doc.is_archived': true
+          }
+        },
+        {
+          range: { 
+            'doc.datetime': {
+              "lte": "now"
+            }
+          }
+        }
+      ]
+    }
+    
+    var availableQuery = {
+      term: {
+        'doc.limit_reached': true
+      }
+    }
+    
+    //Jeżeli otwarta jest zakładka Bank Pracy, Biorę Udział w w to potrzeba zwrócić trwające i wolne zadania
+    //a w zakładce Moje Zadania zwracamy wszystkie lub wybrane
+    
+    if(!state.created_by) {
+      must_not.push(finishedQuery)
+      must_not.push(availableQuery)
+    } else {
+      if(state.timeState == 'trwajace') {
+        must_not.push(finishedQuery)
+      } else if (state.timeState == 'zakonczone') {
+        must.push(finishedQuery)
+      }
+      
+      if(state.availabilityState == 'wolne') {
+        must_not.push(availableQuery)
+      } else if (state.availabilityState == 'pelne') {
+        must.push(availableQuery)
+      }
+    }
 
     if(state.created_by) {
       must.push({
@@ -120,27 +163,54 @@ module.exports = {
     }
 
     if(state.volunteer) {
-      must2.push({
-        term: { 'volunteers': state.volunteer }
+      must.push({
+        term: { 'doc.volunteers': state.volunteer }
+      })
+    }
+    
+    if(state.act_type) {
+      must.push({
+        term: { 'doc.act_type': state.act_type }
       })
     }
 
+    if(state.priority) {
+      if (state.priority === 'PILNE') {
+        must.push({
+          term: { 'doc.is_urgent': true }
+        })
+      } else {
+        must_not.push({
+          term: { 'doc.is_urgent': true }
+        })
+      }
+    }
+
+    //geo_point w elastic search ma współrzędne [LON, LAT] w przeciwieństwie do [LAT, LON]
+    //nowe pole tworzone jest za pomocą logstash
+    if(state.placeDistance) {
+      must.push({
+        "geo_distance": {
+          "distance": state.placeDistance+"km",
+          "doc.lon_lat": [parseFloat(state.placeLon), parseFloat(state.placeLat)]
+        }
+      })
+    }
+    
+    if(state.tags && state.tags.length) {
+      must.push({
+        terms: { 'doc.tags': state.tags }
+      })
+    }
+    
     var query = {
       nested: {
         path: 'doc',
         query: {
           bool: {
-            must: must
+            must: must,
+            must_not: must_not
           }
-        }
-      }
-    }
-
-    if(must2.length) {
-      must2.push(query)
-      query = {
-        bool: {
-          must: must2
         }
       }
     }
@@ -540,15 +610,6 @@ module.exports = {
     }
 
     request.send(JSON.stringify(params))
-
-    var base = window.location.toString().replace(new RegExp('[?](.*)$'), '')
-    var attributes = Object.keys(state).filter(function(key) {
-      return state[key]
-    }).map(function(key) {
-      return key + '=' + state[key]
-    }).join('&')
-
-    history.replaceState({}, '', base +'?'+ attributes)
   },
 
   inviteUser: function(context, user) {
@@ -559,10 +620,7 @@ module.exports = {
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
-        var resp = request.responseText
-        var json = JSON.parse(resp)
-
-        context.dispatch('INVITATION_SEND', json)
+        context.dispatch('INVITATION_SEND')
       //} else {
       // We reached our target server, but it returned an error
       }

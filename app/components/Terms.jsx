@@ -109,7 +109,7 @@ return (
         </ol>
         <h3>KONTAKT Z ADMINISTRATOREM</h3>
         <ol>
-          <li>W przypadku wątpliwości dotyczących Umowy bądź Usług, prosimy o kontakt na adres mailowy <a href="mailto:wolontariat@krakow2016.com">wolontariat@krakow2016.com</a>.</li>
+          <li>W przypadku wątpliwości dotyczących Umowy bądź Usług, prosimy o kontakt na adres mailowy <a href="mailto:goradobra@krakow2016.com">goradobra@krakow2016.com</a>.</li>
         </ol>
         <p style={{"margin-top": 40}}><b>Załącznik nr 1</b>
           <br/>do regulaminu świadczenia usług drogą elektroniczną</p>
