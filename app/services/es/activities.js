@@ -14,19 +14,19 @@ var Activities = module.exports = {
   create: function(req, resource, params, body, config, callback) {
 
     body.sort = [{
-      "doc.is_urgent" : {
-        "order" : "desc",
-        "nested_path" : "doc",
-        "missing" : 0
+      'doc.is_urgent' : {
+        'order' : 'desc',
+        'nested_path' : 'doc',
+        'missing' : 0
       }
     },
-    {
-      "doc.datetime" : {
-        "order" : "asc",
-        "nested_path" : "doc",
-        "missing" : "_last"
-      }
-    }]
+      {
+        'doc.datetime' : {
+          'order' : 'asc',
+          'nested_path' : 'doc',
+          'missing' : '_last'
+        }
+      }]
 
     var query = {
       index: 'sdm',
@@ -37,11 +37,11 @@ var Activities = module.exports = {
 
     client.search(query)
       .then(function (resp) {
-      var hits = resp.hits.hits;
-      callback(null, hits)
-    }, function (err) {
-      console.trace(err.message);
-    })
+        var hits = resp.hits.hits
+        callback(null, hits)
+      }, function (err) {
+        console.trace(err.message)
+      })
 
   }
 }

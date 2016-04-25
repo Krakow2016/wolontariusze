@@ -8,28 +8,28 @@ var INLINE_STYLES = [
     {label: 'Italic', style: 'ITALIC'},
     {label: 'Underline', style: 'UNDERLINE'},
     {label: 'Monospace', style: 'CODE'},
-];
+]
 
 class StyleButton extends React.Component {
   constructor() {
-    super();
+    super()
     this.onToggle = (e) => {
-      e.preventDefault();
-      this.props.onToggle(this.props.style);
-    };
+      e.preventDefault()
+      this.props.onToggle(this.props.style)
+    }
   }
 
   render() {
-    let className = 'RichEditor-styleButton';
+    let className = 'RichEditor-styleButton'
     if (this.props.active) {
-      className += ' RichEditor-activeButton';
+      className += ' RichEditor-activeButton'
     }
 
     return (
       <span className={className} onMouseDown={this.onToggle}>
         {this.props.label}
       </span>
-    );
+    )
   }
 }
 

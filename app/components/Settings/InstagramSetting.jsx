@@ -38,7 +38,7 @@ var InstagramSetting = React.createClass({
   },
 
   handleSubmit: function(data){
-    var that = this;
+    var that = this
     request
       .post('/instagram')
       .send({
@@ -63,7 +63,7 @@ var InstagramSetting = React.createClass({
     if (this.state.instagram && this.state.instagram.id) {
       insta_state = (
         <div>
-          <span><a href={"https://www.instagram.com"+this.state.instagram.username}>{this.state.instagram.username}</a></span>
+          <span><a href={'https://www.instagram.com'+this.state.instagram.username}>{this.state.instagram.username}</a></span>
           <input type="button" value="Usuń" onClick={this.removeInstagram} />
         </div>
       )

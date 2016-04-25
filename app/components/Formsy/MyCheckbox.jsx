@@ -4,7 +4,7 @@ var Formsy = require('formsy-react')
 var MyCheckbox = React.createClass({
   mixins: [Formsy.Mixin],
   changeValue: function (event) {
-    this.setValue(!this.getValue());
+    this.setValue(!this.getValue())
   },
   render: function () {
     return (

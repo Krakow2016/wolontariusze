@@ -14,7 +14,7 @@ var ProfileDetails = function(props) {
     <p className="text--center">
       <img src={props.profile_picture_url} className="profileMedium" /><br />
       <span>
-        <NavLink href={"/wolontariusz/"+ props.id}>
+        <NavLink href={'/wolontariusz/'+ props.id}>
           {props.first_name} {props.last_name}
         </NavLink>
       </span>
@@ -145,31 +145,31 @@ var Activity = React.createClass({
 
     var actType = function () {
       switch(activity.act_type) {
-        case 'dalem_dla_sdm':
-          return 'Dałem dla ŚDM'
-        case 'wzialem_od_sdm':
-          return 'Wziąłęm od ŚDM'
-        default:
-          return 'Niezdefiniowany'
+      case 'dalem_dla_sdm':
+        return 'Dałem dla ŚDM'
+      case 'wzialem_od_sdm':
+        return 'Wziąłęm od ŚDM'
+      default:
+        return 'Niezdefiniowany'
       }
     }()
-    
+
     var tags = this.state.activity.tags || []
     var tagsList = tags.map(function(tag) {
       return (
         <span className="activityTagLabel" key={tag}>{tag}</span>
       )
     })
-    
+
     var applicationTime
     if (typeof (this.state.activity.datetime) != 'undefined')  {
       applicationTime = TimeService.showTime(activity.datetime)
     } else {
       applicationTime = 'Nieokreślony'
     }
-    
+
     var is_archived = (activity.is_archived) ? 'Tak' : 'Nie'
-    
+
     var priority = (activity.is_urgent) ? (<span className="urgent">PILNE</span>) : (<span clssName="normal">NORMALNE</span>)
 
     var volunteers = this.state.volunteers
@@ -178,7 +178,7 @@ var Activity = React.createClass({
     var activeVolonteersList = volunteers.map(function(volunteer) {
       return (
         <span className="volonteerLabel" key={volunteer.id}>
-          <NavLink href={'/wolontariusz/'+volunteer.user_id} className="tooltip--bottom" data-hint={volunteer.first_name +" "+ volunteer.last_name} >
+          <NavLink href={'/wolontariusz/'+volunteer.user_id} className="tooltip--bottom" data-hint={volunteer.first_name +' '+ volunteer.last_name} >
             <ProfilePic src={volunteer.profile_picture_url} className='profileThumbnail' />
           </NavLink>
         </span>
@@ -288,7 +288,7 @@ var Activity = React.createClass({
             <div className="col col5">
               <p className="text--center activity-image">
                 <img src={creator.profile_picture_url} /><br />
-                <NavLink href={"/wolontariusz/"+ creator.id}>
+                <NavLink href={'/wolontariusz/'+ creator.id}>
                   {creator.first_name} {creator.last_name}
                 </NavLink>
               </p>
@@ -336,7 +336,7 @@ var Activity = React.createClass({
 
         { this.map() }
 
-        <b style={{"font-size": "1.8rem"}}>Wolontariusze, którzy biorą udział:</b>
+        <b style={{'font-size': '1.8rem'}}>Wolontariusze, którzy biorą udział:</b>
         <p>
           {activeVolonteersList}
         </p>

@@ -22,10 +22,10 @@ var ProfileImageChange = React.createClass({
   },
 
   render: function () {
-    var classNameBtn = 'btn-change-avatar' + (this.state.showDropzone && " hidden"),
-        classNameWrapper = 'avatar-change avatar-change-size-'+this.props.size,
-        classNameFile = "field-file hidden",
-        classDropzone = "dropzone" + (!this.state.showDropzone && " hidden");
+    var classNameBtn = 'btn-change-avatar' + (this.state.showDropzone && ' hidden'),
+      classNameWrapper = 'avatar-change avatar-change-size-'+this.props.size,
+      classNameFile = 'field-file hidden',
+      classDropzone = 'dropzone' + (!this.state.showDropzone && ' hidden')
 
     return (
       <div className={classNameWrapper}>

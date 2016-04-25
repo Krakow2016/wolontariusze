@@ -64,9 +64,9 @@ var Settings = React.createClass({
       return (<Integration name={integration.name} key={integration.id} />)
     })
 
-    var state_formsy = false;
+    var state_formsy = false
     if(this.state.profile.who_question && this.state.profile.what_question && this.state.profile.why_question){
-      state_formsy = true;
+      state_formsy = true
     }
 
     return (

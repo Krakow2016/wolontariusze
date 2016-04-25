@@ -45,7 +45,7 @@ var Instagram = React.createClass({
 
     if(this.state.error){
 
-      console.log(this.state.error);
+      console.log(this.state.error)
       insta_content = (
         <h4>Podaj swój login w ustawieniach jeżeli chcesz mieć swoje zdjęcia z instagrama na profilu</h4>
       )

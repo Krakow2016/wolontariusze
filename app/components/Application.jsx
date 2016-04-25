@@ -106,7 +106,7 @@ var Application = React.createClass({
       )
     }
 
-    if(this.props.currentRoute.name == "home" || this.props.currentRoute.name == "login"){
+    if(this.props.currentRoute.name == 'home' || this.props.currentRoute.name == 'login'){
       article = (
         <article>
           <Handler context={this.context} />
@@ -147,7 +147,7 @@ var Application = React.createClass({
             <Authentication user_id={this.user_id()} user_name={this.user_name()} search_status={searchForm || false} />
             {searchForm}
           </nav>
-          
+
         </header>
 
         {article}

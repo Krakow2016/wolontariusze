@@ -44,7 +44,7 @@ var Joints = module.exports = {
       }
 
       // W przypadku kiedy wypisaliśmy się i ponownie sie zapisujemy
-      config.conflict = "replace"
+      config.conflict = 'replace'
       config.returnChanges = true
 
       r.table('Joints').insert(body, config).run(conn, function (err, resp) {

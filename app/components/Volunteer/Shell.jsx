@@ -12,23 +12,23 @@ var Volunteer = React.createClass({
 
     var email
     var tabs = [
-      <NavLink key="profile" href={"/wolontariusz/" + this.props.profile.id} className="profile-ribon-cell">
+      <NavLink key="profile" href={'/wolontariusz/' + this.props.profile.id} className="profile-ribon-cell">
         <b id="profile-ribon-txt">Profil</b>
       </NavLink>,
-      <NavLink key="activities" href={"/wolontariusz/" + this.props.profile.id +'/aktywnosci'} className="profile-ribon-cell">
+      <NavLink key="activities" href={'/wolontariusz/' + this.props.profile.id +'/aktywnosci'} className="profile-ribon-cell">
         <b id="profile-ribon-txt">Aktywności</b>
       </NavLink>
-    ] 
+    ]
 
     if(user) {
       tabs.push(
-        <NavLink key="schedule" href={"/wolontariusz/" + this.props.profile.id +'/grafik'} className="profile-ribon-cell">
+        <NavLink key="schedule" href={'/wolontariusz/' + this.props.profile.id +'/grafik'} className="profile-ribon-cell">
           <b id="profile-ribon-txt">Grafik</b>
         </NavLink>
       )
       if(user.is_admin) {
         tabs.push(
-          <NavLink key="details" href={"/wolontariusz/" + this.props.profile.id +'/admin'} className="profile-ribon-cell">
+          <NavLink key="details" href={'/wolontariusz/' + this.props.profile.id +'/admin'} className="profile-ribon-cell">
             <b id="profile-ribon-txt">Szczegóły</b>
           </NavLink>
         )
@@ -37,7 +37,7 @@ var Volunteer = React.createClass({
           <h2>
             <b>E-mail: </b>
             <span>
-              <a href={"mailto:"+ this.props.profile.email} target="_blank">
+              <a href={'mailto:'+ this.props.profile.email} target="_blank">
                 {this.props.profile.email}
               </a>
             </span>

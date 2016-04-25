@@ -20,7 +20,7 @@ var Invite = React.createClass({
     this.props.context.executeAction(actions.inviteUser, {
       id: this.props.id
     })
-    window.location.hash = "close"
+    window.location.hash = 'close'
   },
 
   render: function() {

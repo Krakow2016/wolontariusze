@@ -14,9 +14,9 @@ var Authentication = React.createClass({
     }
 
     if(this.props.search_status){
-      classname = "col col9 head-section"
+      classname = 'col col9 head-section'
     }else{
-      classname = "col col12 head-section"
+      classname = 'col col12 head-section'
     }
 
     return (

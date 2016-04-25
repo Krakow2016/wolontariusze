@@ -60,7 +60,7 @@ var ActivityStore = createStore({
     })
     this.emitChange()
   },
-  
+
   create: function(data) {
     // TODO
     //this.rehydrate(data)

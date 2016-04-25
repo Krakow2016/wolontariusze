@@ -49,51 +49,51 @@ module.exports = {
         callback('404')
       }
     } else { // Brak identyfikatora, zwróć wszystkie aktywności
-      
-        var results = Object.keys(activities).map(function(key) {
-          var act = modifiedActivity(key)
-          act.volunteers = getActivityVolunteers(act.id)
-          act.volunteerNumber = act.volunteers.length
-          return act
-        })
-        var currentTime = new Date().getTime()
-        if (params.type === 'openTasks') {
-          results = results.filter(function (task) {
-            var data = new Date(task.datetime).getTime()
-            return ((typeof(task.is_archived) == 'undefined' || task.is_archived == false) &&
+
+      var results = Object.keys(activities).map(function(key) {
+        var act = modifiedActivity(key)
+        act.volunteers = getActivityVolunteers(act.id)
+        act.volunteerNumber = act.volunteers.length
+        return act
+      })
+      var currentTime = new Date().getTime()
+      if (params.type === 'openTasks') {
+        results = results.filter(function (task) {
+          var data = new Date(task.datetime).getTime()
+          return ((typeof(task.is_archived) == 'undefined' || task.is_archived == false) &&
                    (typeof( task.datetime) == 'undefined' || (new Date(task.datetime).getTime()) > currentTime) &&
                    (parseInt(task.limit) == 0 || parseInt(task.limit) > task.volunteerNumber))
-          })
-        }
-        if (params.type === 'volunteerTasks') {
-          results = results.filter(function (task) {
-            
-            var isVolunteerTask = false
-            for (var i in joints) {
-              if (joints[i].activity_id == task.id && joints[i].user_id == (params.user_id+'')) {
-                isVolunteerTask = true
-                break
-              }
+        })
+      }
+      if (params.type === 'volunteerTasks') {
+        results = results.filter(function (task) {
+
+          var isVolunteerTask = false
+          for (var i in joints) {
+            if (joints[i].activity_id == task.id && joints[i].user_id == (params.user_id+'')) {
+              isVolunteerTask = true
+              break
             }
-            
-            return ((typeof( task.is_archived) == 'undefined' || task.is_archived == false) &&
+          }
+
+          return ((typeof( task.is_archived) == 'undefined' || task.is_archived == false) &&
                    (typeof( task.datetime) == 'undefined' || (new Date(task.datetime).getTime()) > currentTime) &&
                    isVolunteerTask)
-          })
-        }
-        if (params.type === 'adminTasks') {
-          
-          results = results.filter(function (task) {
-            return task.created_by == (params.user_id+'')
-          })
-        }
-      
-        if(results) {
-          callback(null, results)
-        } else {
-          callback(404)
-        }
-        return
+        })
+      }
+      if (params.type === 'adminTasks') {
+
+        results = results.filter(function (task) {
+          return task.created_by == (params.user_id+'')
+        })
+      }
+
+      if(results) {
+        callback(null, results)
+      } else {
+        callback(404)
+      }
+      return
     }
   },
 

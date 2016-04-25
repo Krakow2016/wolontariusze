@@ -12,8 +12,8 @@ var NewTag = React.createClass({
   },
 
   getSuggestions: function (value) {
-    var inputValue = value.trim().toLowerCase();
-    var inputLength = inputValue.length;
+    var inputValue = value.trim().toLowerCase()
+    var inputLength = inputValue.length
 
     return inputLength === 0 ? [] : this.suggestions.filter(function(lang) {
       return lang.name.toLowerCase().slice(0, inputLength) === inputValue
@@ -52,9 +52,9 @@ var NewTag = React.createClass({
     request
       .get('/tags')
       .end(function(err, resp){
-          that.suggestions = resp.body ? resp.body.map(function(tag) {
-            return { name: tag }
-          }) : []
+        that.suggestions = resp.body ? resp.body.map(function(tag) {
+          return { name: tag }
+        }) : []
       })
   },
 

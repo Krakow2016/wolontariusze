@@ -86,7 +86,7 @@ var Welcome = React.createClass({
                 name="cb2" value={false} />
 
               <label htmlFor="cb2">
-                Oświadczenie o wyrażeniu zgody na wykorzystanie wizerunku 
+                Oświadczenie o wyrażeniu zgody na wykorzystanie wizerunku
               </label>
 
               <p>

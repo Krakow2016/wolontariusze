@@ -1,7 +1,7 @@
 var React = require('react')
 
 module.exports = function() {
-return (
+  return (
 <div>
     <p>
         Twoje dane już są w naszej bazie, gdyż zarejestrowałeś się jako

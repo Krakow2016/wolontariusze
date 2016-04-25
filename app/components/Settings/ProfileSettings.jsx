@@ -28,13 +28,13 @@ var ProfileSettings = React.createClass({
   },
 
   render: function() {
-    var form_col = "col col12";
-    var form_class = "settingsForm form-alert";
-    var alert_col;
+    var form_col = 'col col12'
+    var form_class = 'settingsForm form-alert'
+    var alert_col
     if(!this.props.state_formsy){
-      form_col = "col col7";
-      form_class = "settingsForm";
-      alert_col = (            
+      form_col = 'col col7'
+      form_class = 'settingsForm'
+      alert_col = (
         <div className="col col5">
           <div className="alert">
             <p>
@@ -48,7 +48,7 @@ var ProfileSettings = React.createClass({
             </p>
           </div>
         </div>
-      );
+      )
     }
 
 
