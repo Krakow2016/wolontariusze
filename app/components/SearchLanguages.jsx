@@ -282,6 +282,7 @@ var Languages = React.createClass({
           options={allOptions}
           selectedOptions={selectedOptions}
           buttonText={'Wybierz'}
+          placeholder={'Napisz, aby przefiltrować'}
         />
         {selectedLanguages.length > 0 && <ul>
           {selectedLanguages.map((language, i) => <li key={language.value}>

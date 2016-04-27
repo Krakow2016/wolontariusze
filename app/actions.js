@@ -455,16 +455,37 @@ module.exports = {
         exists: { 'field': 'raw.id' }
       })
     }
+    
+    if(state['raw.need_accomodation']) {
+      raw_must.push({
+        term: { 'raw.cd_need_accomodation': true }
+      })
+    } 
+    //else {
+    //  raw_must.push({
+    //    term: { 'raw.cd_need_accomodation': false }
+    //  })
+    //}
 
-    if(state.departments) {
+    if(state.city) {
       raw_should.push({
-        match: { 'raw.cd_sectors': state.departments }
+        match: { 'raw.rg_city': state.city }
+      })
+    }
+    
+    if(state.sectors) {
+      raw_should.push({
+        match: { 'raw.cd_sectors': state.sectors }
       })
     }
 
     if(state.skills) {
       raw_should.push({
-        match: { 'raw.sk_skills': state.skills }
+        or: [
+          { match: { 'raw.sk_skills': state.skills }},
+          { match: { 'raw.sk_other_skills': state.skills } }
+        ]
+
       })
     }
     
@@ -483,6 +504,8 @@ module.exports = {
               return [name+'=excellent', name+'=professional translator, interpreter']
             case 'interpreter':
               return [name+'=professional translator, interpreter']
+            default:
+              return []
           }
         }()
         raw_must.push({
