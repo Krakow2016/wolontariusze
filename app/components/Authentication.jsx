@@ -4,6 +4,7 @@ var NavLink = require('fluxible-router').NavLink
 var Authentication = React.createClass({
   render: function () {
     var loginButton
+    var classname
     if (this.props.user_name) {
       loginButton = <LogoutButton
         user_id={this.props.user_id}
@@ -12,8 +13,14 @@ var Authentication = React.createClass({
       loginButton = <LoginButton />
     }
 
+    if(this.props.search_status){
+      classname = 'col col9 head-section'
+    }else{
+      classname = 'col col12 head-section'
+    }
+
     return (
-      <div className="navBar">
+      <div className={classname}>
         {loginButton}
       </div>
     )
@@ -23,7 +30,7 @@ var Authentication = React.createClass({
 var LoginButton = React.createClass({
   render: function() {
     return (
-      <ul>
+      <ul id="nav-list">
         <li><NavLink href="/login">Zaloguj się</NavLink></li>
       </ul>
     )
@@ -33,7 +40,7 @@ var LoginButton = React.createClass({
 var LogoutButton = React.createClass({
   render: function() {
     return (
-      <ul>
+      <ul id="nav-list">
         <li><NavLink href="/zadania">Bank pracy</NavLink></li>
         <li><NavLink href={'/wolontariusz/'+this.props.user_id}>Witaj {this.props.user_name}!</NavLink></li>
         <li><NavLink href="/ustawienia">Ustawienia</NavLink></li>

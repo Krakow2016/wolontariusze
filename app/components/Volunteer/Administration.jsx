@@ -84,7 +84,7 @@ var VolunteerAdministration = React.createClass({
       id: this.state.profile.id,
       approved: false
     })
-    window.location.hash = "close"
+    window.location.hash = 'close'
   },
 
   _onAdminDialogSubmit: function() {
@@ -92,7 +92,7 @@ var VolunteerAdministration = React.createClass({
       id: this.state.profile.id,
       is_admin: true
     })
-    window.location.hash = "close"
+    window.location.hash = 'close'
   },
 
   saveTag: function(tag) {
@@ -160,9 +160,9 @@ var VolunteerAdministration = React.createClass({
           </p>
         </div>
 
-        <div ref={node => node && node.setAttribute('container', '')}>
-          <div ref={node => node && node.setAttribute('row', '')}>
-            <div ref={node => node && node.setAttribute('column', '7')}>
+        <div className="container">
+          <div className="row">
+            <div className="col col7">
 
               {papers}
 
@@ -172,7 +172,7 @@ var VolunteerAdministration = React.createClass({
               <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
 
             </div>
-            <div ref={node => node && node.setAttribute('column', '5')}>
+            <div className="col col5">
               <Comments context={this.props.context} />
             </div>
 

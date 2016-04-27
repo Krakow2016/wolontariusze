@@ -14,7 +14,7 @@ var ProfileDetails = function(props) {
     <p className="text--center">
       <img src={props.profile_picture_url} className="profileMedium" /><br />
       <span>
-        <NavLink href={"/wolontariusz/"+ props.id}>
+        <NavLink href={'/wolontariusz/'+ props.id}>
           {props.first_name} {props.last_name}
         </NavLink>
       </span>
@@ -145,32 +145,32 @@ var Activity = React.createClass({
 
     var actType = function () {
       switch(activity.act_type) {
-        case 'dalem_dla_sdm':
-          return 'Dałem dla ŚDM'
-        case 'wzialem_od_sdm':
-          return 'Wziąłęm od ŚDM'
-        default:
-          return 'Niezdefiniowany'
+      case 'dalem_dla_sdm':
+        return 'Dałem dla ŚDM'
+      case 'wzialem_od_sdm':
+        return 'Wziąłęm od ŚDM'
+      default:
+        return 'Niezdefiniowany'
       }
     }()
-    
+
     var tags = this.state.activity.tags || []
     var tagsList = tags.map(function(tag) {
       return (
         <span className="activityTagLabel" key={tag}>{tag}</span>
       )
     })
-    
+
     var applicationTime
     if (typeof (this.state.activity.datetime) != 'undefined')  {
       applicationTime = TimeService.showTime(activity.datetime)
     } else {
       applicationTime = 'Nieokreślony'
     }
-    
+
     var is_archived = (activity.is_archived) ? 'Tak' : 'Nie'
-    
-    var priority = (activity.is_urgent) ? 'PILNE' : 'NORMALNE'
+
+    var priority = (activity.is_urgent) ? (<span className="urgent">PILNE</span>) : (<span clssName="normal">NORMALNE</span>)
 
     var volunteers = this.state.volunteers
     var has_joined = !!this.mine()
@@ -178,7 +178,7 @@ var Activity = React.createClass({
     var activeVolonteersList = volunteers.map(function(volunteer) {
       return (
         <span className="volonteerLabel" key={volunteer.id}>
-          <NavLink href={'/wolontariusz/'+volunteer.user_id} className="tooltip--bottom" data-hint={volunteer.first_name +" "+ volunteer.last_name} >
+          <NavLink href={'/wolontariusz/'+volunteer.user_id} className="tooltip--bottom" data-hint={volunteer.first_name +' '+ volunteer.last_name} >
             <ProfilePic src={volunteer.profile_picture_url} className='profileThumbnail' />
           </NavLink>
         </span>
@@ -189,12 +189,12 @@ var Activity = React.createClass({
 
     //acceptButton
     if (!has_joined && (volunteers.length < activity.limit || activity.limit==0)) {
-      buttons.push(<input type="button" onClick={this.onAcceptButtonClick} value="Zgłaszam się" key="join" />)
+      buttons.push(<input type="button" className="activity-help" onClick={this.onAcceptButtonClick} value="Zgłaszam się" key="join" />)
     }
 
     //canceButton
     if (has_joined) {
-      buttons.push(<input type="button" onClick={this.onCancelButtonClick} value="Wypisz mnie" key="leave" />)
+      buttons.push(<input type="button" className="activity-help" onClick={this.onCancelButtonClick} value="Wypisz mnie" key="leave" />)
     }
 
     var volonteersLimit = (activity.limit == 0) ? 'Brak' : activity.limit
@@ -262,13 +262,18 @@ var Activity = React.createClass({
       )
     }
 
+    var creator = activity.created_by || {}
+
     // TODO
     //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>
     //<b>Ostatnia edycja:</b> {TimeService.showTime(activity.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.editor.id}>{activity.editor.name}</a></span>
     return (
-        <div ref={node => node && node.setAttribute('container', '')}>
-          <div ref={node => node && node.setAttribute('row', '')}>
-            <div ref={node => node && node.setAttribute('column', '7')}>
+        <div className="container">
+          <div className="text--center activity-header">
+            <h1>{this.state.activity.name}</h1>
+          </div>
+          <div className="row">
+            <div className="col col7">
 
               {editLink}
 
@@ -280,24 +285,49 @@ var Activity = React.createClass({
               {updateForm}
 
             </div>
-            <div ref={node => node && node.setAttribute('column', '5')}>
-              <ProfileDetails {...activity.created_by} />
-              <b>Typ:</b> {actType}
-              <br></br>
-              <b>Kategorie:</b> {tagsList}
-              <br></br>
-              <b>Miejsce wydarzenia:</b> {activity.place}
-              <br></br>
-              <b>Czas zakończenia zgłoszeń do zadania:</b> {applicationTime}
-              <br></br>
-              <b>Czas trwania:</b> {activity.duration}
-              <br></br>
-              <b>Jest w archiwum?:</b> {is_archived}
-              <br></br>
-              <b>Prorytet:</b> {priority}
-              <br></br>
-              <b>Limit(maksymalna liczba wolontariuszy):</b> {volonteersLimit}
-              <br></br>
+            <div className="col col5">
+              <p className="text--center activity-image">
+                <img src={creator.profile_picture_url} /><br />
+                <NavLink href={'/wolontariusz/'+ creator.id}>
+                  {creator.first_name} {creator.last_name}
+                </NavLink>
+              </p>
+              <table className="table--hoverRow activity-table">
+                <tbody>
+                  <tr>
+                    <td scope="Typ">Typ</td>
+                    <td>{actType}</td>
+                  </tr>
+                  <tr>
+                    <td scope="Kategorie">Kategorie</td>
+                    <td>{tagsList}</td>
+                  </tr>
+                  <tr>
+                    <td scope="Miejsce">Miejsce</td>
+                    <td>{activity.place}</td>
+                  </tr>
+                  <tr>
+                    <td scope="Rozpoczęcie">Czas zakończenia zgłoszeń do zadania</td>
+                    <td>{applicationTime}</td>
+                  </tr>
+                  <tr>
+                    <td scope="Czas">Czas</td>
+                    <td>{activity.duration}</td>
+                  </tr>
+                  <tr>
+                    <td scope="Archiwalne">Archiwalne</td>
+                    <td>{is_archived}</td>
+                  </tr>
+                  <tr>
+                    <td scope="Prorytet">Prorytet</td>
+                    <td>{priority}</td>
+                  </tr>
+                  <tr>
+                    <td scope="Limit(maksymalna liczba wolontariuszy)">Limit osób</td>
+                    <td>{volonteersLimit}</td>
+                  </tr>
+                </tbody>
+              </table>
 
               {buttons}
 
@@ -306,7 +336,7 @@ var Activity = React.createClass({
 
         { this.map() }
 
-        <b>Wolontariusze, którzy biorą udział:</b>
+        <b className="big-text">Wolontariusze, którzy biorą udział:</b>
         <p>
           {activeVolonteersList}
         </p>

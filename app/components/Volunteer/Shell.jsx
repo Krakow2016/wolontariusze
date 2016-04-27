@@ -12,23 +12,23 @@ var Volunteer = React.createClass({
 
     var email
     var tabs = [
-      <NavLink key="profile" href={"/wolontariusz/" + this.props.profile.id} className="profile-ribon-cell">
+      <NavLink key="profile" href={'/wolontariusz/' + this.props.profile.id} className="profile-ribon-cell">
         <b id="profile-ribon-txt">Profil</b>
       </NavLink>,
-      <NavLink key="activities" href={"/wolontariusz/" + this.props.profile.id +'/aktywnosci'} className="profile-ribon-cell">
+      <NavLink key="activities" href={'/wolontariusz/' + this.props.profile.id +'/aktywnosci'} className="profile-ribon-cell">
         <b id="profile-ribon-txt">Aktywności</b>
       </NavLink>
     ]
 
     if(user) {
       tabs.push(
-        <NavLink key="schedule" href={"/wolontariusz/" + this.props.profile.id +'/grafik'} className="profile-ribon-cell">
+        <NavLink key="schedule" href={'/wolontariusz/' + this.props.profile.id +'/grafik'} className="profile-ribon-cell">
           <b id="profile-ribon-txt">Grafik</b>
         </NavLink>
       )
       if(user.is_admin) {
         tabs.push(
-          <NavLink key="details" href={"/wolontariusz/" + this.props.profile.id +'/admin'} className="profile-ribon-cell">
+          <NavLink key="details" href={'/wolontariusz/' + this.props.profile.id +'/admin'} className="profile-ribon-cell">
             <b id="profile-ribon-txt">Szczegóły</b>
           </NavLink>
         )
@@ -37,7 +37,7 @@ var Volunteer = React.createClass({
           <h2>
             <b>E-mail: </b>
             <span>
-              <a href={"mailto:"+ this.props.profile.email} target="_blank">
+              <a href={'mailto:'+ this.props.profile.email} target="_blank">
                 {this.props.profile.email}
               </a>
             </span>
@@ -53,11 +53,11 @@ var Volunteer = React.createClass({
 
     return (
       <div className="volonteer">
-        <div className="section group">
-          <div className="col span_2_of_4">
+        <div className="section row">
+          <div className="col col6">
             <img src={this.props.profile.profile_picture_url} id="prolife-photo" />
           </div>
-          <div className="col span_2_of_4">
+          <div className="col col6">
             <h1 className="profile-name">{this.name()}</h1>
             <h2><b>Kraj:</b> <span>{ this.props.profile.nationality || 'Polska' }</span></h2>
             {tags}
@@ -65,8 +65,8 @@ var Volunteer = React.createClass({
           </div>
         </div>
 
-        <div className="section group">
-          <div className="col span_4_of_4 profile-ribon">
+        <div className="section row">
+          <div className="col col12 profile-ribon">
             {tabs}
           </div>
         </div>
@@ -212,4 +212,3 @@ var ExtraAttributesVisible = React.createClass({
 
 // Module.exports instead of normal dom mounting
 module.exports = Volunteer
-

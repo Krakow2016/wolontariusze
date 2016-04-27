@@ -39,8 +39,8 @@ var TaskFilters = React.createClass({
       //place: place
     //}))
   },
-  
-  
+
+
   handlePlaceSelectChange: function (evt) {
     //var place = {}
     //var value = evt.target.value
@@ -55,7 +55,7 @@ var TaskFilters = React.createClass({
       //place: place
     //}))
   },
-  
+
   render: function () {
 
     //var filterByPlace = <div>
@@ -96,7 +96,7 @@ var TaskFilters = React.createClass({
     if (this.props.query.created_by && this.props.query.created_by.length>0) {
       filterByTimeState = <div>
                               <span>Stan czasowy</span>
-                              <select name="timeState" selected={this.props.query.timeState || ""} onChange={this.props.handleChange} >
+                              <select name="timeState" selected={this.props.query.timeState || ''} onChange={this.props.handleChange} >
                                 <option value="">dowolne</option>
                                 <option value="trwajace">Trwające</option>
                                 <option value="zakonczone">Zakończone</option>
@@ -104,7 +104,7 @@ var TaskFilters = React.createClass({
                             </div>
       filterByAvailabilityState = <div>
                                 <span>Dostępność</span>
-                                <select name="availabilityState" selected={this.props.query.availabilityState || ""} onChange={this.props.handleChange}>
+                                <select name="availabilityState" selected={this.props.query.availabilityState || ''} onChange={this.props.handleChange}>
                                   <option value="">dowolne</option>
                                   <option value="wolne">Wolne</option>
                                   <option value="pelne">Pełne</option>
@@ -123,7 +123,7 @@ var TaskFilters = React.createClass({
                   <span onClick={this.toggleOpen} >Filtry (zwiń) </span>
                   <div>
                       <span>Typ: </span>
-                      <select name="act_type" value={this.props.query.act_type || ""}  onChange={this.props.handleChange} >
+                      <select name="act_type" value={this.props.query.act_type || ''}  onChange={this.props.handleChange} >
                           <option value="">dowolny</option>
                           <option value="dalem_dla_sdm">Dałem dla ŚDM</option>
                           <option value="wzialem_od_sdm">Wziąłęm od ŚDM</option>
@@ -131,7 +131,7 @@ var TaskFilters = React.createClass({
                   </div>
                   <div>
                       <span>Priorytet: </span>
-                      <select name="priority" value={this.props.query.priority || ""} onChange={this.props.handleChange}>
+                      <select name="priority" value={this.props.query.priority || ''} onChange={this.props.handleChange}>
                           <option value="">dowolny</option>
                           <option value="NORMALNE">NORMALNE</option>
                           <option value="PILNE">PILNE</option>

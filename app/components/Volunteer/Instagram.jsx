@@ -45,8 +45,9 @@ var Instagram = React.createClass({
 
     if(this.state.error){
 
+      console.log(this.state.error)
       insta_content = (
-        <h3>Wystapił błąd podczas połączenia z Instagram.com</h3>
+        <h4>Podaj swój login w ustawieniach jeżeli chcesz mieć swoje zdjęcia z instagrama na profilu</h4>
       )
 
     } else if(this.state.media) { // Zapytanie wykonane poprawnie
@@ -57,19 +58,13 @@ var Instagram = React.createClass({
       }
       var media = this.state.media.map(function(img) {
         return (
-          <div className="col span_1_of_4">
+          <div className="col col3">
             <a href={img.link}><img src={img.images.low_resolution.url} key={img.id} className="profile-insta-photo"/></a>
           </div>
         )
       })
       insta_content = (
-        <div className="section group">{ media }</div>
-      )
-    } else { // Użytkownik nie autoryzował nas do wykonywania zapytań
-      insta_content = (
-        <a href={'https://api.instagram.com/oauth/authorize/?client_id='+ this.state.client_id +'&redirect_uri=https://wolontariusze.krakow2016.com/instagram&response_type=code'}>
-          Zaloguj się do instagrama
-        </a>
+        <div className="row">{ media }</div>
       )
     }
 

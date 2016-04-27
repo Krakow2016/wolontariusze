@@ -96,8 +96,9 @@ var ActivityAdministration = React.createClass({
   },
 
   handleDatetimeChange: function (m) {
+    var datetime = new Date(m)
     this.setState(update(this.state, {
-      activity: {datetime: {$set: m}}
+      activity: {datetime: {$set: datetime}}
     }))
   },
 
@@ -112,7 +113,7 @@ var ActivityAdministration = React.createClass({
     }
 
     this.setState(update(this.state, {
-        activity: {$set: activity}
+      activity: {$set: activity}
     }))
   },
 
@@ -379,7 +380,7 @@ var ActivityAdministration = React.createClass({
 
     var createButton = []
     if (this.props.creationMode == true) {
-      createButton = <button className={this.state.canSubmit ? "bg--warning" : ""} disabled={!this.state.canSubmit} onClick={this.createPrivate}>Utwórz prywatne zadanie</button>
+      createButton = <button className={this.state.canSubmit ? 'bg--warning' : ''} disabled={!this.state.canSubmit} onClick={this.createPrivate}>Utwórz prywatne zadanie</button>
     }
 
     var createButton2 = []
@@ -400,7 +401,7 @@ var ActivityAdministration = React.createClass({
     var removeActiveVolonteer = this.removeActiveVolonteer
     var addVolonteer
     if (this.state.volunteers.length < this.state.activity.limit) {
-        addVolonteer = <ActivityVolonteersList
+      addVolonteer = <ActivityVolonteersList
             id="activeVolonteers"
             addActiveVolonteer={this.addActiveVolonteer}
             excludedVolunteers={this.state.volunteers} />
@@ -534,7 +535,7 @@ var ActivityAdministration = React.createClass({
           <br/>
           <br/>
           <br/>
-          <div id="activityEditToolbar">
+          <div id="activityEditToolbar text--center">
             {removeButton}
             {updateButton}
             {createButton}

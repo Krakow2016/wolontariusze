@@ -26,8 +26,8 @@ var Shell = React.createClass({
   render: function() {
     return (
       <VolunteerShell context={this.props.context} profile={this.state}>
-        <div className="section group">
-            <div className="col span_2_of_4">
+        <div className="section row">
+            <div className="col col6">
                 <h1>Dałem dla ŚDM:</h1>
                 <h2>Udzielam się w sekcjach:</h2>
                 <p className="p-space">Patolodzy dla ŚDM</p>
@@ -47,7 +47,7 @@ var Shell = React.createClass({
                     <li><NavLink href="/zadania/nowe">Dodaj aktywność</NavLink></li>
                 </ul>
             </div>
-            <div className="col span_2_of_4">
+            <div className="col col6">
                 <h1>Otrzymałem od ŚDM:</h1>
                 <ul>
                     <li>Suscipit a urna urna non venenatis quisque</li>

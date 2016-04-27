@@ -6,6 +6,7 @@ var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
 // Połączenie z sendgrid daje nam możliwość wysyłania emaili
 var sendgrid = require('sendgrid')(process.env.SENDGRID_APIKEY)
+var sendgrid_template = process.env.SENDGRID_TEMPLATE
 
 var to_text = function(state) {
   return state.blocks.map(function(block) {
@@ -66,7 +67,7 @@ r.connect(config.rethinkdb, function(err, conn) {
               'templates': {
                 'settings': {
                   'enable': 1,
-                  'template_id' : 'b716bb89-8416-4a44-a59f-edce76134f66',
+                  'template_id': sendgrid_template,
                 }
               }
             })
@@ -132,7 +133,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                   'templates': {
                     'settings': {
                       'enable': 1,
-                      'template_id' : 'b716bb89-8416-4a44-a59f-edce76134f66',
+                      'template_id': sendgrid_template,
                     }
                   }
                 })
@@ -168,13 +169,50 @@ r.connect(config.rethinkdb, function(err, conn) {
           'templates': {
             'settings': {
               'enable': 1,
-              'template_id' : 'b716bb89-8416-4a44-a59f-edce76134f66',
+              'template_id': sendgrid_template,
             }
           }
         })
 
         sendgrid.send(email, function(err, json) {
           console.log('sendgrid:', err, json)
+        })
+      })
+    })
+
+  r.table('Volunteers').changes()
+    .filter(r.row('old_val')('is_admin').eq(true).not().and(r.row('new_val')('is_admin').eq(true)))
+    .run(conn, function(err, cursor) {
+      cursor.each(function(err, change){ // Wolontariusz został adminem
+        var row = change.new_val
+
+        r.table('Volunteers').get(row.promoted_by)
+          .run(conn, function(err, admin) { // Pobierz autora zmiany
+
+          var html = '<p>'+ admin.first_name +' '+ admin.last_name +' właśnie nadał/a Ci specjalne uprawnienia koordynatora, dzięki którym masz obecnie dostęp do bazy danych wszystkich wolontariuszy w systemie m.in. danych kontaktowych, umiejętności, doświadczenie itp.</p><p> Równocześnie informujemy, że otrzymując dostęp jako koordynator, jesteś zobowiązany/a do zachowania w tajemnicy i nie ujawniania osobom trzecim otrzymanych tu informacji i danych o charakterze poufnym, w tym danych osobowych oraz sposobów ich zabezpieczenia, do których będziesz mieć dostęp w związku z wykonywaniem zadań koordynatora wolontariuszy ŚDM Kraków 2016 zarówno w trakcie ich wykonywania, jak i po ich ustaniu. *<br /> Administratorem powyższych danych jest Archidiecezja Krakowska.</p> <p>* Zgodnie z przepisami Rozdziału 8. Ustawy o ochronie danych osobowych (Dz. U. z 2002 r. Nr 101, poz. 926 ze zm.) w wypadku naruszenia powyższych przepisów ustawy, ponoszona jest odpowiedzialność karna.</p>'
+
+          var email = new sendgrid.Email({
+            to:       row.email,
+            bcc:      'goradobra@krakow2016.com',
+            from:     'goradobra@krakow2016.com',
+            fromname: 'Góra Dobra',
+            subject:  'Witaj w gronie koordynatorów wolontariuszy na Górze Dobra!',
+            html:     html
+          })
+
+          email.addSubstitution(':name', row.first_name)
+          email.setFilters({
+            'templates': {
+              'settings': {
+                'enable': 1,
+                'template_id': sendgrid_template,
+              }
+            }
+          })
+
+          sendgrid.send(email, function(err, json) {
+            console.log('sendgrid:', err, json)
+          })
         })
       })
     })

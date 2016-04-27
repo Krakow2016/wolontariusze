@@ -64,6 +64,11 @@ var Settings = React.createClass({
       return (<Integration name={integration.name} key={integration.id} />)
     })
 
+    var state_formsy = false
+    if(this.state.profile.who_question && this.state.profile.what_question && this.state.profile.why_question){
+      state_formsy = true
+    }
+
     return (
       <div>
 
@@ -73,7 +78,8 @@ var Settings = React.createClass({
           profileId={this.state.profile.id}
           context={this.props.context}
           success={this.state.success}
-          error={this.state.error}>
+          error={this.state.error}
+          state_formsy={state_formsy}>
 
           <label htmlFor="first_name">
             <h2>Kim jestem?</h2>
@@ -125,13 +131,13 @@ var Settings = React.createClass({
 
         </ProfileSettings>
 
-        <h1>
+        <h1 className="header-text">
           Aplikacje
         </h1>
 
-        <div ref={node => node && node.setAttribute('container', '')}>
-          <div ref={node => node && node.setAttribute('row', '')}>
-            <div ref={node => node && node.setAttribute('column', '7')}>
+        <div className="container">
+          <div className="row">
+            <div className="col col7">
               <p>Lista integracji:</p>
               <ul>
                 <li><InstagramSetting context={this.props.context} /></li>
@@ -142,7 +148,7 @@ var Settings = React.createClass({
               </ul>
               <NavLink href="/ustawienia/developer">Dla deweloperów</NavLink>
             </div>
-            <div ref={node => node && node.setAttribute('column', '5')}>
+            <div className="col col5">
               <div className="alert">
                 <p>
                   Informacja o tym jakie są możliwe integracje.

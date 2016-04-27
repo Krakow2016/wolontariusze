@@ -5,13 +5,16 @@ var update = require('react-addons-update')
 var TaskFilters = require('./TaskFilters.jsx')
 var TimeService = require('../../modules/time/TimeService.js')
 var ActivitiesStore = require('../../stores/Activities.js')
+var ActivityStore = require('../../stores/Activity')
 var ActivitiesSearchForm = require('./Search.jsx')
 var actions = require('../../actions')
 
 var Tasks = React.createClass({
 
   getInitialState: function () {
-    return this.props.context.getStore(ActivitiesStore).dehydrate()
+    var state = this.props.context.getStore(ActivitiesStore).dehydrate()
+    state.activity = this.props.context.getStore(ActivityStore).getState()
+    return state
   },
 
   _changeListener: function() {
@@ -21,10 +24,14 @@ var Tasks = React.createClass({
   componentDidMount: function() {
     this.props.context.getStore(ActivitiesStore)
       .addChangeListener(this._changeListener)
+    this.props.context.getStore(ActivityStore)
+      .addChangeListener(this._changeListener)
   },
 
   componentWillUnmount: function() {
     this.props.context.getStore(ActivitiesStore)
+      .removeChangeListener(this._changeListener)
+    this.props.context.getStore(ActivityStore)
       .removeChangeListener(this._changeListener)
   },
 
@@ -40,7 +47,7 @@ var Tasks = React.createClass({
     var query = this.state.query
     query.tags = query.tags || []
     this.setState(update(this.state, {
-        query: {tags: {$push: [tag]}}
+      query: {tags: {$push: [tag]}}
     }))
   },
 
@@ -49,7 +56,7 @@ var Tasks = React.createClass({
     var tag = e.target.dataset.tag
     var index = query.tags.indexOf(tag)
     this.setState(update(this.state, {
-        query: {tags: {$splice: [[index, 1]]}}
+      query: {tags: {$splice: [[index, 1]]}}
     }))
   },
 
@@ -74,20 +81,20 @@ var Tasks = React.createClass({
     // TABS
     var tabs = [
       <NavLink href={"/zadania" } className="profile-ribon-cell">
-        <b id="profile-ribon-txt">Bank pracy</b>
+        <b>Bank pracy</b>
       </NavLink>
     ]
 
     if(user) {
       tabs.push(
-        <NavLink href={"/zadania?volunteer="+user.id} className="profile-ribon-cell">
-          <b id="profile-ribon-txt">Biorę udział w</b>
+        <NavLink href={'/zadania?volunteer='+user.id} className="profile-ribon-cell">
+          <b>Biorę udział w</b>
         </NavLink>
       )
       if(user.is_admin) {
         tabs.push(
-          <NavLink href={"/zadania?created_by="+user.id} className="profile-ribon-cell">
-            <b id="profile-ribon-txt">Moje zadania</b>
+          <NavLink href={'/zadania?created_by='+user.id} className="profile-ribon-cell">
+            <b>Moje zadania</b>
           </NavLink>
         )
       }
@@ -113,8 +120,8 @@ var Tasks = React.createClass({
     if (user) {
       return (
         <div className="taskBank">
-          <div className="section group">
-            <div className="col span_4_of_4 profile-ribon">
+          <div className="row">
+            <div className="col col12 profile-ribon">
               {tabs}
             </div>
           </div>
