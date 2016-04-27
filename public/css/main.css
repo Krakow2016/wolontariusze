@@ -1173,6 +1173,11 @@ nav#task-nav{
   font-size: 2rem;
   color: #006492;
 	margin-bottom: 0.2rem;
+  font-weight: normal
+}
+
+.task h1.urgent{
+  font-weight: bold
 }
 
 .task p{
@@ -1202,7 +1207,7 @@ nav#task-nav{
   border: none;
 }
 
-.task-volunteers{
+.task-volunteers:not(:empty){
 	width: 100%;
 	border-top: 1px solid #578ea8;
 }

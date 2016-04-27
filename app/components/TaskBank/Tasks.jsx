@@ -3,6 +3,7 @@ var NavLink = require('fluxible-router').NavLink
 var update = require('react-addons-update')
 
 var TaskFilters = require('./TaskFilters.jsx')
+var ProfilePic = require('../ProfilePic.jsx')
 var TimeService = require('../../modules/time/TimeService.js')
 var ActivitiesStore = require('../../stores/Activities.js')
 var ActivityStore = require('../../stores/Activity')
@@ -96,32 +97,43 @@ var Tasks = React.createClass({
       }
     }
 
-    var tasks = this.state.all.map(function (doc) {
-      var source = doc._source
-      var task = source.doc
+    var tasks = this.state.all.map(function(task) {
       if(!task) { return }
-      var priorityClass = task.is_urgent ? 'tasks-priority-urgent-tr' : 'tasks-priority-normal-tr'
+      var volunteers = (task.volunteers || []).map(function(id) {
+        return (
+          <ProfilePic src={"https://krakow2016.s3.eu-central-1.amazonaws.com/"+id+"/thumb"} className='profileThumbnail' />
+        )
+      })
       var tresc = [(task.description.length > 200) ? task.description.substring(0,200) : task.description]
       if (task.description.length > 200){
         tresc.push(<a href={'/zadania/'+task.id}> ...więcej</a>)
       }
+
       return (
         <div className="row task">
           <div className="col col1 task-color">
-            <img src="/img/flaga.png"></img>
+            <img src={task.act_type === 'wzialem_od_sdm' ? '/img/flaga2.png' : '/img/flaga.png'} />
           </div>
 
           <div className="col col11 task-content">
-            <h1><NavLink href={'/zadania/'+task.id}>{task.name}</NavLink></h1>
-            <span className="task-meta">{}Autor</span>
-            <span className="task-meta">Ilość osób: {(source.volunteers || []).length }/{ task.limit != 0 ? task.limit : 'Brak'}</span>
+            <h1 className={task.is_urgent ? 'urgent' : ''}>
+              <NavLink href={'/zadania/'+task.id}>
+                {task.name}
+              </NavLink>
+            </h1>
+            <span className="task-meta">
+              <NavLink href={"/zadania?created_by="+ task.created_by.id}>
+                {task.created_by.first_name} {task.created_by.last_name}
+              </NavLink>
+            </span>
+            <span className="task-meta">Wolnych miejsc: { task.limit != 0 ? (task.limit - (task.volunteers || []).length) : 'Bez limitu'}</span>
             <span className="task-meta">{((task.tags || []).length != 0) ? (task.tags || []).join(', ') : 'Brak kategorii' }</span>
-            <span className="task-meta">{(typeof (task.datetime) != 'undefined') ? TimeService.showTime(task.datetime) : 'Brak'}</span>
+            <span className="task-meta">Termin zgłoszeń: {(typeof (task.datetime) != 'undefined') ? TimeService.showTime(task.datetime) : 'Brak'}</span>
             <p>
               {tresc}
             </p>
             <div className="task-volunteers">
-              Janusz
+              {volunteers}
             </div>
           </div>
         </div>
