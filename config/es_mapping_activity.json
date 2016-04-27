@@ -24,8 +24,9 @@
           "type" : "date",
           "format" : "date_optional_time"
         },
-        "duration" : {
-          "type" : "string"
+        "endtime" : {
+          "type" : "date",
+          "format" : "date_optional_time"
         },
         "place" : {
           "type" : "string"

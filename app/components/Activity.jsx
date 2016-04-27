@@ -160,10 +160,17 @@ var Activity = React.createClass({
     })
 
     var applicationTime
-    if (typeof (this.state.activity.datetime) != 'undefined')  {
+    if (TimeService.isDate(this.state.activity.datetime))  {
       applicationTime = TimeService.showTime(activity.datetime)
     } else {
       applicationTime = 'Nieokreślony'
+    }
+
+    var endTime
+    if (TimeService.isDate(this.state.activity.endtime))  {
+      endTime = TimeService.showTime(activity.endtime)
+    } else {
+      endTime = 'Nieokreślona'
     }
 
     var is_archived = (activity.is_archived) ? 'Tak' : 'Nie'
@@ -309,8 +316,8 @@ var Activity = React.createClass({
                     <td>{applicationTime}</td>
                   </tr>
                   <tr>
-                    <td scope="Czas">Czas</td>
-                    <td>{activity.duration}</td>
+                    <td scope="Czas">Data zakończenia</td>
+                    <td>{endTime}</td>
                   </tr>
                   <tr>
                     <td scope="Archiwalne">Archiwalne</td>

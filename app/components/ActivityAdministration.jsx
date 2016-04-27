@@ -22,21 +22,8 @@ var leaveActivityAction = actions.leaveActivity
 var createAction = actions.createActivity
 var deleteAction = actions.deleteActivity
 
-//Formsy
-Formsy.addValidationRule('isDuration', function (values, value) {
-  if (!value || value == '') {
-    return true
-  } else {
-    var min = value.match(new RegExp ('([0-9]+m){1}', 'g'))
-    var hours = value.match(new RegExp ('([0-9]+h){1}', 'g'))
-    var days = value.match(new RegExp ('([0-9]+d){1}', 'g'))
-    var other = value.match(new RegExp ('[^0-9mhd\u00a0\u0020]+', 'g'))
-    return (
-      (!!days || !!hours || !!min) && !other
-    )
-  }
+var TimeService = require('../modules/time/TimeService.js')
 
-})
 Formsy.addValidationRule('isMoreOrGreaterIntThanZero', function (values, value) {
   return (value % 1 === 0 && value >= 0)
 })
@@ -107,13 +94,42 @@ var ActivityAdministration = React.createClass({
 
     var activity = this.state.activity
     if (!value) {
-      delete activity.datetime
+      activity.datetime = TimeService.NO_DATE
     } else {
       activity.datetime = new Date()
     }
 
     this.setState(update(this.state, {
       activity: {$set: activity}
+    }))
+  },
+  
+  handleEndtimeChange: function (m) {
+    if (typeof m  == 'string' && !moment(m, 'YYYY/M/D HH:mm', true).isValid()) {
+      this.setState(update(this.state, {
+        invalidEndtime: {$set: 'Format daty niepoprawny'},
+        activity: {endtime: {$set: m}}
+      }))
+    } else {
+      this.setState(update(this.state, {
+        invalidEndtime: {$set: ''},
+        activity: {endtime: {$set: m}}
+      }))
+    }
+  },
+  
+  handleAddEndtimeChange: function(evt) {
+    var value = evt.target.checked
+
+    var activity = this.state.activity
+    if (!value) {
+      activity.endtime = TimeService.NO_DATE
+    } else {
+      activity.endtime = new Date()
+    }
+
+    this.setState(update(this.state, {
+        activity: {$set: activity}
     }))
   },
 
@@ -350,16 +366,23 @@ var ActivityAdministration = React.createClass({
 
   render: function() {
     var startTime
-    if (typeof (this.state.activity.datetime) != 'undefined')  {
-      var startEventDate = new Date(this.state.activity.datetime)
+    if (TimeService.isDate(this.state.activity.datetime)) {
       var startEventDateHint
       if (this.props.taskMode) {
         startEventDateHint = <span> Dla zadania data powinna być w przyszłości </span>
       } else {
         startEventDateHint = <span> Dla aktywności data powinna być w przeszłości </span>
       }
-
+      
+      var startEventDate
+      if(!this.state.invalidDatetime)  {
+        startEventDate = new Date(this.state.activity.datetime)
+      } else {
+        startEventDate = this.state.activity.datetime
+      }
+      
       startTime = <div className="pure-u-1 pure-u-md-2-3">
+                    {this.state.invalidDatetime}
                     <DateTime open={false}
                       dateFormat={'YYYY/M/D'}
                       timeFormat={'HH:mm'}
@@ -369,9 +392,28 @@ var ActivityAdministration = React.createClass({
                     {startEventDateHint}
                 </div>
     }
+    
+    var endTime
+    if (TimeService.isDate(this.state.activity.endtime)) {
 
-
-
+      var endTimeDateHint = <span> Powinna być później niż czas zakońćzenia zgłoszeń do zadania </span>
+      var endDate
+      if(!this.state.invalidEndtime)  {
+        endDate = new Date(this.state.activity.endtime)
+      } else {
+        endDate = this.state.activity.endtime
+      }
+      
+      endTime = <div className="pure-u-1 pure-u-md-2-3">
+                    {this.state.invalidEndtime}
+                    <DateTime open={false}
+                      dateFormat={'YYYY/M/D'}
+                      timeFormat={'HH:mm'}
+                      value={endDate}
+                      onChange={this.handleEndtimeChange}/>
+                    {endTimeDateHint}
+                </div>
+    }
 
     var updateButton = []
     if (this.props.creationMode == false) {
@@ -441,20 +483,6 @@ var ActivityAdministration = React.createClass({
           <br/>
           <b>Kategorie:</b>
           <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
-          <div className="pure-u-1 pure-u-md-1-3">
-            <b>Czas trwania</b>
-          </div>
-          <div className="pure-u-1 pure-u-md-2-3">
-            <MyTextField
-              id='duration'
-              name='duration'
-              placeholder=''
-              validations='isDuration'
-              validationError='Format to np. pusty string, "1d 3h 30m", "15m"'
-              disabled={false}
-              value={this.state.activity.duration}
-              onChange={this.handleChange} />
-          </div>
 
           <b>Typ</b>
           <select name="act_type" selected={this.state.activity.act_type} onChange={this.handleChange}>
@@ -464,13 +492,17 @@ var ActivityAdministration = React.createClass({
           </select>
           <br/>
           <br/>
-          <input id="datetime" type="checkbox" name="addDatetime" checked={!!this.state.activity.datetime} onChange={this.handleAddDatetimeChange} />
+          <input id="datetime" type="checkbox" name="addDatetime" checked={TimeService.isDate(this.state.activity.datetime)} onChange={this.handleAddDatetimeChange} />
           <label htmlFor="datetime">Czas zakończenia zgłoszeń do zadania</label>
           <br/>
           <input id="is_archived" type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
           <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
           {startTime}
           <br/>
+          <input id="endtime" type="checkbox" name="addEndtime" checked={TimeService.isDate(this.state.activity.endtime)} onChange={this.handleAddEndtimeChange} />
+          <label htmlFor="endtime">Data zakończenia</label>
+          {endTime}
+          
           <br/>
           <div className="pure-u-1 pure-u-md-1-3">
             <b>Miejsce</b>

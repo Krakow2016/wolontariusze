@@ -2,6 +2,7 @@
 
 var createStore  = require('fluxible/addons').createStore
 var Draft = require('draft-js')
+var TimeService = require('../modules/time/TimeService.js')
 
 var ActivityStore = createStore({
   storeName: 'Activity',
@@ -18,15 +19,17 @@ var ActivityStore = createStore({
     this.activity = {
       name: '',
       act_type: 'niezdefiniowany',
-      duration: '',
       place: '',
+      datetime: TimeService.NO_DATE,
       description: Draft.EditorState.createEmpty(),
+      endtime: TimeService.NO_DATE,
       is_urgent: false,
       limit: 5,
       profile_picture_url: '/img/profile/face.svg'
     }
     this.volunteers = []
-    this.invalidSnackBar = ''
+    this.invalidDatetime = ''
+    this.invalidEndtime = ''
     this.editorState = Draft.EditorState.createEmpty()
   },
 
@@ -82,7 +85,8 @@ var ActivityStore = createStore({
     return {
       activity: this.activity,
       volunteers: this.volunteers,
-      invalidSnackBar: this.invalidSnackBar,
+      invalidDatetime: this.invalidDatetime,
+      invalidEndtime: this.invalidEndtime,
       editorState: this.editorState
     }
   },
@@ -96,7 +100,8 @@ var ActivityStore = createStore({
     return {
       activity: activity,
       volunteers: this.volunteers,
-      invalidSnackBar: this.invalidSnackBar,
+      invalidDatetime: this.invalidDatetime,
+      invalidEndtime: this.invalidEndtime,
       editorState: Draft.convertToRaw(this.editorState.getCurrentContent())
     }
   },
@@ -105,7 +110,8 @@ var ActivityStore = createStore({
 
     this.activity = state.activity
     this.volunteers = state.volunteers
-    this.invalidSnackBar = state.invalidSnackBar
+    this.invalidDatetime = state.invalidDatetime
+    this.invalidEndtime = state.invalidEndtime
 
     var blocks = Draft.convertFromRaw(this.activity.description)
     var contentState = Draft.ContentState.createFromBlockArray(blocks)
@@ -126,7 +132,7 @@ ActivityStore.attributes = function() {
     'created_by',
     'datetime',
     'description',
-    'duration',
+    'endtime',
     'is_archived',
     'is_private',
     'is_urgent',
