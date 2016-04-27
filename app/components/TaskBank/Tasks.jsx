@@ -9,6 +9,7 @@ var ActivitiesStore = require('../../stores/Activities.js')
 var ActivityStore = require('../../stores/Activity')
 var ActivitiesSearchForm = require('./Search.jsx')
 var actions = require('../../actions')
+var AddActivityButton = require('./AddActivityButton.jsx')
 
 var Tasks = React.createClass({
 
@@ -157,14 +158,19 @@ var Tasks = React.createClass({
               onSubmit={this.onSubmit}
               query={this.state.query} />
 
-            {tasks}
-          <NavLink href="/zadania/nowe">Dodaj zadanie</NavLink>
+          {this.addActivityButton()}
+          {tasks}
+          {this.addActivityButton()}
         </div>
       )
     } else {
       return (<span>Bank pracy widoczny tylko dla zalogowanych użytkowników</span>)
     }
+  },
 
+  addActivityButton: function() {
+    var user = this.user()
+    return user.is_admin ? <AddActivityButton /> : null
   },
 
   user: function() {
