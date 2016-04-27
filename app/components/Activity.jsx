@@ -145,12 +145,10 @@ var Activity = React.createClass({
 
     var actType = function () {
       switch(activity.act_type) {
-      case 'dalem_dla_sdm':
-        return 'Dałem dla ŚDM'
       case 'wzialem_od_sdm':
         return 'Wziąłęm od ŚDM'
       default:
-        return 'Niezdefiniowany'
+        return 'Dałem dla ŚDM'
       }
     }()
 

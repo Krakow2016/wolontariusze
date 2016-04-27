@@ -196,14 +196,7 @@ server.get('/api/v2/activities', bearer, function(req, res) {
   ActivitiesES.create(req, 'ActivitiesES', {}, req.query, {}, function (err, activities) {
     if(err) { res.status(500).send(error(err)) }
     else {
-      res.send(success({
-        activities: activities.map(function(activity) {
-          var source = activity._source
-          return Object.assign(source.doc, {
-            volunteers: source.volunteers
-          })
-        })
-      }))
+      res.send(success({ activities: activities }))
     }
   })
 })
@@ -311,27 +304,26 @@ server.post('/api/v2/joints/:id', is_admin, function(req, res) {
 
 // Lista noclegowa grup pielgrzymów
 server.get('/api/v2/pilgrims', bearer, function(req, res) {
-
-    Pilgrims.read(req, 'Pilgrims', {}, {}, function(err, result) {
-      if(err) {
-        res.status(500).send(error('DBError', err))
-      } else {
-        if(req.query.from) { // Pobierz diff
-          Pilgrims.read(req, 'Pilgrims', { key: parseInt(req.query.from, 10) }, {}, function(err, base) {
-            if(err) {
-              res.status(500).send(error('DBError', err))
-            } else {
-              var oldStr = JSON.stringify(base[0], null, 2)
-              var newStr = JSON.stringify(result[0], null, 2)
-              var patch = JsDiff.createPatch('Pilgrims.json', oldStr, newStr)
-              res.send(success({ patch: patch }))
-            }
-          })
-        } else { // Pobierz ostatnią wersję
-          res.send(success({ pilgrims: result[0] }))
-        }
+  Pilgrims.read(req, 'Pilgrims', {}, {}, function(err, result) {
+    if(err) {
+      res.status(500).send(error('DBError', err))
+    } else {
+      if(req.query.from) { // Pobierz diff
+        Pilgrims.read(req, 'Pilgrims', { key: parseInt(req.query.from, 10) }, {}, function(err, base) {
+          if(err) {
+            res.status(500).send(error('DBError', err))
+          } else {
+            var oldStr = JSON.stringify(base[0], null, 2)
+            var newStr = JSON.stringify(result[0], null, 2)
+            var patch = JsDiff.createPatch('Pilgrims.json', oldStr, newStr)
+            res.send(success({ patch: patch }))
+          }
+        })
+      } else { // Pobierz ostatnią wersję
+        res.send(success({ pilgrims: result[0] }))
       }
-    })
+    }
+  })
 })
 
 // Domyślna ścieżka

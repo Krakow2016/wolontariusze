@@ -27,6 +27,7 @@
     "fluxible-router": "^0.4.9",
     "formsy-react": "0.17.0",
     "leaflet": "^0.7.7",
+    "lodash": "^4.11.1",
     "moment": "2.11.2",
     "node-jsx": "0.13.3",
     "oauth2orize": "^1.2.0",
@@ -69,9 +70,9 @@
     "jasmine": "2.3",
     "jsdom": "5.4.3",
     "react-addons-test-utils": "0.14.7",
-    "webpack": "^1.12.9",
-    "webpack-dev-middleware": "^1.4.0",
-    "webpack-hot-middleware": "^2.9.1"
+    "webpack": "^1.13.0",
+    "webpack-dev-middleware": "^1.6.1",
+    "webpack-hot-middleware": "^2.10.0"
   },
   "scripts": {
     "test": "jasmine"
