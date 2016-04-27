@@ -149,6 +149,14 @@ var Tasks = React.createClass({
             </ul>
           </nav>
           <ActivitiesSearchForm query={this.state.query} handleChange={this.handleChange} submit={this.onSubmit} />
+
+          <TaskFilters
+              handleChange={this.handleChange}
+              saveTag={this.saveTag}
+              removeTag={this.removeTag}
+              onSubmit={this.onSubmit}
+              query={this.state.query} />
+
             {tasks}
           <NavLink href="/zadania/nowe">Dodaj zadanie</NavLink>
         </div>
@@ -163,13 +171,6 @@ var Tasks = React.createClass({
     return this.props.context.getUser()
   }
 })
-
-          //<TaskFilters
-              //handleChange={this.handleChange}
-              //saveTag={this.saveTag}
-              //removeTag={this.removeTag}
-              //onSubmit={this.onSubmit}
-              //query={this.state.query} />
 
 /* Module.exports instead of normal dom mounting */
 module.exports = Tasks

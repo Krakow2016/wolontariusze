@@ -46,33 +46,37 @@ var Activities = module.exports = {
           return hit.created_by
         }))
 
-        r.connect(rethinkdbConf, function(error, conn){
-          if(error) { // Wystąpił błąd przy połączeniu z bazą danych
-            callback(error)
-            return
-          }
-
-          var table = r.table('Volunteers')
-          table.getAll.apply(table, authors).run(conn, function(err, cursor) {
-            if(err) { callback(err) }
-            else {
-              cursor.toArray(function(err, results){
-                var map = {}
-                results.forEach(function(result) {
-                  map[result.id] = _.pick(result, [
-                    'id',
-                    'first_name',
-                    'last_name'
-                  ])
-                })
-                callback(null, hits.map(function(hit) {
-                  hit.created_by = map[hit.created_by]
-                  return hit
-                }))
-              })
+        if(authors.length) {
+          r.connect(rethinkdbConf, function(error, conn){
+            if(error) { // Wystąpił błąd przy połączeniu z bazą danych
+              callback(error)
+              return
             }
+
+            var table = r.table('Volunteers')
+            table.getAll.apply(table, authors).run(conn, function(err, cursor) {
+              if(err) { callback(err) }
+              else {
+                cursor.toArray(function(err, results){
+                  var map = {}
+                  results.forEach(function(result) {
+                    map[result.id] = _.pick(result, [
+                      'id',
+                      'first_name',
+                      'last_name'
+                    ])
+                  })
+                  callback(null, hits.map(function(hit) {
+                    hit.created_by = map[hit.created_by]
+                    return hit
+                  }))
+                })
+              }
+            })
           })
-        })
+        } else {
+          callback(null, hits)
+        }
       })
       .catch(function(err) {
         console.log(err)
