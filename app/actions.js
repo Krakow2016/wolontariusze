@@ -494,25 +494,43 @@ module.exports = {
       for (var i=0; i<languages.length; i++) {
         var name = languages[i].split('_')[0]
         var level = languages[i].split('_')[1]
+        
         var terms = function () {
           switch (level) {
             case 'basic':
-              return [name+'=basic', name+'=good', name+'=excellent', name+'=professional translator, interpreter']
+              return [
+                {"term": {'raw.od_motherlanguage': {"value": name, "boost": 10 } } },
+                {"term": {'raw.od_languages': {"value": name+'=professional translator, interpreter', "boost": 8 } } },
+                {"term": {'raw.od_languages': {"value": name+'=excellent', "boost": 6 } } },
+                {"term": {'raw.od_languages': {"value": name+'=good', "boost": 4 } } },
+                {"term": {'raw.od_languages': {"value": name+'=basic', "boost": 2 } } }
+              ]
             case 'good':
-              return [name+'=good', name+'=excellent', name+'=professional translator, interpreter']
+              return [
+                {"term": {'raw.od_motherlanguage': {"value": name, "boost": 10 } } },
+                {"term": {'raw.od_languages': {"value": name+'=professional translator, interpreter', "boost": 8 } } },
+                {"term": {'raw.od_languages': {"value": name+'=excellent', "boost": 6 } } },
+                {"term": {'raw.od_languages': {"value": name+'=good', "boost": 4 } } }
+              ]
             case 'excellent':
-              return [name+'=excellent', name+'=professional translator, interpreter']
+              return [
+                {"term": {'raw.od_motherlanguage': {"value": name, "boost": 10 } } },
+                {"term": {'raw.od_languages': {"value": name+'=professional translator, interpreter', "boost": 8 } } },
+                {"term": {'raw.od_languages': {"value": name+'=excellent', "boost": 6 } } }
+              ]
             case 'interpreter':
-              return [name+'=professional translator, interpreter']
+              return [
+                {"term": {'raw.od_motherlanguage': {"value": name, "boost": 10} } },
+                {"term": {'raw.od_languages': {"value": name+'=professional translator, interpreter', "boost": 8 } } }
+              ]
             default:
-              return []
+              return [
+                {"term": {'raw.od_motherlanguage': {"value": name, "boost": 10} } }
+              ]
           }
         }()
         raw_must.push({
-          or: [
-                { term: {'raw.od_motherlanguage': name} },
-                { terms: { 'raw.od_languages': terms } }
-              ]
+          or: terms
         })
       }
     }
