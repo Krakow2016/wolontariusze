@@ -8,7 +8,6 @@ var Instagram = React.createClass({
   getInitialState: function() {
     return {
       media: null,
-      client_id: this.props.context.getStore(ApplicationStore).instagram_client_id
     }
   },
 
@@ -17,11 +16,16 @@ var Instagram = React.createClass({
   },
 
   componentWillReceiveProps: function(props) {
-    this.loadInstagram(props.user_id)
+    if(props.user_id !== this.props.user_id) {
+      this.loadInstagram(props.user_id)
+    }
   },
 
   loadInstagram: function(id) {
     var that = this
+
+    // Brak skonfigurowanego konta Instagram
+    if(!id) { return }
 
     request
       .get('/instagram/'+ id)
@@ -45,7 +49,6 @@ var Instagram = React.createClass({
 
     if(this.state.error){
 
-      console.log(this.state.error)
       insta_content = (
         <h4>Podaj swój login w ustawieniach jeżeli chcesz mieć swoje zdjęcia z instagrama na profilu</h4>
       )

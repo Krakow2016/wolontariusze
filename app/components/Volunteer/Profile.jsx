@@ -37,11 +37,11 @@ var Shell = React.createClass({
 
         <div className="section row">
           <div className="col col12">
-            <img src="/img/profile/insta.svg" id="profilie-insta-ico" /><h1>#WYD2016</h1>
+            <img src="/img/profile/insta.svg" id="profilie-insta-ico" /><h1>#KRAKOW2016</h1>
           </div>
         </div>
 
-        <Instagram user_id={this.state.id} context={this.props.context} />
+        <Instagram user_id={this.state.id} />
       </VolunteerShell>
     )
   }

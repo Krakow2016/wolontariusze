@@ -235,16 +235,21 @@ module.exports = function(server) {
       var tags = ['krakow2016', 'wyd2016', 'sdm2016', 'jmj2016', 'gmg2016', 'сдм2016', 'wjt2016', 'вдм2016']
 
       Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function (err, user) {
-        if(err) { return res.send(500) }
         var instagram = user.instagram
+
+        if(err) { return res.send(500) }
         if(!instagram) { return res.send(404) }
 
         request({
           url: 'https://api.instagram.com/v1/users/'+ instagram.id +'/media/recent/?access_token='+ process.env.INSTAGRAM_TOKEN,
           json: true
-        }, function(err, req, resp) {
-          var data = resp
+        }, function(err, req, data) {
           var resp_tags = {data: []}
+
+          if(err) {
+            // Brak lub źle podpięta integracja
+            return res.send(404)
+          }
 
           for(var img in data.data){
             for(var tag in data.data[img].tags){
