@@ -146,9 +146,10 @@ r.connect(config.rethinkdb, function(err, conn) {
           })
         })
       })
-  })
+    })
+
   r.table('Volunteers').changes()
-    .filter(r.row('old_val')('approved').eq(true).not().and(r.row('new_val')('approved').eq(true)))
+    .filter(r.row('old_val')('approved').default(false).eq(true).not().and(r.row('new_val')('approved').eq(true)))
     .run(conn, function(err, cursor) {
       cursor.each(function(err, change){ // Wolontariusz został "approved"
         var row = change.new_val
@@ -181,7 +182,7 @@ r.connect(config.rethinkdb, function(err, conn) {
     })
 
   r.table('Volunteers').changes()
-    .filter(r.row('old_val')('is_admin').eq(true).not().and(r.row('new_val')('is_admin').eq(true)))
+    .filter(r.row('old_val')('is_admin').default(false).eq(true).not().and(r.row('new_val')('is_admin').eq(true)))
     .run(conn, function(err, cursor) {
       cursor.each(function(err, change){ // Wolontariusz został adminem
         var row = change.new_val
@@ -219,7 +220,7 @@ r.connect(config.rethinkdb, function(err, conn) {
 
   // Informuje API Eventory o zmianach w grupach wolontariusza
   r.table('Volunteers').changes()
-    .filter( r.row('new_val')('tags').eq(r.row('old_val')('tags')).not())
+    .filter(r.row('new_val')('tags').eq(r.row('old_val')('tags')).not())
     .run(conn, function(err, cursor) {
       cursor.each(function(err, change){
         var row = change.new_val
