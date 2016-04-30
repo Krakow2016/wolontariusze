@@ -39,8 +39,7 @@ var ActivityStore = createStore({
     this.activity = data
     this.volunteers = volunteers
 
-    var blocks = Draft.convertFromRaw(data.description)
-    var contentState = Draft.ContentState.createFromBlockArray(blocks)
+    var contentState = Draft.convertFromRaw(data.description)
     this.activity.description = Draft.EditorState.createWithContent(contentState)
 
     this.emitChange()
@@ -113,12 +112,10 @@ var ActivityStore = createStore({
     this.invalidDatetime = state.invalidDatetime
     this.invalidEndtime = state.invalidEndtime
 
-    var blocks = Draft.convertFromRaw(this.activity.description)
-    var contentState = Draft.ContentState.createFromBlockArray(blocks)
+    var contentState = Draft.convertFromRaw(this.activity.description)
     this.activity.description = Draft.EditorState.createWithContent(contentState)
 
-    var blocks2 = Draft.convertFromRaw(state.editorState)
-    var contentState2 = Draft.ContentState.createFromBlockArray(blocks2)
+    var contentState2 = Draft.convertFromRaw(state.editorState)
     this.editorState = Draft.EditorState.createWithContent(contentState2)
   }
 

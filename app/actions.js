@@ -248,8 +248,7 @@ module.exports = {
         // TODO tymczasowe rozwiązanie
 
         var Draft = require('draft-js')
-        var blocks = Draft.convertFromRaw(payload.description)
-        var contentState = Draft.ContentState.createFromBlockArray(blocks)
+        var contentState = Draft.convertFromRaw(payload.description)
         payload.description = Draft.EditorState.createWithContent(contentState)
 
         context.dispatch('ACTIVITY_UPDATED', payload)
