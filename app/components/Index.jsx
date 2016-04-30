@@ -71,56 +71,58 @@ var App = React.createClass({
     if(user && user.is_admin) {
       stats = (
         <table style={{width: '100%'}}>
-          <tr>
-            <td>
-              Liczba kont w systemie:
-            </td>
-            <td>
-              {this.state.total_accounts}
-            </td>
-            <td>
-              <NavLink href="/rejestracja">
-                Dodaj
-              </NavLink>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Liczba wolontariuszy krótkoterminowych:
-            </td>
-            <td>
-              <NavLink href="/wyszukiwarka?raw.is_volunteer=true">
-                {this.state.total_volunteers}
-              </NavLink>
-            </td>
-            <td>
-              <NavLink href="/import">
-                Importuj
-              </NavLink>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Liczba aktywnych kont w systemie:
-            </td>
-            <td>
-              <NavLink href="/wyszukiwarka?doc.has_password=true">
-                {this.state.total_active}
-              </NavLink>
-            </td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>
-              Liczba administratorów w systemie:
-            </td>
-            <td>
-              <NavLink href="/wyszukiwarka?doc.is_admin=true">
-                {this.state.total_admins}
-              </NavLink>
-            </td>
-            <td></td>
-          </tr>
+          <tbody>
+            <tr>
+              <td>
+                Liczba kont w systemie:
+              </td>
+              <td>
+                {this.state.total_accounts}
+              </td>
+              <td>
+                <NavLink href="/rejestracja">
+                  Dodaj
+                </NavLink>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Liczba wolontariuszy krótkoterminowych:
+              </td>
+              <td>
+                <NavLink href="/wyszukiwarka?raw.is_volunteer=true">
+                  {this.state.total_volunteers}
+                </NavLink>
+              </td>
+              <td>
+                <NavLink href="/import">
+                  Importuj
+                </NavLink>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Liczba aktywnych kont w systemie:
+              </td>
+              <td>
+                <NavLink href="/wyszukiwarka?doc.has_password=true">
+                  {this.state.total_active}
+                </NavLink>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                Liczba administratorów w systemie:
+              </td>
+              <td>
+                <NavLink href="/wyszukiwarka?doc.is_admin=true">
+                  {this.state.total_admins}
+                </NavLink>
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
         </table>
       )
     }
