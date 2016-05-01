@@ -940,11 +940,6 @@
       "from": "detective@>=4.3.1 <5.0.0",
       "resolved": "https://registry.npmjs.org/detective/-/detective-4.3.1.tgz"
     },
-    "diff": {
-      "version": "2.2.2",
-      "from": "diff@>=2.2.2 <3.0.0",
-      "resolved": "https://registry.npmjs.org/diff/-/diff-2.2.2.tgz"
-    },
     "dispatchr": {
       "version": "0.3.3",
       "from": "dispatchr@>=0.3.1 <0.4.0",
@@ -1794,6 +1789,11 @@
       "from": "jasmine-core@>=2.3.0 <2.4.0",
       "resolved": "https://registry.npmjs.org/jasmine-core/-/jasmine-core-2.3.4.tgz"
     },
+    "jiff": {
+      "version": "0.7.3",
+      "from": "jiff@>=0.7.3 <0.8.0",
+      "resolved": "https://registry.npmjs.org/jiff/-/jiff-0.7.3.tgz"
+    },
     "jmespath": {
       "version": "0.15.0",
       "from": "jmespath@0.15.0",
@@ -2460,7 +2460,7 @@
     },
     "react-autowhatever": {
       "version": "3.2.2",
-      "from": "react-autowhatever@>=3.0.0 <4.0.0",
+      "from": "react-autowhatever@>=3.2.2 <4.0.0",
       "resolved": "https://registry.npmjs.org/react-autowhatever/-/react-autowhatever-3.2.2.tgz"
     },
     "react-datetime": {
@@ -2507,7 +2507,7 @@
     },
     "react-redux": {
       "version": "4.4.5",
-      "from": "react-redux@>=4.4.0 <5.0.0",
+      "from": "react-redux@>=4.4.5 <5.0.0",
       "resolved": "https://registry.npmjs.org/react-redux/-/react-redux-4.4.5.tgz"
     },
     "react-tap-event-plugin": {
@@ -2624,7 +2624,7 @@
     },
     "redux": {
       "version": "3.5.2",
-      "from": "redux@>=3.3.1 <4.0.0",
+      "from": "redux@>=3.5.1 <4.0.0",
       "resolved": "https://registry.npmjs.org/redux/-/redux-3.5.2.tgz"
     },
     "regenerate": {
@@ -2693,9 +2693,9 @@
       "resolved": "https://registry.npmjs.org/rethinkdb/-/rethinkdb-2.2.3.tgz"
     },
     "rethinkdbdash": {
-      "version": "2.3.4",
+      "version": "2.3.5",
       "from": "rethinkdbdash@>=2.2.1 <3.0.0",
-      "resolved": "https://registry.npmjs.org/rethinkdbdash/-/rethinkdbdash-2.3.4.tgz",
+      "resolved": "https://registry.npmjs.org/rethinkdbdash/-/rethinkdbdash-2.3.5.tgz",
       "dependencies": {
         "bluebird": {
           "version": "3.3.5",

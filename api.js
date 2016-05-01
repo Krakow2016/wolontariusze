@@ -8,7 +8,7 @@ var passport = require('passport')
 var util = require('util')
 var bodyParser = require('body-parser')
 var expressSession = require('express-session')
-var JsDiff = require('diff')
+var jiff = require('jiff')
 
 var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
@@ -313,10 +313,8 @@ server.get('/api/v2/pilgrims', bearer, function(req, res) {
           if(err) {
             res.status(500).send(error('DBError', err))
           } else {
-            var oldStr = JSON.stringify(base[0], null, 2)
-            var newStr = JSON.stringify(result[0], null, 2)
-            var patch = JsDiff.createPatch('Pilgrims.json', oldStr, newStr)
-            res.send(success({ patch: patch }))
+            var diff = jiff.diff(base[0], result[0])
+            res.send(success({ diff: diff }))
           }
         })
       } else { // Pobierz ostatnią wersję

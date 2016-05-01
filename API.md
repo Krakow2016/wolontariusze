@@ -537,7 +537,8 @@ GET https://wolontariusze.krakow2016.com/api/v2/pilgrims
 ### Pobieranie aktualizacji do bazy danych (wersjonowanie)
 
 Zwraca zmiany które nastąpiły od ostatniej aktualizacji (numer wersji należy
-podać w parametrze `from`) w formacie path na bazie w formacie pretty json.
+podać w parametrze `from`) w formacie JSON w implementacji JSON Patch RFC6902
+(implementacja przez bibliotekę [jiff](https://github.com/cujojs/jiff)).
 
 **Ścieżka:**  
 ```
@@ -554,7 +555,60 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/pilgrims?from=20160416
 {
     "status": "success",
     "data": {
-        "patch": "Index: Pilgrims.json\n===================================================================\n--- Pilgrims.json\n+++ Pilgrims.json\n@@ -1,16 +1,16 @@\n {\n-  \"created_at\": 20160416,\n+  \"created_at\": 20160418,\n   \"data\": [\n     {\n-      \"guardian\": \"Jan Kowalski\",\n-      \"id\": \"foo\",\n+      \"guardian\": \"Joanna Nowak\",\n+      \"id\": \"bar\",\n       \"lat_lon\": [\n         0,\n         0\n       ],\n-      \"location\": \"parafia \u015bw. Szczepana\",\n-      \"phone\": \"+48123456789\"\n+      \"location\": \"parafia \u015bw. Salawy\",\n+      \"phone\": \"+48111222333\"\n     }\n   ],\n-  \"id\": \"eb63b33a-bd8d-4537-8b79-a29744b1f51c\"\n+  \"id\": \"c19a5c9c-da02-4aeb-b08b-558e83a27cbd\"\n }\n\\ No newline at end of file\n"
+        "patch": [
+            {
+                "op": "test",
+                "path": "/id",
+                "value": "eb63b33a-bd8d-4537-8b79-a29744b1f51c"
+            },
+            {
+                "op": "replace",
+                "path": "/id",
+                "value": "c19a5c9c-da02-4aeb-b08b-558e83a27cbd"
+            },
+            {
+                "op": "add",
+                "path": "/data/0",
+                "value": {
+                    "guardian": "Joanna Nowak",
+                    "id": "bar",
+                    "lat_lon": [
+                        0,
+                        0
+                    ],
+                    "location": "parafia \u015bw. Salawy",
+                    "phone": "+48111222333"
+                }
+            },
+            {
+                "op": "test",
+                "path": "/data/1",
+                "value": {
+                    "guardian": "Jan Kowalski",
+                    "id": "foo",
+                    "lat_lon": [
+                        0,
+                        0
+                    ],
+                    "location": "parafia \u015bw. Szczepana",
+                    "phone": "+48123456789"
+                }
+            },
+            {
+                "op": "remove",
+                "path": "/data/1"
+            },
+            {
+                "op": "test",
+                "path": "/created_at",
+                "value": 20160416
+            },
+            {
+                "op": "replace",
+                "path": "/created_at",
+                "value": 20160418
+            }
+        ]
     }
 }
 ```
