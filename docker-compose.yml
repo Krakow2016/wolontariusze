@@ -1,5 +1,5 @@
 rethinkdb:
-  image: rethinkdb:2.2
+  image: rethinkdb:2.3.1
 
 es:
   image: krakow2016/elasticsearch
