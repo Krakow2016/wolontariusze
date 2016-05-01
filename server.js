@@ -450,7 +450,9 @@ module.exports = function(server) {
             // Dane do ElasticSearcha najpierw lądują w tabeli `Imports` żeby
             // później zostać automatycznie przeniesione i zcalone z odpowiadającym
             // im dokumentem wolontariusza poprzez narzędzie LogStash.
-            r.table('Imports').insert(docs).run(conn, function(err, imports) {
+            r.table('Imports').insert(docs, {
+              conflict: 'replace'
+            }).run(conn, function(err, imports) {
               if(err) { return res.status(500).send(err) }
 
               var table = r.table('Volunteers')
