@@ -42,9 +42,9 @@ var Activities = module.exports = {
         var hits = resp.hits.hits.map(function(hit) {
           return hit._source.doc
         })
-        var authors = _.uniq(hits.map(function(hit) {
+        var authors = _.compact(_.uniq(hits.map(function(hit) {
           return hit.created_by
-        }))
+        })))
 
         if(authors.length) {
           r.connect(rethinkdbConf, function(error, conn){
@@ -67,7 +67,7 @@ var Activities = module.exports = {
                     ])
                   })
                   callback(null, hits.map(function(hit) {
-                    hit.created_by = map[hit.created_by]
+                    hit.created_by = map[hit.created_by] || {}
                     return hit
                   }))
                 })
