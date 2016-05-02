@@ -24,8 +24,7 @@ var EditedProfileComment = React.createClass({
   },
 
   getInitialState: function() {
-    var blocks = Draft.convertFromRaw(this.props.comment.raw)
-    var contentState = Draft.ContentState.createFromBlockArray(blocks)
+    var contentState = Draft.convertFromRaw(this.props.comment.raw)
     var editorState = Draft.EditorState.createWithContent(contentState)
 
     return {
