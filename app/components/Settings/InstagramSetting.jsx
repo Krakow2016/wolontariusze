@@ -9,6 +9,10 @@ var request = require('superagent')
 
 var InstagramSetting = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     return {
       instagram: this.props.context.getStore(VolunteerStore).profile.instagram

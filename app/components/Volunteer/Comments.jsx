@@ -17,6 +17,12 @@ var Editor = require('../Editor.jsx')
 
 var EditedProfileComment = React.createClass({
 
+  propTypes: {
+    comment: React.PropTypes.object,
+    context: React.PropTypes.object,
+    cancel: React.PropTypes.func
+  },
+
   getInitialState: function() {
     var blocks = Draft.convertFromRaw(this.props.comment.raw)
     var contentState = Draft.ContentState.createFromBlockArray(blocks)
@@ -54,6 +60,13 @@ var EditedProfileComment = React.createClass({
 })
 
 var ProfileComment = React.createClass ({
+
+  propTypes: {
+    editComment: React.PropTypes.func,
+    cancelEditComment: React.PropTypes.func,
+    comment: React.PropTypes.object,
+    context: React.PropTypes.object
+  },
 
   editComment: function() {
     this.props.editComment(this.props.comment.id)
@@ -105,6 +118,10 @@ var ProfileComment = React.createClass ({
 })
 
 var ProfileComments = React.createClass({
+
+  propTypes: {
+    context: React.PropTypes.object
+  },
 
   getInitialState: function () {
     return this.props.context.getStore(CommentsStore).getState()

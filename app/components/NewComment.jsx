@@ -10,6 +10,10 @@ var connectToStores = addons.connectToStores
 
 var NewComment = React.createClass ({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function() {
     return this.props.context.getStore(NewCommentStore).getState()
   },

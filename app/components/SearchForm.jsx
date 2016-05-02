@@ -2,6 +2,10 @@ var React = require('react')
 
 var SearchForm = React.createClass({
 
+  propTypes: {
+    query: React.PropTypes.object
+  },
+
   render: function() {
     return (
       <div className="searchForm">

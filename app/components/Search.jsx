@@ -8,6 +8,11 @@ var ResultsStore = require('../stores/Results')
 var ApplicationStore = require('../stores/ApplicationStore')
 
 var Search = React.createClass({
+
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function() {
     var state = this.props.context.getStore(ResultsStore).dehydrate()
     state.consent = this.props.context.getStore(ApplicationStore).consent

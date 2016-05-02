@@ -7,6 +7,10 @@ var actions = require('../actions')
 
 var App = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     return this.props.context.getStore(IndexStore).data || {}
   },

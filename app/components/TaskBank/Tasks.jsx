@@ -13,6 +13,10 @@ var AddActivityButton = require('./AddActivityButton.jsx')
 
 var Tasks = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     var state = this.props.context.getStore(ActivitiesStore).dehydrate()
     state.activity = this.props.context.getStore(ActivityStore).getState()

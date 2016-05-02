@@ -2,6 +2,11 @@ var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 
 var VolunteerLi = React.createClass({
+
+  propTypes: {
+    volunteer: React.PropTypes.object
+  },
+
   render: function() {
     var id = '/wolontariusz/'+ this.props.volunteer.id
     return (
@@ -15,6 +20,11 @@ var VolunteerLi = React.createClass({
 })
 
 var VolunteerList = React.createClass({
+
+  propTypes: {
+    results: React.PropTypes.object
+  },
+
   render: function() {
     var results = this.props.results
     return (
@@ -22,7 +32,7 @@ var VolunteerList = React.createClass({
         {results.map(function(result) {
           return <VolunteerLi key={result.id} volunteer={result} />
         })}
-        </ul>
+      </ul>
     )
   }
 })

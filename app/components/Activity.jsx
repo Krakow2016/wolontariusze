@@ -24,6 +24,10 @@ var ProfileDetails = function(props) {
 
 var Activity = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     var state = this.props.context.getStore(ActivityStore).getState()
     return state

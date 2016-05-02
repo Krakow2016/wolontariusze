@@ -20,10 +20,14 @@ injectTapEventPlugin()
 
 var Application = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   contextTypes: {
-    getStore      : React.PropTypes.func,
-    executeAction : React.PropTypes.func,
-    getUser       : React.PropTypes.func
+    getStore: React.PropTypes.func,
+    executeAction: React.PropTypes.func,
+    getUser: React.PropTypes.func
   },
 
   getInitialState: function() {

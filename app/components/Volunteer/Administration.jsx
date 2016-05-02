@@ -44,6 +44,11 @@ var Details = React.createClass({
 })
 
 var VolunteerAdministration = React.createClass({
+
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     return {
       profile: this.props.context.getStore(VolunteerStore).getState().profile,

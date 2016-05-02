@@ -5,6 +5,10 @@ var Instagram = require('./Instagram.jsx')
 
 var Shell = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     return this.props.context.getStore(VolunteerStore).profile
   },

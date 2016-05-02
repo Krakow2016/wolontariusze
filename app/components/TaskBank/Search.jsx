@@ -2,6 +2,11 @@ var React = require('react')
 
 var Search = React.createClass({
 
+  propTypes: {
+    handleChange: React.PropTypes.func,
+    query: React.PropTypes.object
+  },
+
   render: function() {
     return (
       <div>

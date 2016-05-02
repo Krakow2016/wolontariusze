@@ -1,11 +1,13 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 
-var VolunteerStore = require('../../stores/Volunteer')
-
-var actions = require('../../actions')
-
 var Volunteer = React.createClass({
+
+  propTypes: {
+    children: React.PropTypes.element,
+    context: React.PropTypes.object,
+    profile: React.PropTypes.object
+  },
 
   render: function () {
     var user = this.user()
@@ -202,13 +204,13 @@ var Volunteer = React.createClass({
 
 //})
 
-var ExtraAttributesVisible = React.createClass({
-  render: function() {
-    return(
-      <p style={{color: 'red'}}><b>Doświadczenie </b>{this.props.experience}</p>
-    )
-  }
-})
+//var ExtraAttributesVisible = React.createClass({
+  //render: function() {
+    //return(
+      //<p style={{color: 'red'}}><b>Doświadczenie </b>{this.props.experience}</p>
+    //)
+  //}
+//})
 
 // Module.exports instead of normal dom mounting
 module.exports = Volunteer

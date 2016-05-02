@@ -29,6 +29,10 @@ var MyInput = React.createClass({
 
 var Registration = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function() {
     return {}
   },

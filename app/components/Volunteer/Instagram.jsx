@@ -1,9 +1,11 @@
 var React = require('react')
 var request = require('superagent')
 
-var ApplicationStore = require('../../stores/ApplicationStore')
-
 var Instagram = React.createClass({
+
+  propTypes: {
+    user_id: React.PropTypes.string
+  },
 
   getInitialState: function() {
     return {

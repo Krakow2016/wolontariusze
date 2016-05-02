@@ -46,6 +46,10 @@ var AddedVolonteer = React.createClass({
 
 var ActivityAdministration = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     var state = this.props.context.getStore(ActivityStore).getState()
     // Tworzy kopię tablicy volontariuszy po to żeby później stwierdzić jakie
