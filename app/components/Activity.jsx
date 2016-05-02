@@ -209,7 +209,7 @@ var Activity = React.createClass({
       'BOLD': ['<strong>', '</strong>'],
       'ITALIC': ['<i>', '</i>'],
       'UNDERLINE': ['<u>', '</u>'],
-      'CODE': ['<span style="font-family: monospace">', '</span>'],
+      'CODE': ['<span style="font-family: monospace">', '</span>']
     }).map(function(block, i) {
       return (<p key={'block_'+i} dangerouslySetInnerHTML={{__html: block}} />)
     })
@@ -242,7 +242,7 @@ var Activity = React.createClass({
           'BOLD': ['<strong>', '</strong>'],
           'ITALIC': ['<i>', '</i>'],
           'UNDERLINE': ['<u>', '</u>'],
-          'CODE': ['<span style="font-family: monospace">', '</span>'],
+          'CODE': ['<span style="font-family: monospace">', '</span>']
         }).map(function(block, j) {
           return (<p key={'update_'+i+'_'+j} dangerouslySetInnerHTML={{__html: block}} />)
         })

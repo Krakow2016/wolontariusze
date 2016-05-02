@@ -7,7 +7,7 @@ var Instagram = React.createClass({
 
   getInitialState: function() {
     return {
-      media: null,
+      media: null
     }
   },
 

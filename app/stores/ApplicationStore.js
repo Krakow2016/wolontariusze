@@ -55,7 +55,7 @@ var ApplicationStore = createStore({
       route: this.currentRoute,
       title: this.title,
       flashSuccess: this.flashSuccess,
-      flashFailure: this.flashFailure,
+      flashFailure: this.flashFailure
     }
   },
 

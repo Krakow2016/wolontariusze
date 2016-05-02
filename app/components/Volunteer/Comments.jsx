@@ -81,7 +81,7 @@ var ProfileComment = React.createClass ({
         'BOLD': ['<strong>', '</strong>'],
         'ITALIC': ['<i>', '</i>'],
         'UNDERLINE': ['<u>', '</u>'],
-        'CODE': ['<span style="font-family: monospace">', '</span>'],
+        'CODE': ['<span style="font-family: monospace">', '</span>']
       })
       return (
 <div>

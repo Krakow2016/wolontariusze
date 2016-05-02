@@ -426,7 +426,7 @@ module.exports = {
       doc_should.push({
         multi_match: {
           query: state.name,
-          fields: ['doc.first_name', 'doc.last_name'],
+          fields: ['doc.first_name', 'doc.last_name']
         }
       })
     }

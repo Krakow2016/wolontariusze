@@ -89,11 +89,11 @@ var Tasks = React.createClass({
 
     if(user) {
       tabs.push(
-        <li><NavLink href={"/zadania?volunteer="+user.id} className="profile-ribon-cell">Biorę udział w</NavLink></li>
+        <li><NavLink href={'/zadania?volunteer='+user.id} className="profile-ribon-cell">Biorę udział w</NavLink></li>
       )
       if(user.is_admin) {
         tabs.push(
-          <li><NavLink href={"/zadania?created_by="+user.id} className="profile-ribon-cell">Moje zadania</NavLink></li>
+          <li><NavLink href={'/zadania?created_by='+user.id} className="profile-ribon-cell">Moje zadania</NavLink></li>
         )
       }
     }
@@ -102,7 +102,7 @@ var Tasks = React.createClass({
       if(!task) { return }
       var volunteers = (task.volunteers || []).map(function(id) {
         return (
-          <ProfilePic src={"https://krakow2016.s3.eu-central-1.amazonaws.com/"+id+"/thumb"} className='profileThumbnail' />
+          <ProfilePic src={'https://krakow2016.s3.eu-central-1.amazonaws.com/'+id+'/thumb'} className='profileThumbnail' />
         )
       })
       var tresc = [(task.description.length > 200) ? task.description.substring(0,200) : task.description]
@@ -123,7 +123,7 @@ var Tasks = React.createClass({
               </NavLink>
             </h1>
             <span className="task-meta">
-              <NavLink href={"/zadania?created_by="+ task.created_by.id}>
+              <NavLink href={'/zadania?created_by='+ task.created_by.id}>
                 {task.created_by.first_name} {task.created_by.last_name}
               </NavLink>
             </span>

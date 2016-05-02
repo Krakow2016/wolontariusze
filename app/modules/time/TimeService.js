@@ -15,10 +15,10 @@ var TimeService = {
   isDate: function (obj) {
     if (typeof obj == 'undefined' || obj == this.NO_DATE)
       return false
-    
+
     return true
   },
-    
+
   NO_DATE: '3000-01-01T00:00:00.000Z'
 }
 

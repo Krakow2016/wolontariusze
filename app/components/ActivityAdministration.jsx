@@ -103,7 +103,7 @@ var ActivityAdministration = React.createClass({
       activity: {$set: activity}
     }))
   },
-  
+
   handleEndtimeChange: function (m) {
     if (typeof m  == 'string' && !moment(m, 'YYYY/M/D HH:mm', true).isValid()) {
       this.setState(update(this.state, {
@@ -117,7 +117,7 @@ var ActivityAdministration = React.createClass({
       }))
     }
   },
-  
+
   handleAddEndtimeChange: function(evt) {
     var value = evt.target.checked
 
@@ -129,7 +129,7 @@ var ActivityAdministration = React.createClass({
     }
 
     this.setState(update(this.state, {
-        activity: {$set: activity}
+      activity: {$set: activity}
     }))
   },
 
@@ -373,14 +373,14 @@ var ActivityAdministration = React.createClass({
       } else {
         startEventDateHint = <span> Dla aktywności data powinna być w przeszłości </span>
       }
-      
+
       var startEventDate
       if(!this.state.invalidDatetime)  {
         startEventDate = new Date(this.state.activity.datetime)
       } else {
         startEventDate = this.state.activity.datetime
       }
-      
+
       startTime = <div className="pure-u-1 pure-u-md-2-3">
                     {this.state.invalidDatetime}
                     <DateTime open={false}
@@ -392,7 +392,7 @@ var ActivityAdministration = React.createClass({
                     {startEventDateHint}
                 </div>
     }
-    
+
     var endTime
     if (TimeService.isDate(this.state.activity.endtime)) {
 
@@ -403,7 +403,7 @@ var ActivityAdministration = React.createClass({
       } else {
         endDate = this.state.activity.endtime
       }
-      
+
       endTime = <div className="pure-u-1 pure-u-md-2-3">
                     {this.state.invalidEndtime}
                     <DateTime open={false}
@@ -502,7 +502,7 @@ var ActivityAdministration = React.createClass({
           <input id="endtime" type="checkbox" name="addEndtime" checked={TimeService.isDate(this.state.activity.endtime)} onChange={this.handleAddEndtimeChange} />
           <label htmlFor="endtime">Data zakończenia</label>
           {endTime}
-          
+
           <br/>
           <div className="pure-u-1 pure-u-md-1-3">
             <b>Miejsce</b>
