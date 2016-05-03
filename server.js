@@ -312,9 +312,12 @@ module.exports = function(server) {
       var id = req.body.id
       if(req.user && req.user.is_admin) {
         Volunteers.read(req, 'Volunteers', {id: id}, {}, function (err, user) {
+          if(err) {
+            return res.status(500).send(err)
+          }
           // Generuje losowy token dostępu
           crypto.randomBytes(32, function(ex, buf) {
-            var tokens = [] //user.access_tokens || []
+            var tokens = user.access_tokens || []
             // Token przekształcony do formatu szesnastkowego
             var token = buf.toString('hex')
             tokens.push({
