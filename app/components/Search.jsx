@@ -1,5 +1,4 @@
 var React = require('react')
-var update = require('react-addons-update')
 
 var actions = require('../actions')
 var SearchForm = require('./SearchForm.jsx')
@@ -8,6 +7,11 @@ var ResultsStore = require('../stores/Results')
 var ApplicationStore = require('../stores/ApplicationStore')
 
 var Search = React.createClass({
+
+  propTypes: {
+     context: React.PropTypes.object
+  },
+
   getInitialState: function() {
     var state = this.props.context.getStore(ResultsStore).dehydrate()
     state.consent = this.props.context.getStore(ApplicationStore).consent
@@ -56,7 +60,7 @@ var Search = React.createClass({
       query: query
     })
   },
-  
+
   handleLanguagesChange: function(languages) {
     var query = this.state.query
     query['languages'] = languages.map(function (lang) {return lang.value})
@@ -112,7 +116,7 @@ var Search = React.createClass({
           query={this.state.query}
           search={this.search}
           handleChange={this.handleChange}
-          handleCheckboxChange={this.handleCheckboxChange} 
+          handleCheckboxChange={this.handleCheckboxChange}
           handleLanguagesChange={this.handleLanguagesChange}/>
         <SearchResults results={this.state.all} />
       </div>

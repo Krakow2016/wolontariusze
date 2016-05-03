@@ -75,7 +75,7 @@ module.exports = {
 
     r.attach('avatar', payload[0])
     r.end(function(err, resp){
-      console.log(resp)
+      //console.log(resp)
       context.dispatch('VOLUNTEER_UPDATE_SUCCESS', resp.body)
       cb()
     })
@@ -427,7 +427,7 @@ module.exports = {
       doc_should.push({
         multi_match: {
           query: state.name,
-          fields: ['doc.first_name', 'doc.last_name'],
+          fields: ['doc.first_name', 'doc.last_name']
         }
       })
     }
@@ -455,12 +455,12 @@ module.exports = {
         exists: { 'field': 'raw.id' }
       })
     }
-    
+
     if(state['raw.need_accomodation']) {
       raw_must.push({
         term: { 'raw.cd_need_accomodation': true }
       })
-    } 
+    }
     //else {
     //  raw_must.push({
     //    term: { 'raw.cd_need_accomodation': false }
@@ -472,7 +472,7 @@ module.exports = {
         match: { 'raw.rg_city': state.city }
       })
     }
-    
+
     if(state.sectors) {
       raw_should.push({
         match: { 'raw.cd_sectors': state.sectors }
@@ -488,45 +488,45 @@ module.exports = {
 
       })
     }
-    
+
     if(state.languages) {
       var languages = state.languages
       for (var i=0; i<languages.length; i++) {
         var name = languages[i].split('_')[0]
         var level = languages[i].split('_')[1]
-        
+
         var terms = function () {
           switch (level) {
-            case 'basic':
-              return [
-                {"term": {'raw.od_motherlanguage': {"value": name, "boost": 10 } } },
-                {"term": {'raw.od_languages': {"value": name+'=professional translator, interpreter', "boost": 8 } } },
-                {"term": {'raw.od_languages': {"value": name+'=excellent', "boost": 6 } } },
-                {"term": {'raw.od_languages': {"value": name+'=good', "boost": 4 } } },
-                {"term": {'raw.od_languages': {"value": name+'=basic', "boost": 2 } } }
-              ]
-            case 'good':
-              return [
-                {"term": {'raw.od_motherlanguage': {"value": name, "boost": 10 } } },
-                {"term": {'raw.od_languages': {"value": name+'=professional translator, interpreter', "boost": 8 } } },
-                {"term": {'raw.od_languages': {"value": name+'=excellent', "boost": 6 } } },
-                {"term": {'raw.od_languages': {"value": name+'=good', "boost": 4 } } }
-              ]
-            case 'excellent':
-              return [
-                {"term": {'raw.od_motherlanguage': {"value": name, "boost": 10 } } },
-                {"term": {'raw.od_languages': {"value": name+'=professional translator, interpreter', "boost": 8 } } },
-                {"term": {'raw.od_languages': {"value": name+'=excellent', "boost": 6 } } }
-              ]
-            case 'interpreter':
-              return [
-                {"term": {'raw.od_motherlanguage': {"value": name, "boost": 10} } },
-                {"term": {'raw.od_languages': {"value": name+'=professional translator, interpreter', "boost": 8 } } }
-              ]
-            default:
-              return [
-                {"term": {'raw.od_motherlanguage': {"value": name, "boost": 10} } }
-              ]
+          case 'basic':
+            return [
+                {'term': {'raw.od_motherlanguage': {'value': name, 'boost': 10 } } },
+                {'term': {'raw.od_languages': {'value': name+'=professional translator, interpreter', 'boost': 8 } } },
+                {'term': {'raw.od_languages': {'value': name+'=excellent', 'boost': 6 } } },
+                {'term': {'raw.od_languages': {'value': name+'=good', 'boost': 4 } } },
+                {'term': {'raw.od_languages': {'value': name+'=basic', 'boost': 2 } } }
+            ]
+          case 'good':
+            return [
+                {'term': {'raw.od_motherlanguage': {'value': name, 'boost': 10 } } },
+                {'term': {'raw.od_languages': {'value': name+'=professional translator, interpreter', 'boost': 8 } } },
+                {'term': {'raw.od_languages': {'value': name+'=excellent', 'boost': 6 } } },
+                {'term': {'raw.od_languages': {'value': name+'=good', 'boost': 4 } } }
+            ]
+          case 'excellent':
+            return [
+                {'term': {'raw.od_motherlanguage': {'value': name, 'boost': 10 } } },
+                {'term': {'raw.od_languages': {'value': name+'=professional translator, interpreter', 'boost': 8 } } },
+                {'term': {'raw.od_languages': {'value': name+'=excellent', 'boost': 6 } } }
+            ]
+          case 'interpreter':
+            return [
+                {'term': {'raw.od_motherlanguage': {'value': name, 'boost': 10} } },
+                {'term': {'raw.od_languages': {'value': name+'=professional translator, interpreter', 'boost': 8 } } }
+            ]
+          default:
+            return [
+                {'term': {'raw.od_motherlanguage': {'value': name, 'boost': 10} } }
+            ]
           }
         }()
         raw_must.push({

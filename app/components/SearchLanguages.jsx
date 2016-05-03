@@ -75,7 +75,7 @@ var allLanguages = [
   {value: 'xhosa', text: 'Xhosa'},
   {value: 'chinese-cantonese', text: 'Chiński (Kantoński)'},
   {value: 'chinese-mandarin', text: 'Chiński (Mandaryński)'},
-  {value: 'zulu', text: 'Zulu'},
+  {value: 'zulu', text: 'Zulu'}
 ]
 
 var allOptions = [
@@ -97,32 +97,34 @@ var Languages = React.createClass({
       selectedLanguages: []
     }
   },
-  
+
   deselectLanguage(index) {
     var selectedOptions = this.state.selectedOptions
     var selectedLanguages = this.state.selectedLanguages
     var language = selectedLanguages[index]
     selectedLanguages.splice(index,1)
-    
+
+    var j
+    var opt
     if (language.value != 'other') {
       var language_value = language.value.split('_')[0]
-      var basic = language_value+'_basic' 
-      for(var j = 0; j < selectedOptions.length; j++) {
-        var opt = selectedOptions[j]
+      var basic = language_value+'_basic'
+      for(j = 0; j < selectedOptions.length; j++) {
+        opt = selectedOptions[j]
         if (opt.value == basic) {
           selectedOptions.splice(j, 5)
         }
       }
     } else {
-      for(var j = 0; j < selectedOptions.length; j++) {
-        var opt = selectedOptions[j]
+      for(j = 0; j < selectedOptions.length; j++) {
+        opt = selectedOptions[j]
         if (opt.value == 'other') {
           selectedOptions.splice(j, 1)
         }
       }
     }
-        
-    this.props.handleLanguagesChange(selectedLanguages)    
+
+    this.props.handleLanguagesChange(selectedLanguages)
     this.setState ( {
       selectedOptions: selectedOptions,
       selectedLanguages: selectedLanguages
@@ -131,21 +133,20 @@ var Languages = React.createClass({
   handleChange(selected) {
     var selectedLength = selected.length
     var new_language =  selected[selectedLength-1]
-    
+
     var selectedOptions = this.state.selectedOptions
     var selectedLanguages = this.state.selectedLanguages
-    
+
     selectedLanguages.push(new_language)
-    
+
     if (new_language.value != 'other') {
-    console.log(new_language.value)
       var language_value = new_language.value.split('_')[0]
-      var levels = [language_value+'_basic', 
+      var levels = [language_value+'_basic',
         language_value+'_good',
         language_value+'_excellent',
         language_value+'_interpreter',
         language_value+'_mother']
-        
+
       for (var i = 0; i < levels.length; i++) {
         var opt
         for (var j=0; j<allOptions.length; j++) {
@@ -159,21 +160,21 @@ var Languages = React.createClass({
     } else {
       selectedOptions.push(new_language)
     }
-    
+
     this.props.handleLanguagesChange(selectedLanguages)
     this.setState ( {
       selectedOptions: selectedOptions,
       selectedLanguages: selectedLanguages
     })
-    
+
   },
-  
-  
+
+
   render() {
     //console.log('STATE', this.state)
     var selectedLanguages = this.state.selectedLanguages
-    var selectedOptions = this.state.selectedOptions.map(function (opt) {return opt}) 
-    return ( 
+    var selectedOptions = this.state.selectedOptions.map(function (opt) {return opt})
+    return (
       <div>
         <ReactFilteredMultiselect
           onChange={this.handleChange}

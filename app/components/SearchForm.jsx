@@ -3,6 +3,10 @@ var Languages = require('./SearchLanguages.jsx')
 
 var SearchForm = React.createClass({
 
+  propTypes: {
+    query: React.PropTypes.object
+  },
+
   render: function() {
     return (
       <div className="searchForm">
@@ -43,14 +47,14 @@ var SearchForm = React.createClass({
               <label htmlFor="is_volunteer"> Wolontariusz krótkoterminowy </label>
           </div>
         </div>
-        
+
         <div className="pure-g">
           <div className="pure-u-2-3">
               <input id="need_accomodation" name="raw.need_accomodation" type="checkbox" onChange={this.props.handleCheckboxChange} checked={this.props.query['raw.need_accomodation']} />
               <label htmlFor="need_accomodation"> Potrzebuje zakwaterowania </label>
           </div>
         </div>
-        
+
         <div className="pure-g">
           <div className="pure-u-1-3">Miejscowość</div>
           <div className="pure-u-2-3">
@@ -71,7 +75,7 @@ var SearchForm = React.createClass({
             <input name="sectors" value={this.props.query.sectors} onChange={this.props.handleChange} />
           </div>
         </div>
-        
+
         <div className="pure-g">
           <div className="pure-u-1-3"> Języki </div>
           <div className="pure-u-2-3">
