@@ -60,6 +60,10 @@ var Search = React.createClass({
   handleLanguagesChange: function(languages) {
     var query = this.state.query
     query['languages'] = languages.map(function (lang) {return lang.value})
+    //kasuje tekst "languages" z adresu url po usunięciu wybranych języków
+    if(query['languages'].length == 0) {
+      delete query['languages']
+    }
     this.setState({
       query: query
     })
