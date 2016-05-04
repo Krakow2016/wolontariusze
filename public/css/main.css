@@ -198,6 +198,10 @@ label:hover:before {
 	border: 1px solid #4778d9!important;
 }
 
+.mydatetime-validation-error {
+  color: red;
+}
+
 /*--------GROUP INPUTS----------*/
 
 .input-group-container{

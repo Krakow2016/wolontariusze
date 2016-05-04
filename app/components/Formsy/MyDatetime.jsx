@@ -25,12 +25,12 @@ var MyDatetime = React.createClass({
     var time = this.getValue()
     return (
       <div>
+        <span className="mydatetime-validation-error">{errorMessage}</span>
         <DateTime open={false}
           dateFormat={'YYYY/M/D'}
           timeFormat={'HH:mm'}
           value={time}
           onChange={this.changeValue}/>
-        <span>{errorMessage}</span>
       </div>
     )
   }
