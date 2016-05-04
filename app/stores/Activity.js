@@ -28,8 +28,6 @@ var ActivityStore = createStore({
       profile_picture_url: '/img/profile/face.svg'
     }
     this.volunteers = []
-    this.invalidDatetime = ''
-    this.invalidEndtime = ''
     this.editorState = Draft.EditorState.createEmpty()
   },
 
@@ -84,8 +82,6 @@ var ActivityStore = createStore({
     return {
       activity: this.activity,
       volunteers: this.volunteers,
-      invalidDatetime: this.invalidDatetime,
-      invalidEndtime: this.invalidEndtime,
       editorState: this.editorState
     }
   },
@@ -99,8 +95,6 @@ var ActivityStore = createStore({
     return {
       activity: activity,
       volunteers: this.volunteers,
-      invalidDatetime: this.invalidDatetime,
-      invalidEndtime: this.invalidEndtime,
       editorState: Draft.convertToRaw(this.editorState.getCurrentContent())
     }
   },
@@ -109,8 +103,6 @@ var ActivityStore = createStore({
 
     this.activity = state.activity
     this.volunteers = state.volunteers
-    this.invalidDatetime = state.invalidDatetime
-    this.invalidEndtime = state.invalidEndtime
 
     var contentState = Draft.convertFromRaw(this.activity.description)
     this.activity.description = Draft.EditorState.createWithContent(contentState)
