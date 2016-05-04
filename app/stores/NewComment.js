@@ -10,14 +10,7 @@ var NewComment = createStore({
   },
 
   handlers: {
-    'COMMENT_CREATED' : 'reset',
     'LOAD_VOLUNTEER'  : 'update_volunteer'
-  },
-
-  reset: function() {
-    // Komentarz został zapisany na serwerze. Możemy wyczyścić pole.
-    this.initialize()
-    this.emitChange()
   },
 
   update_volunteer: function(volunteer) {

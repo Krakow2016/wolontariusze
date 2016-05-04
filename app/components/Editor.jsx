@@ -3,12 +3,22 @@
 var React = require('react')
 var Draft = require('draft-js')
 
+var DraftEditor = require('draft-js-plugins-editor').default
+var createMentionPlugin = require('draft-js-mention-plugin').default
+var fromJS = require('immutable').fromJS
+var request = require('superagent')
+
 var INLINE_STYLES = [
     {label: 'Bold', style: 'BOLD'},
     {label: 'Italic', style: 'ITALIC'},
     {label: 'Underline', style: 'UNDERLINE'},
     {label: 'Monospace', style: 'CODE'}
 ]
+
+var mentionPlugin = createMentionPlugin({
+  entityMutability: 'IMMUTABLE',
+  mentionPrefix: '',
+})
 
 class StyleButton extends React.Component {
   constructor() {
@@ -52,6 +62,38 @@ const InlineStyleControls = (props) => {
 
 var Editor = React.createClass({
 
+  getInitialState: function() {
+    return {
+      suggestions: fromJS([])
+    }
+  },
+
+  onSearchChange: function(opts) {
+    var that = this
+    request
+      .post('/suggest')
+      .send({
+        suggest: {
+          text: opts.value,
+          completion: {
+            field: 'suggest'
+          }
+        }
+      })
+      .end(function(err, resp) {
+        var mentions = resp.body.suggest[0].options.map(function(option){
+          return {
+            name: option.text,
+            id: option.payload.id,
+            avatar: option.payload.thumb_picture_url
+          }
+        })
+        that.setState({
+          suggestions: fromJS(mentions)
+        })
+      })
+  },
+
   toggleInlineStyle: function(inlineStyle) {
     this.props.onChange(
       Draft.RichUtils.toggleInlineStyle(
@@ -73,11 +115,18 @@ var Editor = React.createClass({
           onToggle={this.toggleInlineStyle} />
 
         <div onClick={this.focus} className="myEditor" style={this.props.style}>
-          <Draft.Editor
+
+          <DraftEditor
             ref="editor"
             placeholder="Wpisz komentarz..."
             editorState={this.props.editorState}
+            plugins={ [mentionPlugin] }
             onChange={this.props.onChange} />
+
+          <mentionPlugin.MentionSuggestions
+            onSearchChange={ this.onSearchChange }
+            suggestions={ this.state.suggestions } />
+
         </div>
 
         {this.props.children}

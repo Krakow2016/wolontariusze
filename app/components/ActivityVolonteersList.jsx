@@ -15,10 +15,7 @@ var ActivityVolonteersList = React.createClass ({
       suggest: {
         text: this.state.value,
         completion: {
-          field: 'suggest',
-          fuzzy: {
-            fuzziness: 1
-          }
+          field: 'suggest'
         }
       }
     }

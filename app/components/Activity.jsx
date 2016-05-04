@@ -208,7 +208,7 @@ var Activity = React.createClass({
 
     var volonteersLimit = (activity.limit == 0) ? 'Brak' : activity.limit
 
-    var raw = Draft.convertToRaw(activity.description.getCurrentContent())
+    var raw = Draft.convertToRaw(this.state.activityDescription.getCurrentContent())
     var html = backdraft(raw, {
       'BOLD': ['<strong>', '</strong>'],
       'ITALIC': ['<i>', '</i>'],

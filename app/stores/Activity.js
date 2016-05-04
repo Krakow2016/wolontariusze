@@ -3,6 +3,8 @@
 var createStore  = require('fluxible/addons').createStore
 var Draft = require('draft-js')
 var TimeService = require('../modules/time/TimeService.js')
+var fromJS = require('immutable').fromJS
+var _ = require('lodash')
 
 var ActivityStore = createStore({
   storeName: 'Activity',
@@ -21,7 +23,6 @@ var ActivityStore = createStore({
       act_type: 'niezdefiniowany',
       place: '',
       datetime: TimeService.NO_DATE,
-      description: Draft.EditorState.createEmpty(),
       endtime: TimeService.NO_DATE,
       is_urgent: false,
       limit: 5,
@@ -30,6 +31,7 @@ var ActivityStore = createStore({
     this.volunteers = []
     this.invalidDatetime = ''
     this.invalidEndtime = ''
+    this.activityDescription = Draft.EditorState.createEmpty()
     this.editorState = Draft.EditorState.createEmpty()
   },
 
@@ -39,9 +41,13 @@ var ActivityStore = createStore({
     this.activity = data
     this.volunteers = volunteers
 
-    var contentState = Draft.convertFromRaw(data.description)
-    this.activity.description = Draft.EditorState.createWithContent(contentState)
+    _.forEach(data.description.entityMap, function(val, key) {
+      val.data.mention = fromJS(val.data.mention)
+    })
 
+    var contentState = Draft.convertFromRaw(data.description)
+    var editorState = Draft.EditorState.push(this.activityDescription, Draft.ContentState.createFromBlockArray(contentState.getBlocksAsArray()))
+    this.activityDescription = editorState
     this.emitChange()
   },
 
@@ -83,6 +89,7 @@ var ActivityStore = createStore({
   getState: function () {
     return {
       activity: this.activity,
+      activityDescription: this.activityDescription,
       volunteers: this.volunteers,
       invalidDatetime: this.invalidDatetime,
       invalidEndtime: this.invalidEndtime,
@@ -91,13 +98,9 @@ var ActivityStore = createStore({
   },
 
   dehydrate: function () {
-
-    var activity = Object.assign({}, this.activity, {
-      description: Draft.convertToRaw(this.activity.description.getCurrentContent())
-    })
-
     return {
-      activity: activity,
+      activity: this.activity,
+      activityDescription: Draft.convertToRaw(this.activityDescription.getCurrentContent()),
       volunteers: this.volunteers,
       invalidDatetime: this.invalidDatetime,
       invalidEndtime: this.invalidEndtime,
@@ -106,14 +109,22 @@ var ActivityStore = createStore({
   },
 
   rehydrate: function (state) {
-
     this.activity = state.activity
     this.volunteers = state.volunteers
     this.invalidDatetime = state.invalidDatetime
     this.invalidEndtime = state.invalidEndtime
 
-    var contentState = Draft.convertFromRaw(this.activity.description)
-    this.activity.description = Draft.EditorState.createWithContent(contentState)
+    _.forEach(state.activityDescription.entityMap, function(val, key) {
+      val.data.mention = fromJS(val.data.mention)
+    })
+
+    var contentState = Draft.convertFromRaw(state.activityDescription)
+    this.activityDescription = Draft.EditorState.push(this.activityDescription, Draft.ContentState.createFromBlockArray(contentState.getBlocksAsArray()))
+
+    // Formularz aktualizacji do zadania
+    _.forEach(state.editorState.entityMap, function(val, key) {
+      val.data.mention = fromJS(val.data.mention)
+    })
 
     var contentState2 = Draft.convertFromRaw(state.editorState)
     this.editorState = Draft.EditorState.createWithContent(contentState2)

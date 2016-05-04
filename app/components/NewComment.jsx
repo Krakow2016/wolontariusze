@@ -31,7 +31,10 @@ var NewComment = React.createClass ({
 
   _onStoreChange: function() {
     // Nastąpiła zmiana w stanie zasobu nowego komentarza - uaktualij widok.
-    this.setState(this.props.context.getStore(NewCommentStore).getState())
+    var store = this.props.context.getStore(NewCommentStore)
+    this.setState({
+      volunteerId: store.getState().volunteerId
+    })
   },
 
   onChange: function(editorState) {
@@ -45,6 +48,11 @@ var NewComment = React.createClass ({
     this.props.context.executeAction(createComment, {
       raw: Draft.convertToRaw(state),
       volunteerId: this.state.volunteerId
+    })
+
+    var editorState = Draft.EditorState.push(this.state.editorState, Draft.ContentState.createFromText(''))
+    this.setState({
+      editorState: editorState
     })
   },
 

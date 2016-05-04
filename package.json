@@ -14,6 +14,8 @@
     "connect-multiparty": "^2.0.0",
     "debug": "*",
     "draft-js": "^0.6.0",
+    "draft-js-mention-plugin": "^1.0.1",
+    "draft-js-plugins-editor": "^1.0.0",
     "ejs": "^2.3.1",
     "elasticsearch": "^11.0.1",
     "excel-parser": "^0.2.2",

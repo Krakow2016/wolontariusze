@@ -14,6 +14,8 @@ var deleteAction = actions.profileCommentsDelete
 
 var NewComment = require('../NewComment.jsx')
 var Editor = require('../Editor.jsx')
+var fromJS = require('immutable').fromJS
+var _ = require('lodash')
 
 var EditedProfileComment = React.createClass({
 
@@ -24,6 +26,11 @@ var EditedProfileComment = React.createClass({
   },
 
   getInitialState: function() {
+    var map = this.props.comment.raw.entityMap
+    _.forEach(map, function(val, key) {
+      val.data.mention = fromJS(val.data.mention)
+    })
+
     var contentState = Draft.convertFromRaw(this.props.comment.raw)
     var editorState = Draft.EditorState.createWithContent(contentState)
 
