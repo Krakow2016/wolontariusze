@@ -68,8 +68,9 @@ var Welcome = React.createClass({
 
           <hr />
           <h4>
-            By dokończyć rejestrację, wprowadź  hasło, którego będziesz
-            używać za każdym razem logując się do swojego profilu.
+            By dokończyć rejestrację, wprowadź  hasło, którego będziesz używać
+            za każdym razem logując się do swojego profilu. Login to Twoj adres
+            email podany przy rejestracji na wolontariat krótkoterminowy.
           </h4>
           <div className="alert">
 

@@ -6,7 +6,7 @@ var App = React.createClass({
       <div className="login-container">
         <div className="section group login-form">
           <form action="/login" method="POST">
-            <label htmlFor="login">Login</label>
+            <label htmlFor="login">E-mail</label>
             <input type="text" name="username" className="form login" /><br />
             <label htmlFor="pass">Hasło</label>
             <input type="password" name="password" className="form login" /><br />
