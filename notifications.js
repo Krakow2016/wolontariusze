@@ -1,12 +1,14 @@
 var r = require('rethinkdb')
 var request = require('superagent')
 var backdraft = require('backdraft-js')
+var _ = require('lodash')
 
 var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
 // Połączenie z sendgrid daje nam możliwość wysyłania emaili
 var sendgrid = require('sendgrid')(process.env.SENDGRID_APIKEY)
 var sendgrid_template = process.env.SENDGRID_TEMPLATE
+var smtpapi = require('smtpapi')
 
 var to_text = function(state) {
   return state.blocks.map(function(block) {
@@ -216,6 +218,130 @@ r.connect(config.rethinkdb, function(err, conn) {
           })
         })
       })
+    })
+
+  // Wzmianki w komentarzach
+  r.table('Comments').filter(r.row.hasFields({
+    raw: {
+      entityMap: {'0': true} // Tylko te które mają jakąś wzmiankę
+    }
+  })).changes()
+    .run(conn, function(err, cursor){
+      cursor.each(function(err, change){ // Nowy komentarz
+
+        var comment = change.new_val
+        var table = r.table('Volunteers')
+
+        table.get(comment.adminId)
+          .run(conn, function(err, author) { // Pobierz autora komentarza
+            table.get(comment.volunteerId)
+              .run(conn, function(err, volunteer) { // Pobierz wolontariusza
+
+                // Identyfikatory odbiorców powiadomienia
+                var receivers = _.map(comment.raw.entityMap, function(map) {
+                  return map.data.mention.id
+                })
+
+                table.getAll.apply(table, receivers)
+                  .filter(r.row('is_admin').eq(true)) // Powiadomienia dostają tylko koordynatorzy!
+                  .run(conn, function(err, cursor) { // Pobierz wolontariusza
+                    cursor.toArray(function(err, all) {
+
+                      var html = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w komentarzu do profilu wolontariusza.</p><p>Kliknij w poniższy link, aby przejść do profilu: <a href="https://wolontariusze.krakow2016.com/wolontariusze/'+ volunteer.id +'">'+ volunteer.first_name +' '+ volunteer.last_name +'</a>.</p>'
+
+                      // Build the smtpapi header
+                      var header = new smtpapi()
+                      header.setTos(all.map(function(x){ return x.email }))
+                      header.addSubstitution(':name', all.map(function(x){ return x.first_name }))
+                      header.setFilters({
+                        'templates': {
+                          'settings': {
+                            'enable': 1,
+                            'template_id': sendgrid_template,
+                          }
+                        }
+                      })
+
+                      var email = new sendgrid.Email({
+                        to:       'goradobra@krakow2016.com', // Zostanie nadpisane przez nagłówek x-smtpapi
+                        from:     'goradobra@krakow2016.com',
+                        fromname: 'Góra Dobra',
+                        subject:  author.first_name +' '+ author.last_name +' przesyła Ci wiadomość o wolontariuszu',
+                        html:     html,
+                        headers:  { 'x-smtpapi': header.jsonString() }
+                      })
+
+                      sendgrid.send(email, function(err, json) {
+                        console.log('sendgrid:', err, json)
+                      })
+                    })
+                  })
+              })
+          })
+      })
+    })
+
+  // Wzmianki w aktywnościach
+  r.table('Activities').filter(r.row.hasFields({
+    description: {
+      entityMap: {'0': true} // Tylko te które mają jakąś wzmiankę
+    }
+  })).changes().filter(r.row.hasFields('old_val').not()) // Tylko te które zostały właśnie stworzone (a nie edytowane)
+    .run(conn, function(err, cursor) {
+      cursor.each(function(err, change){ // Nowy komentarz
+        var activity = change.new_val
+        var table = r.table('Volunteers')
+
+        table.get(activity.created_by)
+          .run(conn, function(err, author) { // Pobierz autora zadania
+
+            // Identyfikatory odbiorców powiadomienia
+            var receivers = _.map(activity.description.entityMap, function(map) {
+              return map.data.mention.id
+            })
+
+            table.getAll.apply(table, receivers)
+              .run(conn, function(err, cursor) { // Pobierz wolontariuszy
+                cursor.toArray(function(err, all) {
+
+                  var body = backdraft(activity.description, {
+                    'BOLD': ['<strong>', '</strong>'],
+                    'ITALIC': ['<i>', '</i>'],
+                    'UNDERLINE': ['<u>', '</u>'],
+                    'CODE': ['<span style="font-family: monospace">', '</span>'],
+                  }).join('<br/>')
+
+                  var html = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w zadaniu.</p><p>'+ body +'</p><p>Kliknij w poniższy link, aby zobaczyć szczegóły: <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ activity.name +'</a>.</p>'
+
+                  // Build the smtpapi header
+                  var header = new smtpapi()
+                  header.setTos(all.map(function(x){ return x.email }))
+                  header.addSubstitution(':name', all.map(function(x){ return x.first_name }))
+                  header.setFilters({
+                    'templates': {
+                      'settings': {
+                        'enable': 1,
+                        'template_id': sendgrid_template,
+                      }
+                    }
+                  })
+
+                  var email = new sendgrid.Email({
+                    to:       'goradobra@krakow2016.com', // Zostanie nadpisane przez nagłówek x-smtpapi
+                    from:     'goradobra@krakow2016.com',
+                    fromname: 'Góra Dobra',
+                    subject:  author.first_name +' '+ author.last_name +' wspomina Cię w zadaniu '+ activity.name,
+                    html:     html,
+                    headers:  { 'x-smtpapi': header.jsonString() }
+                  })
+
+                  sendgrid.send(email, function(err, json) {
+                    console.log('sendgrid:', err, json)
+                  })
+                })
+              })
+          })
+        })
     })
 
   // Informuje API Eventory o zmianach w grupach wolontariusza
