@@ -3,7 +3,6 @@ var NavLink = require('fluxible-router').NavLink
 var request = require('superagent')
 var Formsy = require('formsy-react')
 
-var DateTime = require('react-datetime')
 var moment = require('moment')
 
 var update = require('react-addons-update')
@@ -12,6 +11,8 @@ var ActivityStore = require('../stores/Activity')
 var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
 var Tags = require('./Tags/Tags.jsx')
 
+
+var MyDatetime = require('./Formsy/MyDatetime.jsx')
 var MyTextField = require('./Formsy/MyTextField.jsx')
 var Editor = require('./Editor.jsx')
 var Draft = require('draft-js')
@@ -43,6 +44,8 @@ var AddedVolonteer = React.createClass({
     )
   }
 })
+
+
 
 var ActivityAdministration = React.createClass({
 
@@ -87,9 +90,8 @@ var ActivityAdministration = React.createClass({
   },
 
   handleDatetimeChange: function (m) {
-    var datetime = new Date(m)
     this.setState(update(this.state, {
-      activity: {datetime: {$set: datetime}}
+      activity: {datetime: {$set: m}}
     }))
   },
 
@@ -109,17 +111,9 @@ var ActivityAdministration = React.createClass({
   },
 
   handleEndtimeChange: function (m) {
-    if (typeof m  == 'string' && !moment(m, 'YYYY/M/D HH:mm', true).isValid()) {
-      this.setState(update(this.state, {
-        invalidEndtime: {$set: 'Format daty niepoprawny'},
-        activity: {endtime: {$set: m}}
-      }))
-    } else {
-      this.setState(update(this.state, {
-        invalidEndtime: {$set: ''},
-        activity: {endtime: {$set: m}}
-      }))
-    }
+    this.setState(update(this.state, {
+      activity: {endtime: {$set: m}}
+    }))
   },
 
   handleAddEndtimeChange: function(evt) {
@@ -369,53 +363,38 @@ var ActivityAdministration = React.createClass({
   },
 
   render: function() {
-    var startTime
+    var dateTime
     if (TimeService.isDate(this.state.activity.datetime)) {
-      var startEventDateHint
+      var datetimeHint
       if (this.props.taskMode) {
-        startEventDateHint = <span> Dla zadania data powinna być w przyszłości </span>
+        datetimeHint = <span> Dla zadania data powinna być w przyszłości </span>
       } else {
-        startEventDateHint = <span> Dla aktywności data powinna być w przeszłości </span>
+        datetimeHint = <span> Dla aktywności data powinna być w przeszłości </span>
       }
-
-      var startEventDate
-      if(!this.state.invalidDatetime)  {
-        startEventDate = new Date(this.state.activity.datetime)
-      } else {
-        startEventDate = this.state.activity.datetime
-      }
-
-      startTime = <div className="pure-u-1 pure-u-md-2-3">
-                    {this.state.invalidDatetime}
-                    <DateTime open={false}
-                      dateFormat={'YYYY/M/D'}
-                      timeFormat={'HH:mm'}
-                      isValidDate={this.isValidDate}
-                      value={startEventDate}
-                      onChange={this.handleDatetimeChange}/>
-                    {startEventDateHint}
+      var datetimeDate = new Date(this.state.activity.datetime)
+      dateTime = <div className="pure-u-1 pure-u-md-2-3">
+                    {datetimeHint}
+                    <MyDatetime 
+                      id='datetime'
+                      name='datetime'
+                      value={datetimeDate}
+                      handleChange={this.handleDatetimeChange}
+                    />
                 </div>
     }
 
     var endTime
     if (TimeService.isDate(this.state.activity.endtime)) {
-
       var endTimeDateHint = <span> Powinna być później niż czas zakońćzenia zgłoszeń do zadania </span>
-      var endDate
-      if(!this.state.invalidEndtime)  {
-        endDate = new Date(this.state.activity.endtime)
-      } else {
-        endDate = this.state.activity.endtime
-      }
-
+      var endTimeDate = new Date(this.state.activity.endtime)
       endTime = <div className="pure-u-1 pure-u-md-2-3">
-                    {this.state.invalidEndtime}
-                    <DateTime open={false}
-                      dateFormat={'YYYY/M/D'}
-                      timeFormat={'HH:mm'}
-                      value={endDate}
-                      onChange={this.handleEndtimeChange}/>
                     {endTimeDateHint}
+                    <MyDatetime 
+                      id='endtime'
+                      name='endtime'
+                      value={endTimeDate}
+                      handleChange={this.handleEndtimeChange}
+                    />
                 </div>
     }
 
@@ -501,7 +480,7 @@ var ActivityAdministration = React.createClass({
           <br/>
           <input id="is_archived" type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
           <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
-          {startTime}
+          {dateTime}
           <br/>
           <input id="endtime" type="checkbox" name="addEndtime" checked={TimeService.isDate(this.state.activity.endtime)} onChange={this.handleAddEndtimeChange} />
           <label htmlFor="endtime">Data zakończenia</label>
