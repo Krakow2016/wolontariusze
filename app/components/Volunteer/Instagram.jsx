@@ -63,8 +63,8 @@ var Instagram = React.createClass({
       }
       var media = this.state.media.map(function(img) {
         return (
-          <div className="col col3">
-            <a href={img.link}><img src={img.images.low_resolution.url} key={img.id} className="profile-insta-photo"/></a>
+          <div className="col col3" key={img.id}>
+            <a href={img.link}><img src={img.images.low_resolution.url} className="profile-insta-photo"/></a>
           </div>
         )
       })
