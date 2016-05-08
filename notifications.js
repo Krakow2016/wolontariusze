@@ -247,7 +247,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                   .run(conn, function(err, cursor) { // Pobierz wolontariusza
                     cursor.toArray(function(err, all) {
 
-                      var html = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w komentarzu do profilu wolontariusza.</p><p>Kliknij w poniższy link, aby przejść do profilu: <a href="https://wolontariusze.krakow2016.com/wolontariusze/'+ volunteer.id +'">'+ volunteer.first_name +' '+ volunteer.last_name +'</a>.</p>'
+                      var html = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w komentarzu do profilu wolontariusza.</p><p>Kliknij w poniższy link, aby przejść do profilu: <a href="https://wolontariusze.krakow2016.com/wolontariusz/'+ volunteer.id +'">'+ volunteer.first_name +' '+ volunteer.last_name +'</a>.</p>'
 
                       // Build the smtpapi header
                       var header = new smtpapi()
