@@ -85,7 +85,7 @@ var Editor = React.createClass({
           return {
             name: option.text,
             id: option.payload.id,
-            avatar: option.payload.thumb_picture_url
+            avatar: option.payload.thumb_picture_url || '/img/profile/face.svg'
           }
         })
         that.setState({
