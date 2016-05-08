@@ -1530,3 +1530,11 @@ footer{
   -webkit-transform: scale(0);
           transform: scale(0);
 }
+
+.error {
+  color: red;
+}
+
+.error input {
+  border-color: red
+}
