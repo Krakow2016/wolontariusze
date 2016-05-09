@@ -20,7 +20,8 @@ var express = require('express'),
   AWS = require('aws-sdk'),
   async = require('async'),
   sharp = require('sharp'),
-  ua = require('universal-analytics')
+  ua = require('universal-analytics'),
+  fs = require('fs')
 
 // Służy do zapisywania sesji użytkowników w bazie danych
 var RDBStore = require('session-rethinkdb')(session)
@@ -465,6 +466,8 @@ module.exports = function(server) {
             })
           }
         })
+        // Zapisz adres email
+        fs.appendFile('registrations.log', email +', '+ JSON.stringify(req.headers) +'\n')
       } else {
         res.send(403)
       }
