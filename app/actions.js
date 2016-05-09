@@ -633,41 +633,17 @@ module.exports = {
   },
 
   activateAccount: function(context, state) {
-    var inviteUser = module.exports.inviteUser
-    var query = {email: state.email}
+    var query = { email: state.email }
     var request = new XMLHttpRequest()
-    request.open('POST', '/account-activation', true)
+
+    request.open('POST', '/register', true)
     request.setRequestHeader('Content-Type', 'application/json')
-
-    var resp
-    var json
-    var data
     request.onload = function() {
-      if (request.status >= 200 && request.status < 400) {
-        // Success!
-        resp = request.responseText
-        json = JSON.parse(resp)
-        data = {
-          email: query.email,
-          message: json.message
-        }
-
-        //Wysyłamy dodatkowo link aktywacyjny na maila
-        inviteUser(context, {id: json.userId})
-        //console.log('Link Aktywacyjny', json.userId)
-
-        context.dispatch('LOAD_ACCOUNT_ACTIVATION_MESSAGE', data)
-      } else if (request.status == 500 ) {
-        // We reached our target server, but it returned an error
-        resp = request.responseText
-        json = JSON.parse(resp)
-        data = {
-          email: query.email,
-          message: json.message
-        }
-        context.dispatch('LOAD_ACCOUNT_ACTIVATION_MESSAGE', data)
-
-      }
+      var json = JSON.parse(request.responseText)
+      context.dispatch('LOAD_ACCOUNT_ACTIVATION_MESSAGE', {
+        email: state.email,
+        message: json.message
+      })
     }
 
     request.onerror = function() {

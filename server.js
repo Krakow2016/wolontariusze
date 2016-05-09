@@ -62,6 +62,29 @@ var jsonParser = bodyParser.json()
 // Parse the URL-encoded data with qs library
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
+var approve = function(user, cb) {
+  // Generuje losowy token dostępu
+  crypto.randomBytes(32, function(ex, buf) {
+    var tokens = user.access_tokens || []
+    // Token przekształcony do formatu szesnastkowego
+    var token = buf.toString('hex')
+    tokens.push({
+      token: token,
+      // Data potrzebna do późniejszego sprawdzenia ważności tokenu
+      generated_at: new Date()
+      // Data użycia (token jest jednorazowy)
+      //used_at: null,
+      // IP komputera z którego nastąpiło zalogowanie
+      //used_by: null
+    })
+
+    cb({
+      approved: true,
+      access_tokens: tokens
+    })
+  })
+}
+
 // Konfiguracja middleware-u Passport definująca metodę weryfikacji poprawności
 // logowania.
 require('./auth')
@@ -316,26 +339,12 @@ module.exports = function(server) {
           if(err) {
             return res.status(500).send(err)
           }
-          // Generuje losowy token dostępu
-          crypto.randomBytes(32, function(ex, buf) {
-            var tokens = user.access_tokens || []
-            // Token przekształcony do formatu szesnastkowego
-            var token = buf.toString('hex')
-            tokens.push({
-              token: token,
-              // Data potrzebna do późniejszego sprawdzenia ważności tokenu
-              generated_at: new Date()
-              // Data użycia (token jest jednorazowy)
-              //used_at: null,
-              // IP komputera z którego nastąpiło zalogowanie
-              //used_by: null
-            })
 
+          approve(user, function(update) {
             // Zapisz w token w bazie
-            Volunteers.update(req, 'Volunteers', {id: id}, {
-              approved: true,
-              access_tokens: tokens
-            }, {}, function (err) {
+            Volunteers.update(req, 'Volunteers', {
+              id: id
+            }, update, {}, function (err) {
               if(err) {
                 res.status(500).send(err)
               } else {
@@ -405,9 +414,9 @@ module.exports = function(server) {
         res.send(403)
       }
     })
-    
+
     // Wysyła link aktywacyjny do nieaktywnych krótkoterminowych wolontariuszy
-    server.post('/account-activation', jsonParser, function(req, res){
+    server.post('/register', jsonParser, function(req, res){
       var email = req.body.email
       if(email) {
         // Znajdź konto o podanym adresie email
@@ -415,33 +424,38 @@ module.exports = function(server) {
           var user = users[0]
           if (err) { return done(err) } // Błąd bazy danych
           if (!user) {
-            return res.status(500).send({
+            return res.status(400).send({
               status: "error",
-              message: "Podany adres e-mail nie istnieje w bazie danych. Prawdopodobnie twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane.",
-              email: email
-              
+              message: "Podany adres e-mail nie istnieje w bazie danych. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane."
             })
           } else {
             Xls.read({force_admin: true}, 'Imports', { email: email }, { index: 'rg_email' }, function (err2, importedUser) {
               if (!importedUser) {
-                return res.status(500).send({
+                return res.status(400).send({
                   status: "error",
-                  message: "Brak informacji o zgłoszeniu do wolontariatu krótkoterminowego. Prawdopodobnie twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane.",
-                  email: email
+                  message: "Brak informacji o zgłoszeniu do wolontariatu krótkoterminowego. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane."
                 })
               } else {
                 if (user.password) {
-                  return res.status(500).send({
+                  return res.status(400).send({
                     status: "error",
-                    message: "Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. W razie problemów skontaktuj się z goradobra@krakow2016.com",
-                    email: email,
+                    message: "Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. W razie problemów skontaktuj się z goradobra@krakow2016.com."
                   })
                 } else {
-                  return res.status(200).send({
-                    status: "ok",
-                    message: "Na podany adres email powinien zostać wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę.",
-                    email: email,
-                    userId: user.id
+                  approve(user, function(update) {
+                    // Zapisz w token w bazie
+                    Volunteers.update({force_admin: true}, 'Volunteers', {
+                      id: user.id
+                    }, update, {}, function (err) {
+                      if(err) {
+                        res.status(500).send(err)
+                      } else {
+                        res.status(200).send({
+                          status: "ok",
+                          message: "Dziękujemy za zgłoszenie! Na podany adres email został wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę."
+                        })
+                      }
+                    })
                   })
                 }
               }

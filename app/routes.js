@@ -275,7 +275,7 @@ module.exports = {
   },
 
   account_activation: {
-    path: '/aktywacja-konta',
+    path: '/aktywacja',
     method: 'get',
     handler: require('./components/AccountActivation.jsx'),
     action: function(context, payload, done) {
