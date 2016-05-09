@@ -272,5 +272,17 @@ module.exports = {
     action: function(context, payload, done) {
       done()
     }
+  },
+  
+  account_activation: {
+    path: '/aktywacja-konta',
+    method: 'get',
+    handler: require('./components/AccountActivation.jsx'),
+    action: function(context, payload, done) {
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Aktywuj konto' })
+      done()
+    }
   }
+  
+  
 }
