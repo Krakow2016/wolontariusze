@@ -650,8 +650,8 @@ module.exports = {
         }
         
         //Wysyłamy dodatkowo link aktywacyjny na maila
-        //that.inviteUser(context, json.userId)
-        console.log('LINK Aktywacyjny', json.userId)
+        that.inviteUser(context, json.userId)
+        //console.log('Link Aktywacyjny', json.userId)
 
         context.dispatch('LOAD_ACCOUNT_ACTIVATION_MESSAGE', data)
       } else if (request.status == 500 ) {
