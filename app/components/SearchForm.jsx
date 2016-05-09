@@ -54,9 +54,16 @@ var SearchForm = React.createClass({
               <label htmlFor="need_accomodation"> Potrzebuje zakwaterowania </label>
           </div>
         </div>
+        
+        <div className="pure-g">
+          <div className="pure-u-1-3">Nr telefonu komórkowego (bez kierunkowego)</div>
+          <div className="pure-u-2-3">
+            <input name="mobilephone" value={this.props.query.mobilephone} onChange={this.props.handleChange} />
+          </div>
+        </div>
 
         <div className="pure-g">
-          <div className="pure-u-1-3">Miejscowość</div>
+          <div className="pure-u-1-3">Miejsce zamieszkania</div>
           <div className="pure-u-2-3">
             <input name="city" value={this.props.query.city} onChange={this.props.handleChange} />
           </div>

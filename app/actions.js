@@ -466,6 +466,12 @@ module.exports = {
     //    term: { 'raw.cd_need_accomodation': false }
     //  })
     //}
+    
+    if(state.mobilephone) {
+      raw_must.push({
+        term: { 'raw.rg_mobilephone': state.mobilephone }
+      })
+    }
 
     if(state.city) {
       raw_should.push({

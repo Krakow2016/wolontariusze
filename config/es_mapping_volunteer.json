@@ -140,6 +140,10 @@
         "od_motherlanguage": {
           "type": "string",
           "index": "not_analyzed"
+        },
+        "rg_mobilephone": {
+          "type": "string",
+          "index": "not_analyzed"
         }
       }
     },
