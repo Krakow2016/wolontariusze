@@ -9,6 +9,12 @@ var MyTextField = React.createClass({
   // setValue() will set the value of the component, which in
   // turn will validate it and the rest of the form
   changeValue: function (event) {
+    if (typeof(this.props.onChange) == 'function') {
+      if(this.props.name) {
+        event.currentTarget.name = this.props.name
+      }
+      this.props.onChange(event)
+    }
     this.setValue(event.currentTarget[this.props.type === 'checkbox' ? 'checked' : 'value'])
   },
 
