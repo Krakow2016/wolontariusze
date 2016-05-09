@@ -650,7 +650,7 @@ module.exports = {
         }
         
         //Wysyłamy dodatkowo link aktywacyjny na maila
-        inviteUser(context, json.userId)
+        inviteUser(context, {id: json.userId})
         //console.log('Link Aktywacyjny', json.userId)
 
         context.dispatch('LOAD_ACCOUNT_ACTIVATION_MESSAGE', data)

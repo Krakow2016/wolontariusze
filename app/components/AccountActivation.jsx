@@ -57,7 +57,7 @@ var App = React.createClass({
   },
   
   render: function () {
-    var saveButton = <input type="submit" value="Zapisz" disabled={!this.state.canSubmit} />
+    var sendButton = <input type="submit" value="Wyślij" disabled={!this.state.canSubmit} />
     return (
     
     <div className="login-container">
@@ -80,7 +80,7 @@ var App = React.createClass({
             value={this.state.email}
             onChange={this.handleChange} />
      
-            {saveButton}
+            {sendButton}
         </Formsy.Form>
       </div>
       <br />
