@@ -1,5 +1,6 @@
 var React = require('react')
 var AutoSuggest = require('react-autosuggest')
+var ProfilePic = require('./ProfilePic.jsx')
 
 var ActivityVolonteersList = React.createClass ({
 
@@ -64,7 +65,7 @@ var ActivityVolonteersList = React.createClass ({
   renderSuggestion: function (suggestion, input) {
     return (
       <div>
-        <img src={suggestion.thumb_picture_url} className="profileSuggestion" />
+        <ProfilePic src={suggestion.thumb_picture_url} className="profileSuggestion" />
         <span>{suggestion.display_name}</span>
       </div>
     )
