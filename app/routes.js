@@ -273,7 +273,7 @@ module.exports = {
       done()
     }
   },
-  
+
   account_activation: {
     path: '/aktywacja-konta',
     method: 'get',
@@ -283,6 +283,6 @@ module.exports = {
       done()
     }
   }
-  
-  
+
+
 }

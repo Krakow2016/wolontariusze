@@ -439,7 +439,7 @@ module.exports = function(server) {
                 } else {
                   return res.status(200).send({
                     status: "ok",
-                    message: "Na podany adres email został wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę.",
+                    message: "Na podany adres email powinien zostać wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę.",
                     email: email,
                     userId: user.id
                   })

@@ -7,6 +7,11 @@ var actions = require('../actions')
 var saveAction = actions.activateAccount
 
 var App = React.createClass({
+
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     return {
       email: '',
@@ -14,12 +19,12 @@ var App = React.createClass({
       canSubmit: false
     }
   },
-  
+
   _changeListener: function() {
     var state = this.props.context.getStore(AccountActivationStore).data
     this.setState(state)
   },
-  
+
   componentDidMount: function() {
     this.props.context.getStore(AccountActivationStore)
       .addChangeListener(this._changeListener)
@@ -29,21 +34,21 @@ var App = React.createClass({
     this.props.context.getStore(AccountActivationStore)
       .removeChangeListener(this._changeListener)
   },
-  
+
   handleChange: function (evt) {
     var target = evt.target != null
       ? evt.target
       : evt.currentTarget
     this.setState({
-      email: target.value, 
+      email: target.value,
       message: ''
     })
   },
-  
+
   onValidSubmit: function () {
-    context.executeAction(saveAction, this.state)
+    this.props.context.executeAction(saveAction, this.state)
   },
-  
+
   enableButton: function () {
     this.setState({
       canSubmit: true
@@ -55,11 +60,11 @@ var App = React.createClass({
       canSubmit: false
     })
   },
-  
+
   render: function () {
     var sendButton = <input type="submit" value="Wyślij" disabled={!this.state.canSubmit} />
     return (
-    
+
     <div className="login-container">
       <div>
         <h2>Formularz aktywujący konto</h2>
@@ -79,7 +84,7 @@ var App = React.createClass({
             disabled={false}
             value={this.state.email}
             onChange={this.handleChange} />
-     
+
             {sendButton}
         </Formsy.Form>
       </div>
