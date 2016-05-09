@@ -1,4 +1,5 @@
 var React = require('react')
+var NavLink = require('fluxible-router').NavLink
 
 var App = React.createClass({
   render: function () {
@@ -12,6 +13,7 @@ var App = React.createClass({
             <input type="password" name="password" className="form login" /><br />
             <input type="submit" value="Wejdź" className="submit" />
           </form>
+          <p>Nie masz konta a jesteś wolontariuszem? <NavLink href="/aktywacja">Kliknij tutaj!</NavLink></p>
         </div>
       </div>
     )

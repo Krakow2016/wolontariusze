@@ -16,7 +16,8 @@ var App = React.createClass({
     return {
       email: '',
       message: '',
-      canSubmit: false
+      canSubmit: false,
+      hasLoaded: false
     }
   },
 
@@ -28,6 +29,10 @@ var App = React.createClass({
   componentDidMount: function() {
     this.props.context.getStore(AccountActivationStore)
       .addChangeListener(this._changeListener)
+
+    this.setState({
+      hasLoaded: true
+    })
   },
 
   componentWillUnmount: function() {
@@ -81,7 +86,7 @@ var App = React.createClass({
             placeholder='Wpisz swój adres e-mail'
             validations='isEmail'
             validationError='Zły format e-mail'
-            disabled={false}
+            disabled={!this.state.hasLoaded}
             value={this.state.email}
             onChange={this.handleChange} />
 

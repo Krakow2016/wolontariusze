@@ -428,6 +428,16 @@ module.exports = function(server) {
               status: "error",
               message: "Podany adres e-mail nie istnieje w bazie danych. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane."
             })
+          } else if (user.password) {
+            return res.status(400).send({
+              status: "error",
+              message: "Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. Jeżeli nie pamiętasz swojego hasła, skontaktuj się z goradobra@krakow2016.com."
+            })
+          } else if (user.approved) {
+            return res.status(400).send({
+              status: "error",
+              message: "Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. Jeżeli masz problem z ustawieniem hasła, skontaktuj się z goradobra@krakow2016.com."
+            })
           } else {
             Xls.read({force_admin: true}, 'Imports', { email: email }, { index: 'rg_email' }, function (err2, importedUser) {
               if (!importedUser) {
@@ -436,28 +446,21 @@ module.exports = function(server) {
                   message: "Brak informacji o zgłoszeniu do wolontariatu krótkoterminowego. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane."
                 })
               } else {
-                if (user.password) {
-                  return res.status(400).send({
-                    status: "error",
-                    message: "Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. W razie problemów skontaktuj się z goradobra@krakow2016.com."
+                approve(user, function(update) {
+                  // Zapisz w token w bazie
+                  Volunteers.update({force_admin: true}, 'Volunteers', {
+                    id: user.id
+                  }, update, {}, function (err) {
+                    if(err) {
+                      res.status(500).send(err)
+                    } else {
+                      res.status(200).send({
+                        status: "ok",
+                        message: "Dziękujemy za zgłoszenie! Na podany adres email został wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę."
+                      })
+                    }
                   })
-                } else {
-                  approve(user, function(update) {
-                    // Zapisz w token w bazie
-                    Volunteers.update({force_admin: true}, 'Volunteers', {
-                      id: user.id
-                    }, update, {}, function (err) {
-                      if(err) {
-                        res.status(500).send(err)
-                      } else {
-                        res.status(200).send({
-                          status: "ok",
-                          message: "Dziękujemy za zgłoszenie! Na podany adres email został wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę."
-                        })
-                      }
-                    })
-                  })
-                }
+                })
               }
             })
           }
