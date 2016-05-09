@@ -633,7 +633,7 @@ module.exports = {
   },
   
   activateAccount: function(context, state) {
-    var that = this
+    var inviteUser = module.exports.inviteUser
     var query = {email: state.email}
     var request = new XMLHttpRequest()
     request.open('POST', '/account-activation', true)
@@ -650,7 +650,7 @@ module.exports = {
         }
         
         //Wysyłamy dodatkowo link aktywacyjny na maila
-        that.inviteUser(context, json.userId)
+        inviteUser(context, json.userId)
         //console.log('Link Aktywacyjny', json.userId)
 
         context.dispatch('LOAD_ACCOUNT_ACTIVATION_MESSAGE', data)
