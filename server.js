@@ -424,7 +424,7 @@ module.exports = function(server) {
             if (user.password) {
               return res.status(500).send({
                 status: "error",
-                message: "Twoje konto jest już aktywne w systemie. W razie problemów skontaktuj się z goradobra@krakow2016.com",
+                message: "Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. W razie problemów skontaktuj się z goradobra@krakow2016.com",
                 email: email,
               })
             } else {

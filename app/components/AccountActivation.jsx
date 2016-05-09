@@ -63,7 +63,7 @@ var App = React.createClass({
     
     <div className="login-container">
       <div>
-        <h2>Formularz aktywacyjny - Góra Dobra</h2>
+        <h2>Formularz aktywujący konto</h2>
         <Formsy.Form
           ref="formsy"
           className="settingsForm"
