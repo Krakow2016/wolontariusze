@@ -161,7 +161,7 @@ module.exports = function(server) {
           req.visitor.pageview({
             dp: req.path,
             dh: 'https://wolontariusze.krakow2016.com',
-            uip: req.ip,
+            uip: req.headers['x-real-ip'],
             ua: req.headers['user-agent']
           }).send()
         }
