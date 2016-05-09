@@ -17,7 +17,6 @@ var App = React.createClass({
   
   _changeListener: function() {
     var state = this.props.context.getStore(AccountActivationStore).data
-    console.log('STATE', state)
     this.setState(state)
   },
   

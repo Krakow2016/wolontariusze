@@ -46,6 +46,7 @@ var Integration = require('./app/services/'+config.service+'/integrations')
 var APIClient = require('./app/services/'+config.service+'/apiclients')
 var Joints = require('./app/services/joints')(config.service)
 var Xls = require('./app/services/'+config.service+'/xls')
+var Integration = require('./app/services/'+config.service+'/integrations')
 
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
@@ -421,21 +422,30 @@ module.exports = function(server) {
               
             })
           } else {
-            if (user.password) {
-              return res.status(500).send({
-                status: "error",
-                message: "Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. W razie problemów skontaktuj się z goradobra@krakow2016.com",
-                email: email,
-              })
-            } else {
-              return res.status(200).send({
-                status: "ok",
-                message: "Na podany adres email został wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę.",
-                email: email,
-                userId: user.id
-              })
-            }
-
+            Xls.read({force_admin: true}, 'Imports', { email: email }, { index: 'rg_email' }, function (err2, importedUser) {
+              if (!importedUser) {
+                return res.status(500).send({
+                  status: "error",
+                  message: "Brak informacji o zgłoszeniu do wolontariatu krótkoterminowego. Prawdopodobnie twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane.",
+                  email: email
+                })
+              } else {
+                if (user.password) {
+                  return res.status(500).send({
+                    status: "error",
+                    message: "Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. W razie problemów skontaktuj się z goradobra@krakow2016.com",
+                    email: email,
+                  })
+                } else {
+                  return res.status(200).send({
+                    status: "ok",
+                    message: "Na podany adres email został wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę.",
+                    email: email,
+                    userId: user.id
+                  })
+                }
+              }
+            })
           }
         })
       } else {
