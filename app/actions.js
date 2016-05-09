@@ -630,5 +630,48 @@ module.exports = {
     }
 
     request.send(JSON.stringify(query))
+  },
+  
+  activateAccount: function(context, state) {
+    var that = this
+    var query = {email: state.email}
+    var request = new XMLHttpRequest()
+    request.open('POST', '/account-activation', true)
+    request.setRequestHeader('Content-Type', 'application/json')
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        // Success!
+        var resp = request.responseText
+                console.log(resp)
+        var json = JSON.parse(resp)
+        var data = {
+            email: query.email,
+            message: json.message
+        }
+        
+        //Wysyłamy dodatkowo link aktywacyjny na maila
+        //that.inviteUser(context, json.userId)
+        console.log('LINK Aktywacyjny', json.userId)
+
+        context.dispatch('LOAD_ACCOUNT_ACTIVATION_MESSAGE', data)
+      } else if (request.status == 500 ) {
+        // We reached our target server, but it returned an error
+        var resp = request.responseText
+        console.log(resp)
+        var json = JSON.parse(resp)
+        var data = {
+            email: query.email,
+            message: json.message
+        }
+        context.dispatch('LOAD_ACCOUNT_ACTIVATION_MESSAGE', data)
+        
+      }
+    }
+
+    request.onerror = function() {
+      // There was a connection error of some sort
+    }
+
+    request.send(JSON.stringify(query))
   }
 }

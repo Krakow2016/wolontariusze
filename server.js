@@ -404,6 +404,44 @@ module.exports = function(server) {
         res.send(403)
       }
     })
+    
+    // Wysyła link aktywacyjny do nieaktywnych krótkoterminowych wolontariuszy
+    server.post('/account-activation', jsonParser, function(req, res){
+      var email = req.body.email
+      if(email) {
+        // Znajdź konto o podanym adresie email
+        Volunteers.read({force_admin: true}, 'Volunteers', { key: email }, { index: 'email' }, function (err, users) {
+          var user = users[0]
+          if (err) { return done(err) } // Błąd bazy danych
+          if (!user) {
+            return res.status(500).send({
+              status: "error",
+              message: "Podany adres e-mail nie istnieje w bazie danych. Prawdopodobnie twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane.",
+              email: email
+              
+            })
+          } else {
+            if (user.password) {
+              return res.status(500).send({
+                status: "error",
+                message: "Twoje konto jest już aktywne w systemie. W razie problemów skontaktuj się z goradobra@krakow2016.com",
+                email: email,
+              })
+            } else {
+              return res.status(200).send({
+                status: "ok",
+                message: "Na podany adres email został wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę.",
+                email: email,
+                userId: user.id
+              })
+            }
+
+          }
+        })
+      } else {
+        res.send(403)
+      }
+    })
 
     var multipartMiddleware = multipart()
     server.post('/import', multipartMiddleware, function(req, res) {
