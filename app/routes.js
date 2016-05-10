@@ -139,7 +139,7 @@ module.exports = {
         if(activity) {
           context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
           done()
-        } else {
+        } else { // TODO only 403
           context.executeAction(navigateAction, {
             url: '/login'
           }, done)

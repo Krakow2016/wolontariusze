@@ -5,6 +5,8 @@ var Draft = require('draft-js')
 
 var DraftEditor = require('draft-js-plugins-editor').default
 var createMentionPlugin = require('draft-js-mention-plugin').default
+var createLinkifyPlugin = require('draft-js-linkify-plugin').default
+var createEmojiPlugin = require('draft-js-emoji-plugin').default
 var fromJS = require('immutable').fromJS
 var request = require('superagent')
 
@@ -19,6 +21,12 @@ var mentionPlugin = createMentionPlugin({
   entityMutability: 'IMMUTABLE',
   mentionPrefix: '',
 })
+
+var linkifyPlugin = createLinkifyPlugin({
+  target: '_blank',
+})
+
+var emojiPlugin = createEmojiPlugin()
 
 class StyleButton extends React.Component {
   constructor() {
@@ -126,7 +134,7 @@ var Editor = React.createClass({
             ref="editor"
             placeholder="Wpisz komentarz..."
             editorState={this.props.editorState}
-            plugins={ [mentionPlugin] }
+            plugins={ [mentionPlugin, linkifyPlugin, emojiPlugin] }
             readOnly={this.props.readOnly}
             onChange={this.props.onChange} />
 
@@ -134,6 +142,7 @@ var Editor = React.createClass({
             onSearchChange={ this.onSearchChange }
             suggestions={ this.state.suggestions } />
 
+          <emojiPlugin.EmojiSuggestions />
         </div>
 
         {this.props.children}

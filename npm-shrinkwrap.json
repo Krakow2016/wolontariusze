@@ -1009,6 +1009,16 @@
       "from": "draft-js@>=0.6.0 <0.7.0",
       "resolved": "https://registry.npmjs.org/draft-js/-/draft-js-0.6.0.tgz"
     },
+    "draft-js-emoji-plugin": {
+      "version": "1.1.0",
+      "from": "draft-js-emoji-plugin@latest",
+      "resolved": "https://registry.npmjs.org/draft-js-emoji-plugin/-/draft-js-emoji-plugin-1.1.0.tgz"
+    },
+    "draft-js-linkify-plugin": {
+      "version": "1.0.1",
+      "from": "draft-js-linkify-plugin@latest",
+      "resolved": "https://registry.npmjs.org/draft-js-linkify-plugin/-/draft-js-linkify-plugin-1.0.1.tgz"
+    },
     "draft-js-mention-plugin": {
       "version": "1.0.1",
       "from": "draft-js-mention-plugin@latest",
@@ -1917,6 +1927,11 @@
       "version": "0.3.0",
       "from": "levn@>=0.3.0 <0.4.0",
       "resolved": "https://registry.npmjs.org/levn/-/levn-0.3.0.tgz"
+    },
+    "linkify-it": {
+      "version": "1.2.1",
+      "from": "linkify-it@1.2.1",
+      "resolved": "https://registry.npmjs.org/linkify-it/-/linkify-it-1.2.1.tgz"
     },
     "loader-utils": {
       "version": "0.2.14",
@@ -3044,6 +3059,11 @@
         }
       }
     },
+    "tlds": {
+      "version": "1.108.0",
+      "from": "tlds@1.108.0",
+      "resolved": "https://registry.npmjs.org/tlds/-/tlds-1.108.0.tgz"
+    },
     "to-fast-properties": {
       "version": "1.0.2",
       "from": "to-fast-properties@>=1.0.1 <2.0.0",
@@ -3108,6 +3128,11 @@
       "version": "0.7.10",
       "from": "ua-parser-js@>=0.7.9 <0.8.0",
       "resolved": "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.10.tgz"
+    },
+    "uc.micro": {
+      "version": "1.0.0",
+      "from": "uc.micro@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/uc.micro/-/uc.micro-1.0.0.tgz"
     },
     "uglify-js": {
       "version": "2.6.2",
