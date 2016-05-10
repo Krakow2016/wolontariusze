@@ -34,7 +34,14 @@ var Activity = React.createClass({
   },
 
   _changeListener: function() {
-    this.setState(this.props.context.getStore(ActivityStore).getState())
+    var state = this.props.context.getStore(ActivityStore)
+    var editorState = Draft.EditorState.push(this.state.activityDescription, Draft.ContentState.createFromBlockArray(state.activityDescription.getCurrentContent().getBlocksAsArray()))
+
+    this.setState({
+      activity: state.activity,
+      activityDescription: editorState,
+      volunteers: state.volunteers
+    })
   },
 
   componentDidMount: function() {
@@ -112,6 +119,12 @@ var Activity = React.createClass({
   onChange: function(editorState) {
     this.setState({
       editorState: editorState
+    })
+  },
+
+  onChange2: function(editorState) {
+    this.setState({
+      activityDescription: editorState
     })
   },
 
@@ -208,16 +221,6 @@ var Activity = React.createClass({
 
     var volonteersLimit = (activity.limit == 0) ? 'Brak' : activity.limit
 
-    var raw = Draft.convertToRaw(this.state.activityDescription.getCurrentContent())
-    var html = backdraft(raw, {
-      'BOLD': ['<strong>', '</strong>'],
-      'ITALIC': ['<i>', '</i>'],
-      'UNDERLINE': ['<u>', '</u>'],
-      'CODE': ['<span style="font-family: monospace">', '</span>']
-    }).map(function(block, i) {
-      return (<p key={'block_'+i} dangerouslySetInnerHTML={{__html: block}} />)
-    })
-
     var updateForm
     if(this.user() && this.user().is_admin) {
       updateForm = (
@@ -228,9 +231,9 @@ var Activity = React.createClass({
             zadania, będzie wysłane drogą e-mailową do wszystkich
             zgłoszonych do zadania wolontariuszy.
           </p>
-          <Editor editorState={this.state.editorState} onChange={this.onChange} style={{'min-height': 'initial'}}>
+          <Editor editorState={this.state.editorState} onChange={this.onChange} style={{'minHeight': 'initial'}}>
             <p className="clearfix">
-              <button className="bg--warning float--right" onClick={this.handleNewUpdate} style={{'margin-top': 10}}>
+              <button className="bg--warning float--right" onClick={this.handleNewUpdate} style={{'marginTop': 10}}>
                 Dodaj aktualizacje
               </button>
             </p>
@@ -288,7 +291,7 @@ var Activity = React.createClass({
 
               {warning}
 
-              {html}
+              <Editor editorState={this.state.activityDescription} onChange={this.onChange2} readOnly={true} />
 
               {updates}
               {updateForm}

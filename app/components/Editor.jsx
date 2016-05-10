@@ -108,11 +108,17 @@ var Editor = React.createClass({
   },
 
   render: function() {
-    return (
-      <div>
+    var controls
+    if(!this.props.readOnly) {
+      controls = (
         <InlineStyleControls
           editorState={this.props.editorState}
           onToggle={this.toggleInlineStyle} />
+      )
+    }
+    return (
+      <div>
+        {controls}
 
         <div onClick={this.focus} className="myEditor" style={this.props.style}>
 
@@ -121,6 +127,7 @@ var Editor = React.createClass({
             placeholder="Wpisz komentarz..."
             editorState={this.props.editorState}
             plugins={ [mentionPlugin] }
+            readOnly={this.props.readOnly}
             onChange={this.props.onChange} />
 
           <mentionPlugin.MentionSuggestions
