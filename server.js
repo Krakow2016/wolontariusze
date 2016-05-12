@@ -422,8 +422,8 @@ module.exports = function(server) {
       if(email) {
         // Znajdź konto o podanym adresie email
         Volunteers.read({force_admin: true}, 'Volunteers', { key: email }, { index: 'email' }, function (err, users) {
+          if (err || !users) { return done(err) } // Błąd bazy danych
           var user = users[0]
-          if (err) { return done(err) } // Błąd bazy danych
           if (!user) {
             return res.status(400).send({
               status: "error",
