@@ -64,7 +64,7 @@ var ActivityVolonteersList = React.createClass ({
 
   renderSuggestion: function (suggestion, input) {
     return (
-      <div>
+      <div key={suggestion.user_id}>
         <ProfilePic src={suggestion.thumb_picture_url} className="profileSuggestion" />
         <span>{suggestion.display_name}</span>
       </div>
