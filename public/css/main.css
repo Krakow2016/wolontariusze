@@ -1615,3 +1615,7 @@ footer{
 .error input {
   border-color: red
 }
+
+.activity--updateBox {
+  position: initial
+}

@@ -88,7 +88,7 @@ var ActivityStore = createStore({
   },
 
   update_published: function(updates) {
-    this.updates = this.updates ? [ ...this.updates, updates[updates.length-1] ] : updates
+    this.updates = updates
     this.newUpdateState = Draft.EditorState.createEmpty()
     this.emitChange()
   },

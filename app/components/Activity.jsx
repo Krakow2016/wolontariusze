@@ -3,6 +3,7 @@ var NavLink = require('fluxible-router').NavLink
 var Draft = require('draft-js')
 var fromJS = require('immutable').fromJS
 var _ = require('lodash')
+var moment = require('moment')
 
 var Editor = require('./Editor.jsx')
 var ProfilePic = require('./ProfilePic.jsx')
@@ -50,7 +51,7 @@ var ActivityUpdate = React.createClass({
       <div className="activityUpdate">
         <hr />
         <p className="small italic">
-          Aktualizacja z dnia: {this.props.created_at.toString()}
+          { moment(this.props.created_at).calendar() }
         </p>
         <Editor editorState={this.state.editorState} onChange={this.onChange} readOnly={true} />
       </div>
@@ -262,7 +263,7 @@ var Activity = React.createClass({
     var updateForm
     if(this.user() && this.user().is_admin) {
       updateForm = (
-        <div className="alert alert--warning">
+        <div className="alert alert--warning activity--updateBox">
           <p>
             Jako koordynator masz możliwość dodawania aktualiacji do
             zadania, które oprócz tego, że wyświetli się pod treścią
