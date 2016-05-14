@@ -1,10 +1,13 @@
-//var configuration = require('../../../config.json')[env]
 //var dbConf = configuration.es
+var env = process.env.NODE_ENV || 'development'
+var rethinkdbConf = require('../../../config.json')[env].rethinkdb
 
+var _ = require('lodash')
+var r = require('rethinkdb')
 var elasticsearch = require('elasticsearch')
 var client = new elasticsearch.Client({
   host: 'es:9200',
-  log: 'trace'
+  log: 'error'
 })
 
 var Activities = module.exports = {
@@ -14,17 +17,16 @@ var Activities = module.exports = {
   create: function(req, resource, params, body, config, callback) {
 
     body.sort = [{
-      "doc.is_urgent" : {
-        "order" : "desc",
-        "nested_path" : "doc",
-        "missing" : 0
+      'doc.is_urgent' : {
+        'order' : 'desc',
+        'nested_path' : 'doc',
+        'missing' : 0
       }
-    },
-    {
-      "doc.datetime" : {
-        "order" : "asc",
-        "nested_path" : "doc",
-        "missing" : "_last"
+    }, {
+      'doc.datetime' : {
+        'order' : 'asc',
+        'nested_path' : 'doc',
+        'missing' : '_last'
       }
     }]
 
@@ -37,11 +39,48 @@ var Activities = module.exports = {
 
     client.search(query)
       .then(function (resp) {
-      var hits = resp.hits.hits;
-      callback(null, hits)
-    }, function (err) {
-      console.trace(err.message);
-    })
+        var hits = resp.hits.hits.map(function(hit) {
+          return hit._source.doc
+        })
+        var authors = _.compact(_.uniq(hits.map(function(hit) {
+          return hit.created_by
+        })))
+
+        if(authors.length) {
+          r.connect(rethinkdbConf, function(error, conn){
+            if(error) { // Wystąpił błąd przy połączeniu z bazą danych
+              callback(error)
+              return
+            }
+
+            var table = r.table('Volunteers')
+            table.getAll.apply(table, authors).run(conn, function(err, cursor) {
+              if(err) { callback(err) }
+              else {
+                cursor.toArray(function(err, results){
+                  var map = {}
+                  results.forEach(function(result) {
+                    map[result.id] = _.pick(result, [
+                      'id',
+                      'first_name',
+                      'last_name'
+                    ])
+                  })
+                  callback(null, hits.map(function(hit) {
+                    hit.created_by = map[hit.created_by] || {}
+                    return hit
+                  }))
+                })
+              }
+            })
+          })
+        } else {
+          callback(null, hits)
+        }
+      })
+      .catch(function(err) {
+        console.log(err)
+      })
 
   }
 }

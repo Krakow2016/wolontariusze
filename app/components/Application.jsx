@@ -20,10 +20,14 @@ injectTapEventPlugin()
 
 var Application = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   contextTypes: {
-    getStore      : React.PropTypes.func,
-    executeAction : React.PropTypes.func,
-    getUser       : React.PropTypes.func
+    getStore: React.PropTypes.func,
+    executeAction: React.PropTypes.func,
+    getUser: React.PropTypes.func
   },
 
   getInitialState: function() {
@@ -98,7 +102,7 @@ var Application = React.createClass({
       }
 
       searchForm = (
-        <div className="col col3" style={searchStyle}>
+        <div className="col col3 head-section" id="head-search" style={searchStyle}>
           <ActivityVolonteersList id="form" addActiveVolonteer={this.addActiveVolonteer} className="form menu-search-box" />
           <input src="/img/search.svg" id="menu-search-submit" type="image" />
           {advancedSearch}
@@ -106,7 +110,7 @@ var Application = React.createClass({
       )
     }
 
-    if(this.props.currentRoute.name == "home" || this.props.currentRoute.name == "login"){
+    if(this.props.currentRoute.name == 'home' || this.props.currentRoute.name == 'login'){
       article = (
         <article>
           <Handler context={this.context} />
@@ -138,25 +142,24 @@ var Application = React.createClass({
 
     //render content
     return (
-      <div>
+      <div id="">
         <header>
           <div className="head-photo">
-            <span id="head-txt">You are the saltof the earth...You arethe light of the world. Mt 5:13,14</span>
             <NavLink href="/"><img src="/img/homepage/1.svg" id="head-img" alt="" draggable="false" /></NavLink>
           </div>
           <nav id="head-nav" className="row">
             <Authentication user_id={this.user_id()} user_name={this.user_name()} search_status={searchForm || false} />
             {searchForm}
           </nav>
+
         </header>
 
         {article}
         {infoMessage}
         {errorMessage}
-
         <footer>
           <p>
-            Strona została zbudowana przez wolontariuszy ŚDM w Krakowie w 2016r.
+            Strona została zbudowana przez wolontariuszy ŚDM KRAKÓW 2016.
             <br />
             <a href="mailto:goradobra@krakow2016.com" target="_balnk">Kontakt</a> | <NavLink href="/regulamin">Regulamin</NavLink> | <a href="https://github.com/Krakow2016/wolontariusze">Dla programistów</a>
           </p>
@@ -164,6 +167,10 @@ var Application = React.createClass({
       </div>
     )
   },
+          //   <section className="inspiration">
+          //   <h2 className="text--center">Do not be afraid</h2>
+          //   <p className="text--center">St John Paul II</p>
+          // </section>
   // <header>
   //    <h1 id="THE-title">{this.state.title}</h1>
   //  </header>

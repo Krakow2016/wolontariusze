@@ -4,6 +4,11 @@ var actions = require('../../actions')
 
 var Invite = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object,
+    id: React.PropTypes.string
+  },
+
   getInitialState: function () {
     return {}
   },
@@ -20,7 +25,7 @@ var Invite = React.createClass({
     this.props.context.executeAction(actions.inviteUser, {
       id: this.props.id
     })
-    window.location.hash = "close"
+    window.location.hash = 'close'
   },
 
   render: function() {

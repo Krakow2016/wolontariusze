@@ -14,9 +14,9 @@ var Authentication = React.createClass({
     }
 
     if(this.props.search_status){
-      classname = "col col9"
+      classname = 'col col9 head-section'
     }else{
-      classname = "col col12"
+      classname = 'col col12 head-section'
     }
 
     return (
@@ -24,7 +24,7 @@ var Authentication = React.createClass({
         {loginButton}
       </div>
     )
-  },
+  }
 })
 
 var LoginButton = React.createClass({

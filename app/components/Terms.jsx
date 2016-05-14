@@ -1,7 +1,7 @@
 var React = require('react')
 
 module.exports = function() {
-return (
+  return (
 <article className="main-content">
     <div className="container">
       <div className="section group" id="status">
@@ -109,9 +109,9 @@ return (
         </ol>
         <h3>KONTAKT Z ADMINISTRATOREM</h3>
         <ol>
-          <li>W przypadku wątpliwości dotyczących Umowy bądź Usług, prosimy o kontakt na adres mailowy <a href="mailto:wolontariat@krakow2016.com">wolontariat@krakow2016.com</a>.</li>
+          <li>W przypadku wątpliwości dotyczących Umowy bądź Usług, prosimy o kontakt na adres mailowy <a href="mailto:goradobra@krakow2016.com">goradobra@krakow2016.com</a>.</li>
         </ol>
-        <p style={{"margin-top": 40}}><b>Załącznik nr 1</b>
+        <p style={{'margin-top': 40}}><b>Załącznik nr 1</b>
           <br/>do regulaminu świadczenia usług drogą elektroniczną</p>
 
       </div>
@@ -125,8 +125,8 @@ return (
         <p><span>§ 5</span> <span>Upoważnienie do przetwarzania Danych</span><p>Podstawą przetwarzania danych osobowych jest zgoda samych Użytkowników, jak również ustawowe upoważnienie do przetwarzania danych niezbędnych w celu realizacji zadań przez Archidiecezję Krakowską w związku z organizacją Światowych Dni Młodzieży Kraków 2016. .</p></p>
         <p><span>§ 6</span> <span>Sposoby przetwarzania Danych</span><p>Dane przetwarzane są w szczególności w systemie informatycznym, w tym za pośrednictwem Portalu oraz narzędzi służących do rejestracji i identyfikacji Użytkowników.</p></p>
         <span>§ 8</span> <span>Gromadzenie Danych</span> <p>Podanie jakichkolwiek Danych jest dobrowolne, przy czym podanie następujących Danych jest niezbędne do zawarcia Umowy i należytego funkcjonowania Portalu:</p>
-          <ol style={{"list-style": "none"}}>
-            <li style={{"padding-left": 20}}>
+          <ol style={{'list-style': 'none'}}>
+            <li style={{'padding-left': 20}}>
               <ol>
                 <li>1) imię i nazwisko,</li>
                 <li>2) adres e-mail,</li>

@@ -44,6 +44,11 @@ var Details = React.createClass({
 })
 
 var VolunteerAdministration = React.createClass({
+
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     return {
       profile: this.props.context.getStore(VolunteerStore).getState().profile,
@@ -84,7 +89,7 @@ var VolunteerAdministration = React.createClass({
       id: this.state.profile.id,
       approved: false
     })
-    window.location.hash = "close"
+    window.location.hash = 'close'
   },
 
   _onAdminDialogSubmit: function() {
@@ -92,7 +97,7 @@ var VolunteerAdministration = React.createClass({
       id: this.state.profile.id,
       is_admin: true
     })
-    window.location.hash = "close"
+    window.location.hash = 'close'
   },
 
   saveTag: function(tag) {

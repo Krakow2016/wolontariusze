@@ -5,7 +5,7 @@ var XlsStore = createStore({
   storeName: 'Xls',
 
   handlers: {
-    'LOAD_XLS': 'load',
+    'LOAD_XLS': 'load'
   },
 
   load: function(data) {

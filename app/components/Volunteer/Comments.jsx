@@ -1,7 +1,6 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var Draft = require('draft-js')
-var backdraft = require('backdraft-js')
 var update = require('react-addons-update')
 
 var TimeService = require('../../modules/time/TimeService.js')
@@ -14,12 +13,24 @@ var deleteAction = actions.profileCommentsDelete
 
 var NewComment = require('../NewComment.jsx')
 var Editor = require('../Editor.jsx')
+var fromJS = require('immutable').fromJS
+var _ = require('lodash')
 
 var EditedProfileComment = React.createClass({
 
+  propTypes: {
+    comment: React.PropTypes.object,
+    context: React.PropTypes.object,
+    cancel: React.PropTypes.func
+  },
+
   getInitialState: function() {
-    var blocks = Draft.convertFromRaw(this.props.comment.raw)
-    var contentState = Draft.ContentState.createFromBlockArray(blocks)
+    var map = this.props.comment.raw.entityMap
+    _.forEach(map, function(val, key) {
+      val.data.mention = fromJS(val.data.mention)
+    })
+
+    var contentState = Draft.convertFromRaw(this.props.comment.raw)
     var editorState = Draft.EditorState.createWithContent(contentState)
 
     return {
@@ -53,7 +64,52 @@ var EditedProfileComment = React.createClass({
   }
 })
 
-var ProfileComment = React.createClass ({
+var ProfileComment = React.createClass({
+
+  propTypes: {
+    editComment: React.PropTypes.func,
+    cancelEditComment: React.PropTypes.func,
+    comment: React.PropTypes.object,
+    context: React.PropTypes.object
+  },
+
+  getInitialState: function() {
+    if (this.props.comment.raw) {
+      var raw = this.props.comment.raw
+      _.forEach(raw.entityMap, function(val, key) {
+        val.data.mention = fromJS(val.data.mention)
+      })
+      var content = Draft.convertFromRaw(raw)
+      var editorState = Draft.EditorState.createWithContent(content)
+      return {
+        editorState: editorState
+      }
+    } else {
+      return {
+        editorState: Draft.EditorState.createEmpty()
+      }
+    }
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    if (nextProps.comment.raw) {
+      var raw = nextProps.comment.raw
+      _.forEach(raw.entityMap, function(val, key) {
+        val.data.mention = fromJS(val.data.mention)
+      })
+      var content = Draft.convertFromRaw(raw)
+      var editorState = Draft.EditorState.createWithContent(content)
+      this.setState({
+        editorState: editorState
+      })
+    }
+  },
+
+  onChange: function(editorState) {
+    this.setState({
+      editorState: editorState
+    })
+  },
 
   editComment: function() {
     this.props.editComment(this.props.comment.id)
@@ -76,25 +132,18 @@ var ProfileComment = React.createClass ({
           context={this.props.context} />
       )
     } else {
-      if(!this.props.comment.raw) { return (<div />) }
-      var html = backdraft(this.props.comment.raw, {
-        'BOLD': ['<strong>', '</strong>'],
-        'ITALIC': ['<i>', '</i>'],
-        'UNDERLINE': ['<u>', '</u>'],
-        'CODE': ['<span style="font-family: monospace">', '</span>'],
-      })
       return (
-<div>
-          <p dangerouslySetInnerHTML={{__html: html}} />
+        <div>
+          <Editor editorState={this.state.editorState} onChange={this.onChange} readOnly={true} />
           <div>
             <NavLink href={'/wolontariusz/'+this.props.comment.adminId}>
               {this.full_name()}
             </NavLink>
             {TimeService.showTime(this.props.comment.creationTimestamp)}
           </div>
-            <input type="button" onClick={this.editComment} value="Edytuj" />
-            <input type="button" onClick={this.deleteComment} value="Usuń" />
-          </div>
+          <input type="button" onClick={this.editComment} value="Edytuj" />
+          <input type="button" onClick={this.deleteComment} value="Usuń" />
+        </div>
       )
     }
   },
@@ -105,6 +154,10 @@ var ProfileComment = React.createClass ({
 })
 
 var ProfileComments = React.createClass({
+
+  propTypes: {
+    context: React.PropTypes.object
+  },
 
   getInitialState: function () {
     return this.props.context.getStore(CommentsStore).getState()
@@ -134,7 +187,7 @@ var ProfileComments = React.createClass({
     comment.editMode = true
 
     this.setState(update(this.state, {
-        comments: {$splice: [[index, 1, comment]]}
+      comments: {$splice: [[index, 1, comment]]}
     }))
   },
 
@@ -147,7 +200,7 @@ var ProfileComments = React.createClass({
     comment.editMode = false
 
     this.setState(update(this.state, {
-        comments: {$splice: [[index, 1, comment]]}
+      comments: {$splice: [[index, 1, comment]]}
     }))
   },
 
@@ -170,7 +223,7 @@ var ProfileComments = React.createClass({
         <div className="alert">
           <p>
             Komentarze, które możesz dodawać są widoczne tylko i wyłącznie dla
-            innych koordynatorów - nie są widoczne dla właściciela profilu.
+            innych koordynatorów - nie są widoczne dla wolontariuszy.
           </p>
         </div>
 

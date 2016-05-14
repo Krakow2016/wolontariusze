@@ -14,9 +14,10 @@ var tables = {
   'APITokens'  : ['userId'],
   'Activities' : [],
   'Comments'   : [],
-  'Joints'     : ['activity_id'],
-  'Volunteers' : ['email'],
   'Imports'    : ['rg_email'],
+  'Joints'     : ['activity_id'],
+  'Pilgrims'   : ['created_at'],
+  'Volunteers' : ['email'],
   'session'    : []
 }
 
@@ -50,11 +51,11 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
       // ElasticSearch mapping
       request({
         method: 'PUT',
-        uri: conf.elasticSearch +'/_mapping/volunteer',
-        body: fs.readFileSync('./config/es_mapping_volunteer.json', 'utf8')
+        uri: conf.elasticSearch +'/_mapping/activity',
+        body: fs.readFileSync('./config/es_mapping_activity.json', 'utf8')
       }, function(err, resp, json){
         if(err) {
-          reject('Błąd: wystąpił problem przy wgrywaniu mappingu wolontariusza do ElasticSearch.')
+          reject('Błąd: wystąpił problem przy wgrywaniu mappingu aktywności do ElasticSearch.')
         } else {
           console.log(json)
           resolve(conn)
@@ -66,11 +67,11 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
       // ElasticSearch mapping
       request({
         method: 'PUT',
-        uri: conf.elasticSearch +'/_mapping/activity',
-        body: fs.readFileSync('./config/es_mapping_activity.json', 'utf8')
+        uri: conf.elasticSearch +'/_mapping/volunteer',
+        body: fs.readFileSync('./config/es_mapping_volunteer.json', 'utf8')
       }, function(err, resp, json){
         if(err) {
-          reject('Błąd: wystąpił problem przy wgrywaniu mappingu aktywności do ElasticSearch.')
+          reject('Błąd: wystąpił problem przy wgrywaniu mappingu wolontariusza do ElasticSearch.')
         } else {
           console.log(json)
           resolve(conn)
@@ -92,7 +93,9 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
         else {
           // Utwórz tabele w bazie danych
           async.each(Object.keys(tables), function(table, cb) {
-            r.tableCreate(table).run(conn, cb)
+            r.tableCreate(table).run(conn, function() {
+              cb()
+            })
           }, function() {
             resolve(conn)
           })
@@ -171,6 +174,20 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
           var data = require('./app/services/static/apiclients.json')
           Object.keys(data).forEach(function(key) { arr.push(data[key]) })
           r.table('APIClients').insert(arr).run(conn, function(err) {
+            resolve(conn)
+          })
+        } else { resolve(conn) }
+      })
+    })
+  }).then(function(conn) {
+    return new Promise(function(resolve) {
+      r.table('Pilgrims').count().run(conn, function(err, count) {
+        if(count === 0) {
+          // Dane dla tabeli grup pielgrzymów
+          var arr = []
+          var data = require('./app/services/static/pilgrims.json')
+          Object.keys(data).forEach(function(key) { arr.push(data[key]) })
+          r.table('Pilgrims').insert(arr).run(conn, function(err) {
             resolve(conn)
           })
         } else { resolve(conn) }

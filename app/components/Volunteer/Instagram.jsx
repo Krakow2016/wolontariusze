@@ -1,14 +1,15 @@
 var React = require('react')
 var request = require('superagent')
 
-var ApplicationStore = require('../../stores/ApplicationStore')
-
 var Instagram = React.createClass({
+
+  propTypes: {
+    user_id: React.PropTypes.string
+  },
 
   getInitialState: function() {
     return {
-      media: null,
-      client_id: this.props.context.getStore(ApplicationStore).instagram_client_id
+      media: null
     }
   },
 
@@ -17,11 +18,16 @@ var Instagram = React.createClass({
   },
 
   componentWillReceiveProps: function(props) {
-    this.loadInstagram(props.user_id)
+    if(props.user_id !== this.props.user_id) {
+      this.loadInstagram(props.user_id)
+    }
   },
 
   loadInstagram: function(id) {
     var that = this
+
+    // Brak skonfigurowanego konta Instagram
+    if(!id) { return }
 
     request
       .get('/instagram/'+ id)
@@ -46,7 +52,7 @@ var Instagram = React.createClass({
     if(this.state.error){
 
       insta_content = (
-        <h3>Wystapił błąd podczas połączenia z Instagram.com</h3>
+        <h4>Podaj swój login w ustawieniach jeżeli chcesz mieć swoje zdjęcia z instagrama na profilu</h4>
       )
 
     } else if(this.state.media) { // Zapytanie wykonane poprawnie
@@ -57,19 +63,13 @@ var Instagram = React.createClass({
       }
       var media = this.state.media.map(function(img) {
         return (
-          <div className="col col3">
-            <a href={img.link}><img src={img.images.low_resolution.url} key={img.id} className="profile-insta-photo"/></a>
+          <div className="col col3" key={img.id}>
+            <a href={img.link}><img src={img.images.low_resolution.url} className="profile-insta-photo"/></a>
           </div>
         )
       })
       insta_content = (
-        <div className="section group">{ media }</div>
-      )
-    } else { // Użytkownik nie autoryzował nas do wykonywania zapytań
-      insta_content = (
-        <a href={'https://api.instagram.com/oauth/authorize/?client_id='+ this.state.client_id +'&redirect_uri=https://wolontariusze.krakow2016.com/instagram&response_type=code'}>
-          Zaloguj się do instagrama
-        </a>
+        <div className="row">{ media }</div>
       )
     }
 

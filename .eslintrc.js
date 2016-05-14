@@ -18,17 +18,19 @@ module.exports = {
         ],
         "no-trailing-spaces": [
             2
-        ]
+        ],
     },
     "env": {
         "es6": true,
         "node": true,
         "browser": true
     },
-    "extends": "eslint:recommended",
-    "ecmaFeatures": {
-        "jsx": true,
-        "experimentalObjectRestSpread": true
+    "extends": ["eslint:recommended", "plugin:react/recommended"],
+    "parserOptions": {
+      "ecmaFeatures": {
+          "jsx": true,
+          "experimentalObjectRestSpread": true
+      },
     },
     "plugins": [
         "react"

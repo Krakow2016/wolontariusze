@@ -12,8 +12,8 @@ var NewTag = React.createClass({
   },
 
   getSuggestions: function (value) {
-    var inputValue = value.trim().toLowerCase();
-    var inputLength = inputValue.length;
+    var inputValue = value.trim().toLowerCase()
+    var inputLength = inputValue.length
 
     return inputLength === 0 ? [] : this.suggestions.filter(function(lang) {
       return lang.name.toLowerCase().slice(0, inputLength) === inputValue
@@ -52,23 +52,23 @@ var NewTag = React.createClass({
     request
       .get('/tags')
       .end(function(err, resp){
-          that.suggestions = resp.body ? resp.body.map(function(tag) {
-            return { name: tag }
-          }) : []
+        that.suggestions = resp.body ? resp.body.map(function(tag) {
+          return { name: tag }
+        }) : []
       })
   },
 
   render: function() {
 
     var inputProps = {
-      placeholder: 'Dodaj projekt...',
+      placeholder: 'Dodaj projekt, kategorię...',
       value: this.state.value,
       onChange: this.onChange,
-      className: 'input-category-add'
+      className: 'input-group-text'
     }
 
     return (
-      <div className="category-add">
+      <div className="input-group-container">
         <Autosuggest
           suggestions={this.state.suggestions}
           onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
@@ -76,8 +76,8 @@ var NewTag = React.createClass({
           getSuggestionValue={this.getSuggestionValue}
           onSuggestionSelected={this.handleSave}
           inputProps={inputProps} />
-        <div className="btn-category-add">
-          <button className="bg--primary" onClick={this.handleSave}>Dodaj</button>
+        <div>
+          <input type="button" className="bg--primary" value="Dodaj" onClick={this.handleSave} />
         </div>
       </div>
     )

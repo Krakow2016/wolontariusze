@@ -5,7 +5,7 @@ var IndexStore = createStore({
   storeName: 'Index',
 
   handlers: {
-    'LOAD_INDEX': 'load',
+    'LOAD_INDEX': 'load'
   },
 
   load: function(data) {

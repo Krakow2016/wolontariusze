@@ -18,10 +18,6 @@ var BasicInfo = function(props) {
           </Formsy.Form>
         </div>
         <div className="col col5">
-
-          <div className="pure-u-1 pure-u-md-1-3">
-            <label>Twoje zdjęcie</label>
-          </div>
           <div className="pure-u-1 pure-u-md-2-3">
             <ProfileImageChange context={props.context} src={props.profile_picture_url} />
           </div>

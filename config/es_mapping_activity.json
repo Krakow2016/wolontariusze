@@ -24,40 +24,49 @@
           "type" : "date",
           "format" : "date_optional_time"
         },
-        "duration" : {
-          "type" : "string"
+        "endtime" : {
+          "type" : "date",
+          "format" : "date_optional_time"
         },
         "place" : {
           "type" : "string"
         },
         "lat_lon" : {
-            "type" : "float"
+          "type" : "geo_point"
+        },
+        "lon_lat" : {
+          "type" : "geo_point"
         },
         "is_archived" : {
-            "type" : "boolean"
+          "type" : "boolean",
+          "null_value": false
         },
         "is_urgent" : {
-            "type" : "boolean"
+          "type" : "boolean"
         },
         "created_by" : {
-            "type" : "string",
-            "index": "not_analyzed"
+          "type" : "string",
+          "index": "not_analyzed"
         },
-        "editor" : {
-            "type" : "string",
-            "index": "not_analyzed"
+        "updated_by" : {
+          "type" : "string",
+          "index": "not_analyzed"
         },
         "limit" : {
-            "type" : "integer"
+          "type" : "integer"
+        },
+        "limit_reached" : {
+          "type" : "boolean"
         },
         "tags" : {
-            "type" : "string"
+          "type" : "string",
+          "index": "not_analyzed"
+        },
+        "volunteers" : {
+          "type" : "string",
+          "index": "not_analyzed"
         }
       }
-    },
-    "volunteers" : {
-      "type" : "string",
-      "index": "not_analyzed"
     }
   }
 }

@@ -20,7 +20,8 @@ var express = require('express'),
   AWS = require('aws-sdk'),
   async = require('async'),
   sharp = require('sharp'),
-  ua = require('universal-analytics')
+  ua = require('universal-analytics'),
+  fs = require('fs')
 
 // Służy do zapisywania sesji użytkowników w bazie danych
 var RDBStore = require('session-rethinkdb')(session)
@@ -46,6 +47,7 @@ var Integration = require('./app/services/'+config.service+'/integrations')
 var APIClient = require('./app/services/'+config.service+'/apiclients')
 var Joints = require('./app/services/joints')(config.service)
 var Xls = require('./app/services/'+config.service+'/xls')
+var Integration = require('./app/services/'+config.service+'/integrations')
 
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
@@ -60,6 +62,29 @@ var session_store = {
 var jsonParser = bodyParser.json()
 // Parse the URL-encoded data with qs library
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+var approve = function(user, cb) {
+  // Generuje losowy token dostępu
+  crypto.randomBytes(32, function(ex, buf) {
+    var tokens = user.access_tokens || []
+    // Token przekształcony do formatu szesnastkowego
+    var token = buf.toString('hex')
+    tokens.push({
+      token: token,
+      // Data potrzebna do późniejszego sprawdzenia ważności tokenu
+      generated_at: new Date()
+      // Data użycia (token jest jednorazowy)
+      //used_at: null,
+      // IP komputera z którego nastąpiło zalogowanie
+      //used_by: null
+    })
+
+    cb({
+      approved: true,
+      access_tokens: tokens
+    })
+  })
+}
 
 // Konfiguracja middleware-u Passport definująca metodę weryfikacji poprawności
 // logowania.
@@ -86,7 +111,7 @@ passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
         }
 
         if(!token) { return done(500) } // Brak tokena - nie powinno się zdarzyć
-        var expiration_date = token.generated_at + 48*60*60*1000 // +48h
+        var expiration_date = token.generated_at + 72*60*60*1000 // +72h
 
         if(token.used) { // Sprawdź czy token nie został już użyty
           return done(null, false, {message: 'Token already used. You must generate a new one.'})
@@ -109,6 +134,8 @@ passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
 ))
 
 module.exports = function(server) {
+
+    var tags = ['krakow2016', 'wyd2016', 'sdm2016', 'jmj2016', 'gmg2016', 'сдм2016', 'wjt2016', 'вдм2016', 'swiatowednimlodziezy', 'worldyouthday'];
 
     // Serwuj wszystkie pliki w katalogu public/ jako zwykłe pliki statyczne.
     server.use(express.static(path.join(__dirname, 'public')))
@@ -159,7 +186,8 @@ module.exports = function(server) {
           req.visitor.pageview({
             dp: req.path,
             dh: 'https://wolontariusze.krakow2016.com',
-            uip: req.ip,
+            dr: req.headers['referer'],
+            uip: req.headers['x-real-ip'],
             ua: req.headers['user-agent']
           }).send()
         }
@@ -170,7 +198,7 @@ module.exports = function(server) {
     // W pierwszej kolejności sprawdź ścieżki z poza single-page
     // application
     server.post('/login', jsonParser, urlencodedParser, passport.authenticate('local', {
-      successRedirect: '/',
+      successReturnToOrRedirect: '/',
       failureRedirect: '/login',
       failureFlash: true,
       successFlash: true
@@ -182,66 +210,97 @@ module.exports = function(server) {
       res.redirect('/')
     })
 
-    // Końcówka zwrotna dla API instagrama po udanym uwierzytelnieniu
-    server.get('/instagram', function(req, res){
-      if(req.user) {
-        if(req.query.code) {
+    // Zamienia nazwę użytkownika na id i zapisuje w bazie
+    server.post('/instagram', jsonParser, function(req, res){
+      if(req.body.username) {
           request({
-            method: 'POST',
-            url: 'https://api.instagram.com/oauth/access_token',
-            formData: {
-              client_id: process.env.INSTAGRAM_CLIENT_ID,
-              client_secret: process.env.INSTAGRAM_SECRET,
-              code: req.query.code,
-              grant_type: 'authorization_code',
-              redirect_uri: 'https://wolontariusze.krakow2016.com/instagram'
-            }
+            method: 'GET',
+            url: 'https://api.instagram.com/v1/users/search?q='+ req.body.username +'&access_token=' + process.env.INSTAGRAM_TOKEN,
           }, function(err, resp, body) {
 
-            if (err) {
-              req.flash('error', 'Integracja z Instagramem nie powiodła się.')
-              res.redirect('/wolontariusz/'+ req.user.id)
+            if (err || resp.statusCode !== 200) {
+              return res.status(500).send({'status': 'error'})
+            }
+
+            var json = JSON.parse(body).data[0]
+            if (!json) {
+              // Niepoprawny login
               return
             }
 
-            if (resp.statusCode !== 200) { return res.send(500) }
-
-            var json = JSON.parse(body)
-            Volunteers.update(req, 'Volunteers', {id: req.user.id}, {
+            var instagram = {
               instagram: {
-                id: json.user.id,
-                access_token: json.access_token,
-                username: json.user.username
+                id: json.id,
+                username: json.username
               }
-            }, {}, function(err, data){
-              if(err) { return res.send(500) }
-              req.flash('success', 'Integracja z Instagramem zakończona pomyślnie.')
-              res.redirect('/wolontariusz/'+ req.user.id)
+            }
+            Volunteers.update(req, 'Volunteers', {id: req.user.id}, instagram, {}, function(err, data){
+              if(err) { return res.status(500) }
+              return res.send({
+                'status': 'ok',
+                'result': instagram.instagram
+              })
             })
           })
-        }
       } else {
         res.send(403)
       }
     })
 
-    // Pobiera zdjęcia dla danego usera
+    server.get('/instagram/all', function(req, res){
+      request({
+        url: 'https://api.instagram.com/v1/tags/krakow2016/media/recent?access_token='+ process.env.INSTAGRAM_TOKEN+'&count=8',
+        json: true
+      }, function(err, req, resp){
+        res.send(resp);
+      })
+    })
+
     server.get('/instagram/:id', function(req, res){
       var id = req.params.id
+      var tags = ['krakow2016', 'wyd2016', 'sdm2016', 'jmj2016', 'gmg2016', 'сдм2016', 'wjt2016', 'вдм2016']
+
       Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function (err, user) {
-        if(err) { return res.send(500) }
         var instagram = user.instagram
+
+        if(err) { return res.send(500) }
         if(!instagram) { return res.send(404) }
 
-        var token = instagram.access_token
         request({
-          url: 'https://api.instagram.com/v1/users/'+ instagram.id +'/media/recent/',
-          qs: { access_token: token },
+          url: 'https://api.instagram.com/v1/users/'+ instagram.id +'/media/recent/?access_token='+ process.env.INSTAGRAM_TOKEN,
           json: true
-        }, function(err, req, resp) {
-          res.send(resp)
+        }, function(err, req, data) {
+          var resp_tags = {data: []}
+
+          if(err) {
+            // Brak lub źle podpięta integracja
+            return res.send(404)
+          }
+
+          for(var img in data.data){
+            for(var tag in data.data[img].tags){
+              if(tags.indexOf(data.data[img].tags[tag]) != -1){
+                resp_tags.data.push(data.data[img])
+                break
+              }
+            }
+          }
+          res.send(resp_tags)
         })
+
       })
+    })
+
+    server.post('/search', function(req, res) {
+      if(req.user && req.user.is_admin) {
+        var elasticSearch = config.elasticSearch +'/_search'
+        req.pipe(request(elasticSearch))
+          .on('error', function(e){
+            res.send(500) // Brak połączenia z bazą
+          }).pipe(res)
+      } else {
+        res.send(403)
+      }
     })
 
     server.post('/search', function(req, res) {
@@ -279,43 +338,19 @@ module.exports = function(server) {
       var id = req.body.id
       if(req.user && req.user.is_admin) {
         Volunteers.read(req, 'Volunteers', {id: id}, {}, function (err, user) {
-          // Generuje losowy token dostępu
-          crypto.randomBytes(32, function(ex, buf) {
-            var tokens = [] //user.access_tokens || []
-            // Token przekształcony do formatu szesnastkowego
-            var token = buf.toString('hex')
-            tokens.push({
-              token: token,
-              // Data potrzebna do późniejszego sprawdzenia ważności tokenu
-              generated_at: new Date()
-              // Data użycia (token jest jednorazowy)
-              //used_at: null,
-              // IP komputera z którego nastąpiło zalogowanie
-              //used_by: null
-            })
+          if(err) {
+            return res.status(500).send(err)
+          }
 
+          approve(user, function(update) {
             // Zapisz w token w bazie
-            Volunteers.update(req, 'Volunteers', {id: id}, {
-              approved: true,
-              access_tokens: tokens
-            }, {}, function (err) {
+            Volunteers.update(req, 'Volunteers', {
+              id: id
+            }, update, {}, function (err) {
               if(err) {
-                res.send(err)
+                res.status(500).send(err)
               } else {
-                var url = '/invitation?apikey='+ token
-
-                var text = 'Wolontariuszu!\n\nChcemy zaprosić Cię do Góry Dobra - portalu dla wolontariuszy, który będzie równocześnie naszą główną platformą komunikacji podczas Światowych Dni Młodzieży w Krakowie oraz narzędziem do organizacji projektów i wydarzeń.\n\nTo tutaj chcemy stworzyć środowisko młodych i zaangażowanych ludzi, dzielić się tym, co robimy i przekazywać Ci ważne informacje o ŚDM i zadaniach, jakie czekają na realizację.\n\nDzięki Górze Dobra będziesz mógł pochwalić się efektami swojej pracy. W tym też miejscu będziesz miał możliwość zobaczenia i dzielenia się z innymi informacjami o tym, jak dużo serca, i aktywności wolontariackiej dajesz na rzecz Światowych Dni Młodzieży w Krakowie.\n\nAby aktywować swoje konto kliknij w poniższy link:\n\nhttps://wolontariusze.krakow2016.com'+ url +'\n\nWAŻNE! Link, jaki otrzymujesz teraz do zalogowania, jest aktywny tylko przez 48h. W wypadku jakichkolwiek problemów bądź pytań, prosimy o kontakt na: goradobra2016@gmail.com.\n\nNie zwlekaj ani chwili dłużej i zostań już dziś Wolontariuszem ŚDM Kraków 2016.'
-
-                var email = new sendgrid.Email({
-                  to:       user.email,
-                  from:     'wolontariat@krakow2016.com',
-                  subject:  'Zaproszenie do Góry Dobra!',
-                  text:     text
-                })
-                sendgrid.send(email, function(err, json) {
-                  console.log('sendgrid:', err, url, json)
-                  res.send(err || json)
-                })
+                res.send({"status": "success"})
               }
             })
           })
@@ -382,6 +417,63 @@ module.exports = function(server) {
       }
     })
 
+    // Wysyła link aktywacyjny do nieaktywnych krótkoterminowych wolontariuszy
+    server.post('/register', jsonParser, function(req, res){
+      var email = req.body.email
+      if(email) {
+        // Znajdź konto o podanym adresie email
+        Volunteers.read({force_admin: true}, 'Volunteers', { key: email }, { index: 'email' }, function (err, users) {
+          if (err || !users) { return done(err) } // Błąd bazy danych
+          var user = users[0]
+          if (!user) {
+            return res.status(400).send({
+              status: "error",
+              message: "Podany adres e-mail nie istnieje w bazie danych. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane."
+            })
+          } else if (user.password) {
+            return res.status(400).send({
+              status: "error",
+              message: "Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. Jeżeli nie pamiętasz swojego hasła, skontaktuj się z goradobra@krakow2016.com."
+            })
+          } else if (user.approved) {
+            return res.status(400).send({
+              status: "error",
+              message: "Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. Jeżeli masz problem z ustawieniem hasła, skontaktuj się z goradobra@krakow2016.com."
+            })
+          } else {
+            Xls.read({force_admin: true}, 'Imports', { email: email }, { index: 'rg_email' }, function (err2, importedUser) {
+              if (!importedUser) {
+                return res.status(400).send({
+                  status: "error",
+                  message: "Brak informacji o zgłoszeniu do wolontariatu krótkoterminowego. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane."
+                })
+              } else {
+                approve(user, function(update) {
+                  // Zapisz w token w bazie
+                  Volunteers.update({force_admin: true}, 'Volunteers', {
+                    id: user.id
+                  }, update, {}, function (err) {
+                    if(err) {
+                      res.status(500).send(err)
+                    } else {
+                      res.status(200).send({
+                        status: "ok",
+                        message: "Dziękujemy za zgłoszenie! Na podany adres email został wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę."
+                      })
+                    }
+                  })
+                })
+              }
+            })
+          }
+        })
+        // Zapisz adres email
+        fs.appendFile('registrations.log', email +', '+ JSON.stringify(req.headers) +'\n')
+      } else {
+        res.send(403)
+      }
+    })
+
     var multipartMiddleware = multipart()
     server.post('/import', multipartMiddleware, function(req, res) {
       if(req.user && req.user.is_admin) {
@@ -430,7 +522,9 @@ module.exports = function(server) {
             // Dane do ElasticSearcha najpierw lądują w tabeli `Imports` żeby
             // później zostać automatycznie przeniesione i zcalone z odpowiadającym
             // im dokumentem wolontariusza poprzez narzędzie LogStash.
-            r.table('Imports').insert(docs).run(conn, function(err, imports) {
+            r.table('Imports').insert(docs, {
+              conflict: 'replace'
+            }).run(conn, function(err, imports) {
               if(err) { return res.status(500).send(err) }
 
               var table = r.table('Volunteers')
@@ -523,9 +617,10 @@ module.exports = function(server) {
           if(err) {
             res.status(500).send(err)
           } else {
+            var reg = new RegExp('\"', 'g')
             var changes = {
-              profile_picture_url: data[1].Location +'?'+ data[0].ETag.replace('\"', '', 'g'),
-              thumb_picture_url: data[2].Location +'?'+ data[1].ETag.replace('\"', '', 'g')
+              profile_picture_url: data[1].Location +'?'+ data[0].ETag.replace(reg, ''),
+              thumb_picture_url: data[2].Location +'?'+ data[1].ETag.replace(reg, '')
             }
             Volunteers.update({force_admin: true}, 'Volunteers', {id: req.user.id}, changes, {returnChanges: true}, function(err, result) {
               res.status(201).send(result.changes[0].new_val)
@@ -557,15 +652,13 @@ module.exports = function(server) {
         context.getActionContext().dispatch('SAVE_FLASH_FAILURE', failure)
       }
 
-      // Ustaw konfigurację integracji z Instagramem
-      context.getActionContext().dispatch('INSTAGRAM_CONFIG',  process.env.INSTAGRAM_CLIENT_ID)
-
       // Google Analytics Measurement Protocol
       if(req.visitor) {
         req.visitor.pageview({
           dp: req.path,
           dh: 'https://wolontariusze.krakow2016.com',
-          uip: req.ip,
+          dr: req.headers['referer'],
+          uip: req.headers['x-real-ip'],
           ua: req.headers['user-agent']
         }).send()
       }

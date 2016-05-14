@@ -1,5 +1,7 @@
 var React = require('react')
+var NavLink = require('fluxible-router').NavLink
 var navigateAction = require('fluxible-router').navigateAction
+var Formsy = require('formsy-react')
 
 var Password = require('./Settings/Password.jsx')
 var MyCheckbox = require('./Formsy/MyCheckbox.jsx')
@@ -9,10 +11,16 @@ var Disclamer = require('./Settings/Disclamer.jsx')
 
 var Welcome = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     return {
       profile: this.props.context.getStore(VolunteerStore).getState().profile,
-      canSubmit: false
+      canSubmit: false,
+      // Zablokuj możliwość wpisywania hasła do czasu aż strona nie załduje skryptów
+      hasLoaded: false
     }
   },
 
@@ -28,6 +36,9 @@ var Welcome = React.createClass({
 
   componentDidMount: function() {
     this.props.context.getStore(VolunteerStore).addChangeListener(this._changeListener)
+    this.setState({
+      hasLoaded: true
+    })
   },
 
   componentWillUnmount: function componentWillUnmount() {
@@ -62,19 +73,20 @@ var Welcome = React.createClass({
 
           <hr />
           <h4>
-            By dokończyć rejestrację, wprowadź  hasło, którego będziesz
-            używać za każdym razem logując się do swojego profilu.
+            By dokończyć rejestrację, wprowadź  hasło, którego będziesz używać
+            za każdym razem logując się do swojego profilu. Login to Twoj adres
+            email podany przy rejestracji na wolontariat krótkoterminowy.
           </h4>
           <div className="alert">
 
-            <Password />
+            <Password disabled={!this.state.hasLoaded} />
 
             <div>
               <MyCheckbox required="isFalse"
                 id="cb1"
                 name="cb1" value={false} />
               <label htmlFor="cb1">
-                Regulamin serwisu Góra Dobra
+                Regulamin serwisu Góra Dobra <NavLink href="/regulamin">(kliknij tutaj aby przeczytać)</NavLink>
               </label>
 
             </div>
@@ -85,7 +97,7 @@ var Welcome = React.createClass({
                 name="cb2" value={false} />
 
               <label htmlFor="cb2">
-                Oświadczenie o wyrażeniu zgody na wykorzystanie wizerunku 
+                Oświadczenie o wyrażeniu zgody na wykorzystanie wizerunku
               </label>
 
               <p>

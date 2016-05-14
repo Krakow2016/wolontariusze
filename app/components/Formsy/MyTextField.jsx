@@ -15,7 +15,7 @@ var MyTextField = React.createClass({
       }
       this.props.onChange(event)
     }
-    this.setValue(event.currentTarget.value)
+    this.setValue(event.currentTarget[this.props.type === 'checkbox' ? 'checked' : 'value'])
   },
 
   render: function () {
@@ -31,16 +31,26 @@ var MyTextField = React.createClass({
     // or the server has returned an error message
     var errorMessage = this.getErrorMessage()
 
+    // Set a specific className based on the validation state of this
+    // component. showRequired() is true when the value is empty and the
+    // required prop is passed to the input. showError() is true when the value
+    // typed is invalid
+    var className = this.showRequired() ? 'required' : this.showError() ? 'error' : null;
+
     return (
-      <input
-        name={this.props.name}
-        type={this.props.type}
-        className={className}
-        onChange={this.changeValue}
-        value={this.getValue()}
-        hintText={this.props.placeholder}
-        disabled={this.props.disabled}
-        errorText={errorMessage} />
+      <div className={className}>
+        <input
+          name={this.props.name}
+          type={this.props.type}
+          className={className}
+          onChange={this.changeValue}
+          value={this.getValue()}
+          hintText={this.props.placeholder}
+          disabled={this.props.disabled}
+          errorText={errorMessage}
+          placeholder={this.props.placeholder} />
+        <span>{errorMessage}</span>
+      </div>
     )
   }
 })

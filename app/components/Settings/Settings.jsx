@@ -14,6 +14,10 @@ var Integration = function(props) {
 
 var Settings = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     return {
       profile: this.props.context.getStore(VolunteerStore).getState().profile,
@@ -64,6 +68,11 @@ var Settings = React.createClass({
       return (<Integration name={integration.name} key={integration.id} />)
     })
 
+    var state_formsy = false
+    if(this.state.profile.who_question && this.state.profile.what_question && this.state.profile.why_question){
+      state_formsy = true
+    }
+
     return (
       <div>
 
@@ -73,7 +82,8 @@ var Settings = React.createClass({
           profileId={this.state.profile.id}
           context={this.props.context}
           success={this.state.success}
-          error={this.state.error}>
+          error={this.state.error}
+          state_formsy={state_formsy}>
 
           <label htmlFor="first_name">
             <h2>Kim jestem?</h2>
@@ -83,7 +93,7 @@ var Settings = React.createClass({
             id="who_question"
             name="who_question"
             placeholder=""
-            value={this.state.profile.who_question}
+            value={this.state.profile.who_question || ""}
             validations={{
               maxLength: 500
             }}
@@ -99,7 +109,7 @@ var Settings = React.createClass({
             id="what_question"
             name="what_question"
             placeholder=""
-            value={this.state.profile.what_question}
+            value={this.state.profile.what_question || ""}
             validations={{
               maxLength: 500
             }}
@@ -115,7 +125,7 @@ var Settings = React.createClass({
             id="why_question"
             name="why_question"
             placeholder=""
-            value={this.state.profile.why_question}
+            value={this.state.profile.why_question || ""}
             validations={{
               maxLength: 500
             }}
@@ -125,7 +135,7 @@ var Settings = React.createClass({
 
         </ProfileSettings>
 
-        <h1>
+        <h1 className="header-text">
           Aplikacje
         </h1>
 
