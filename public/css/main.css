@@ -1280,13 +1280,6 @@ article ul#nav-list a{
 .activity-header > h1{
 	font:600 3.5rem/2.5rem "Open Sans", Arial;
 }
-.activity-help{
-	margin: 1rem 0 1rem 0;
-}
-.activity-help:hover{
-	background-color: rgb(65, 106, 125);
-	color: white;
-}
 .activity-table{
 	width: 100%;
 }

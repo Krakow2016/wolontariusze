@@ -250,16 +250,11 @@ var Activity = React.createClass({
       )
     })
 
-    var buttons = []
-
-    //acceptButton
-    if (!has_joined && (volunteers.length < activity.limit || activity.limit==0)) {
-      buttons.push(<input type="button" className="activity-help" onClick={this.onAcceptButtonClick} value="Zgłaszam się" key="join" />)
-    }
-
-    //canceButton
-    if (has_joined) {
-      buttons.push(<input type="button" className="activity-help" onClick={this.onCancelButtonClick} value="Wypisz mnie" key="leave" />)
+    var button
+    if (!has_joined && (volunteers.length < activity.limit || activity.limit==0)) { //acceptButton
+      button = (<button className="button--xlg bg--primary" onClick={this.onAcceptButtonClick}>Zgłaszam się!</button>)
+    } else if (has_joined) { // canceButton
+      button = (<button className="button--xsm bg--muted" onClick={this.onCancelButtonClick}>Wypisz mnie</button>)
     }
 
     var volonteersLimit = (activity.limit == 0) ? 'Brak' : activity.limit
@@ -302,11 +297,11 @@ var Activity = React.createClass({
     //<b>Ostatnia edycja:</b> {TimeService.showTime(activity.editionTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.editor.id}>{activity.editor.name}</a></span>
     return (
         <div className="container">
-          <div className="text--center activity-header">
-            <h1>{this.state.activity.name}</h1>
-          </div>
           <div className="row">
             <div className="col col7">
+              <div className="text--center activity-header">
+                <h1>{this.state.activity.name}</h1>
+              </div>
 
               {editLink}
 
@@ -365,7 +360,9 @@ var Activity = React.createClass({
                 </tbody>
               </table>
 
-              {buttons}
+              <p className="text--center">
+                {button}
+              </p>
 
           </div>
         </div>
