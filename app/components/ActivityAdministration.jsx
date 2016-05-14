@@ -380,10 +380,11 @@ var ActivityAdministration = React.createClass({
       var datetimeDate = new Date(this.state.activity.datetime)
       dateTime = <div className="pure-u-1 pure-u-md-2-3">
                     {datetimeHint}
-                    <MyDatetime 
+                    <MyDatetime
                       id='datetime'
                       name='datetime'
                       value={datetimeDate}
+                      validationError='Niepoprawny format daty'
                       handleChange={this.handleDatetimeChange}
                     />
                 </div>
@@ -395,10 +396,11 @@ var ActivityAdministration = React.createClass({
       var endTimeDate = new Date(this.state.activity.endtime)
       endTime = <div className="pure-u-1 pure-u-md-2-3">
                     {endTimeDateHint}
-                    <MyDatetime 
+                    <MyDatetime
                       id='endtime'
                       name='endtime'
                       value={endTimeDate}
+                      validationError='Niepoprawny format daty'
                       handleChange={this.handleEndtimeChange}
                     />
                 </div>
