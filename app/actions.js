@@ -75,7 +75,7 @@ module.exports = {
 
     r.attach('avatar', payload[0])
     r.end(function(err, resp){
-      console.log(resp)
+      //console.log(resp)
       context.dispatch('VOLUNTEER_UPDATE_SUCCESS', resp.body)
       cb()
     })
@@ -623,6 +623,27 @@ module.exports = {
       //} else {
       // We reached our target server, but it returned an error
       }
+    }
+
+    request.onerror = function() {
+      // There was a connection error of some sort
+    }
+
+    request.send(JSON.stringify(query))
+  },
+
+  activateAccount: function(context, state) {
+    var query = { email: state.email }
+    var request = new XMLHttpRequest()
+
+    request.open('POST', '/register', true)
+    request.setRequestHeader('Content-Type', 'application/json')
+    request.onload = function() {
+      var json = JSON.parse(request.responseText)
+      context.dispatch('LOAD_ACCOUNT_ACTIVATION_MESSAGE', {
+        email: state.email,
+        message: json.message
+      })
     }
 
     request.onerror = function() {

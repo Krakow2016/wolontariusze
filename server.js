@@ -20,7 +20,8 @@ var express = require('express'),
   AWS = require('aws-sdk'),
   async = require('async'),
   sharp = require('sharp'),
-  ua = require('universal-analytics')
+  ua = require('universal-analytics'),
+  fs = require('fs')
 
 // Służy do zapisywania sesji użytkowników w bazie danych
 var RDBStore = require('session-rethinkdb')(session)
@@ -46,6 +47,7 @@ var Integration = require('./app/services/'+config.service+'/integrations')
 var APIClient = require('./app/services/'+config.service+'/apiclients')
 var Joints = require('./app/services/joints')(config.service)
 var Xls = require('./app/services/'+config.service+'/xls')
+var Integration = require('./app/services/'+config.service+'/integrations')
 
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
@@ -60,6 +62,29 @@ var session_store = {
 var jsonParser = bodyParser.json()
 // Parse the URL-encoded data with qs library
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+var approve = function(user, cb) {
+  // Generuje losowy token dostępu
+  crypto.randomBytes(32, function(ex, buf) {
+    var tokens = user.access_tokens || []
+    // Token przekształcony do formatu szesnastkowego
+    var token = buf.toString('hex')
+    tokens.push({
+      token: token,
+      // Data potrzebna do późniejszego sprawdzenia ważności tokenu
+      generated_at: new Date()
+      // Data użycia (token jest jednorazowy)
+      //used_at: null,
+      // IP komputera z którego nastąpiło zalogowanie
+      //used_by: null
+    })
+
+    cb({
+      approved: true,
+      access_tokens: tokens
+    })
+  })
+}
 
 // Konfiguracja middleware-u Passport definująca metodę weryfikacji poprawności
 // logowania.
@@ -161,7 +186,8 @@ module.exports = function(server) {
           req.visitor.pageview({
             dp: req.path,
             dh: 'https://wolontariusze.krakow2016.com',
-            uip: req.ip,
+            dr: req.headers['referer'],
+            uip: req.headers['x-real-ip'],
             ua: req.headers['user-agent']
           }).send()
         }
@@ -312,26 +338,15 @@ module.exports = function(server) {
       var id = req.body.id
       if(req.user && req.user.is_admin) {
         Volunteers.read(req, 'Volunteers', {id: id}, {}, function (err, user) {
-          // Generuje losowy token dostępu
-          crypto.randomBytes(32, function(ex, buf) {
-            var tokens = [] //user.access_tokens || []
-            // Token przekształcony do formatu szesnastkowego
-            var token = buf.toString('hex')
-            tokens.push({
-              token: token,
-              // Data potrzebna do późniejszego sprawdzenia ważności tokenu
-              generated_at: new Date()
-              // Data użycia (token jest jednorazowy)
-              //used_at: null,
-              // IP komputera z którego nastąpiło zalogowanie
-              //used_by: null
-            })
+          if(err) {
+            return res.status(500).send(err)
+          }
 
+          approve(user, function(update) {
             // Zapisz w token w bazie
-            Volunteers.update(req, 'Volunteers', {id: id}, {
-              approved: true,
-              access_tokens: tokens
-            }, {}, function (err) {
+            Volunteers.update(req, 'Volunteers', {
+              id: id
+            }, update, {}, function (err) {
               if(err) {
                 res.status(500).send(err)
               } else {
@@ -397,6 +412,63 @@ module.exports = function(server) {
             else { res.send(stats) }
           })
         })
+      } else {
+        res.send(403)
+      }
+    })
+
+    // Wysyła link aktywacyjny do nieaktywnych krótkoterminowych wolontariuszy
+    server.post('/register', jsonParser, function(req, res){
+      var email = req.body.email
+      if(email) {
+        // Znajdź konto o podanym adresie email
+        Volunteers.read({force_admin: true}, 'Volunteers', { key: email }, { index: 'email' }, function (err, users) {
+          if (err || !users) { return done(err) } // Błąd bazy danych
+          var user = users[0]
+          if (!user) {
+            return res.status(400).send({
+              status: "error",
+              message: "Podany adres e-mail nie istnieje w bazie danych. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane."
+            })
+          } else if (user.password) {
+            return res.status(400).send({
+              status: "error",
+              message: "Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. Jeżeli nie pamiętasz swojego hasła, skontaktuj się z goradobra@krakow2016.com."
+            })
+          } else if (user.approved) {
+            return res.status(400).send({
+              status: "error",
+              message: "Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. Jeżeli masz problem z ustawieniem hasła, skontaktuj się z goradobra@krakow2016.com."
+            })
+          } else {
+            Xls.read({force_admin: true}, 'Imports', { email: email }, { index: 'rg_email' }, function (err2, importedUser) {
+              if (!importedUser) {
+                return res.status(400).send({
+                  status: "error",
+                  message: "Brak informacji o zgłoszeniu do wolontariatu krótkoterminowego. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane."
+                })
+              } else {
+                approve(user, function(update) {
+                  // Zapisz w token w bazie
+                  Volunteers.update({force_admin: true}, 'Volunteers', {
+                    id: user.id
+                  }, update, {}, function (err) {
+                    if(err) {
+                      res.status(500).send(err)
+                    } else {
+                      res.status(200).send({
+                        status: "ok",
+                        message: "Dziękujemy za zgłoszenie! Na podany adres email został wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę."
+                      })
+                    }
+                  })
+                })
+              }
+            })
+          }
+        })
+        // Zapisz adres email
+        fs.appendFile('registrations.log', email +', '+ JSON.stringify(req.headers) +'\n')
       } else {
         res.send(403)
       }
@@ -585,7 +657,8 @@ module.exports = function(server) {
         req.visitor.pageview({
           dp: req.path,
           dh: 'https://wolontariusze.krakow2016.com',
-          uip: req.ip,
+          dr: req.headers['referer'],
+          uip: req.headers['x-real-ip'],
           ua: req.headers['user-agent']
         }).send()
       }

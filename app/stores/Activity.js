@@ -3,6 +3,8 @@
 var createStore  = require('fluxible/addons').createStore
 var Draft = require('draft-js')
 var TimeService = require('../modules/time/TimeService.js')
+var fromJS = require('immutable').fromJS
+var _ = require('lodash')
 
 var ActivityStore = createStore({
   storeName: 'Activity',
@@ -21,24 +23,34 @@ var ActivityStore = createStore({
       act_type: 'niezdefiniowany',
       place: '',
       datetime: TimeService.NO_DATE,
-      description: Draft.EditorState.createEmpty(),
       endtime: TimeService.NO_DATE,
       is_urgent: false,
       limit: 5,
       profile_picture_url: '/img/profile/face.svg'
     }
     this.volunteers = []
-    this.editorState = Draft.EditorState.createEmpty()
+    this.activityState = Draft.EditorState.createEmpty()
+    this.newUpdateState = Draft.EditorState.createEmpty()
+    this.updates = []
   },
 
   load: function(data) {
+    var that = this
     var volunteers = data.volunteers || []
     delete data.volunteers
     this.activity = data
     this.volunteers = volunteers
 
+    _.forEach(data.description.entityMap, function(val, key) {
+      val.data.mention = fromJS(val.data.mention)
+    })
+
+    // Opis zadania
     var contentState = Draft.convertFromRaw(data.description)
-    this.activity.description = Draft.EditorState.createWithContent(contentState)
+    this.activityState = Draft.EditorState.push(this.activityState, Draft.ContentState.createFromBlockArray(contentState.getBlocksAsArray()))
+
+    // Aktualizacje
+    this.updates = data.updates
 
     this.emitChange()
   },
@@ -73,42 +85,46 @@ var ActivityStore = createStore({
   },
 
   update_published: function(updates) {
-    this.activity.updates = updates
-    this.editorState = Draft.EditorState.createEmpty()
+    this.updates = updates
+    this.newUpdateState = Draft.EditorState.createEmpty()
     this.emitChange()
   },
 
   getState: function () {
     return {
       activity: this.activity,
+      activityState: this.activityState,
       volunteers: this.volunteers,
-      editorState: this.editorState
+      updates: this.updates,
+      newUpdateState: this.newUpdateState
     }
   },
 
   dehydrate: function () {
-
-    var activity = Object.assign({}, this.activity, {
-      description: Draft.convertToRaw(this.activity.description.getCurrentContent())
-    })
-
     return {
-      activity: activity,
+      activity: this.activity,
       volunteers: this.volunteers,
-      editorState: Draft.convertToRaw(this.editorState.getCurrentContent())
+      activityState: Draft.convertToRaw(this.activityState.getCurrentContent()),
+      newUpdateState: Draft.convertToRaw(this.newUpdateState.getCurrentContent()),
+      updates: this.updates
     }
   },
 
   rehydrate: function (state) {
-
     this.activity = state.activity
     this.volunteers = state.volunteers
+    this.updates = state.updates
 
-    var contentState = Draft.convertFromRaw(this.activity.description)
-    this.activity.description = Draft.EditorState.createWithContent(contentState)
+    _.forEach(state.activityState.entityMap, function(val, key) {
+      val.data.mention = fromJS(val.data.mention)
+    })
 
-    var contentState2 = Draft.convertFromRaw(state.editorState)
-    this.editorState = Draft.EditorState.createWithContent(contentState2)
+    var contentState = Draft.convertFromRaw(state.activityState)
+    this.activityState = Draft.EditorState.push(this.activityState, Draft.ContentState.createFromBlockArray(contentState.getBlocksAsArray()))
+
+    // Formularz aktualizacji do zadania
+    var contentState2 = Draft.convertFromRaw(state.newUpdateState)
+    this.newUpdateState = Draft.EditorState.push(this.newUpdateState, Draft.ContentState.createFromBlockArray(contentState2.getBlocksAsArray()))
   }
 
 })

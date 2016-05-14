@@ -30,7 +30,8 @@
           "type" : "string"
         },
         "email" : {
-          "type" : "string"
+          "type" : "string",
+          "index": "not_analyzed"
         },
         "experience" : {
           "type" : "string",

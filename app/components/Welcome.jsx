@@ -18,7 +18,9 @@ var Welcome = React.createClass({
   getInitialState: function () {
     return {
       profile: this.props.context.getStore(VolunteerStore).getState().profile,
-      canSubmit: false
+      canSubmit: false,
+      // Zablokuj możliwość wpisywania hasła do czasu aż strona nie załduje skryptów
+      hasLoaded: false
     }
   },
 
@@ -34,6 +36,9 @@ var Welcome = React.createClass({
 
   componentDidMount: function() {
     this.props.context.getStore(VolunteerStore).addChangeListener(this._changeListener)
+    this.setState({
+      hasLoaded: true
+    })
   },
 
   componentWillUnmount: function componentWillUnmount() {
@@ -68,12 +73,13 @@ var Welcome = React.createClass({
 
           <hr />
           <h4>
-            By dokończyć rejestrację, wprowadź  hasło, którego będziesz
-            używać za każdym razem logując się do swojego profilu.
+            By dokończyć rejestrację, wprowadź  hasło, którego będziesz używać
+            za każdym razem logując się do swojego profilu. Login to Twoj adres
+            email podany przy rejestracji na wolontariat krótkoterminowy.
           </h4>
           <div className="alert">
 
-            <Password />
+            <Password disabled={!this.state.hasLoaded} />
 
             <div>
               <MyCheckbox required="isFalse"

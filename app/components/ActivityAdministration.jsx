@@ -66,8 +66,16 @@ var ActivityAdministration = React.createClass({
   },
 
   _changeListener: function() {
-    var state = this.props.context.getStore(ActivityStore).getState()
-    this.setState(state)
+    var state = this.props.context.getStore(ActivityStore)
+    var editorState = Draft.EditorState.push(this.state.activityState, Draft.ContentState.createFromBlockArray(state.activityState.getCurrentContent().getBlocksAsArray()))
+
+    this.setState({
+      activity: state.activity,
+      activityState: editorState,
+      volunteers: state.volunteers,
+      invalidDatetime: state.invalidDatetime,
+      invalidEndtime: state.invalidEndtime
+    })
     state._volunteers = Object.assign({}, state).volunteers
   },
 
@@ -147,11 +155,9 @@ var ActivityAdministration = React.createClass({
   },
 
   onChange: function(editorState) {
-    this.setState(update(this.state, {
-      activity: {
-        description: {$set: editorState}
-      }
-    }))
+    this.setState({
+      activityState: editorState
+    })
   },
 
   handleAddPositionChange: function(evt) {
@@ -233,7 +239,7 @@ var ActivityAdministration = React.createClass({
     var context = this.props.context
 
     var activity = Object.assign({}, this.state.activity, {
-      description: Draft.convertToRaw(this.state.activity.description.getCurrentContent())
+      description: Draft.convertToRaw(this.state.activityState.getCurrentContent())
     })
 
     // Aktualizuje parametry aktywności
@@ -272,7 +278,7 @@ var ActivityAdministration = React.createClass({
   create: function () {
 
     var activity = Object.assign({}, this.state.activity, {
-      description: Draft.convertToRaw(this.state.activity.description.getCurrentContent())
+      description: Draft.convertToRaw(this.state.activityState.getCurrentContent())
     })
 
     var payload = Object.assign({}, this.state, { activity: activity })
@@ -521,7 +527,7 @@ var ActivityAdministration = React.createClass({
           <b>Treść </b>
           <br/>
 
-          <Editor editorState={this.state.activity.description} onChange={this.onChange} />
+          <Editor editorState={this.state.activityState} onChange={this.onChange} />
 
           <br/>
 
