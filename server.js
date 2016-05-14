@@ -186,6 +186,7 @@ module.exports = function(server) {
           req.visitor.pageview({
             dp: req.path,
             dh: 'https://wolontariusze.krakow2016.com',
+            dr: req.headers['referer'],
             uip: req.headers['x-real-ip'],
             ua: req.headers['user-agent']
           }).send()
@@ -656,7 +657,8 @@ module.exports = function(server) {
         req.visitor.pageview({
           dp: req.path,
           dh: 'https://wolontariusze.krakow2016.com',
-          uip: req.ip,
+          dr: req.headers['referer'],
+          uip: req.headers['x-real-ip'],
           ua: req.headers['user-agent']
         }).send()
       }
