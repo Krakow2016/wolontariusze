@@ -16,6 +16,43 @@ var to_text = function(state) {
   }).join('\n')
 }
 
+var notifyMentioned = function(title, body, author) {
+  return function(err, cursor) {
+    cursor.toArray(function(err, all) {
+
+      // Anuluj jeżeli nie ma do kogo wysłać
+      if(!all.length) { return }
+
+      // Build the smtpapi header
+      var header = new smtpapi()
+      header.setTos(all.map(function(x){ return x.email }))
+      header.addSubstitution(':name', all.map(function(x){ return x.first_name }))
+      header.setFilters({
+        'templates': {
+          'settings': {
+            'enable': 1,
+            'template_id': sendgrid_template,
+          }
+        }
+      })
+
+      var email = new sendgrid.Email({
+        to:       'goradobra@krakow2016.com', // Zostanie nadpisane przez nagłówek x-smtpapi
+        from:     'goradobra@krakow2016.com',
+        fromname: 'Góra Dobra',
+        replyto:  author,
+        subject:  title,
+        html:     body,
+        headers:  { 'x-smtpapi': header.jsonString() }
+      })
+
+      sendgrid.send(email, function(err, json) {
+        console.log('sendgrid:', err, json)
+      })
+    })
+  }
+}
+
 r.connect(config.rethinkdb, function(err, conn) {
   r.table('Joints').changes().filter(r.row.hasFields('old_val').not())
     .run(conn, function(err, cursor) {
@@ -93,8 +130,7 @@ r.connect(config.rethinkdb, function(err, conn) {
 
         var activity = change.new_val
         var update = activity.updates.pop()
-        var title = activity.name
-        var html = '<p>Nastąpiła najnowsza aktualizacja zadania <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ title +'</a>, w którym uczestniczysz:</p>'
+        var html = '<p>Nastąpiła najnowsza aktualizacja zadania <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ activity.name +'</a>, w którym uczestniczysz:</p>'
         html += backdraft(update.raw, {
           'BOLD': ['<strong>', '</strong>'],
           'ITALIC': ['<i>', '</i>'],
@@ -102,48 +138,63 @@ r.connect(config.rethinkdb, function(err, conn) {
           'CODE': ['<span style="font-family: monospace">', '</span>'],
         }).join('<br/>')
 
-        r.table('Joints')
-          .getAll(change.new_val.id, { index: 'activity_id' })
-          .filter(function(x) {
-            // Upewnij się że zgłoszenie nie zostało anulowane
-            return x.hasFields('is_canceled').not()
-          }, { default: true })
-          .eqJoin('user_id', r.table('Volunteers'))
-          .run(conn, function(err, cursor) {
+        r.table('Volunteers').get(update.created_by)
+          .run(conn, function(err, author) {
 
-          r.table('Volunteers').get(change.new_val.created_by)
-            .run(conn, function(err, author) {
+          // Wzmianki w aktualizacji
+          var entities = update.raw.entityMap || []
+          var receivers = _.map(entities, function(map) {
+            return map.data.mention.id
+          })
 
-            cursor.toArray(function(err, volunteers) {
-              // TODO: dodaj autora aktualizacji
-              // Build the smtpapi header
-              var header = new smtpapi()
-              header.setTos(volunteers.map(function(x){ return x.right.email }))
-              header.addSubstitution(':name', volunteers.map(function(x){ return x.right.first_name }))
-              header.setFilters({
-                'templates': {
-                  'settings': {
-                    'enable': 1,
-                    'template_id': sendgrid_template,
+          var title = author.first_name +' '+ author.last_name +' wspomina Cię w zadaniu \"'+ activity.name +'\"'
+          var body = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w aktualizacji do zadania.</p><p>Kliknij w poniższy link, aby przejść do opisu: <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ activity.name +'</a>.</p>'
+
+          var table = r.table('Volunteers')
+          table.getAll.apply(table, receivers) // Pobierz wolontariuszy
+            .run(conn, notifyMentioned(title, body, author.email))
+
+          // Powiadom resztę (TODO: usuń wspomnianych)
+          r.table('Joints')
+            .getAll(change.new_val.id, { index: 'activity_id' })
+            .filter(function(x) {
+              // Upewnij się że zgłoszenie nie zostało anulowane
+              return x.hasFields('is_canceled').not()
+            }, { default: true })
+            .eqJoin('user_id', r.table('Volunteers'))
+            .run(conn, function(err, cursor) {
+
+              cursor.toArray(function(err, volunteers) {
+                if(!volunteers.length) { return } // Nie ma do kogo wysłać
+                // TODO: dodaj autora aktualizacji
+                // Build the smtpapi header
+                var header = new smtpapi()
+                header.setTos(volunteers.map(function(x){ return x.right.email }))
+                header.addSubstitution(':name', volunteers.map(function(x){ return x.right.first_name }))
+                header.setFilters({
+                  'templates': {
+                    'settings': {
+                      'enable': 1,
+                      'template_id': sendgrid_template,
+                    }
                   }
-                }
-              })
+                })
 
-              var email = new sendgrid.Email({
-                to:       'goradobra@krakow2016.com', // Zostanie nadpisane przez nagłówek x-smtpapi
-                from:     'goradobra@krakow2016.com',
-                fromname: 'Góra Dobra',
-                replyto:  author.email,
-                subject:  'Zadanie: '+ title,
-                html:     html,
-                headers:  { 'x-smtpapi': header.jsonString() }
-              })
+                var email = new sendgrid.Email({
+                  to:       'goradobra@krakow2016.com', // Zostanie nadpisane przez nagłówek x-smtpapi
+                  from:     'goradobra@krakow2016.com',
+                  fromname: 'Góra Dobra',
+                  replyto:  author.email,
+                  subject:  'Zadanie: '+ activity.name,
+                  html:     html,
+                  headers:  { 'x-smtpapi': header.jsonString() }
+                })
 
-              sendgrid.send(email, function(err, json) {
-                console.log('sendgrid:', err, json)
+                sendgrid.send(email, function(err, json) {
+                  console.log('sendgrid:', err, json)
+                })
               })
             })
-          })
         })
       })
     })
@@ -239,41 +290,12 @@ r.connect(config.rethinkdb, function(err, conn) {
                 var receivers = _.map(comment.raw.entityMap, function(map) {
                   return map.data.mention.id
                 })
+                var title = author.first_name +' '+ author.last_name +' przesyła Ci wiadomość o wolontariuszu'
+                var body = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w komentarzu do profilu wolontariusza.</p><p>Kliknij w poniższy link, aby przejść do profilu: <a href="https://wolontariusze.krakow2016.com/wolontariusz/'+ volunteer.id +'">'+ volunteer.first_name +' '+ volunteer.last_name +'</a>.</p>'
 
                 table.getAll.apply(table, receivers)
                   .filter(r.row('is_admin').eq(true)) // Powiadomienia dostają tylko koordynatorzy!
-                  .run(conn, function(err, cursor) { // Pobierz wolontariusza
-                    cursor.toArray(function(err, all) {
-
-                      var html = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w komentarzu do profilu wolontariusza.</p><p>Kliknij w poniższy link, aby przejść do profilu: <a href="https://wolontariusze.krakow2016.com/wolontariusz/'+ volunteer.id +'">'+ volunteer.first_name +' '+ volunteer.last_name +'</a>.</p>'
-
-                      // Build the smtpapi header
-                      var header = new smtpapi()
-                      header.setTos(all.map(function(x){ return x.email }))
-                      header.addSubstitution(':name', all.map(function(x){ return x.first_name }))
-                      header.setFilters({
-                        'templates': {
-                          'settings': {
-                            'enable': 1,
-                            'template_id': sendgrid_template,
-                          }
-                        }
-                      })
-
-                      var email = new sendgrid.Email({
-                        to:       'goradobra@krakow2016.com', // Zostanie nadpisane przez nagłówek x-smtpapi
-                        from:     'goradobra@krakow2016.com',
-                        fromname: 'Góra Dobra',
-                        subject:  author.first_name +' '+ author.last_name +' przesyła Ci wiadomość o wolontariuszu',
-                        html:     html,
-                        headers:  { 'x-smtpapi': header.jsonString() }
-                      })
-
-                      sendgrid.send(email, function(err, json) {
-                        console.log('sendgrid:', err, json)
-                      })
-                    })
-                  })
+                  .run(conn, notifyMentioned(title, body, author.email)) // Pobierz wolontariusza
               })
           })
       })
@@ -328,7 +350,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                     to:       'goradobra@krakow2016.com', // Zostanie nadpisane przez nagłówek x-smtpapi
                     from:     'goradobra@krakow2016.com',
                     fromname: 'Góra Dobra',
-                    subject:  author.first_name +' '+ author.last_name +' wspomina Cię w zadaniu '+ activity.name,
+                    subject:  author.first_name +' '+ author.last_name +' wspomina Cię w zadaniu \"'+ activity.name +'\"',
                     html:     html,
                     headers:  { 'x-smtpapi': header.jsonString() }
                   })
