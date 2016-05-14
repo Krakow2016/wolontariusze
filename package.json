@@ -13,7 +13,7 @@
     "connect-flash": "^0.1.1",
     "connect-multiparty": "^2.0.0",
     "debug": "*",
-    "draft-js": "^0.6.0",
+    "draft-js": "^0.7.0",
     "draft-js-emoji-plugin": "^1.1.0",
     "draft-js-linkify-plugin": "^1.0.1",
     "draft-js-mention-plugin": "^1.0.1",

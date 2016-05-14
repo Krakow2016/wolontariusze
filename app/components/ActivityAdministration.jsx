@@ -64,11 +64,11 @@ var ActivityAdministration = React.createClass({
 
   _changeListener: function() {
     var state = this.props.context.getStore(ActivityStore)
-    var editorState = Draft.EditorState.push(this.state.activityDescription, Draft.ContentState.createFromBlockArray(state.activityDescription.getCurrentContent().getBlocksAsArray()))
+    var editorState = Draft.EditorState.push(this.state.activityState, Draft.ContentState.createFromBlockArray(state.activityState.getCurrentContent().getBlocksAsArray()))
 
     this.setState({
       activity: state.activity,
-      activityDescription: editorState,
+      activityState: editorState,
       volunteers: state.volunteers,
       invalidDatetime: state.invalidDatetime,
       invalidEndtime: state.invalidEndtime
@@ -162,7 +162,7 @@ var ActivityAdministration = React.createClass({
 
   onChange: function(editorState) {
     this.setState({
-      activityDescription: editorState
+      activityState: editorState
     })
   },
 
@@ -245,7 +245,7 @@ var ActivityAdministration = React.createClass({
     var context = this.props.context
 
     var activity = Object.assign({}, this.state.activity, {
-      description: Draft.convertToRaw(this.state.activityDescription.getCurrentContent())
+      description: Draft.convertToRaw(this.state.activityState.getCurrentContent())
     })
 
     // Aktualizuje parametry aktywności
@@ -284,7 +284,7 @@ var ActivityAdministration = React.createClass({
   create: function () {
 
     var activity = Object.assign({}, this.state.activity, {
-      description: Draft.convertToRaw(this.state.activityDescription.getCurrentContent())
+      description: Draft.convertToRaw(this.state.activityState.getCurrentContent())
     })
 
     var payload = Object.assign({}, this.state, { activity: activity })
@@ -548,7 +548,7 @@ var ActivityAdministration = React.createClass({
           <b>Treść </b>
           <br/>
 
-          <Editor editorState={this.state.activityDescription} onChange={this.onChange} />
+          <Editor editorState={this.state.activityState} onChange={this.onChange} />
 
           <br/>
 

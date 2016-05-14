@@ -17,17 +17,6 @@ var INLINE_STYLES = [
     {label: 'Monospace', style: 'CODE'}
 ]
 
-var mentionPlugin = createMentionPlugin({
-  entityMutability: 'IMMUTABLE',
-  mentionPrefix: '',
-})
-
-var linkifyPlugin = createLinkifyPlugin({
-  target: '_blank',
-})
-
-var emojiPlugin = createEmojiPlugin()
-
 class StyleButton extends React.Component {
   constructor() {
     super()
@@ -72,7 +61,15 @@ var Editor = React.createClass({
 
   getInitialState: function() {
     return {
-      suggestions: fromJS([])
+      suggestions: fromJS([]),
+      mentionPlugin: createMentionPlugin({
+        entityMutability: 'IMMUTABLE',
+        mentionPrefix: '',
+      }),
+      linkifyPlugin: createLinkifyPlugin({
+        target: '_blank',
+      }),
+      emojiPlugin: createEmojiPlugin()
     }
   },
 
@@ -93,7 +90,8 @@ var Editor = React.createClass({
           return {
             name: option.text,
             id: option.payload.id,
-            avatar: option.payload.thumb_picture_url || '/img/profile/face.svg'
+            avatar: option.payload.thumb_picture_url || '/img/profile/face.svg',
+            link: '/wolontariusz/' + option.payload.id
           }
         })
         that.setState({
@@ -119,30 +117,36 @@ var Editor = React.createClass({
     var controls
     if(!this.props.readOnly) {
       controls = (
-        <InlineStyleControls
-          editorState={this.props.editorState}
-          onToggle={this.toggleInlineStyle} />
+        <div>
+          <InlineStyleControls
+            editorState={this.props.editorState}
+            onToggle={this.toggleInlineStyle} />
+
+          <this.state.mentionPlugin.MentionSuggestions
+            onSearchChange={ this.onSearchChange }
+            suggestions={ this.state.suggestions } />
+
+          <this.state.emojiPlugin.EmojiSuggestions />
+        </div>
       )
     }
     return (
       <div>
         {controls}
 
-        <div onClick={this.focus} className="myEditor" style={this.props.style}>
+        <div onClick={this.focus} className={this.props.readOnly ? '' : 'myEditor'} style={this.props.style}>
 
           <DraftEditor
             ref="editor"
             placeholder="Wpisz komentarz..."
             editorState={this.props.editorState}
-            plugins={ [mentionPlugin, linkifyPlugin, emojiPlugin] }
+            plugins={[
+              this.state.mentionPlugin,
+              this.state.linkifyPlugin,
+              this.state.emojiPlugin
+            ]}
             readOnly={this.props.readOnly}
             onChange={this.props.onChange} />
-
-          <mentionPlugin.MentionSuggestions
-            onSearchChange={ this.onSearchChange }
-            suggestions={ this.state.suggestions } />
-
-          <emojiPlugin.EmojiSuggestions />
         </div>
 
         {this.props.children}

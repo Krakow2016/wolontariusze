@@ -31,11 +31,14 @@ var ActivityStore = createStore({
     this.volunteers = []
     this.invalidDatetime = ''
     this.invalidEndtime = ''
-    this.activityDescription = Draft.EditorState.createEmpty()
-    this.editorState = Draft.EditorState.createEmpty()
+
+    this.activityState = Draft.EditorState.createEmpty()
+    this.newUpdateState = Draft.EditorState.createEmpty()
+    this.updates = []
   },
 
   load: function(data) {
+    var that = this
     var volunteers = data.volunteers || []
     delete data.volunteers
     this.activity = data
@@ -45,9 +48,13 @@ var ActivityStore = createStore({
       val.data.mention = fromJS(val.data.mention)
     })
 
+    // Opis zadania
     var contentState = Draft.convertFromRaw(data.description)
-    var editorState = Draft.EditorState.push(this.activityDescription, Draft.ContentState.createFromBlockArray(contentState.getBlocksAsArray()))
-    this.activityDescription = editorState
+    this.activityState = Draft.EditorState.push(this.activityState, Draft.ContentState.createFromBlockArray(contentState.getBlocksAsArray()))
+
+    // Aktualizacje
+    this.updates = data.updates
+
     this.emitChange()
   },
 
@@ -81,30 +88,32 @@ var ActivityStore = createStore({
   },
 
   update_published: function(updates) {
-    this.activity.updates = updates
-    this.editorState = Draft.EditorState.createEmpty()
+    this.updates = this.updates ? [ ...this.updates, updates[updates.length-1] ] : updates
+    this.newUpdateState = Draft.EditorState.createEmpty()
     this.emitChange()
   },
 
   getState: function () {
     return {
       activity: this.activity,
-      activityDescription: this.activityDescription,
+      activityState: this.activityState,
       volunteers: this.volunteers,
       invalidDatetime: this.invalidDatetime,
       invalidEndtime: this.invalidEndtime,
-      editorState: this.editorState
+      updates: this.updates,
+      newUpdateState: this.newUpdateState
     }
   },
 
   dehydrate: function () {
     return {
       activity: this.activity,
-      activityDescription: Draft.convertToRaw(this.activityDescription.getCurrentContent()),
       volunteers: this.volunteers,
       invalidDatetime: this.invalidDatetime,
       invalidEndtime: this.invalidEndtime,
-      editorState: Draft.convertToRaw(this.editorState.getCurrentContent())
+      activityState: Draft.convertToRaw(this.activityState.getCurrentContent()),
+      newUpdateState: Draft.convertToRaw(this.newUpdateState.getCurrentContent()),
+      updates: this.updates
     }
   },
 
@@ -113,21 +122,18 @@ var ActivityStore = createStore({
     this.volunteers = state.volunteers
     this.invalidDatetime = state.invalidDatetime
     this.invalidEndtime = state.invalidEndtime
+    this.updates = state.updates
 
-    _.forEach(state.activityDescription.entityMap, function(val, key) {
+    _.forEach(state.activityState.entityMap, function(val, key) {
       val.data.mention = fromJS(val.data.mention)
     })
 
-    var contentState = Draft.convertFromRaw(state.activityDescription)
-    this.activityDescription = Draft.EditorState.push(this.activityDescription, Draft.ContentState.createFromBlockArray(contentState.getBlocksAsArray()))
+    var contentState = Draft.convertFromRaw(state.activityState)
+    this.activityState = Draft.EditorState.push(this.activityState, Draft.ContentState.createFromBlockArray(contentState.getBlocksAsArray()))
 
     // Formularz aktualizacji do zadania
-    _.forEach(state.editorState.entityMap, function(val, key) {
-      val.data.mention = fromJS(val.data.mention)
-    })
-
-    var contentState2 = Draft.convertFromRaw(state.editorState)
-    this.editorState = Draft.EditorState.createWithContent(contentState2)
+    var contentState2 = Draft.convertFromRaw(state.newUpdateState)
+    this.newUpdateState = Draft.EditorState.push(this.newUpdateState, Draft.ContentState.createFromBlockArray(contentState2.getBlocksAsArray()))
   }
 
 })
