@@ -59,7 +59,6 @@ r.connect(config.rethinkdb, function(err, conn) {
               fromname: 'Góra Dobra',
               replyto:  author.email,
               subject:  'Zadanie: '+ activity.name,
-              //text:     text.join('\n\n***\n\n'),
               html:     html.join('<hr/>')
             })
 
@@ -106,6 +105,7 @@ r.connect(config.rethinkdb, function(err, conn) {
         r.table('Joints')
           .getAll(change.new_val.id, { index: 'activity_id' })
           .filter(function(x) {
+            // Upewnij się że zgłoszenie nie zostało anulowane
             return x.hasFields('is_canceled').not()
           }, { default: true })
           .eqJoin('user_id', r.table('Volunteers'))
@@ -115,34 +115,32 @@ r.connect(config.rethinkdb, function(err, conn) {
             .run(conn, function(err, author) {
 
             cursor.toArray(function(err, volunteers) {
-              // TODO: dodaj autora aktywności
-              volunteers.forEach(function(volunteer) {
-                // Upewnij się że zgłoszenie nie zostało anulowane
-                if(volunteer.left.is_canceled === true) { return }
-
-                var to = volunteer.right.email
-                var email = new sendgrid.Email({
-                  to:       to,
-                  from:     'goradobra@krakow2016.com',
-                  fromname: 'Góra Dobra',
-                  replyto:  author.email,
-                  subject:  'Zadanie: '+ title,
-                  html:     html
-                })
-
-                email.addSubstitution(':name', volunteer.right.first_name)
-                email.setFilters({
-                  'templates': {
-                    'settings': {
-                      'enable': 1,
-                      'template_id': sendgrid_template,
-                    }
+              // TODO: dodaj autora aktualizacji
+              // Build the smtpapi header
+              var header = new smtpapi()
+              header.setTos(volunteers.map(function(x){ return x.right.email }))
+              header.addSubstitution(':name', volunteers.map(function(x){ return x.right.first_name }))
+              header.setFilters({
+                'templates': {
+                  'settings': {
+                    'enable': 1,
+                    'template_id': sendgrid_template,
                   }
-                })
+                }
+              })
 
-                sendgrid.send(email, function(err, json) {
-                  console.log('sendgrid:', err, json)
-                })
+              var email = new sendgrid.Email({
+                to:       'goradobra@krakow2016.com', // Zostanie nadpisane przez nagłówek x-smtpapi
+                from:     'goradobra@krakow2016.com',
+                fromname: 'Góra Dobra',
+                replyto:  author.email,
+                subject:  'Zadanie: '+ title,
+                html:     html,
+                headers:  { 'x-smtpapi': header.jsonString() }
+              })
+
+              sendgrid.send(email, function(err, json) {
+                console.log('sendgrid:', err, json)
               })
             })
           })
