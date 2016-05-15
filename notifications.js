@@ -143,9 +143,9 @@ r.connect(config.rethinkdb, function(err, conn) {
 
           // Wzmianki w aktualizacji
           var entities = update.raw.entityMap || []
-          var receivers = _.map(entities, function(map) {
-            return map.data.mention.id
-          })
+          var receivers = _.compact(_.map(entities, function(map) {
+            return map.data.mention && map.data.mention.id
+          }))
 
           var title = author.first_name +' '+ author.last_name +' wspomina Cię w zadaniu \"'+ activity.name +'\"'
           var body = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w aktualizacji do zadania.</p><p>Kliknij w poniższy link, aby przejść do opisu: <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ activity.name +'</a>.</p>'
@@ -287,9 +287,9 @@ r.connect(config.rethinkdb, function(err, conn) {
               .run(conn, function(err, volunteer) { // Pobierz wolontariusza
 
                 // Identyfikatory odbiorców powiadomienia
-                var receivers = _.map(comment.raw.entityMap, function(map) {
-                  return map.data.mention.id
-                })
+                var receivers = _.compact(_.map(entities, function(map) {
+                  return map.data.mention && map.data.mention.id
+                }))
                 var title = author.first_name +' '+ author.last_name +' przesyła Ci wiadomość o wolontariuszu'
                 var body = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w komentarzu do profilu wolontariusza.</p><p>Kliknij w poniższy link, aby przejść do profilu: <a href="https://wolontariusze.krakow2016.com/wolontariusz/'+ volunteer.id +'">'+ volunteer.first_name +' '+ volunteer.last_name +'</a>.</p>'
 
@@ -316,9 +316,9 @@ r.connect(config.rethinkdb, function(err, conn) {
           .run(conn, function(err, author) { // Pobierz autora zadania
 
             // Identyfikatory odbiorców powiadomienia
-            var receivers = _.map(activity.description.entityMap, function(map) {
-              return map.data.mention.id
-            })
+            var receivers = _.compact(_.map(entities, function(map) {
+              return map.data.mention && map.data.mention.id
+            }))
 
             table.getAll.apply(table, receivers)
               .run(conn, function(err, cursor) { // Pobierz wolontariuszy
