@@ -41,7 +41,7 @@ var Shell = React.createClass({
 
         <div className="section row">
           <div className="col col12">
-            <img src="/img/profile/insta.svg" id="profilie-insta-ico" /><h1>#KRAKOW2016</h1>
+            <img src="/img/profile/insta.svg" id="profile-insta-ico" /><h1>#KRAKOW2016</h1>
           </div>
         </div>
 

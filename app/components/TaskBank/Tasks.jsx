@@ -86,18 +86,16 @@ var Tasks = React.createClass({
 
     // TABS
     var tabs = [
-      <li>
         <NavLink href={"/zadania"} className="profile-ribon-cell">Bank pracy</NavLink>
-      </li>
     ]
 
     if(user) {
       tabs.push(
-        <li><NavLink href={'/zadania?volunteer='+user.id} className="profile-ribon-cell">Biorę udział w</NavLink></li>
+        <NavLink href={'/zadania?volunteer='+user.id} className="profile-ribon-cell">Biorę udział w</NavLink>
       )
       if(user.is_admin) {
         tabs.push(
-          <li><NavLink href={'/zadania?created_by='+user.id} className="profile-ribon-cell">Moje zadania</NavLink></li>
+          <NavLink href={'/zadania?created_by='+user.id} className="profile-ribon-cell">Moje zadania</NavLink>
         )
       }
     }
@@ -148,11 +146,11 @@ var Tasks = React.createClass({
     if (user) {
       return (
         <div className="task-bank">
-          <nav id="task-nav">
-            <ul id="nav-list">
+          <div className="task-nav">
+            <div className="col col12 profile-ribon ">
               {tabs}
-            </ul>
-          </nav>
+            </div>
+          </div>
           <ActivitiesSearchForm query={this.state.query} handleChange={this.handleChange} submit={this.onSubmit} />
 
           <TaskFilters

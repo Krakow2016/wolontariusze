@@ -253,9 +253,9 @@ var Activity = React.createClass({
 
     var button
     if (!has_joined && (volunteers.length < activity.limit || activity.limit==0)) { //acceptButton
-      button = (<button className="button--xlg bg--primary" onClick={this.onAcceptButtonClick}>Zgłaszam się!</button>)
+      button = (<button className="button--xlg button--full bg--task" onClick={this.onAcceptButtonClick}>Zgłaszam się!</button>)
     } else if (has_joined) { // canceButton
-      button = (<button className="button--xsm bg--muted" onClick={this.onCancelButtonClick}>Wypisz mnie</button>)
+      button = (<button className="button--xsm button--full bg--task-muted" onClick={this.onCancelButtonClick}>Wypisz mnie</button>)
     }
 
     var volonteersLimit = (activity.limit == 0) ? 'Brak' : activity.limit
@@ -339,11 +339,11 @@ var Activity = React.createClass({
                     <td>{activity.place}</td>
                   </tr>
                   <tr>
-                    <td scope="Rozpoczęcie">Czas zakończenia zgłoszeń do zadania</td>
+                    <td scope="Zakończenie">Zakończenie zgłoszeń</td>
                     <td>{applicationTime}</td>
                   </tr>
                   <tr>
-                    <td scope="Czas">Data zakończenia</td>
+                    <td scope="Czas">Zakończenia zadania</td>
                     <td>{endTime}</td>
                   </tr>
                   <tr>
@@ -351,19 +351,16 @@ var Activity = React.createClass({
                     <td>{is_archived}</td>
                   </tr>
                   <tr>
-                    <td scope="Prorytet">Prorytet</td>
+                    <td scope="Priorytet">Priorytet</td>
                     <td>{priority}</td>
                   </tr>
                   <tr>
-                    <td scope="Limit(maksymalna liczba wolontariuszy)">Limit osób</td>
+                    <td scope="Limit osób">Limit osób</td>
                     <td>{volonteersLimit}</td>
                   </tr>
                 </tbody>
               </table>
-
-              <p className="text--center">
-                {button}
-              </p>
+              {button}
 
           </div>
         </div>

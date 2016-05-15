@@ -1194,7 +1194,8 @@ address {
   color: #ffb800 !important; }
 
 .bg--warning {
-  background-color: #ffb800 !important; }
+  background-color: #E3BF44 !important;
+  border: none; }
 
 .text--error {
   color: #ca4829 !important; }
