@@ -311,7 +311,7 @@ var Activity = React.createClass({
               <Editor editorState={this.state.activityState} onChange={this.onChange2} readOnly={true} />
 
               {updates.map(function(update, i) {
-                return <ActivityUpdate key={'update_'+i} {...update} />
+                return <ActivityUpdate key={'update_'+activity.id+'_'+i} {...update} />
               })}
 
               {updateForm}
