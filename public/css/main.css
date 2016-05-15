@@ -223,7 +223,10 @@ label:hover:before {
 	color: #555;
 }
 .input-group-text,
-.input-group-text input{
+.input-group-text input,
+.input-group-btn,
+.input-group-btn button,
+.input-group-btn input{
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 	vertical-align: middle;
@@ -237,7 +240,8 @@ label:hover:before {
 	width: 1%;
 	vertical-align: middle;
 }
-.input-group-btn button{
+.input-group-btn button,
+.input-group-btn input{
 	position: relative;
 	z-index: 2;
 	margin-left: -1px;
@@ -262,6 +266,7 @@ label:hover:before {
 	border-radius: 4px;
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
+	color: white;
 }
 
 .btn-category-remove{
