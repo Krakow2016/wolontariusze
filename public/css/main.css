@@ -1269,6 +1269,17 @@ article ul#nav-list a{
 .insta{
 	margin-bottom: 4rem;
 }
+#insta-tags{
+	font-size: 12;
+    color: gray;
+    width: 100%;
+    text-align: center;
+    background-color: rgba(0, 138, 195, 0.12);
+    border-radius: 4px;
+    height: 44px;
+    line-height: 44px;
+    font: 400 10pt/44px &quot;Open Sans&quot;, Arial;
+}
 
 /*---------ACTIVITY--------*/
 
