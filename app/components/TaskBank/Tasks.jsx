@@ -160,7 +160,7 @@ var Tasks = React.createClass({
               onSubmit={this.onSubmit}
               query={this.state.query} />
 
-          {this.addActivityButton()}
+          {this.state.all.length > 3 ? this.addActivityButton() : ''}
           {tasks}
           {this.addActivityButton()}
         </div>

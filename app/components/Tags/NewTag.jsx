@@ -76,8 +76,8 @@ var NewTag = React.createClass({
           getSuggestionValue={this.getSuggestionValue}
           onSuggestionSelected={this.handleSave}
           inputProps={inputProps} />
-        <div>
-          <input type="button" className="bg--primary" value="Dodaj" onClick={this.handleSave} />
+        <div className="input-group-btn">
+          <button className="bg--primary" onClick={this.handleSave}>Dodaj</button>
         </div>
       </div>
     )

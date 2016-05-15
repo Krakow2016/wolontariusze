@@ -210,10 +210,10 @@ label:hover:before {
 	margin: 10px 0;
 }
 .input-group-text,
-.input-group-text > input,
+.input-group-text input,
 .input-group-btn{
 	display: table-cell;
-	height: 36px !important;
+	height: 35px !important;
 }
 .react-autosuggest__container{
 	position: relative;
@@ -223,10 +223,11 @@ label:hover:before {
 	color: #555;
 }
 .input-group-text,
-.input-group-text > input{
-	
+.input-group-text input{
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
+	vertical-align: middle;
+	height: 34px !important;
 }
 
 .input-group-btn{
@@ -236,7 +237,7 @@ label:hover:before {
 	width: 1%;
 	vertical-align: middle;
 }
-.input-group-btn > button{
+.input-group-btn button{
 	position: relative;
 	z-index: 2;
 	margin-left: -1px;
@@ -1363,7 +1364,15 @@ button + .activity-table{
 .content-texts{
 	padding: 1rem 1rem 3rem 1rem;
 }
-
+article.main-content a.task-add-btn{
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	color: white;
+	font-size: 18pt;
+	font-family: 'Open Sans', Arial;
+	font-weight: 600;
+}
 .bg--task{
 	background-color: rgb(41, 83, 102);
 }

@@ -3,6 +3,6 @@ var NavLink = require('fluxible-router').NavLink
 
 module.exports = function() {
   return (
-    <NavLink href="/zadania/nowe" className="button">Dodaj nowe zadanie</NavLink>
+    <NavLink href="/zadania/nowe" className="task-add-btn button">Dodaj nowe zadanie</NavLink>
   )
 }

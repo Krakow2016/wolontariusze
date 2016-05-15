@@ -558,7 +558,7 @@ var ActivityAdministration = React.createClass({
           <br/>
           <br/>
           <br/>
-          <div id="activityEditToolbar text--center">
+          <div id="activityEditToolbar" className="text--center">
             {removeButton}
             {updateButton}
             {createButton}
