@@ -11,7 +11,8 @@
         "who_question": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean felis enim, condimentum ac suscipit venenatis, tincidunt ac est. Duis tempor elementum nunc, et luctus diam iaculis id. Fusce finibus lorem sit amet lorem pellentesque porta. Duis sagittis dolor a nisl tempus fermentum. Donec commodo augue velit, a bibendum dui dapibus vitae.",
         "what_question": "Ut aliquam sagittis felis a aliquet. Quisque in tempor lacus. Nulla mattis bibendum nibh, gravida consectetur ante condimentum eget. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed eu leo consectetur, vestibulum dui sed, convallis massa. Mauris aliquam porttitor dolor id aliquam. Sed tellus diam, eleifend quis elit molestie, imperdiet dapibus leo.",
         "why_question": "Aliquam at fermentum mi. Vestibulum varius lorem sit amet semper tempor. Nullam aliquam pulvinar commodo. Nulla volutpat cursus dolor, eget tincidunt velit pretium in. Donec dictum rutrum condimentum. Ut tincidunt ante ac odio venenatis, eu laoreet velit pharetra. Proin placerat sapien velit, vitae vulputate libero eleifend sit amet.",
-        "approved": true
+        "approved": true,
+        "profile_visible": false
     },
 
     "2": {
@@ -27,7 +28,8 @@
         "who_question": "piłka nożna i sporty zespołowe. Uwielbiam wycieczki po górach i jajecznicę w schronisku po całym dniu wspinaczki.",
         "what_question": "organizację spotkań wolontariuszy i pomagać tworzyć atmosferę braterstwa i wspólnej sprawy jaką są Światowe Dni Młodzieży w Krakowie.",
         "why_question": "aby wszyscy ludzie byli braćmi.",
-        "approved": true
+        "approved": true,
+        "profile_visible": true
     },
     
     "3": {
@@ -42,7 +44,8 @@
         "who_question": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean felis enim, condimentum ac suscipit venenatis, tincidunt ac est. Duis tempor elementum nunc, et luctus diam iaculis id. Fusce finibus lorem sit amet lorem pellentesque porta. Duis sagittis dolor a nisl tempus fermentum. Donec commodo augue velit, a bibendum dui dapibus vitae.",
         "what_question": "Ut aliquam sagittis felis a aliquet. Quisque in tempor lacus. Nulla mattis bibendum nibh, gravida consectetur ante condimentum eget. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed eu leo consectetur, vestibulum dui sed, convallis massa. Mauris aliquam porttitor dolor id aliquam. Sed tellus diam, eleifend quis elit molestie, imperdiet dapibus leo.",
         "why_question": "Aliquam at fermentum mi. Vestibulum varius lorem sit amet semper tempor. Nullam aliquam pulvinar commodo. Nulla volutpat cursus dolor, eget tincidunt velit pretium in. Donec dictum rutrum condimentum. Ut tincidunt ante ac odio venenatis, eu laoreet velit pharetra. Proin placerat sapien velit, vitae vulputate libero eleifend sit amet.",
-        "approved": true
+        "approved": true,
+        "profile_visible": false
     },
     
     "4": {
@@ -57,7 +60,8 @@
         "who_question": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean felis enim, condimentum ac suscipit venenatis, tincidunt ac est. Duis tempor elementum nunc, et luctus diam iaculis id. Fusce finibus lorem sit amet lorem pellentesque porta. Duis sagittis dolor a nisl tempus fermentum. Donec commodo augue velit, a bibendum dui dapibus vitae.",
         "what_question": "Ut aliquam sagittis felis a aliquet. Quisque in tempor lacus. Nulla mattis bibendum nibh, gravida consectetur ante condimentum eget. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed eu leo consectetur, vestibulum dui sed, convallis massa. Mauris aliquam porttitor dolor id aliquam. Sed tellus diam, eleifend quis elit molestie, imperdiet dapibus leo.",
         "why_question": "Aliquam at fermentum mi. Vestibulum varius lorem sit amet semper tempor. Nullam aliquam pulvinar commodo. Nulla volutpat cursus dolor, eget tincidunt velit pretium in. Donec dictum rutrum condimentum. Ut tincidunt ante ac odio venenatis, eu laoreet velit pharetra. Proin placerat sapien velit, vitae vulputate libero eleifend sit amet.",
-        "approved": true
+        "approved": true,
+        "profile_visible": false
     },
     
     "5": {
@@ -72,6 +76,7 @@
         "who_question": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean felis enim, condimentum ac suscipit venenatis, tincidunt ac est. Duis tempor elementum nunc, et luctus diam iaculis id. Fusce finibus lorem sit amet lorem pellentesque porta. Duis sagittis dolor a nisl tempus fermentum. Donec commodo augue velit, a bibendum dui dapibus vitae.",
         "what_question": "Ut aliquam sagittis felis a aliquet. Quisque in tempor lacus. Nulla mattis bibendum nibh, gravida consectetur ante condimentum eget. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed eu leo consectetur, vestibulum dui sed, convallis massa. Mauris aliquam porttitor dolor id aliquam. Sed tellus diam, eleifend quis elit molestie, imperdiet dapibus leo.",
         "why_question": "Aliquam at fermentum mi. Vestibulum varius lorem sit amet semper tempor. Nullam aliquam pulvinar commodo. Nulla volutpat cursus dolor, eget tincidunt velit pretium in. Donec dictum rutrum condimentum. Ut tincidunt ante ac odio venenatis, eu laoreet velit pharetra. Proin placerat sapien velit, vitae vulputate libero eleifend sit amet.",
-        "approved": false
+        "approved": false,
+        "profile_visible": false
     }
 }

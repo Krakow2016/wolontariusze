@@ -52,30 +52,43 @@ var Volunteer = React.createClass({
     if(this.props.profile.tags) {
       tags = (<h2><b>Tagi:</b> <span>{ this.props.profile.tags.join(', ') }</span></h2>)
     }
+    
+    //Jeżeli użytkownik jest zalogowany lub profil jest dostępny publicznie -- to pokazujemy profil
+    if (user || this.props.profile.profile_visible) {
+      return (
+        <div className="volonteer">
+          <div className="section row">
+            <div className="col col6">
+              <img src={this.props.profile.profile_picture_url} id="prolife-photo" />
+            </div>
+            <div className="col col6">
+              <h1 className="profile-name">{this.name()}</h1>
+              <h2><b>Kraj:</b> <span>{ this.props.profile.nationality || 'Polska' }</span></h2>
+              {tags}
+              {email}
+            </div>
+          </div>
 
-    return (
-      <div className="volonteer">
-        <div className="section row">
-          <div className="col col6">
-            <img src={this.props.profile.profile_picture_url} id="prolife-photo" />
+          <div className="section row">
+            <div className="col col12 profile-ribon">
+              {tabs}
+            </div>
           </div>
-          <div className="col col6">
-            <h1 className="profile-name">{this.name()}</h1>
-            <h2><b>Kraj:</b> <span>{ this.props.profile.nationality || 'Polska' }</span></h2>
-            {tags}
-            {email}
-          </div>
+
+          {this.props.children}
         </div>
-
-        <div className="section row">
-          <div className="col col12 profile-ribon">
-            {tabs}
+      )
+    } else {
+      return (
+          //Zwraca domyślne foto - buźkę :)
+          <div className="section row">
+            <div className="col col12">
+              <img src='/img/profile/face.svg' id="prolife-photo" />
+              <h2 style={{textAlign: 'center'}}>Profil niedostępny</h2>
+            </div>
           </div>
-        </div>
-
-        {this.props.children}
-      </div>
-    )
+      )
+    }
           //<div className="col span_1_of_4">
             //<p id="profile-grow-title"><b>Lorem sprawił/a, że Góra Dobra urosła o</b></p>
           //</div>

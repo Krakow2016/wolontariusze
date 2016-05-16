@@ -83,7 +83,9 @@ var Settings = React.createClass({
           context={this.props.context}
           success={this.state.success}
           error={this.state.error}
-          state_formsy={state_formsy}>
+          state_formsy={state_formsy}
+          profile_visible={this.state.profile.profile_visible}>
+          
 
           <label htmlFor="first_name">
             <h2>Kim jestem?</h2>

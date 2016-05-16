@@ -86,7 +86,8 @@ VolunteerStore.attributes = function() {
     'thumb_picture_url',
     'who_question',
     'what_question',
-    'why_question'
+    'why_question',
+    'profile_visible'
   ]
 }
 
