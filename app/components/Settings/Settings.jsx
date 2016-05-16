@@ -145,6 +145,7 @@ var Settings = React.createClass({
               <p>Lista integracji:</p>
               <ul>
                 <li><InstagramSetting context={this.props.context} /></li>
+                <div id="insta-tags">#krakow2016 #wyd2016 #sdm2016 #jmj2016 #gmg2016 #сдм2016 #wjt2016 #вдм2016</div>
               </ul>
               <p>Lista aplikacji:</p>
               <ul>

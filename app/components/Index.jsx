@@ -133,7 +133,7 @@ var App = React.createClass({
 
     return (
       <div>
-        <img src="/img/homepage/inspiration.svg" id="inspiration-img" />
+        <div id="inspiration-img"><img src="/img/homepage/inspiration.svg" /></div>
         <img src="/img/homepage/graph.png" style={{width: '100%'}} alt="" />
         <div className="graph-filter">
           <div className="row">
