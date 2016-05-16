@@ -2,6 +2,7 @@ var React = require('react')
 var VolunteerShell = require('./Shell.jsx')
 var Comments = require('./Comments.jsx')
 var update = require('react-addons-update')
+var moment = require('moment')
 
 var VolunteerStore = require('../../stores/Volunteer')
 var XlsStore = require('../../stores/Xls')
@@ -126,11 +127,12 @@ var VolunteerAdministration = React.createClass({
   render: function() {
     var papers = []
     var tags = this.state.profile.tags || []
+    var approved_at = this.state.profile.approved_at ? moment(this.state.profile.approved_at).calendar() : 'niewiadomo kiedy'
 
     if(this.state.profile.approved) {
       papers.push(
         <div className="paper" key="rejection">
-          <p>Profil jest aktywny</p>
+          <p>Profil jest aktywny (zaproszenie wysłano { approved_at })</p>
           <div style={{textAlign: 'center'}}>
             <a href="#confirm" className="button">Zablokuj profil</a>
           </div>
@@ -139,6 +141,20 @@ var VolunteerAdministration = React.createClass({
     } else {
       papers.push(
         <Invite id={this.state.profile.id} context={this.props.context} />
+      )
+    }
+
+    if(this.state.profile.has_password) {
+      papers.push(
+        <div className="paper" key="password">
+          <p>Wolontariusz aktywował swoje konto i może się logować.</p>
+        </div>
+      )
+    } else {
+      papers.push(
+        <div className="paper" key="password">
+          <p>Wolontariusz nie aktywował swojego konta!</p>
+        </div>
       )
     }
 

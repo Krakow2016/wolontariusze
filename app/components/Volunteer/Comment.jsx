@@ -87,7 +87,6 @@ var ProfileComment = React.createClass({
   },
 
   componentWillReceiveProps: function(nextProps) {
-    console.log('componentWillReceiveProps')
     if (nextProps.comment.raw) {
       var raw = Object.assign({}, nextProps.comment.raw)
       _.forEach(raw.entityMap, function(val, key) {
