@@ -403,12 +403,20 @@ label:hover:before {
 	transition: transform 0.5s ease;
 }
 
+.alert-normal{
+	background-color: rgba(0, 100, 146, 0.48);
+    padding: 10px;
+    font: 400 1rem/1.5rem "Open Sans", Arial;
+    color: #FFFFFF;
+    border: none;
+}
+
 .alert{
-	background-color: rgba(0, 138, 195, 0.39);
-	padding: 10px;
-	font: 400 1rem/1.5rem "Open Sans", Arial;
-	color: white;
-	border: none;
+	background-color: rgba(195, 162, 0, 0.39);
+    padding: 10px;
+    font: 400 1rem/1.5rem "Open Sans", Arial;
+    color: #A99432;
+    border: none;
 }
 .alert a{
 	color: rgb(140, 140, 140) !important;
@@ -1296,44 +1304,55 @@ article ul#nav-list a{
 }
 .activity-table{
 	width: 100%;
-	margin-bottom: 0;
 	border: none;
-	border-top: 2px solid #006492;
-	border-right: 2px solid #006492;
-	border-bottom: 2px solid #006492;
+    right: -2rem;
+    position: relative;
+    color: white;
 }
 button + .activity-table{
 	border-bottom: 0;
 }
 .activity-table td[scope]{
-	font-size: 0.8rem;
-	background-color: #006492;
-	color: white;
+    font-size: 0.8rem;
+    background-color: rgba(124, 204, 241, 0.2);
+    color: #929292;
+}
+.activity-table td{
+    background-color: #345E71;
 }
 .activity-table .urgent{
-	color: red;
+	color: #FF4141;
 }
 .activity-table .normal{
 	color: #3B98FF;
 }
 .activity-table tr:hover td[scope]{
-	background-color: #00547B;
+	background-color: #CAE1EA;
+}
+.activity-table tr:hover td{
+	background-color: #31596B;
 }
 .activity-image{
 	position: relative;
+	right: -2rem;
 }
 .activity-image a{
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  background-color: #FFFFFF;
-  left: 0;
-  bottom: 15px;
-  border-radius: 4px;
+    position: absolute;
+    text-align: center;
+    background-color: #FFFFFF;
+    border-radius: 4px;
+    top: 50%;
+    font-size: 1.3rem;
+    left: 75%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
 .activity-image img {
-	width: 200px;
-	height: 200px;
+	width: 218px;
+	height: 218px;
+	float: left;
 }
 
 /*--------TEXTS--------*/
@@ -1380,6 +1399,8 @@ article.main-content a.task-add-btn{
 }
 .bg--task{
 	background-color: rgb(41, 83, 102);
+	width: 92.8%;
+	float: right;
 }
 .bg--task-muted{
 	background-color: rgb(120, 155, 171);
@@ -1391,9 +1412,6 @@ article.main-content a.task-add-btn{
 .bg--task-muted:hover{
 	background-color: rgb(110, 157, 179);
 	color: white;
-}
-.button--full{
-	width: 100%;
 }
 .bg--warning:hover{
 	background-color: #F3CC49 !important;

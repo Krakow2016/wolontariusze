@@ -318,12 +318,13 @@ var Activity = React.createClass({
 
             </div>
             <div className="col col5">
-              <p className="text--center activity-image">
-                <img src={creator.profile_picture_url} /><br />
+              <div className="text--center activity-image">
+                <img src={creator.profile_picture_url} />
+                <div className="clearfix"></div>
                 <NavLink href={'/wolontariusz/'+ creator.id}>
                   {creator.first_name} {creator.last_name}
                 </NavLink>
-              </p>
+              </div>
               <table className="table--hoverRow activity-table">
                 <tbody>
                   <tr>
