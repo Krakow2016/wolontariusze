@@ -2,19 +2,16 @@ var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var Draft = require('draft-js')
 var update = require('react-addons-update')
-
-var TimeService = require('../../modules/time/TimeService.js')
+var moment = require('moment')
+var fromJS = require('immutable').fromJS
+var _ = require('lodash')
 
 var CommentsStore = require('../../stores/Comments')
-
 var actions = require('../../actions')
 var updateAction = actions.profileCommentsUpdate
 var deleteAction = actions.profileCommentsDelete
-
 var NewComment = require('../NewComment.jsx')
 var Editor = require('../Editor.jsx')
-var fromJS = require('immutable').fromJS
-var _ = require('lodash')
 
 var EditedProfileComment = React.createClass({
 
@@ -139,7 +136,7 @@ var ProfileComment = React.createClass({
             <NavLink href={'/wolontariusz/'+this.props.comment.adminId}>
               {this.full_name()}
             </NavLink>
-            {TimeService.showTime(this.props.comment.creationTimestamp)}
+            { moment(this.props.comment.creationTimestamp).calendar() }
           </div>
           <input type="button" onClick={this.editComment} value="Edytuj" />
           <input type="button" onClick={this.deleteComment} value="Usuń" />

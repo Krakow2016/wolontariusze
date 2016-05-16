@@ -23,7 +23,8 @@ var MyDatetime = React.createClass({
     var time = this.getValue()
     return (
       <div className={className}>
-        <DateTime open={false}
+        <DateTime
+          open={false}
           dateFormat={'YYYY/M/D'}
           timeFormat={'HH:mm'}
           value={time}

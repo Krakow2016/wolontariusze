@@ -1,10 +1,10 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var update = require('react-addons-update')
+var moment = require('moment')
 
 var TaskFilters = require('./TaskFilters.jsx')
 var ProfilePic = require('../ProfilePic.jsx')
-var TimeService = require('../../modules/time/TimeService.js')
 var ActivitiesStore = require('../../stores/Activities.js')
 var ActivityStore = require('../../stores/Activity')
 var ActivitiesSearchForm = require('./Search.jsx')
@@ -109,9 +109,10 @@ var Tasks = React.createClass({
           <ProfilePic src={'https://krakow2016.s3.eu-central-1.amazonaws.com/'+id+'/thumb'} className='profileThumbnail' />
         )
       })
-      var tresc = [(task.description.length > 200) ? task.description.substring(0,200) : task.description]
+
+      var more
       if (task.description.length > 200){
-        tresc.push(<a href={'/zadania/'+task.id}> ...więcej</a>)
+        more = (<span>...</span>)
       }
 
       return (
@@ -127,15 +128,19 @@ var Tasks = React.createClass({
               </NavLink>
             </h1>
             <span className="task-meta">
+              <span>Autor: </span>
               <NavLink href={'/zadania?created_by='+ task.created_by.id}>
                 {task.created_by.first_name} {task.created_by.last_name}
               </NavLink>
             </span>
             <span className="task-meta">Wolnych miejsc: { task.limit != 0 ? (task.limit - (task.volunteers || []).length) : 'Bez limitu'}</span>
             <span className="task-meta">{((task.tags || []).length != 0) ? (task.tags || []).join(', ') : 'Brak kategorii' }</span>
-            <span className="task-meta">Termin zgłoszeń: {(typeof (task.datetime) != 'undefined') ? TimeService.showTime(task.datetime) : 'Brak'}</span>
+            <span className="task-meta">Termin zgłoszeń mija: { task.datetime ? moment(task.datetime).calendar() : 'nigdy'}</span>
             <p>
-              {tresc}
+              <NavLink href={'/zadania/'+task.id}>
+                { task.description.substring(0,200) }
+                { more }
+              </NavLink>
             </p>
             <div className="task-volunteers">
               {volunteers}

@@ -8,7 +8,6 @@ var moment = require('moment')
 var Editor = require('./Editor.jsx')
 var ProfilePic = require('./ProfilePic.jsx')
 var ActivityStore = require('../stores/Activity')
-var TimeService = require('../modules/time/TimeService.js')
 var actions = require('../actions')
 
 var ProfileDetails = function(props) {
@@ -221,15 +220,15 @@ var Activity = React.createClass({
     })
 
     var applicationTime
-    if (TimeService.isDate(this.state.activity.datetime))  {
-      applicationTime = TimeService.showTime(activity.datetime)
+    if (this.state.activity.datetime)  {
+      applicationTime = moment(activity.datetime).calendar()
     } else {
       applicationTime = 'Nieokreślony'
     }
 
     var endTime
-    if (TimeService.isDate(this.state.activity.endtime))  {
-      endTime = TimeService.showTime(activity.endtime)
+    if (this.state.activity.endtime)  {
+      endTime = moment(activity.endtime).calendar()
     } else {
       endTime = 'Nieokreślona'
     }
