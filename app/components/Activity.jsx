@@ -253,7 +253,7 @@ var Activity = React.createClass({
 
     var button
     if (!has_joined && (volunteers.length < activity.limit || activity.limit==0)) { //acceptButton
-      button = (<button className="button--xlg button--full bg--primary" onClick={this.onAcceptButtonClick}>Zgłaszam się!</button>)
+      button = (<button className="button--xlg button--full" onClick={this.onAcceptButtonClick}>Zgłaszam się!</button>)
     } else if (has_joined) { // canceButton
       button = (<button className="button--xsm button--full bg--muted" onClick={this.onCancelButtonClick}>Wypisz mnie</button>)
     }
@@ -318,8 +318,10 @@ var Activity = React.createClass({
 
             </div>
             <div className="col col5">
-              <p className="text--center activity-image">
-                <img src={creator.profile_picture_url} /><br />
+              <div className="text--center activity-image">
+                <img src={creator.profile_picture_url} />
+              </div>
+              <p className="activity-profile-name">
                 <NavLink href={'/wolontariusz/'+ creator.id}>
                   {creator.first_name} {creator.last_name}
                 </NavLink>

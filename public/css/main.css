@@ -8,9 +8,6 @@ input, input:focus, input:hover, input:active{
 	outline: 0;
 	text-decoration: none;
 }
-button.bg--primary:hover{
-	color: #90E4FF;
-}
 a, a:focus, a:hover, a:active{
 	color:white;
 }
@@ -401,6 +398,14 @@ label:hover:before {
 	-webkit-transition: transform 0.5s ease;
 	-o-transition: transform 0.5s ease;
 	transition: transform 0.5s ease;
+}
+
+.alert-normal{
+	background-color: rgba(0, 100, 146, 0.48);
+    padding: 10px;
+    font: 400 1rem/1.5rem "Open Sans", Arial;
+    color: #FFFFFF;
+    border: none;
 }
 
 .alert{
@@ -1304,26 +1309,18 @@ button + .activity-table{
   text-align: right
 }
 .activity-table .urgent{
-	color: red;
+	color: #FF4141;
 }
 .activity-table .normal{
 	color: #3B98FF;
 }
-.activity-image{
-	position: relative;
-}
-.activity-image a{
-  position: absolute;
-  width: 100%;
+.activity-profile-name {
   text-align: center;
-  background-color: #FFFFFF;
-  left: 0;
-  bottom: 15px;
-  border-radius: 4px;
+  font-size: 1.7rem;
+  margin: 20px 0
 }
 .activity-image img {
-	width: 200px;
-	height: 200px;
+  width: 250px
 }
 
 /*--------TEXTS--------*/
@@ -1370,6 +1367,8 @@ article.main-content a.task-add-btn{
 }
 .bg--task{
 	background-color: rgb(41, 83, 102);
+	width: 92.8%;
+	float: right;
 }
 .bg--task:hover{
 	background-color: rgb(61, 112, 135);
