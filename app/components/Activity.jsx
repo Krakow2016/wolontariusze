@@ -196,7 +196,7 @@ var Activity = React.createClass({
 
     var editLink
     if(is_admin) {
-      editLink = <div className="alert alert--warning clearfix">
+      editLink = <div className="alert clearfix">
         <p>
           Jako koordynator masz prawo do edycji treści i parametrów zadań. <NavLink href={'/zadania/'+ activity.id +'/edytuj'}>Kliknij edytuj</NavLink> aby przejść do strony edycji.
         </p>
@@ -252,9 +252,9 @@ var Activity = React.createClass({
 
     var button
     if (!has_joined && (volunteers.length < activity.limit || activity.limit==0)) { //acceptButton
-      button = (<button className="button--xlg bg--primary" onClick={this.onAcceptButtonClick}>Zgłaszam się!</button>)
+      button = (<button className="button--xlg button--full" onClick={this.onAcceptButtonClick}>Zgłaszam się!</button>)
     } else if (has_joined) { // canceButton
-      button = (<button className="button--xsm bg--muted" onClick={this.onCancelButtonClick}>Wypisz mnie</button>)
+      button = (<button className="button--xsm button--full bg--muted" onClick={this.onCancelButtonClick}>Wypisz mnie</button>)
     }
 
     var volonteersLimit = (activity.limit == 0) ? 'Brak' : activity.limit
@@ -262,7 +262,7 @@ var Activity = React.createClass({
     var updateForm
     if(this.user() && this.user().is_admin) {
       updateForm = (
-        <div className="alert alert--warning activity--updateBox">
+        <div className="alert activity--updateBox">
           <p>
             Jako koordynator masz możliwość dodawania aktualiacji do
             zadania, które oprócz tego, że wyświetli się pod treścią
@@ -271,7 +271,7 @@ var Activity = React.createClass({
           </p>
           <Editor editorState={this.state.newUpdateState} onChange={this.onChange} style={{'minHeight': 'initial'}}>
             <p className="clearfix">
-              <button className="bg--warning float--right" onClick={this.handleNewUpdate} style={{'marginTop': 10}}>
+              <button className="float--right" onClick={this.handleNewUpdate} style={{'marginTop': 10}}>
                 Dodaj aktualizacje
               </button>
             </p>
@@ -317,8 +317,10 @@ var Activity = React.createClass({
 
             </div>
             <div className="col col5">
-              <p className="text--center activity-image">
-                <img src={creator.profile_picture_url} /><br />
+              <div className="text--center activity-image">
+                <img src={creator.profile_picture_url} />
+              </div>
+              <p className="activity-profile-name">
                 <NavLink href={'/wolontariusz/'+ creator.id}>
                   {creator.first_name} {creator.last_name}
                 </NavLink>
@@ -338,11 +340,11 @@ var Activity = React.createClass({
                     <td>{activity.place}</td>
                   </tr>
                   <tr>
-                    <td scope="Rozpoczęcie">Czas zakończenia zgłoszeń do zadania</td>
+                    <td scope="Zakończenie">Zakończenie zgłoszeń</td>
                     <td>{applicationTime}</td>
                   </tr>
                   <tr>
-                    <td scope="Czas">Data zakończenia</td>
+                    <td scope="Czas">Zakończenia zadania</td>
                     <td>{endTime}</td>
                   </tr>
                   <tr>
@@ -350,19 +352,16 @@ var Activity = React.createClass({
                     <td>{is_archived}</td>
                   </tr>
                   <tr>
-                    <td scope="Prorytet">Prorytet</td>
+                    <td scope="Priorytet">Priorytet</td>
                     <td>{priority}</td>
                   </tr>
                   <tr>
-                    <td scope="Limit(maksymalna liczba wolontariuszy)">Limit osób</td>
+                    <td scope="Limit osób">Limit osób</td>
                     <td>{volonteersLimit}</td>
                   </tr>
                 </tbody>
               </table>
-
-              <p className="text--center">
-                {button}
-              </p>
+              {button}
 
           </div>
         </div>

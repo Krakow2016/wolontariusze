@@ -36,7 +36,7 @@ var ProfileSettings = React.createClass({
       form_class = 'settingsForm'
       alert_col = (
         <div className="col col5">
-          <div className="alert">
+          <div className="alert-normal">
             <p>
               Zachęcamy Cię do uzupełnienia go o dodatkowe informacje, które pozwolą Cię lepiej poznać.
               Profil będzie Twoją wizytówką. Informacje, które tutaj zamieścisz będą widoczne dla wszystkich

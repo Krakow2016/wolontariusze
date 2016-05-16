@@ -67,7 +67,7 @@ var Volunteer = React.createClass({
           </div>
         </div>
 
-        <div className="section row">
+        <div className="profile-row row">
           <div className="col col12 profile-ribon">
             {tabs}
           </div>
