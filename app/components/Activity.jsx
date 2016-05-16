@@ -197,7 +197,7 @@ var Activity = React.createClass({
 
     var editLink
     if(is_admin) {
-      editLink = <div className="alert alert--warning clearfix">
+      editLink = <div className="alert clearfix">
         <p>
           Jako koordynator masz prawo do edycji treści i parametrów zadań. <NavLink href={'/zadania/'+ activity.id +'/edytuj'}>Kliknij edytuj</NavLink> aby przejść do strony edycji.
         </p>
@@ -253,9 +253,9 @@ var Activity = React.createClass({
 
     var button
     if (!has_joined && (volunteers.length < activity.limit || activity.limit==0)) { //acceptButton
-      button = (<button className="button--xlg button--full bg--task" onClick={this.onAcceptButtonClick}>Zgłaszam się!</button>)
+      button = (<button className="button--xlg button--full bg--primary" onClick={this.onAcceptButtonClick}>Zgłaszam się!</button>)
     } else if (has_joined) { // canceButton
-      button = (<button className="button--xsm button--full bg--task-muted" onClick={this.onCancelButtonClick}>Wypisz mnie</button>)
+      button = (<button className="button--xsm button--full bg--muted" onClick={this.onCancelButtonClick}>Wypisz mnie</button>)
     }
 
     var volonteersLimit = (activity.limit == 0) ? 'Brak' : activity.limit
@@ -263,7 +263,7 @@ var Activity = React.createClass({
     var updateForm
     if(this.user() && this.user().is_admin) {
       updateForm = (
-        <div className="alert alert--warning activity--updateBox">
+        <div className="alert activity--updateBox">
           <p>
             Jako koordynator masz możliwość dodawania aktualiacji do
             zadania, które oprócz tego, że wyświetli się pod treścią
@@ -272,7 +272,7 @@ var Activity = React.createClass({
           </p>
           <Editor editorState={this.state.newUpdateState} onChange={this.onChange} style={{'minHeight': 'initial'}}>
             <p className="clearfix">
-              <button className="bg--warning float--right" onClick={this.handleNewUpdate} style={{'marginTop': 10}}>
+              <button className="float--right" onClick={this.handleNewUpdate} style={{'marginTop': 10}}>
                 Dodaj aktualizacje
               </button>
             </p>

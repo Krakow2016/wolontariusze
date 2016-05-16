@@ -404,11 +404,7 @@ label:hover:before {
 }
 
 .alert{
-	background-color: rgba(0, 138, 195, 0.39);
-	padding: 10px;
 	font: 400 1rem/1.5rem "Open Sans", Arial;
-	color: white;
-	border: none;
 }
 .alert a{
 	color: rgb(140, 140, 140) !important;
@@ -1296,28 +1292,22 @@ article ul#nav-list a{
 }
 .activity-table{
 	width: 100%;
-	margin-bottom: 0;
-	border: none;
-	border-top: 2px solid #006492;
-	border-right: 2px solid #006492;
-	border-bottom: 2px solid #006492;
+	margin-bottom: 50px;
+  font-size: 80%;
+  border-width: 0
 }
 button + .activity-table{
 	border-bottom: 0;
 }
 .activity-table td[scope]{
-	font-size: 0.8rem;
-	background-color: #006492;
-	color: white;
+  width: 50%;
+  text-align: right
 }
 .activity-table .urgent{
 	color: red;
 }
 .activity-table .normal{
 	color: #3B98FF;
-}
-.activity-table tr:hover td[scope]{
-	background-color: #00547B;
 }
 .activity-image{
 	position: relative;
@@ -1381,15 +1371,8 @@ article.main-content a.task-add-btn{
 .bg--task{
 	background-color: rgb(41, 83, 102);
 }
-.bg--task-muted{
-	background-color: rgb(120, 155, 171);
-}
 .bg--task:hover{
 	background-color: rgb(61, 112, 135);
-	color: white;
-}
-.bg--task-muted:hover{
-	background-color: rgb(110, 157, 179);
 	color: white;
 }
 .button--full{
