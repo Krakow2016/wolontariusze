@@ -1303,9 +1303,8 @@ article ul#nav-list a{
 }
 .activity-table{
 	width: 100%;
-	margin-bottom: 50px;
+	margin: 40px 0;
   font-size: 80%;
-  border-width: 0
 }
 button + .activity-table{
 	border-bottom: 0;
@@ -1324,6 +1323,10 @@ button + .activity-table{
   text-align: center;
   font-size: 1.7rem;
   margin: 20px 0
+}
+.activity-profile-responsibilities {
+  text-align: justify;
+  margin: 20px 40px;
 }
 .activity-image img {
   width: 250px

@@ -16,9 +16,9 @@ var Details = React.createClass({
 
     if(!this.props.id) {
       return (
-        <div>
+        <p>
           Brak informacji o zgłoszeniu do wolontariatu krótkoterminowego.
-        </div>
+        </p>
       )
     }
 
@@ -124,6 +124,20 @@ var VolunteerAdministration = React.createClass({
     })
   },
 
+  onResponsibilitiesChange: function(e) {
+    var value = e.target.value
+    this.setState(update(this.state, {
+      profile: {responsibilities: {$set: value}}
+    }))
+  },
+
+  updateResponsibilities: function() {
+    this.props.context.executeAction(updateVolunteer, {
+      id: this.state.profile.id,
+      responsibilities: this.state.profile.responsibilities
+    })
+  },
+
   render: function() {
     var papers = []
     var tags = this.state.profile.tags || []
@@ -131,39 +145,66 @@ var VolunteerAdministration = React.createClass({
 
     if(this.state.profile.approved) {
       papers.push(
-        <div className="paper" key="rejection">
-          <p>Profil jest aktywny (zaproszenie wysłano { approved_at })</p>
-          <div style={{textAlign: 'center'}}>
-            <a href="#confirm" className="button">Zablokuj profil</a>
+        <div className="card" key="invitation">
+          <div className="card-content text--center">
+            <p>Profil jest aktywny (zaproszenie wysłano { approved_at })</p>
+            <div style={{textAlign: 'center'}}>
+              <a href="#confirm" className="button">Zablokuj profil</a>
+            </div>
           </div>
         </div>
       )
     } else {
       papers.push(
-        <Invite id={this.state.profile.id} context={this.props.context} />
+        <div className="card" key="invitation">
+          <div className="card-content text--center">
+            <Invite id={this.state.profile.id} context={this.props.context} />
+          </div>
+        </div>
       )
     }
 
     if(this.state.profile.has_password) {
       papers.push(
-        <div className="paper" key="password">
-          <p>Wolontariusz aktywował swoje konto i może się logować.</p>
+        <div className="card" key="password">
+          <div className="card-content text--center">
+            <p>Wolontariusz aktywował swoje konto i może się logować.</p>
+          </div>
         </div>
       )
     } else {
       papers.push(
-        <div className="paper" key="password">
-          <p>Wolontariusz nie aktywował swojego konta!</p>
+        <div className="card" key="password">
+          <div className="card-content text--center">
+            <p>Wolontariusz nie aktywował swojego konta!</p>
+          </div>
         </div>
       )
     }
 
     if(!this.state.profile.is_admin) {
       papers.push(
-        <div className="paper" key="admin">
-          <p>Użytkownik nie posiada przywilejów administratora</p>
-          <div style={{textAlign: 'center'}}>
-            <a href="#admin" className="button">Awansuj do rangi administratora</a>
+        <div className="card" key="admin">
+          <div className="card-content text--center">
+            <p>Użytkownik nie posiada przywilejów administratora</p>
+            <div style={{textAlign: 'center'}}>
+              <a href="#admin" className="button">Awansuj do rangi administratora</a>
+            </div>
+          </div>
+        </div>
+      )
+    } else {
+      papers.push(
+        <div className="card" key="admin">
+          <div className="card-content">
+            Konto ma uprawnienia administratora.
+            <textarea
+              placeholder="Zakres obowiązków w wolontariacie"
+              onChange={this.onResponsibilitiesChange}
+              value={this.state.profile.responsibilities} />
+            <p className="text--right">
+              <button onClick={this.updateResponsibilities}>Aktualizuj</button>
+            </p>
           </div>
         </div>
       )
@@ -189,8 +230,12 @@ var VolunteerAdministration = React.createClass({
 
               <Details {...this.state.details} />
 
-              <b>Projekty: </b>
-              <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
+              <div className="card" key="admin">
+                <div className="card-content">
+                  <b>Projekty: </b>
+                  <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
+                </div>
+              </div>
 
             </div>
             <div className="col col5">

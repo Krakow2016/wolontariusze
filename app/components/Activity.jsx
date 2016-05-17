@@ -317,6 +317,7 @@ var Activity = React.createClass({
 
             </div>
             <div className="col col5">
+
               <div className="text--center activity-image">
                 <img src={creator.profile_picture_url} />
               </div>
@@ -325,6 +326,10 @@ var Activity = React.createClass({
                   {creator.first_name} {creator.last_name}
                 </NavLink>
               </p>
+              <p className="activity-profile-responsibilities ">
+                {creator.responsibilities}
+              </p>
+
               <table className="table--hoverRow activity-table">
                 <tbody>
                   <tr>
@@ -361,8 +366,8 @@ var Activity = React.createClass({
                   </tr>
                 </tbody>
               </table>
-              {button}
 
+              {button}
           </div>
         </div>
 
