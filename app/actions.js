@@ -62,8 +62,10 @@ module.exports = {
 
     context.service.update('Volunteers', {}, volunteer, function (err) {
       if (err) { // Błąd po stronie serwera
+        context.dispatch('SAVE_FLASH_FAILURE', 'Wystąpił nieznany błąd')
         context.dispatch('VOLUNTEER_UPDATE_FAILURE')
       } else {
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Zapisano.')
         context.dispatch('VOLUNTEER_UPDATE_SUCCESS', volunteer)
       }
       cb()
@@ -262,6 +264,7 @@ module.exports = {
     context.service.update('Activities', {}, payload, function (err, data) {
       if(err) { debug(err) }
       else {
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Aktualizacja do zadania została pomyślnie opublikowana.')
         context.dispatch('UPDATE_ADDED', payload.updates)
         cb()
       }
@@ -271,8 +274,9 @@ module.exports = {
   joinActivity: function(context, payload, cb) {
     context.service.create('Joints', {}, payload, function (err, data) {
       if (err) { // Błąd po stronie serwera
-        //context.dispatch('JOINT_CREATED_FAILURE', [])
+        context.dispatch('SAVE_FLASH_FAILURE', 'Wystąpił nieznany błąd')
       } else {
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Dziękujemy za zgłoszenie!')
         var user = context.getUser()
         context.dispatch('JOINT_CREATED', Object.assign({}, user, {
           id: data.changes[0].new_val.id,
@@ -342,8 +346,12 @@ module.exports = {
   createComment: function(context, payload, cb) {
     debug('profile comment create')
     context.service.create('Comments', payload, {}, function (err, data) {
-      if(err) { debug(err) }
-      else { context.dispatch('COMMENT_CREATED', data) }
+      if(err) {
+        debug(err)
+      } else {
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Komentarz do profilu został pomyślnie dodany.')
+        context.dispatch('COMMENT_CREATED', data)
+      }
       cb()
     })
   },

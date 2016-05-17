@@ -135,11 +135,14 @@ module.exports = {
     handler: require('./components/Activity.jsx'),
     action: function (context, payload, done) {
       var activityId  = payload.params.id
+
+
       context.executeAction(actions.showActivity, { id: activityId }, function(activity) {
         if(activity) {
           context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
           done()
         } else {
+          context.dispatch('SAVE_FLASH_ERROR', 'Błąd: musisz być zalogowany żeby zobaczyć zadanie.')
           context.executeAction(navigateAction, {
             url: '/'
           }, done)

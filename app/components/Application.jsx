@@ -6,7 +6,6 @@ var navigateAction = require('fluxible-router').navigateAction
 var provideContext = addons.provideContext
 
 var ApplicationStore = require('../stores/ApplicationStore')
-
 var Authentication = require('./Authentication.jsx')
 var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
 var Message = require('./Message.jsx')
@@ -34,8 +33,8 @@ var Application = React.createClass({
     // Wyświetl komunikat flash
     var applicationStore = this.props.context.getStore(ApplicationStore)
     return {
-      infoMessage: applicationStore.getSuccess(),
-      errorMessage: applicationStore.getFailure(),
+      flashSuccess: applicationStore.getSuccess(),
+      flashFailure: applicationStore.getFailure(),
       title: applicationStore.getPageTitle()
     }
   },
@@ -47,14 +46,6 @@ var Application = React.createClass({
   componentDidMount: function() {
     this.props.context.getStore(ApplicationStore)
       .addChangeListener(this._changeListener)
-
-    var that = this
-    setTimeout(function() {
-      that.setState({
-        infoMessage: false,
-        errorMessage: false
-      })
-    }, 10000)
   },
 
   componentWillUnmount: function() {
@@ -64,13 +55,13 @@ var Application = React.createClass({
 
   handleInfoSnackbarRequestClose: function() {
     this.setState({
-      infoMessage: false
+      flashSuccess: false
     })
   },
 
   handleErrorSnackbarRequestClose: function() {
     this.setState({
-      errorMessage: false
+      flashFailure: false
     })
   },
 
@@ -86,8 +77,8 @@ var Application = React.createClass({
 
     var searchForm
     var advancedSearch
-    var infoMessage
-    var errorMessage
+    var flashSuccess
+    var flashFailure
     var article
 
     if(this.user()) {
@@ -124,18 +115,18 @@ var Application = React.createClass({
       )
     }
 
-    if(this.state.infoMessage) {
-      infoMessage = (
+    if(this.state.flashSuccess) {
+      flashSuccess = (
         <Message>
-          <b>{this.state.infoMessage}</b>
+          <b>{this.state.flashSuccess}</b>
         </Message>
       )
     }
 
-    if(this.state.errorMessage) {
-      errorMessage = (
+    if(this.state.flashFailure) {
+      flashFailure = (
         <Message className="alert--error">
-          <b>{this.state.errorMessage}</b>
+          <b>{this.state.flashFailure}</b>
         </Message>
       )
     }
@@ -155,8 +146,8 @@ var Application = React.createClass({
         </header>
 
         {article}
-        {infoMessage}
-        {errorMessage}
+        {flashSuccess}
+        {flashFailure}
         <footer>
           <p>
             Strona została zbudowana przez wolontariuszy ŚDM KRAKÓW 2016.
