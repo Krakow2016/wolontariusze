@@ -367,49 +367,64 @@ module.exports = function(server) {
   })
 
   server.get('/stats', function(req, res) {
-    if(req.user && req.user.is_admin) {
-      var stats = {}
+    var result = {}
+    r.connect(config.rethinkdb, function(err, conn) {
+      // Błąd połączenia z bazą danych
+      if(err) { return res.send(500) }
 
-      r.connect(config.rethinkdb, function(err, conn) {
-        // Błąd połączenia z bazą danych
-        if(err) { return res.send(500) }
-
-        async.parallel([function(cb){
-          r.table('Volunteers').count().run(conn, function(err, result) {
-            // Liczba wszystkich kont w systemie
-            stats.total_accounts = result
-            cb(err)
-          })
-        }, function(cb) {
-          r.table('Imports').count().run(conn, function(err, result) {
-            // Liczba wolontariuszy importowanych z bazy watykańskiej
-            stats.total_volunteers = result
-            cb(err)
-          })
-        }, function(cb) {
+      var stats = [
+        // Liczba użytkowników który mogą się zalogować do systemu
+        function(cb) {
           r.table('Volunteers').count(function(volunteer) {
             return volunteer.hasFields('password')
-          }).run(conn, function(err, result) {
-            // Liczba użytkowników który mogą się zalogować do systemu
-            stats.total_active = result
+          }).run(conn, function(err, count) {
+            result.total_active = count
             cb(err)
           })
-        }, function(cb) {
-          r.table('Volunteers')('is_admin').count(true).run(conn, function(err, result) {
-            // Liczba administratorów
-            stats.total_admins = result
+        },
+        // Liczba wykonanych zadań
+        function(cb) {
+          r.table('Activities').count(function(activity) {
+            return activity('is_archived').default(false).eq(true)
+          }).run(conn, function(err, count) {
+            result.total_archived = count
             cb(err)
           })
-        }], function(err) {
-          if(err) { res.send(500) }
-          else { res.send(stats) }
-        })
+        }
+      ]
+
+      if(req.user && req.user.is_admin) {
+        stats = stats.concat([
+          function(cb){
+            r.table('Volunteers').count().run(conn, function(err, count) {
+              // Liczba wszystkich kont w systemie
+              result.total_accounts = count
+              cb(err)
+            })
+          }, function(cb) {
+            r.table('Imports').count().run(conn, function(err, count) {
+              // Liczba wolontariuszy importowanych z bazy watykańskiej
+              result.total_volunteers = count
+              cb(err)
+            })
+          }, function(cb) {
+            r.table('Volunteers')('is_admin').count(true).run(conn, function(err, count) {
+              // Liczba administratorów
+              result.total_admins = count
+              cb(err)
+            })
+          }
+        ])
+      }
+
+      async.parallel(stats, function(err) {
+        if(err) {
+          res.send(500)
+        } else {
+          res.send(result)
+        }
       })
-    } else {
-      res.status(403).send({
-        status: 'error'
-      })
-    }
+    })
   })
 
   // Wysyła link aktywacyjny do nieaktywnych krótkoterminowych wolontariuszy
