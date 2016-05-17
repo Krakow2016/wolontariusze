@@ -63,7 +63,7 @@ var Editor = React.createClass({
     return {
       suggestions: fromJS([]),
       mentionPlugin: createMentionPlugin({
-        entityMutability: 'IMMUTABLE',
+        entityMutability: 'SEGMENTED',
         mentionPrefix: '',
       }),
       linkifyPlugin: createLinkifyPlugin({
