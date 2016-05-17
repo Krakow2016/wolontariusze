@@ -100,7 +100,13 @@ var VolunteerAdministration = React.createClass({
     })
     window.location.hash = 'close'
   },
-
+  _onAdminRejectDialogSubmit: function() {
+    this.props.context.executeAction(updateVolunteer, {
+      id: this.state.profile.id,
+      is_admin: false
+    })
+    window.location.hash = 'close'
+  },
   saveTag: function(tag) {
     var tags = this.state.profile.tags || []
     this.props.context.executeAction(updateVolunteer, {
@@ -197,7 +203,7 @@ var VolunteerAdministration = React.createClass({
       papers.push(
         <div className="card" key="admin">
           <div className="card-content">
-            Konto ma uprawnienia administratora.
+            Konto ma uprawnienia administratora (<a href="#reject_admin">kliknij tutaj aby odebrać</a>).
             <textarea
               placeholder="Zakres obowiązków w wolontariacie"
               onChange={this.onResponsibilitiesChange}
@@ -230,7 +236,7 @@ var VolunteerAdministration = React.createClass({
 
               <Details {...this.state.details} />
 
-              <div className="card" key="admin">
+              <div className="card" key="projects">
                 <div className="card-content">
                   <b>Projekty: </b>
                   <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
@@ -278,13 +284,36 @@ var VolunteerAdministration = React.createClass({
 
             <div className="modal-body">
               <p>
-                <strong>{this.state.profile.first_name} {this.state.profile.last_name}</strong> zyska prawa administratora. Czy jesteś pewien że chcesz to zrobić?
+                <strong>{this.state.profile.first_name} {this.state.profile.last_name}</strong> zyska prawa koordynatora. Czy jesteś pewien że chcesz to zrobić?
               </p>
             </div>
 
             <div className="modal-footer">
               <p>
-                <button className="bg--error" onClick={this._onAdminDialogSubmit}>Tak, nadaj prawa administratora</button>
+                <button className="bg--error" onClick={this._onAdminDialogSubmit}>Tak, nadaj prawa koordynatora</button>
+                <a href="#close" className="button">Anuluj</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div id="reject_admin" className="modal">
+          <div className="modal-container">
+            <div className="modal-header">
+              Czy jesteś pewien?
+
+              <a href="#close" className="modal-close">&times;</a>
+            </div>
+
+            <div className="modal-body">
+              <p>
+                <strong>{this.state.profile.first_name} {this.state.profile.last_name}</strong> straci prawa koordynatora. Czy jesteś pewien że chcesz to zrobić?
+              </p>
+            </div>
+
+            <div className="modal-footer">
+              <p>
+                <button className="bg--error" onClick={this._onAdminRejectDialogSubmit}>Tak, usuń prawa koordynatora</button>
                 <a href="#close" className="button">Anuluj</a>
               </p>
             </div>
