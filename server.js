@@ -111,9 +111,13 @@ passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
         var expiration_date = token.generated_at + 72*60*60*1000 // +72h
 
         if(token.used) { // Sprawdź czy token nie został już użyty
-          return done(null, false, {message: 'Token already used. You must generate a new one.'})
+          return done(null, false, {
+            message: 'Błąd! Jednorazowy token dostępu został już użyty. Skontaktuj się z goradobra@krakow2016.com aby uzyskać nowy.'
+          })
         } else if(new Date() > expiration_date) { // Sprawdź czy token nie wygasł
-          return done(null, false, {message: 'Token expired. You must generate a new one.'})
+          return done(null, false, {
+            message: 'Błąd! Wygasły token dostępu :( Skontaktuj się z goradobra@krakow2016.com aby uzyskać nowy.'
+          })
         } else { // Autoryzacja przebiegła pomyślnie
           token.used = { datetime: new Date(), ip: req.ip, headers: req.headers }
           Volunteers.update({force_admin: true}, 'Volunteers', {id: user.id}, {

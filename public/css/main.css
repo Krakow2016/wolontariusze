@@ -599,11 +599,17 @@ textarea.settings {
 	position: fixed;
 	left: 0;
 	right: 0;
-	bottom: 0;
-	background-color: #416A7D;
-	color: white;
+	top: 0;
+	background-color: #fff;
 	text-align: center;
 	font-size: 1.5rem;
+  padding: 0;
+  margin: 10px 50px;
+  color: initial
+}
+
+.message .alert {
+  margin: 0
 }
 
 .tasks-filters-filterType {

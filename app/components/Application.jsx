@@ -54,7 +54,7 @@ var Application = React.createClass({
         infoMessage: false,
         errorMessage: false
       })
-    }, 5000)
+    }, 10000)
   },
 
   componentWillUnmount: function() {
@@ -134,7 +134,7 @@ var Application = React.createClass({
 
     if(this.state.errorMessage) {
       errorMessage = (
-        <Message>
+        <Message className="alert--error">
           <b>{this.state.errorMessage}</b>
         </Message>
       )
