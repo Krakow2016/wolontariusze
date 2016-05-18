@@ -37,7 +37,7 @@ var NewTag = React.createClass({
   },
 
   handleSave: function(evt, opts) {
-    this.props.onSave(opts.suggestionValue || this.state.value)
+    this.props.onSave(opts && opts.suggestionValue || this.state.value)
     this.setState({value: ''})
   },
 
