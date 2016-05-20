@@ -16,6 +16,7 @@ var Instagram = React.createClass({
             „Człowiek przechodzący obok trzech pracujących razem murarzy pyta, co robią.<br/>
             - Układam cegły, pod 20 $ za godzinę - odpowiada pierwszy murarz.<br/>
             - Buduję mur - mówi drugi.<br/>
+            - Wznoszę katedrę, w której kiedyś moja córka będzie brała ślub.<br/>
             <br/>
             My budujemy Górę Dobra. Zbuduj ją z nami!
           </p>
