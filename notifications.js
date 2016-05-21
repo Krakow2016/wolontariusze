@@ -109,8 +109,8 @@ r.connect(config.rethinkdb, function(err, conn) {
                 }
               }
             })
-            email.addSection(':has_joined', 'Właśnie przypisałeś/aś się do zadania <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ activity.name +'</a> i bierzesz w nim udział. Dziękujemy.')
-            email.addSection(':was_joined', author.first_name +' '+ author.last_name +' - przypisał/a Cię do zadania <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ activity.name +'</a>. Prosimy, potwierdź w nim swój udział mailem zwrotnym. Dziękujemy.')
+            email.addSection(':has_joined', 'Właśnie przypisałeś/aś się do zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> i bierzesz w nim udział. Dziękujemy.')
+            email.addSection(':was_joined', author.first_name +' '+ author.last_name +' - przypisał/a Cię do zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>. Prosimy, potwierdź w nim swój udział mailem zwrotnym. Dziękujemy.')
 
             sendgrid.send(email, function(err, json) {
               console.log('sendgrid:', err, json)
@@ -130,7 +130,7 @@ r.connect(config.rethinkdb, function(err, conn) {
 
         var activity = change.new_val
         var update = activity.updates.pop()
-        var html = '<p>Nastąpiła najnowsza aktualizacja zadania <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ activity.name +'</a>, w którym uczestniczysz:</p>'
+        var html = '<p>Nastąpiła najnowsza aktualizacja zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>, w którym uczestniczysz:</p>'
         html += backdraft(update.raw, {
           'BOLD': ['<strong>', '</strong>'],
           'ITALIC': ['<i>', '</i>'],
@@ -155,7 +155,7 @@ r.connect(config.rethinkdb, function(err, conn) {
           }).join('<br/>')
 
           var title = author.first_name +' '+ author.last_name +' wspomina Cię w zadaniu \"'+ activity.name +'\"'
-          var html = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w aktualizacji do zadania.</p><p>'+ body +'</p><p>Kliknij w poniższy link, aby przejść do zadania: <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ activity.name +'</a>.</p>'
+          var html = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w aktualizacji do zadania.</p><p>'+ body +'</p><p>Kliknij w poniższy link, aby przejść do zadania: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>.</p>'
 
           var table = r.table('Volunteers')
           table.getAll.apply(table, receivers) // Pobierz wolontariuszy
@@ -212,8 +212,8 @@ r.connect(config.rethinkdb, function(err, conn) {
       cursor.each(function(err, change){ // Wolontariusz został "approved"
         var row = change.new_val
         var token = row.access_tokens[row.access_tokens.length-1]
-        var url = '/invitation?apikey='+ token.token
-        var html = '<p>Chcemy zaprosić Cię do Góry Dobra - portalu dla wolontariuszy, który będzie równocześnie naszą główną platformą komunikacji podczas Światowych Dni Młodzieży w Krakowie oraz narzędziem do organizacji projektów i wydarzeń.</p><p>To tutaj chcemy stworzyć środowisko młodych i zaangażowanych ludzi, dzielić się tym, co robimy i przekazywać Ci ważne informacje o ŚDM i zadaniach, jakie czekają na realizację.</p><p>Dzięki Górze Dobra będziesz mógł pochwalić się efektami swojej pracy. W tym też miejscu będziesz miał możliwość zobaczenia i dzielenia się z innymi informacjami o tym, jak dużo serca, i aktywności wolontariackiej dajesz na rzecz Światowych Dni Młodzieży w Krakowie.</p><p>Aby aktywować swoje konto kliknij w poniższy link:</p><p>https://wolontariusze.krakow2016.com'+ url +'</p><p>WAŻNE! Link, jaki otrzymujesz teraz do zalogowania, jest aktywny tylko przez 72h. W wypadku jakichkolwiek problemów bądź pytań, prosimy o kontakt na: goradobra@krakow2016.com.</p><p>Nie zwlekaj ani chwili dłużej i zostań już dziś Wolontariuszem ŚDM Kraków 2016.</p>'
+        var url = config.base_url +'/invitation?apikey='+ token.token
+        var html = '<p>Chcemy zaprosić Cię do Góry Dobra - portalu dla wolontariuszy, który będzie równocześnie naszą główną platformą komunikacji podczas Światowych Dni Młodzieży w Krakowie oraz narzędziem do organizacji projektów i wydarzeń.</p><p>To tutaj chcemy stworzyć środowisko młodych i zaangażowanych ludzi, dzielić się tym, co robimy i przekazywać Ci ważne informacje o ŚDM i zadaniach, jakie czekają na realizację.</p><p>Dzięki Górze Dobra będziesz mógł pochwalić się efektami swojej pracy. W tym też miejscu będziesz miał możliwość zobaczenia i dzielenia się z innymi informacjami o tym, jak dużo serca, i aktywności wolontariackiej dajesz na rzecz Światowych Dni Młodzieży w Krakowie.</p><p>Aby aktywować swoje konto kliknij w poniższy link:</p><p><a href="'+ url +'">'+ url +'</a></p><p>WAŻNE! Link, jaki otrzymujesz teraz do zalogowania, jest aktywny tylko przez 72h. W wypadku jakichkolwiek problemów bądź pytań, prosimy o kontakt na: goradobra@krakow2016.com.</p><p>Nie zwlekaj ani chwili dłużej i zostań już dziś Wolontariuszem ŚDM Kraków 2016.</p>'
 
         var email = new sendgrid.Email({
           to:       row.email,
@@ -299,7 +299,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                   return map.data.mention && map.data.mention.id
                 }))
                 var title = author.first_name +' '+ author.last_name +' przesyła Ci wiadomość o wolontariuszu'
-                var body = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w komentarzu do profilu wolontariusza.</p><p>Kliknij w poniższy link, aby przejść do profilu: <a href="https://wolontariusze.krakow2016.com/wolontariusz/'+ volunteer.id +'">'+ volunteer.first_name +' '+ volunteer.last_name +'</a>.</p>'
+                var body = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w komentarzu do profilu wolontariusza.</p><p>Kliknij w poniższy link, aby przejść do profilu: <a href="'+ config.base_url +'/wolontariusz/'+ volunteer.id +'">'+ volunteer.first_name +' '+ volunteer.last_name +'</a>.</p>'
 
                 table.getAll.apply(table, receivers)
                   .filter(r.row('is_admin').eq(true)) // Powiadomienia dostają tylko koordynatorzy!
@@ -340,7 +340,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                     'CODE': ['<span style="font-family: monospace">', '</span>'],
                   }).join('<br/>')
 
-                  var html = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w zadaniu.</p><p>'+ body +'</p><p>Kliknij w poniższy link, aby zobaczyć szczegóły: <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ activity.name +'</a>.</p>'
+                  var html = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w zadaniu.</p><p>'+ body +'</p><p>Kliknij w poniższy link, aby zobaczyć szczegóły: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>.</p>'
 
                   // Build the smtpapi header
                   var header = new smtpapi()
