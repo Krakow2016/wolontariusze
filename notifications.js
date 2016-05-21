@@ -147,12 +147,19 @@ r.connect(config.rethinkdb, function(err, conn) {
             return map.data.mention && map.data.mention.id
           }))
 
+          var body = backdraft(update.raw, {
+            'BOLD': ['<strong>', '</strong>'],
+            'ITALIC': ['<i>', '</i>'],
+            'UNDERLINE': ['<u>', '</u>'],
+            'CODE': ['<span style="font-family: monospace">', '</span>'],
+          }).join('<br/>')
+
           var title = author.first_name +' '+ author.last_name +' wspomina Cię w zadaniu \"'+ activity.name +'\"'
-          var body = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w aktualizacji do zadania.</p><p>Kliknij w poniższy link, aby przejść do opisu: <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ activity.name +'</a>.</p>'
+          var html = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w aktualizacji do zadania.</p><p>'+ body +'</p><p>Kliknij w poniższy link, aby przejść do zadania: <a href="https://wolontariusze.krakow2016.com/zadania/'+ activity.id +'">'+ activity.name +'</a>.</p>'
 
           var table = r.table('Volunteers')
           table.getAll.apply(table, receivers) // Pobierz wolontariuszy
-            .run(conn, notifyMentioned(title, body, author.email))
+            .run(conn, notifyMentioned(title, html, author.email))
 
           // Powiadom resztę (TODO: usuń wspomnianych)
           r.table('Joints')
@@ -287,6 +294,7 @@ r.connect(config.rethinkdb, function(err, conn) {
               .run(conn, function(err, volunteer) { // Pobierz wolontariusza
 
                 // Identyfikatory odbiorców powiadomienia
+                var entities = comment.raw.entityMap || []
                 var receivers = _.compact(_.map(entities, function(map) {
                   return map.data.mention && map.data.mention.id
                 }))
@@ -316,6 +324,7 @@ r.connect(config.rethinkdb, function(err, conn) {
           .run(conn, function(err, author) { // Pobierz autora zadania
 
             // Identyfikatory odbiorców powiadomienia
+            var entities = activity.description.entityMap || []
             var receivers = _.compact(_.map(entities, function(map) {
               return map.data.mention && map.data.mention.id
             }))
