@@ -15,6 +15,12 @@ input, input:focus, input:hover, input:active{
 	color:rgb(0, 100, 146);
 }
 
+@media (max-width: 480px) {
+  .container {
+    padding: 0
+  }
+}
+
 /*--------------------TEXTS------------------------*/
 h1 {
 	margin: 1rem 0 1rem 0;
@@ -1300,6 +1306,7 @@ article ul#nav-list a{
 .activity-header > h1{
 	font:400 3.5rem/2.5rem "Open Sans", Arial;
 	margin-bottom: 1.5rem;
+  line-height: 3rem;
 }
 .activity-table{
 	width: 100%;
@@ -1329,7 +1336,9 @@ button + .activity-table{
   margin: 20px 40px;
 }
 .activity-image img {
-  width: 250px
+  width: 250px;
+  height: 250px;
+  border-radius: 50%
 }
 
 /*--------TEXTS--------*/
