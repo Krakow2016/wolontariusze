@@ -375,7 +375,7 @@ r.connect(config.rethinkdb, function(err, conn) {
 
   // Informuje API Eventory o zmianach w grupach wolontariusza
   r.table('Volunteers').changes()
-    .filter(r.row('new_val')('tags').eq(r.row('old_val')('tags')).not())
+    .filter(r.row('new_val')('tags').eq(r.row('old_val')('tags').default([])).not())
     .run(conn, function(err, cursor) {
       cursor.each(function(err, change){
         var row = change.new_val
