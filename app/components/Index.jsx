@@ -24,10 +24,7 @@ var App = React.createClass({
     this.props.context.getStore(IndexStore)
       .addChangeListener(this._changeListener)
 
-    var user = this.props.context.getUser()
-    if(user && user.is_admin) {
-      context.executeAction(actions.showIndex, {}, function() {})
-    }
+    context.executeAction(actions.showIndex, {}, function() {})
   },
 
   componentWillUnmount: function() {
@@ -138,16 +135,8 @@ var App = React.createClass({
         <div className="graph-filter">
           <div className="row">
             <div className="col col4">
-              <div className="row">
-                <div className="col col6">
-                  <img src="/img/homepage/VOLUNTEERS.svg" alt="" />
-                  <p>WOLONTARIUSZE</p>
-                </div>
-                <div className="col col6 graph-filter-input-container">
-                  <input type="text" className="graph-filter-input" placeholder="NAZWA" />
-                  <input type="text" className="graph-filter-input" placeholder="NUMER ID" />
-                </div>
-              </div>
+              <img src="/img/homepage/VOLUNTEERS.svg" alt="" />
+              <p>WOLONTARIUSZ</p>
             </div>
             <div className="col col4"><img src="/img/homepage/HOUR.svg" alt="" /><p>GODZINA</p></div>
             <div className="col col4"><img src="/img/homepage/LOCATION.svg" alt="" /><p>LOKALIZACJA</p></div>
@@ -161,17 +150,17 @@ var App = React.createClass({
                 <img src="/img/homepage/bialy_chlopek.svg" alt="" />
                 <img src="/img/homepage/biala_babka.svg" alt="" />
                 <p>WOLONTARIUSZE</p>
-                <p className="dashboard-hours">?</p>
+                <p className="dashboard-hours">{ this.state.total_active }</p>
               </div>
               <div className="col col4">
                 <img src="/img/homepage/biale_buty.svg" alt="" />
                 <p>WYKONANE ZADANIA</p>
-                <p className="dashboard-hours">?</p>
+                <p className="dashboard-hours">{ this.state.total_archived }</p>
               </div>
               <div className="col col4">
                 <img src="/img/homepage/bialy_zegar.svg" alt="" />
                 <p>POŚWIĘCONY CZAS</p>
-                <p className="dashboard-hours">?</p>
+                <p className="dashboard-hours">24h/7d</p>
               </div>
             </div>
           </div>

@@ -23,6 +23,9 @@ var AccountActivationStore = require('./stores/AccountActivation')
 
 var passportPlugin = require('./plugins/passportPlugin')
 
+var moment = require('moment')
+    moment.locale('pl')
+
 // Instancja kontenera aplikacji Fluxible
 var app = new Fluxible({
   component: React.createFactory(require('./components/Application.jsx')),

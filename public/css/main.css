@@ -8,9 +8,6 @@ input, input:focus, input:hover, input:active{
 	outline: 0;
 	text-decoration: none;
 }
-button.bg--primary:hover{
-	color: #90E4FF;
-}
 a, a:focus, a:hover, a:active{
 	color:white;
 }
@@ -412,11 +409,7 @@ label:hover:before {
 }
 
 .alert{
-	background-color: rgba(195, 162, 0, 0.39);
-    padding: 10px;
-    font: 400 1rem/1.5rem "Open Sans", Arial;
-    color: #A99432;
-    border: none;
+	font: 400 1rem/1.5rem "Open Sans", Arial;
 }
 .alert a{
 	color: rgb(140, 140, 140) !important;
@@ -606,11 +599,17 @@ textarea.settings {
 	position: fixed;
 	left: 0;
 	right: 0;
-	bottom: 0;
-	background-color: #416A7D;
-	color: white;
+	top: 0;
+	background-color: #fff;
 	text-align: center;
 	font-size: 1.5rem;
+  padding: 0;
+  margin: 10px 50px;
+  color: initial
+}
+
+.message .alert {
+  margin: 0
 }
 
 .tasks-filters-filterType {
@@ -1304,21 +1303,15 @@ article ul#nav-list a{
 }
 .activity-table{
 	width: 100%;
-	border: none;
-    right: -2rem;
-    position: relative;
-    color: white;
+	margin: 40px 0;
+  font-size: 80%;
 }
 button + .activity-table{
 	border-bottom: 0;
 }
 .activity-table td[scope]{
-    font-size: 0.8rem;
-    background-color: rgba(124, 204, 241, 0.2);
-    color: #929292;
-}
-.activity-table td{
-    background-color: #345E71;
+  width: 50%;
+  text-align: right
 }
 .activity-table .urgent{
 	color: #FF4141;
@@ -1326,33 +1319,17 @@ button + .activity-table{
 .activity-table .normal{
 	color: #3B98FF;
 }
-.activity-table tr:hover td[scope]{
-	background-color: #CAE1EA;
+.activity-profile-name {
+  text-align: center;
+  font-size: 1.7rem;
+  margin: 20px 0
 }
-.activity-table tr:hover td{
-	background-color: #31596B;
-}
-.activity-image{
-	position: relative;
-	right: -2rem;
-}
-.activity-image a{
-    position: absolute;
-    text-align: center;
-    background-color: #FFFFFF;
-    border-radius: 4px;
-    top: 50%;
-    font-size: 1.3rem;
-    left: 75%;
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+.activity-profile-responsibilities {
+  text-align: justify;
+  margin: 20px 40px;
 }
 .activity-image img {
-	width: 218px;
-	height: 218px;
-	float: left;
+  width: 250px
 }
 
 /*--------TEXTS--------*/
@@ -1402,16 +1379,12 @@ article.main-content a.task-add-btn{
 	width: 92.8%;
 	float: right;
 }
-.bg--task-muted{
-	background-color: rgb(120, 155, 171);
-}
 .bg--task:hover{
 	background-color: rgb(61, 112, 135);
 	color: white;
 }
-.bg--task-muted:hover{
-	background-color: rgb(110, 157, 179);
-	color: white;
+.button--full{
+	width: 100%;
 }
 .bg--warning:hover{
 	background-color: #F3CC49 !important;
@@ -1504,8 +1477,101 @@ footer{
           transform: scale(0);
 }
 
+.draftJsEmojiPlugin__emoji__2oqBk {
+  /* make sure the background the image is only shown once */
+  background-repeat: no-repeat;
+  /* move it a bit further down to align it nicer with the text */
+  vertical-align: middle;
 
+  /*
+  We need to limit the emoji width because it can be multiple characters
+  long if it is a 32bit unicode. Since the proper width depends on the font and
+  it's relationship between 0 and other characters it's not ideal. 1.85ch is not
+  the best value, but hopefully a good enough approximation for most fonts.
+  */
+  display: inline-block;
+  overflow: hidden;
+  max-width: 1.95ch;
+  /*
+  Needed for iOS rendering to avoid some icons using a lot of height without
+  actually needing it.
+  */
+  max-height: 1em;
+  line-height: inherit;
+}
 
+.draftJsEmojiPlugin__emojiCharacter__osX-n {
+  /*
+  Hide the original Emoji icon no matter what system it is. color: transparent
+  would have been nice to avoid the extra span, but it doesn't work on iOS.
+  */
+  opacity: 0;
+}
+.draftJsEmojiPlugin__emojiSuggestionsEntry__2-2p_ {
+  padding: 5px 10px 1px 10px;
+  -webkit-transition: background-color 0.4s cubic-bezier(.27,1.27,.48,.56);
+  transition: background-color 0.4s cubic-bezier(.27,1.27,.48,.56);
+}
+
+.draftJsEmojiPlugin__emojiSuggestionsEntry__2-2p_:active {
+  background-color: #cce7ff;
+}
+
+.draftJsEmojiPlugin__emojiSuggestionsEntryFocused__XDntY {
+  background-color: #e6f3ff;
+}
+
+.draftJsEmojiPlugin__emojiSuggestionsEntryText__2sPjk {
+  display: inline-block;
+  margin-left: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 368px;
+  font-size: 0.9em;
+}
+
+.draftJsEmojiPlugin__emojiSuggestionsEntryIcon__1qC2V {
+  width: 1em;
+  height: 1em;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+  display: inline-block;
+}
+.draftJsEmojiPlugin__emojiSuggestions__2ffcV {
+  border: 1px solid #eee;
+  margin-top: 1.75em;
+  position: absolute;
+  min-width: 220px;
+  max-width: 440px;
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0px 4px 30px 0px rgba(220,220,220,1);
+  cursor: pointer;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  z-index: 2;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  box-sizing: border-box;
+  -webkit-transform: scale(0);
+          transform: scale(0);
+}
+
+.error {
+  color: red;
+}
+
+.error input {
+  border-color: red
+}
+
+.activity--updateBox {
+  position: initial
+}
 
 /*-----------------ANIMATION--------------------*/
 

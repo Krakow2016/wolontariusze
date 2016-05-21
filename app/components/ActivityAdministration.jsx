@@ -23,8 +23,6 @@ var leaveActivityAction = actions.leaveActivity
 var createAction = actions.createActivity
 var deleteAction = actions.deleteActivity
 
-var TimeService = require('../modules/time/TimeService.js')
-
 Formsy.addValidationRule('isMoreOrGreaterIntThanZero', function (values, value) {
   return (value % 1 === 0 && value >= 0)
 })
@@ -108,7 +106,7 @@ var ActivityAdministration = React.createClass({
 
     var activity = this.state.activity
     if (!value) {
-      activity.datetime = TimeService.NO_DATE
+      activity.datetime = null
     } else {
       activity.datetime = new Date()
     }
@@ -129,7 +127,7 @@ var ActivityAdministration = React.createClass({
 
     var activity = this.state.activity
     if (!value) {
-      activity.endtime = TimeService.NO_DATE
+      activity.endtime = null
     } else {
       activity.endtime = new Date()
     }
@@ -370,7 +368,7 @@ var ActivityAdministration = React.createClass({
 
   render: function() {
     var dateTime
-    if (TimeService.isDate(this.state.activity.datetime)) {
+    if (this.state.activity.datetime) {
       var datetimeHint
       if (this.props.taskMode) {
         datetimeHint = <span> Dla zadania data powinna być w przyszłości </span>
@@ -391,7 +389,7 @@ var ActivityAdministration = React.createClass({
     }
 
     var endTime
-    if (TimeService.isDate(this.state.activity.endtime)) {
+    if (this.state.activity.endtime) {
       var endTimeDateHint = <span> Powinna być później niż czas zakońćzenia zgłoszeń do zadania </span>
       var endTimeDate = new Date(this.state.activity.endtime)
       endTime = <div className="pure-u-1 pure-u-md-2-3">
@@ -483,14 +481,14 @@ var ActivityAdministration = React.createClass({
           </select>
           <br/>
           <br/>
-          <input id="datetime" type="checkbox" name="addDatetime" checked={TimeService.isDate(this.state.activity.datetime)} onChange={this.handleAddDatetimeChange} />
+          <input id="datetime" type="checkbox" name="addDatetime" checked={ !!this.state.activity.datetime } onChange={this.handleAddDatetimeChange} />
           <label htmlFor="datetime">Czas zakończenia zgłoszeń do zadania</label>
           <br/>
           <input id="is_archived" type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
           <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
           {dateTime}
           <br/>
-          <input id="endtime" type="checkbox" name="addEndtime" checked={TimeService.isDate(this.state.activity.endtime)} onChange={this.handleAddEndtimeChange} />
+          <input id="endtime" type="checkbox" name="addEndtime" checked={ !!this.state.activity.endtime } onChange={this.handleAddEndtimeChange} />
           <label htmlFor="endtime">Data zakończenia</label>
           {endTime}
 

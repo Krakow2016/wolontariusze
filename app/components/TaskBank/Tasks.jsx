@@ -1,10 +1,10 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var update = require('react-addons-update')
+var moment = require('moment')
 
 var TaskFilters = require('./TaskFilters.jsx')
 var ProfilePic = require('../ProfilePic.jsx')
-var TimeService = require('../../modules/time/TimeService.js')
 var ActivitiesStore = require('../../stores/Activities.js')
 var ActivityStore = require('../../stores/Activity')
 var ActivitiesSearchForm = require('./Search.jsx')
@@ -86,16 +86,16 @@ var Tasks = React.createClass({
 
     // TABS
     var tabs = [
-        <NavLink href={"/zadania"} className="profile-ribon-cell">Bank pracy</NavLink>
+        <NavLink href={"/zadania"} className="profile-ribon-cell" key="all">Bank pracy</NavLink>
     ]
 
     if(user) {
       tabs.push(
-        <NavLink href={'/zadania?volunteer='+user.id} className="profile-ribon-cell">Biorę udział w</NavLink>
+        <NavLink href={'/zadania?volunteer='+user.id} className="profile-ribon-cell" key="my">Biorę udział w</NavLink>
       )
       if(user.is_admin) {
         tabs.push(
-          <NavLink href={'/zadania?created_by='+user.id} className="profile-ribon-cell">Moje zadania</NavLink>
+          <NavLink href={'/zadania?created_by='+user.id} className="profile-ribon-cell" key="own">Moje zadania</NavLink>
         )
       }
     }
@@ -104,16 +104,20 @@ var Tasks = React.createClass({
       if(!task) { return }
       var volunteers = (task.volunteers || []).map(function(id) {
         return (
-          <ProfilePic src={'https://krakow2016.s3.eu-central-1.amazonaws.com/'+id+'/thumb'} className='profileThumbnail' />
+          <ProfilePic
+            src={'https://krakow2016.s3.eu-central-1.amazonaws.com/'+id+'/thumb'}
+            className='profileThumbnail'
+            key={id} />
         )
       })
-      var tresc = [(task.description.length > 200) ? task.description.substring(0,200) : task.description]
+
+      var more
       if (task.description.length > 200){
-        tresc.push(<a href={'/zadania/'+task.id}> ...więcej</a>)
+        more = (<span>...</span>)
       }
 
       return (
-        <div className="row task">
+        <div className="row task" key={task.id}>
           <div className="col col1 task-color">
             <img src={task.act_type === 'wzialem_od_sdm' ? '/img/flaga2.png' : '/img/flaga.png'} />
           </div>
@@ -125,15 +129,19 @@ var Tasks = React.createClass({
               </NavLink>
             </h1>
             <span className="task-meta">
+              <span>Autor: </span>
               <NavLink href={'/zadania?created_by='+ task.created_by.id}>
                 {task.created_by.first_name} {task.created_by.last_name}
               </NavLink>
             </span>
             <span className="task-meta">Wolnych miejsc: { task.limit != 0 ? (task.limit - (task.volunteers || []).length) : 'Bez limitu'}</span>
             <span className="task-meta">{((task.tags || []).length != 0) ? (task.tags || []).join(', ') : 'Brak kategorii' }</span>
-            <span className="task-meta">Termin zgłoszeń: {(typeof (task.datetime) != 'undefined') ? TimeService.showTime(task.datetime) : 'Brak'}</span>
+            <span className="task-meta">Termin zgłoszeń mija: { task.datetime ? moment(task.datetime).calendar() : 'nigdy'}</span>
             <p>
-              {tresc}
+              <NavLink href={'/zadania/'+task.id}>
+                { task.description.substring(0,200) }
+                { more }
+              </NavLink>
             </p>
             <div className="task-volunteers">
               {volunteers}

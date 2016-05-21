@@ -22,7 +22,7 @@ var Activities = module.exports = {
           .get(params.id.toString())
           .merge(function(activity){
             return {
-              created_by: r.db('sdm').table('Volunteers').get(activity('created_by')).pluck(['id', 'first_name', 'last_name', 'profile_picture_url'])
+              created_by: r.db('sdm').table('Volunteers').get(activity('created_by')).pluck(['id', 'first_name', 'last_name', 'profile_picture_url', 'responsibilities'])
             }
           })
           .run(conn, function(err, activity){

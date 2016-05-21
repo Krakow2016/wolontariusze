@@ -2,6 +2,7 @@ var React = require('react')
 var VolunteerShell = require('./Shell.jsx')
 var Comments = require('./Comments.jsx')
 var update = require('react-addons-update')
+var moment = require('moment')
 
 var VolunteerStore = require('../../stores/Volunteer')
 var XlsStore = require('../../stores/Xls')
@@ -15,9 +16,9 @@ var Details = React.createClass({
 
     if(!this.props.id) {
       return (
-        <div>
+        <p>
           Brak informacji o zgłoszeniu do wolontariatu krótkoterminowego.
-        </div>
+        </p>
       )
     }
 
@@ -99,7 +100,13 @@ var VolunteerAdministration = React.createClass({
     })
     window.location.hash = 'close'
   },
-
+  _onAdminRejectDialogSubmit: function() {
+    this.props.context.executeAction(updateVolunteer, {
+      id: this.state.profile.id,
+      is_admin: false
+    })
+    window.location.hash = 'close'
+  },
   saveTag: function(tag) {
     var tags = this.state.profile.tags || []
     this.props.context.executeAction(updateVolunteer, {
@@ -123,31 +130,87 @@ var VolunteerAdministration = React.createClass({
     })
   },
 
+  onResponsibilitiesChange: function(e) {
+    var value = e.target.value
+    this.setState(update(this.state, {
+      profile: {responsibilities: {$set: value}}
+    }))
+  },
+
+  updateResponsibilities: function() {
+    this.props.context.executeAction(updateVolunteer, {
+      id: this.state.profile.id,
+      responsibilities: this.state.profile.responsibilities
+    })
+  },
+
   render: function() {
     var papers = []
     var tags = this.state.profile.tags || []
+    var approved_at = this.state.profile.approved_at ? moment(this.state.profile.approved_at).calendar() : 'niewiadomo kiedy'
 
     if(this.state.profile.approved) {
       papers.push(
-        <div className="paper" key="rejection">
-          <p>Profil jest aktywny</p>
-          <div style={{textAlign: 'center'}}>
-            <a href="#confirm" className="button">Zablokuj profil</a>
+        <div className="card" key="invitation">
+          <div className="card-content text--center">
+            <p>Profil jest aktywny (zaproszenie wysłano { approved_at })</p>
+            <div style={{textAlign: 'center'}}>
+              <a href="#confirm" className="button">Zablokuj profil</a>
+            </div>
           </div>
         </div>
       )
     } else {
       papers.push(
-        <Invite id={this.state.profile.id} context={this.props.context} />
+        <div className="card" key="invitation">
+          <div className="card-content text--center">
+            <Invite id={this.state.profile.id} context={this.props.context} />
+          </div>
+        </div>
+      )
+    }
+
+    if(this.state.profile.has_password) {
+      papers.push(
+        <div className="card" key="password">
+          <div className="card-content text--center">
+            <p>Wolontariusz aktywował swoje konto i może się logować.</p>
+          </div>
+        </div>
+      )
+    } else {
+      papers.push(
+        <div className="card" key="password">
+          <div className="card-content text--center">
+            <p>Wolontariusz nie aktywował swojego konta!</p>
+          </div>
+        </div>
       )
     }
 
     if(!this.state.profile.is_admin) {
       papers.push(
-        <div className="paper" key="admin">
-          <p>Użytkownik nie posiada przywilejów administratora</p>
-          <div style={{textAlign: 'center'}}>
-            <a href="#admin" className="button">Awansuj do rangi administratora</a>
+        <div className="card" key="admin">
+          <div className="card-content text--center">
+            <p>Użytkownik nie posiada przywilejów administratora</p>
+            <div style={{textAlign: 'center'}}>
+              <a href="#admin" className="button">Awansuj do rangi administratora</a>
+            </div>
+          </div>
+        </div>
+      )
+    } else {
+      papers.push(
+        <div className="card" key="admin">
+          <div className="card-content">
+            Konto ma uprawnienia administratora (<a href="#reject_admin">kliknij tutaj aby odebrać</a>).
+            <textarea
+              placeholder="Zakres obowiązków w wolontariacie"
+              onChange={this.onResponsibilitiesChange}
+              value={this.state.profile.responsibilities} />
+            <p className="text--right">
+              <button onClick={this.updateResponsibilities}>Aktualizuj</button>
+            </p>
           </div>
         </div>
       )
@@ -173,8 +236,12 @@ var VolunteerAdministration = React.createClass({
 
               <Details {...this.state.details} />
 
-              <b>Projekty: </b>
-              <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
+              <div className="card" key="projects">
+                <div className="card-content">
+                  <b>Projekty: </b>
+                  <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
+                </div>
+              </div>
 
             </div>
             <div className="col col5">
@@ -217,13 +284,36 @@ var VolunteerAdministration = React.createClass({
 
             <div className="modal-body">
               <p>
-                <strong>{this.state.profile.first_name} {this.state.profile.last_name}</strong> zyska prawa administratora. Czy jesteś pewien że chcesz to zrobić?
+                <strong>{this.state.profile.first_name} {this.state.profile.last_name}</strong> zyska prawa koordynatora. Czy jesteś pewien że chcesz to zrobić?
               </p>
             </div>
 
             <div className="modal-footer">
               <p>
-                <button className="bg--error" onClick={this._onAdminDialogSubmit}>Tak, nadaj prawa administratora</button>
+                <button className="bg--error" onClick={this._onAdminDialogSubmit}>Tak, nadaj prawa koordynatora</button>
+                <a href="#close" className="button">Anuluj</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div id="reject_admin" className="modal">
+          <div className="modal-container">
+            <div className="modal-header">
+              Czy jesteś pewien?
+
+              <a href="#close" className="modal-close">&times;</a>
+            </div>
+
+            <div className="modal-body">
+              <p>
+                <strong>{this.state.profile.first_name} {this.state.profile.last_name}</strong> straci prawa koordynatora. Czy jesteś pewien że chcesz to zrobić?
+              </p>
+            </div>
+
+            <div className="modal-footer">
+              <p>
+                <button className="bg--error" onClick={this._onAdminRejectDialogSubmit}>Tak, usuń prawa koordynatora</button>
                 <a href="#close" className="button">Anuluj</a>
               </p>
             </div>
