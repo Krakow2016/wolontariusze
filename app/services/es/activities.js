@@ -53,6 +53,7 @@ var Activities = module.exports = {
               return
             }
 
+            // Połącz z tablicą wolontariuszy (dane autora)
             var table = r.table('Volunteers')
             table.getAll.apply(table, authors).run(conn, function(err, cursor) {
               if(err) { callback(err) }
@@ -63,7 +64,8 @@ var Activities = module.exports = {
                     map[result.id] = _.pick(result, [
                       'id',
                       'first_name',
-                      'last_name'
+                      'last_name',
+                      'profile_picture_url'
                     ])
                   })
                   callback(null, hits.map(function(hit) {

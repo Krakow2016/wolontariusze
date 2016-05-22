@@ -269,21 +269,21 @@ pojedynczych aktywności jak i całej listy aktywności.
 Przykłady użycia są zawarte w pliku:
 <https://github.com/Krakow2016/wolontariusze/blob/master/spec/api_activity_spec.js>.
 
-| Klucz         | Pomijalny | Opis                                                                                                                                             |
-| ---           | ---       | ---                                                                                                                                              |
-| `id`          | Nie       |                                                                                                                                                  |
-| `created_at`  | Nie       | Czas utworzenia aktywności.                                                                                                                      |
-| `created_by`  | Nie       | Obiekt użytkownika dodającego zadanie. Zawiera pola: `id`, `first_name`, `last_name` oraz opcjonalnie `profile_picture_url` i `responsibilities` |
-| `description` | Nie       | Opis aktywności. Format: *RawDraftContentState* (patrz niżej).                                                                                   |
-| `name`        | Nie       | Nazwa aktywności.                                                                                                                                |
-| `volunteers`  | Nie       | Tablica wolontariuszy zgłoszonych do wykonania zadania.                                                                                          |
-| `duration`    | Tak       | Opis słowny czasu trwania zadania.                                                                                                               |
-| `starts_at`   | Tak       | Data i czas rozpoczęcia zadania. Np. ""                                                                                                          |
-| `is_urgent`   | Tak       | `true` dla zadań oznaczonych jako pilne.                                                                                                         |
-| `lat_lon`     | Tak       | Współrzędne geograficzne miejsca wykonywania aktywności. Np. `[0.0, 0.0]`.                                                                       |
-| `limit`       | Tak       | Limit osób które mogą zgłosić się do zadania. Np. `10`.                                                                                          |
-| `place`       | Tak       | Opis miejsca wykonywania zadania. Np. `"Sankruarium św. Jana Pawła II"`.                                                                         |
-| `updates`     | Tak       | Tablica aktualizacji do treści zadania.                                                                                                          |
+| Klucz         | Pomijalny | Opis                                                                                                                                              |
+| ---           | ---       | ---                                                                                                                                               |
+| `id`          | Nie       |                                                                                                                                                   |
+| `created_at`  | Nie       | Czas utworzenia aktywności.                                                                                                                       |
+| `created_by`  | Nie       | Obiekt użytkownika dodającego zadanie. Zawiera pola: `id`, `first_name`, `last_name` oraz opcjonalnie `profile_picture_url` i `responsibilities`. |
+| `description` | Nie       | Opis aktywności. Format: *RawDraftContentState* (patrz niżej).                                                                                    |
+| `name`        | Nie       | Nazwa aktywności.                                                                                                                                 |
+| `volunteers`  | Nie       | Tablica wolontariuszy zgłoszonych do wykonania zadania.                                                                                           |
+| `duration`    | Tak       | Opis słowny czasu trwania zadania.                                                                                                                |
+| `starts_at`   | Tak       | Data i czas rozpoczęcia zadania. Np. ""                                                                                                           |
+| `is_urgent`   | Tak       | `true` dla zadań oznaczonych jako pilne.                                                                                                          |
+| `lat_lon`     | Tak       | Współrzędne geograficzne miejsca wykonywania aktywności. Np. `[0.0, 0.0]`.                                                                        |
+| `limit`       | Tak       | Limit osób które mogą zgłosić się do zadania. Np. `10`.                                                                                           |
+| `place`       | Tak       | Opis miejsca wykonywania zadania. Np. `"Sankruarium św. Jana Pawła II"`.                                                                          |
+| `updates`     | Tak       | Tablica aktualizacji do treści zadania.                                                                                                           |
 
 ### Opis obiektu aktualizacji zadania:
 
@@ -309,7 +309,7 @@ POST https://wolontariusze.krakow2016.com/api/v2/activities
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/activities -d '{"name": "nazwa", "description": "opis"}'
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities -d '{"name": "nazwa"}'
 ```
 
 **Przykładowa odpowiedź:**  
@@ -319,7 +319,6 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/activities -d '{"name": "nazw
     "data": {
         "activity": {
             "created_at": "2016-02-01T22:50:08.906Z",
-            "description": "opis",
             "id": "0565ea98-86bf-4d5f-a3da-3236c8c3a876",
             "name": "nazwa",
             "user_id": "1"
@@ -388,6 +387,8 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f
 ```
 
 ### Listowanie aktywności
+
+Zwraca listę aktywności wraz z obiektem autora (`id`, `first_name`, `last_name`, `profile_picture_url`). Parametry wyszukiwania należy przekazywać w parametrze `query` w formacie [Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html) (format jest zdefiniowany przez ElasticSearch).
 
 **Ścieżka:**  
 ```
