@@ -124,7 +124,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                   .run(conn, function(err, count) {
                     var limit = parseInt(activity.limit, 10)
                     if(limit && count === limit) { // Ostatnie zgłoszenie - wyśwli wiadomość autorowi zadania
-                      var html = '<p>Komplet zgłoszeń!</p><p>Gratulacje - do Twojego zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">"'+ activity.name +'"</a> właśnie zgłosiła się ostatnia osoba. W razie potrzeby kontaktu z wszystkimi uczestnikami, dodaj aktualizację na stronie zadania.</p>'
+                      var html = '<p>Komplet zgłoszeń!</p><p>Gratulacje - do Twojego zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">"'+ activity.name +'"</a> właśnie zgłosiła się ostatnia osoba. Teraz możesz być w kontakcie z wszystkimi zgłoszonymi uczestnikami, dodając aktualizacje na stronie zadania. Możesz również zrobić to, wysyłając bezpośrednio do każdego wiadomość drogą mailową.</p>'
                       var email = new sendgrid.Email({
                         to:       author.email,
                         from:     'goradobra@krakow2016.com',
@@ -408,7 +408,7 @@ r.connect(config.rethinkdb, function(err, conn) {
   var notifyEnd = function(activity) {
     r.table('Volunteers').get(activity.created_by)
       .run(conn, function(err, author) {
-        var html = '<p>Właśnie upłynął czas zgłaszania się do Twojego zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> i nie jest ono już widoczne w banku pracy.</p><p>Nie zapomnij powiadomić zgłoszonych wolontariuszy o szczegółach ich zadań. Możesz zrobić to indywidualnie, lub do wszystkich drogą e-mailową, poprzez umieszczenie aktualizacji do zadania na Górze Dobra.</p>'
+        var html = '<p>Właśnie upłynął czas zgłaszania się do Twojego zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> i nie jest ono już widoczne w banku pracy.</p><p>Nie zapomnij powiadomić zgłoszonych wolontariuszy o szczegółach ich zadań. Możesz zrobić to wysyłając wiadomość  do każdego z osobna lub do wszystkich drogą e-mailową; bądź też poprzez umieszczenie aktualizacji do zadania na Górze Dobra.</p><p>Jeśli nie masz kompletu potrzebnych Ci do zadania osób, możesz przedłużyć czas zgłaszania edytując jego datę.</p>'
         var email = new sendgrid.Email({
           to:       author.email,
           from:     'goradobra@krakow2016.com',
