@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var express = require('express')
+var layout = require('express-layout')
 var passport = require('passport')
 var util = require('util')
 var bodyParser = require('body-parser')
@@ -59,12 +60,12 @@ var error = function(type, message) {
 
 var server = module.exports = express();
 
-server.set('view engine', 'ejs');
-server.set('views', process.cwd() + '/oauth/views')
 //server.use(express.logger());
 //server.use(express.cookieParser());
 server.use(bodyParser.json())
 server.use(bodyParser.urlencoded({ extended: true }))
+server.use(layout())
+server.use(express.static(__dirname +'/public'))
 /*
 server.use(function(req, res, next) {
   console.log('-- session --');
@@ -77,6 +78,10 @@ server.use(function(req, res, next) {
 //server.use(server.router);
 //server.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 
+server.set('view engine', 'ejs');
+server.set('views', process.cwd() + '/oauth/views')
+server.set('layout', 'layout')
+
 // Passport configuration
 
 require('./auth');
@@ -84,7 +89,9 @@ require('./oauth/auth');
 
 // Formularz do logowania dla wolontariuszy chcących dać dostęp do swojego
 // konta wybranej aplikacji.
-server.get('/api/v2/login', session, function(req, res) { res.render('login') })
+server.get('/api/v2/login', session, function(req, res) {
+  res.render('login', { layout: 'layout' })
+})
 server.post('/api/v2/login', session, passport.authenticate('local', {
   successReturnToOrRedirect: '/api/v2/',
   failureRedirect: '/api/v2/login'

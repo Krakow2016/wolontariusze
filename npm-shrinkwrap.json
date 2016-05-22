@@ -1289,6 +1289,11 @@
         }
       }
     },
+    "express-layout": {
+      "version": "0.1.0",
+      "from": "express-layout@latest",
+      "resolved": "https://registry.npmjs.org/express-layout/-/express-layout-0.1.0.tgz"
+    },
     "express-session": {
       "version": "1.13.0",
       "from": "express-session@*",
@@ -2178,6 +2183,11 @@
       "version": "1.2.2",
       "from": "oauth2orize@>=1.2.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/oauth2orize/-/oauth2orize-1.2.2.tgz"
+    },
+    "obj-extend": {
+      "version": "0.1.0",
+      "from": "obj-extend@>=0.1.0 <0.2.0",
+      "resolved": "https://registry.npmjs.org/obj-extend/-/obj-extend-0.1.0.tgz"
     },
     "object-assign": {
       "version": "4.0.1",
