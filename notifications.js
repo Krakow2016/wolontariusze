@@ -44,6 +44,7 @@ var notifyMentioned = function(title, body, author) {
         headers:  { 'x-smtpapi': header.jsonString() }
       })
 
+      email.addCategory('mention')
       sendgrid.send(email, function(err, json) {
         console.log('sendgrid:', err, json)
       })
@@ -97,6 +98,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                       html:     html.join('<hr/>')
                     })
 
+                    email.addCategory('join')
                     email.addSubstitution(':name', volunteer.first_name)
                     email.addSubstitution(':what_happend', joint.user_id === joint.created_by ? ':has_joined' : ':was_joined')
                     email.setFilters({
@@ -133,6 +135,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                         html:     html
                       })
 
+                      email.addCategory('full')
                       email.addSubstitution(':name', author.first_name)
                       email.setFilters({
                         'templates': {
@@ -229,6 +232,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                     headers:  { 'x-smtpapi': header.jsonString() }
                   })
 
+                  email.addCategory('update')
                   sendgrid.send(email, function(err, json) {
                     console.log('sendgrid:', err, json)
                   })
@@ -255,6 +259,7 @@ r.connect(config.rethinkdb, function(err, conn) {
           html:     html
         })
 
+        email.addCategory('invitation')
         email.addSubstitution(':name', row.first_name)
         email.setFilters({
           'templates': {
@@ -291,6 +296,7 @@ r.connect(config.rethinkdb, function(err, conn) {
               html:     html
             })
 
+            email.addCategory('admin')
             email.addSubstitution(':name', row.first_name)
             email.setFilters({
               'templates': {
@@ -396,6 +402,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                     headers:  { 'x-smtpapi': header.jsonString() }
                   })
 
+                  email.addCategory('mention')
                   sendgrid.send(email, function(err, json) {
                     console.log('sendgrid:', err, json)
                   })
@@ -417,6 +424,7 @@ r.connect(config.rethinkdb, function(err, conn) {
           html:     html
         })
 
+        email.addCategory('finish')
         email.addSubstitution(':name', author.first_name)
         email.setFilters({
           'templates': {
