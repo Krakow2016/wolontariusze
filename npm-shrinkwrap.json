@@ -824,6 +824,11 @@
       "from": "crc@3.4.0",
       "resolved": "https://registry.npmjs.org/crc/-/crc-3.4.0.tgz"
     },
+    "cron-parser": {
+      "version": "1.1.0",
+      "from": "cron-parser@1.1.0",
+      "resolved": "https://registry.npmjs.org/cron-parser/-/cron-parser-1.1.0.tgz"
+    },
     "cryptiles": {
       "version": "2.0.5",
       "from": "cryptiles@>=2.0.0 <3.0.0",
@@ -1995,6 +2000,11 @@
       "from": "lodash.rest@>=4.0.0 <5.0.0",
       "resolved": "https://registry.npmjs.org/lodash.rest/-/lodash.rest-4.0.2.tgz"
     },
+    "long-timeout": {
+      "version": "0.0.2",
+      "from": "long-timeout@0.0.2",
+      "resolved": "https://registry.npmjs.org/long-timeout/-/long-timeout-0.0.2.tgz"
+    },
     "longest": {
       "version": "1.0.1",
       "from": "longest@>=1.0.1 <2.0.0",
@@ -2133,6 +2143,11 @@
           "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.1.14.tgz"
         }
       }
+    },
+    "node-schedule": {
+      "version": "1.1.0",
+      "from": "node-schedule@latest",
+      "resolved": "https://registry.npmjs.org/node-schedule/-/node-schedule-1.1.0.tgz"
     },
     "node-uuid": {
       "version": "1.4.7",
