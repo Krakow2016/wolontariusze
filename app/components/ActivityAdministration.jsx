@@ -429,7 +429,7 @@ var ActivityAdministration = React.createClass({
 
     var removeActiveVolonteer = this.removeActiveVolonteer
     var addVolonteer
-    if (this.state.volunteers.length < this.state.activity.limit) {
+    if (!this.state.activity.limit || this.state.volunteers.length < this.state.activity.limit) {
       addVolonteer = <ActivityVolonteersList
             id="activeVolonteers"
             addActiveVolonteer={this.addActiveVolonteer}
@@ -466,7 +466,11 @@ var ActivityAdministration = React.createClass({
             disabled={false}
             value={this.state.activity.name}
             onChange={this.handleChange} />
+
           <br/>
+          <b>Treść </b>
+          <br/>
+          <Editor editorState={this.state.activityState} onChange={this.onChange} />
           <br/>
           <b>Kategorie:</b>
           <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
@@ -481,11 +485,9 @@ var ActivityAdministration = React.createClass({
           <br/>
           <input id="datetime" type="checkbox" name="addDatetime" checked={ !!this.state.activity.datetime } onChange={this.handleAddDatetimeChange} />
           <label htmlFor="datetime">Czas zakończenia zgłoszeń do zadania</label>
-          <br/>
-          <input id="is_archived" type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
-          <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
           {dateTime}
           <br/>
+
           <input id="endtime" type="checkbox" name="addEndtime" checked={ !!this.state.activity.endtime } onChange={this.handleAddEndtimeChange} />
           <label htmlFor="endtime">Data zakończenia</label>
           {endTime}
@@ -512,21 +514,15 @@ var ActivityAdministration = React.createClass({
           <label htmlFor="position">Współrzędne geograficzne</label>
 
           <br/>
-          <br/>
-
-
 
           { this.map() }
+
           <input id="urgent" type="checkbox" name="is_urgent" checked={this.state.activity.is_urgent} onChange={this.handleChange} />
           <label htmlFor="urgent">Zadanie jest PILNE ?</label>
-
-          <br/>
-          <br/>
-          <b>Treść </b>
           <br/>
 
-          <Editor editorState={this.state.activityState} onChange={this.onChange} />
-
+          <input id="is_archived" type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
+          <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
           <br/>
 
           <b>Wolontariusze, którzy biorą udział:</b>

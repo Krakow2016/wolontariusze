@@ -22,7 +22,7 @@ var ActivityStore = createStore({
       act_type: 'niezdefiniowany',
       place: '',
       is_urgent: false,
-      limit: 5
+      limit: 0
     }
     this.volunteers = []
     this.activityState = Draft.EditorState.createEmpty()

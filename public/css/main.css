@@ -1699,3 +1699,11 @@ footer{
 .avatar-change {
   text-align: center
 }
+
+.rdtActive {
+  background-color: #e0e0e0;
+}
+
+.rdtToday {
+  border: 2px #e0e0e0 solid;
+}
