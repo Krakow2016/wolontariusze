@@ -9,7 +9,7 @@ var BasicInfo = function(props) {
       <div className="row">
         <div className="col col7">
 
-          <div className="alert-normal">
+          <div className="alert">
             <Disclamer />
           </div>
 

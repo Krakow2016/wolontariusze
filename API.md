@@ -156,18 +156,19 @@ Przykłady użycia są zawarte w pliku:
 
 ### Atrybuty
 
-| Klucz                 | Pomijalny | Opis                                                    |
-| ---                   | ---       | ---                                                     |
-| `id`                  | Nie       |                                                         |
-| `email`               | Nie       | Adres e-mail.                                           |
-| `first_name`          | Nie       | Imię.                                                   |
-| `last_name`           | Nie       | Nazwisko.                                               |
-| `is_admin`            | Tak       | 'true' jeżeli użytkownik ma uprawnienia administratora. |
-| `is_approved`         | Tak       | 'true' jeżeli użytkownik może logować się w systemie.   |
-| `phone`               | Tak       | Numer telefonu kontaktowego. Np. `"+48 123456789"`.     |
-| `profile_picture_url` | Tak       | Adres url do zdjęcia profilowego.                       |
-| `tags`                | Tak       | Lista grup do których wolontariusz został przypisany.   |
-| `thumb_picture_url`   | Tak       | Adres url do miniatury zdjęcia profilowego.             |
+| Klucz                 | Pomijalny | Opis                                                                |
+| ---                   | ---       | ---                                                                 |
+| `id`                  | Nie       |                                                                     |
+| `email`               | Nie       | Adres e-mail.                                                       |
+| `first_name`          | Nie       | Imię.                                                               |
+| `last_name`           | Nie       | Nazwisko.                                                           |
+| `is_admin`            | Tak       | 'true' jeżeli użytkownik ma uprawnienia administratora.             |
+| `is_approved`         | Tak       | 'true' jeżeli użytkownik może logować się w systemie.               |
+| `phone`               | Tak       | Numer telefonu kontaktowego. Np. `"+48 123456789"`.                 |
+| `profile_picture_url` | Tak       | Adres url do zdjęcia profilowego.                                   |
+| `responsibilities`    | Tak       | Zakres obowiązków koordynatora (wypełniany tylko dla kont adminów). |
+| `tags`                | Tak       | Lista grup do których wolontariusz został przypisany.               |
+| `thumb_picture_url`   | Tak       | Adres url do miniatury zdjęcia profilowego.                         |
 
 ### Tworzenie obiektu wolontariusza
 
@@ -268,21 +269,21 @@ pojedynczych aktywności jak i całej listy aktywności.
 Przykłady użycia są zawarte w pliku:
 <https://github.com/Krakow2016/wolontariusze/blob/master/spec/api_activity_spec.js>.
 
-| Klucz         | Pomijalny | Opis                                                                       |
-| ---           | ---       | ---                                                                        |
-| `id`          | Nie       |                                                                            |
-| `created_at`  | Nie       | Czas utworzenia aktywności.                                                |
-| `created_by`  | Nie       | Obiekt użytkownika dodającego zadanie.                                     |
-| `description` | Nie       | Opis aktywności. Format: *RawDraftContentState* (patrz niżej).             |
-| `name`        | Nie       | Nazwa aktywności.                                                          |
-| `volunteers`  | Nie       | Tablica wolontariuszy zgłoszonych do wykonania zadania.                    |
-| `duration`    | Tak       | Opis słowny czasu trwania zadania.                                         |
-| `starts_at`   | Tak       | Data i czas rozpoczęcia zadania. Np. ""                                    |
-| `is_urgent`   | Tak       | `true` dla zadań oznaczonych jako pilne.                                   |
-| `lat_lon`     | Tak       | Współrzędne geograficzne miejsca wykonywania aktywności. Np. `[0.0, 0.0]`. |
-| `limit`       | Tak       | Limit osób które mogą zgłosić się do zadania. Np. `10`.                    |
-| `place`       | Tak       | Opis miejsca wykonywania zadania. Np. `"Sankruarium św. Jana Pawła II"`.   |
-| `updates`     | Tak       | Tablica aktualizacji do treści zadania.                                    |
+| Klucz         | Pomijalny | Opis                                                                                                                                             |
+| ---           | ---       | ---                                                                                                                                              |
+| `id`          | Nie       |                                                                                                                                                  |
+| `created_at`  | Nie       | Czas utworzenia aktywności.                                                                                                                      |
+| `created_by`  | Nie       | Obiekt użytkownika dodającego zadanie. Zawiera pola: `id`, `first_name`, `last_name` oraz opcjonalnie `profile_picture_url` i `responsibilities` |
+| `description` | Nie       | Opis aktywności. Format: *RawDraftContentState* (patrz niżej).                                                                                   |
+| `name`        | Nie       | Nazwa aktywności.                                                                                                                                |
+| `volunteers`  | Nie       | Tablica wolontariuszy zgłoszonych do wykonania zadania.                                                                                          |
+| `duration`    | Tak       | Opis słowny czasu trwania zadania.                                                                                                               |
+| `starts_at`   | Tak       | Data i czas rozpoczęcia zadania. Np. ""                                                                                                          |
+| `is_urgent`   | Tak       | `true` dla zadań oznaczonych jako pilne.                                                                                                         |
+| `lat_lon`     | Tak       | Współrzędne geograficzne miejsca wykonywania aktywności. Np. `[0.0, 0.0]`.                                                                       |
+| `limit`       | Tak       | Limit osób które mogą zgłosić się do zadania. Np. `10`.                                                                                          |
+| `place`       | Tak       | Opis miejsca wykonywania zadania. Np. `"Sankruarium św. Jana Pawła II"`.                                                                         |
+| `updates`     | Tak       | Tablica aktualizacji do treści zadania.                                                                                                          |
 
 ### Opis obiektu aktualizacji zadania:
 

@@ -1,5 +1,6 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
+var ProfilePic = require('../ProfilePic.jsx')
 
 var Volunteer = React.createClass({
 
@@ -57,7 +58,7 @@ var Volunteer = React.createClass({
       <div className="volonteer">
         <div className="section row">
           <div className="col col6">
-            <img src={this.props.profile.profile_picture_url} id="prolife-photo" />
+            <ProfilePic src={this.props.profile.profile_picture_url} className="prolife-photo" />
           </div>
           <div className="col col6">
             <h1 className="profile-name">{this.name()}</h1>

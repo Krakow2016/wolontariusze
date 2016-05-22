@@ -422,7 +422,7 @@ label:hover:before {
 }
 
 
-#prolife-photo {
+.prolife-photo {
 	height:22rem;
 	display: block;
 	margin: 1rem auto;
@@ -1667,7 +1667,7 @@ footer{
 	.graph-filter{
 		padding: 0.5rem 4rem;
 	}
-	#prolife-photo{
+	.prolife-photo{
 		height: auto;
 		width: 100%;
 	}
@@ -1690,4 +1690,12 @@ footer{
 		font-size: 0.6rem;
 		padding: 0.3rem;
 	}
+}
+
+.profilePicSettings {
+  width: 350px
+}
+
+.avatar-change {
+  text-align: center
 }

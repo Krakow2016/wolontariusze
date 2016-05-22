@@ -17,7 +17,7 @@ module.exports = React.createClass({
 
   render: function() {
     return (
-      <img src={this.state.src} className={this.props.className} onError={this.onError} />
+      <img src={this.state.src} className={this.props.className} onError={this.onError} onClick={this.props.onClick} />
     )
   }
 })
