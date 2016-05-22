@@ -9,6 +9,14 @@ module.exports = React.createClass({
     }
   },
 
+  componentWillReceiveProps: function(props) {
+    if(props.src !== this.props.src) {
+      this.setState({
+        src: props.src
+      })
+    }
+  },
+
   onError: function() {
     this.setState({
       src: default_src
