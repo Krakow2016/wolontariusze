@@ -22,8 +22,7 @@ var ActivityStore = createStore({
       act_type: 'niezdefiniowany',
       place: '',
       is_urgent: false,
-      limit: 5,
-      profile_picture_url: '/img/profile/face.svg'
+      limit: 5
     }
     this.volunteers = []
     this.activityState = Draft.EditorState.createEmpty()

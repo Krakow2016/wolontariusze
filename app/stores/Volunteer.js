@@ -51,11 +51,6 @@ var VolunteerStore = createStore({
       success: this.success
     }
 
-    // Domyślna wartość TODO czy nie da się inaczej?
-    if(!state.profile.profile_picture_url) {
-      state.profile.profile_picture_url = '/img/profile/face.svg'
-    }
-
     return state
   },
 

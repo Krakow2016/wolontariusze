@@ -71,8 +71,6 @@ var ActivityAdministration = React.createClass({
       activity: state.activity,
       activityState: editorState,
       volunteers: state.volunteers,
-      invalidDatetime: state.invalidDatetime,
-      invalidEndtime: state.invalidEndtime
     })
     state._volunteers = Object.assign({}, state).volunteers
   },
