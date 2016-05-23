@@ -10,19 +10,6 @@ var ProfilePic = require('./ProfilePic.jsx')
 var ActivityStore = require('../stores/Activity')
 var actions = require('../actions')
 
-var ProfileDetails = function(props) {
-  return (
-    <p className="text--center">
-      <img src={props.profile_picture_url} className="profileMedium" /><br />
-      <span>
-        <NavLink href={'/wolontariusz/'+ props.id}>
-          {props.first_name} {props.last_name}
-        </NavLink>
-      </span>
-    </p>
-  )
-}
-
 var ActivityUpdate = React.createClass({
 
   getInitialState: function() {
@@ -244,7 +231,7 @@ var Activity = React.createClass({
       return (
         <span className="volonteerLabel" key={volunteer.id}>
           <NavLink href={'/wolontariusz/'+volunteer.user_id} className="tooltip--bottom" data-hint={volunteer.first_name +' '+ volunteer.last_name} >
-            <ProfilePic src={volunteer.profile_picture_url} className='profileThumbnail' />
+            <ProfilePic src={volunteer.thumb_picture_url} className='profileThumbnail' />
           </NavLink>
         </span>
       )
@@ -319,7 +306,7 @@ var Activity = React.createClass({
             <div className="col col5">
 
               <div className="text--center activity-image">
-                <img src={creator.profile_picture_url} />
+                <ProfilePic src={creator.profile_picture_url} />
               </div>
               <p className="activity-profile-name">
                 <NavLink href={'/wolontariusz/'+ creator.id}>

@@ -45,7 +45,7 @@ var Activities = module.exports = {
                   return {'right': {'user_id': doc('right')('id')}}
                 })
               })
-            .pluck({'left': ['id', 'created_at'], 'right': ['user_id', 'first_name', 'last_name', 'profile_picture_url']})
+            .pluck({'left': ['id', 'created_at'], 'right': ['user_id', 'first_name', 'last_name', 'profile_picture_url', 'thumb_picture_url']})
             .zip()
             .orderBy(r.row('created_at'))
             .run(conn, function(err, cursor){
