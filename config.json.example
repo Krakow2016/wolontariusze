@@ -9,6 +9,10 @@
     "rethinkdb": {
       "host": "rethinkdb",
       "db": "sdm"
+    },
+    "s3": {
+      "region": "eu-central-1",
+      "bucket": "krakow2016"
     }
   },
 
@@ -22,6 +26,10 @@
     "rethinkdb": {
       "host": "rethinkdb",
       "db": "sdm"
+    },
+    "s3": {
+      "region": "eu-central-1",
+      "bucket": "krakow2016"
     }
   },
 

@@ -578,7 +578,7 @@ module.exports = function(server) {
     }
   })
 
-  AWS.config.update({region: 'eu-central-1'})
+  AWS.config.update({region: config.s3.region})
   server.post('/upload', multipartMiddleware, function(req, res) {
     if(req.user) {
       async.parallel([
@@ -591,7 +591,7 @@ module.exports = function(server) {
               if(err) { return cb(err) }
               var s3obj = new AWS.S3({
                 params: {
-                  Bucket: 'krakow2016',
+                  Bucket: config.s3.bucket,
                   Key: req.user.id +'/avatar@x2' }
               })
               // pipe to s3
@@ -607,7 +607,7 @@ module.exports = function(server) {
               if(err) { return cb(err) }
               var s3obj = new AWS.S3({
                 params: {
-                  Bucket: 'krakow2016',
+                  Bucket: config.s3.bucket,
                   Key: req.user.id +'/avatar' }
               })
               // pipe to s3
@@ -623,7 +623,7 @@ module.exports = function(server) {
               if(err) { return cb(err) }
               var s3obj = new AWS.S3({
                 params: {
-                  Bucket: 'krakow2016',
+                  Bucket: config.s3.bucket,
                   Key: req.user.id +'/thumb' }
               })
               s3obj.upload({Body: buffer})
