@@ -126,13 +126,12 @@ r.connect(config.rethinkdb, function(err, conn) {
                   .run(conn, function(err, count) {
                     var limit = parseInt(activity.limit, 10)
                     if(limit && count === limit) { // Ostatnie zgłoszenie - wyśwli wiadomość autorowi zadania
-                      var html = '<p>Komplet zgłoszeń!</p><p>Gratulacje - do Twojego zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">"'+ activity.name +'"</a> właśnie zgłosiła się ostatnia osoba. Teraz możesz być w kontakcie z wszystkimi zgłoszonymi uczestnikami, dodając aktualizacje na stronie zadania. Możesz również zrobić to, wysyłając bezpośrednio do każdego wiadomość drogą mailową.</p>'
                       var email = new sendgrid.Email({
                         to:       author.email,
                         from:     'goradobra@krakow2016.com',
                         fromname: 'Góra Dobra',
                         subject:  'Komplet zgłoszeń w zadaniu: '+ activity.name,
-                        html:     html
+                        html:     '<p>Komplet zgłoszeń!</p><p>Gratulacje - do Twojego zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">"'+ activity.name +'"</a> właśnie zgłosiła się ostatnia osoba. Teraz możesz być w kontakcie z wszystkimi zgłoszonymi uczestnikami, dodając aktualizacje na stronie zadania. Możesz również zrobić to, wysyłając bezpośrednio do każdego wiadomość drogą mailową.</p>'
                       })
 
                       email.addCategory('full')
@@ -160,8 +159,8 @@ r.connect(config.rethinkdb, function(err, conn) {
     .filter(
       r.row('new_val').hasFields('updates').and(r.row('new_val')('updates').count().gt(r.row('old_val')('updates').count()).default(true))
     )
-    .run(conn, function(err, cursor) {
-      cursor.each(function(err, change){ // Nowa aktualizacja do aktywności
+    .run(conn, function(err, changes) {
+      changes.each(function(err, change){ // Nowa aktualizacja do aktywności
 
         var activity = change.new_val
         var update = activity.updates.pop()
@@ -190,11 +189,11 @@ r.connect(config.rethinkdb, function(err, conn) {
             }).join('<br/>')
 
             var title = author.first_name +' '+ author.last_name +' wspomina Cię w zadaniu \"'+ activity.name +'\"'
-            var html = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w aktualizacji do zadania.</p><p>'+ body +'</p><p>Kliknij w poniższy link, aby przejść do zadania: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>.</p>'
+            var mention_html = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w aktualizacji do zadania.</p><p>'+ body +'</p><p>Kliknij w poniższy link, aby przejść do zadania: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>.</p>'
 
             var table = r.table('Volunteers')
             table.getAll.apply(table, receivers) // Pobierz wolontariuszy
-              .run(conn, notifyMentioned(title, html, author.email))
+              .run(conn, notifyMentioned(title, mention_html, author.email))
 
             // Powiadom resztę (TODO: usuń wspomnianych)
             r.table('Joints')
@@ -353,8 +352,8 @@ r.connect(config.rethinkdb, function(err, conn) {
       entityMap: {'0': true} // Tylko te które mają jakąś wzmiankę
     }
   })).changes().filter(r.row.hasFields('old_val').not()) // Tylko te które zostały właśnie stworzone (a nie edytowane)
-    .run(conn, function(err, cursor) {
-      cursor.each(function(err, change){ // Nowy komentarz
+    .run(conn, function(err, changes) {
+      changes.each(function(err, change){ // Nowy komentarz
         var activity = change.new_val
         var table = r.table('Volunteers')
 
@@ -451,8 +450,8 @@ r.connect(config.rethinkdb, function(err, conn) {
       cursor.each(function(err, activity){
         if(!activity.datetime) { return }
         // Dodaj zlecenie wysłania powiadomenia o zakończeniu
-        var job = schedule.scheduleJob(new Date(activity.datetime), function(activity){
-          notifyEnd(activity)
+        var job = schedule.scheduleJob(new Date(activity.datetime), function(act){
+          notifyEnd(act)
         }.bind(null, activity))
         jobs[activity.id] = job
       })
@@ -471,8 +470,8 @@ r.connect(config.rethinkdb, function(err, conn) {
         // Brak terminu zgłoszeń
         if(!activity.datetime) { return }
         // Dodaj zlecenie wysyłania powiadomienia
-        job = schedule.scheduleJob(new Date(activity.datetime), function(activity){
-          notifyEnd(activity)
+        job = schedule.scheduleJob(new Date(activity.datetime), function(act){
+          notifyEnd(act)
         }.bind(null, activity))
         jobs[activity.id] = job
       })
