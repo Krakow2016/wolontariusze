@@ -23,6 +23,7 @@ var notifyMentioned = function(title, body, author) {
 
       // Build the smtpapi header
       var header = new smtpapi()
+      header.addCategory('mention')
       header.setTos(all.map(function(x){ return x.email }))
       header.addSubstitution(':name', all.map(function(x){ return x.first_name }))
       header.setFilters({
@@ -44,7 +45,6 @@ var notifyMentioned = function(title, body, author) {
         headers:  { 'x-smtpapi': header.jsonString() }
       })
 
-      email.addCategory('mention')
       sendgrid.send(email, function(err, json) {
         console.log('sendgrid:', err, json)
       })
@@ -210,6 +210,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                   // TODO: dodaj autora aktualizacji
                   // Build the smtpapi header
                   var header = new smtpapi()
+                  header.addCategory('update')
                   header.setTos(volunteers.map(function(x){ return x.right.email }))
                   header.addSubstitution(':name', volunteers.map(function(x){ return x.right.first_name }))
                   header.setFilters({
@@ -231,7 +232,6 @@ r.connect(config.rethinkdb, function(err, conn) {
                     headers:  { 'x-smtpapi': header.jsonString() }
                   })
 
-                  email.addCategory('update')
                   sendgrid.send(email, function(err, json) {
                     console.log('sendgrid:', err, json)
                   })
@@ -381,6 +381,7 @@ r.connect(config.rethinkdb, function(err, conn) {
 
                   // Build the smtpapi header
                   var header = new smtpapi()
+                  header.addCategory('mention')
                   header.setTos(all.map(function(x){ return x.email }))
                   header.addSubstitution(':name', all.map(function(x){ return x.first_name }))
                   header.setFilters({
@@ -401,7 +402,6 @@ r.connect(config.rethinkdb, function(err, conn) {
                     headers:  { 'x-smtpapi': header.jsonString() }
                   })
 
-                  email.addCategory('mention')
                   sendgrid.send(email, function(err, json) {
                     console.log('sendgrid:', err, json)
                   })
