@@ -336,7 +336,7 @@ GET https://wolontariusze.krakow2016.com/api/v2/activities/:id
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f-a3da-3236c8c3a876
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities/5102bb7d-651e-49b1-84a9-6f9460287fce
 ```
 
 **Przykładowa odpowiedź:**  
@@ -345,11 +345,53 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f
     "status": "success",
     "data": {
         "activity": {
-            "id": "0565ea98-86bf-4d5f-a3da-3236c8c3a876",
-            "name": "nazwa",
-            "description": "opis",
-            "created_at": "2016-02-01T22:50:08.906Z",
-            "volunteers": []
+            "act_type": "",
+            "created_at": "2016-03-28T21:16:52.689Z",
+            "created_by": {
+                "first_name": "Karol",
+                "id": "2",
+                "last_name": "Wojty\u0142a",
+                "profile_picture_url": "https://krakow2016.s3.eu-central-1.amazonaws.com/2/avatar?57ae215a9beb713e4475fc9e7623132a\"",
+                "responsibilities": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis viverra vel neque sit amet condimentum. Vestibulum sit amet ornare nisl. Nam porttitor arcu sed ultrices dapibus. Nullam ultrices ligula in dignissim commodo. "
+            },
+            "datetime": "2016-05-24T21:01:45.489Z",
+            "description": {
+                "blocks": [
+                    {
+                        "depth": 0,
+                        "entityRanges": [],
+                        "inlineStyleRanges": [],
+                        "key": "asu40",
+                        "text": "Tre\u015b\u0107 zadania",
+                        "type": "unstyled"
+                    }
+                ],
+                "entityMap": {}
+            },
+            "duration": "",
+            "id": "5102bb7d-651e-49b1-84a9-6f9460287fce",
+            "limit": 5,
+            "name": "Tytu\u0142 zadania",
+            "place": "",
+            "updated_at": "2016-05-24T21:01:49.887Z",
+            "volunteers": [
+                {
+                    "first_name": "Karol",
+                    "id": "98630ba85f5f5fc7273fba5ecc125f740d1a727a8cac905f98b3ecc34782bccc",
+                    "last_name": "Wojty\u0142a",
+                    "profile_picture_url": "https://krakow2016.s3.eu-central-1.amazonaws.com/2/avatar?57ae215a9beb713e4475fc9e7623132a\"",
+                    "thumb_picture_url": "https://krakow2016.s3.eu-central-1.amazonaws.com/2/thumb?ba35a3d499405de4f1114b796b2904c9\"",
+                    "user_id": "2"
+                },
+                {
+                    "first_name": "Faustyna",
+                    "id": "00ea70c378b01bdc332edce822189edd40af94c982f6148047fb285b24adeb77",
+                    "last_name": "Kowalska",
+                    "profile_picture_url": "https://krakow2016.s3.eu-central-1.amazonaws.com/1/avatar?03a8646cff472ee1a1a2de2e247355b2",
+                    "thumb_picture_url": "https://krakow2016.s3.eu-central-1.amazonaws.com/1/thumb?40e207b3121deb0e4486ef0397e78a14",
+                    "user_id": "1"
+                }
+            ]
         }
     }
 }
@@ -397,12 +439,44 @@ GET https://wolontariusze.krakow2016.com/api/v2/activities
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/activities
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities?query[bool][should][0][term][doc.tags]=kategoria1
 ```
 
 **Przykładowa odpowiedź:**  
 ```
-{}
+{
+    "status": "success",
+    "data": {
+        "activities": [
+            {
+                "act_type": "dalem_dla_sdm",
+                "created_at": "2016-03-28T21:16:52.689Z",
+                "created_by": {
+                    "id": "2",
+                    "first_name": "Karol",
+                    "last_name": "Wojty\u0142a",
+                    "profile_picture_url": "https://krakow2016.s3.eu-central-1.amazonaws.com/2/avatar?57ae215a9beb713e4475fc9e7623132a\""
+                },
+                "description": "Tre\u015b\u0107 zadania",
+                "duration": "",
+                "id": "5102bb7d-651e-49b1-84a9-6f9460287fce",
+                "limit": 5,
+                "name": "Tytu\u0142 zadania",
+                "place": "",
+                "volunteers": [
+                    "1",
+                    "2"
+                ],
+                "limit_reached": false,
+                "datetime": "2016-05-24T21:01:45.489Z",
+                "updated_at": "2016-05-24T22:44:09.553Z",
+                "tags": [
+                    "kategoria1"
+                ]
+            }
+        ]
+    }
+}
 ```
 
 ### Wysłanie zgłoszenia do aktywności
