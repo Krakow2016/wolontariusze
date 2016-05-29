@@ -266,6 +266,16 @@ module.exports = {
       done()
     }
   },
+  contact: {
+    path: '/kontakt',
+    method: 'get',
+    handler: require('./components/Contact.jsx'),
+    action: function(context, payload, done){
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Kontakt' })
+      context.dispatch('LOAD_QUERY', payload.query)
+      done()
+    }
+  },
 
 
   import: {
