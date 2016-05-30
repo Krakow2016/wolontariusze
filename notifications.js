@@ -288,7 +288,7 @@ r.connect(config.rethinkdb, function(err, conn) {
 
             var email = new sendgrid.Email({
               to:       row.email,
-              bcc:      'goradobra@krakow2016.com',
+              cc:       'goradobra@krakow2016.com',
               from:     'goradobra@krakow2016.com',
               fromname: 'Góra Dobra',
               subject:  'Witaj w gronie koordynatorów wolontariuszy na Górze Dobra!',
