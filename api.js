@@ -10,6 +10,7 @@ var util = require('util')
 var bodyParser = require('body-parser')
 var expressSession = require('express-session')
 var jiff = require('jiff')
+var qs = require('qs')
 
 var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
@@ -59,6 +60,10 @@ var error = function(type, message) {
 }
 
 var server = module.exports = express();
+
+server.set('query parser', function(query, options) {
+  return qs.parse(query, { depth: 10 })
+})
 
 //server.use(express.logger());
 //server.use(express.cookieParser());
