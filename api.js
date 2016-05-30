@@ -200,17 +200,19 @@ server.post('/api/v2/activities', bearer, function(req, res) {
 
 // Lista aktywności
 server.get('/api/v2/activities', bearer, function(req, res) {
-  var query = {
+  var query = req.query.query || { "match_all": {} }
+  ActivitiesES.create(req, 'ActivitiesES', {}, {
     "query": {
       "nested": {
         "path": "doc",
-        "query": req.query.query
+        "query": query
       }
     }
-  }
-  ActivitiesES.create(req, 'ActivitiesES', {}, query, {}, function (err, activities) {
-    if(err) { res.status(500).send(error(err)) }
-    else {
+  }, {}, function (err, activities) {
+    if(err) {
+      var code = err.statusCode || 500
+      res.status(code).send(error(err))
+    } else {
       res.send(success({ activities: activities }))
     }
   })
