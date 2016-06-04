@@ -19,6 +19,10 @@ module.exports = function(service) {
   var read = service.read
   output.read = function(req, resource, params, config, callback) {
     read(req, resource, params, config, function(err, result) {
+      if(!result) {
+        callback(404)
+        return
+      }
 
       // Informacja dla koordynatora czy wolontariusz aktywował konto
       result.has_password = !!result.password

@@ -82,6 +82,7 @@ var Activities = module.exports = {
       })
       .catch(function(err) {
         console.log(err)
+        callback(err)
       })
 
   }

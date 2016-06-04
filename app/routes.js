@@ -53,8 +53,15 @@ module.exports = {
     action: function (context, payload, done) {
       var volunteerId  = payload.params.id
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Profil wolontariusza' })
-      context.executeAction(actions.showVolunteer, { id: volunteerId }, function() {
-        done()
+      context.executeAction(actions.showVolunteer, { id: volunteerId }, function(data) {
+        if(!data) {
+          context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: Użytkownik nie istnieje w systemie.')
+          context.executeAction(navigateAction, {
+            url: '/'
+          }, done)
+        } else {
+          done()
+        }
       })
     }
   },
@@ -93,12 +100,19 @@ module.exports = {
       var volunteerId  = payload.params.id
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Szczegóły wolontariusza' })
       context.executeAction(actions.showVolunteer, { id: volunteerId }, function(data) {
-        context.executeAction(actions.showXls, { email: data.email }, function() {
-          context.service.read('Comments', {volunteerId: volunteerId}, {}, function (err, data) {
-            context.dispatch('LOAD_COMMENTS', data)
-            done()
+        if(!data) {
+          context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: Użytkownik nie istnieje w systemie.')
+          context.executeAction(navigateAction, {
+            url: '/'
+          }, done)
+        } else {
+          context.executeAction(actions.showXls, { email: data.email }, function() {
+            context.service.read('Comments', {volunteerId: volunteerId}, {}, function (err, data) {
+              context.dispatch('LOAD_COMMENTS', data)
+              done()
+            })
           })
-        })
+        }
       })
     }
   },
@@ -142,7 +156,7 @@ module.exports = {
           context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
           done()
         } else {
-          context.dispatch('SAVE_FLASH_ERROR', 'Błąd: musisz być zalogowany żeby zobaczyć zadanie.')
+          context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: musisz być zalogowany żeby zobaczyć zadanie.')
           context.executeAction(navigateAction, {
             url: '/'
           }, done)
