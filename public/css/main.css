@@ -1225,6 +1225,8 @@ input.graph-filter-input{
 .task-volunteers:not(:empty){
 	width: 100%;
 	border-top: 1px solid #578ea8;
+  max-height: 120px;
+  overflow-y: auto
 }
 
 .task-volunteers .profileThumbnail{
