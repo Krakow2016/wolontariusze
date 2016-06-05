@@ -490,4 +490,21 @@ r.connect(config.rethinkdb, function(err, conn) {
           .end()
       })
     })
+
+  // Informuje API Eventory o zmianach w zdjęciu profilowym
+  r.table('Volunteers').changes()
+    .filter(r.row('new_val')('profile_picture_url').eq(r.row('old_val')('profile_picture_url').default('')).not())
+    .run(conn, function(err, cursor) {
+      cursor.each(function(err, change){
+        var row = change.new_val
+        request
+          .put('http://eventory-beta.coders-mill.com/webapi/v1/sdm/sync')
+          .send({
+            volunteer_id: row.id,
+            photo: row.profile_picture_url
+          })
+          .set('X-Operator-Api-Token', process.env.EVENTORY_API)
+          .end()
+      })
+    })
 })
