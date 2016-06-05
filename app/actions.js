@@ -332,17 +332,6 @@ module.exports = {
     })
   },
 
-  deleteActivity: function(context, payload, cb) {
-    context.service.delete('Activities', payload, {}, function (err, data) {
-      if(err) { debug(err) }
-      else {
-        context.dispatch('ACTIVITY_DELETED', data)
-        context.executeAction(navigateAction, {url: '/zadania'})
-      }
-      cb()
-    })
-  },
-
   createComment: function(context, payload, cb) {
     debug('profile comment create')
     context.service.create('Comments', payload, {}, function (err, data) {

@@ -21,7 +21,6 @@ var actions = require('../actions')
 var updateAction = actions.updateActivity
 var leaveActivityAction = actions.leaveActivity
 var createAction = actions.createActivity
-var deleteAction = actions.deleteActivity
 
 Formsy.addValidationRule('isMoreOrGreaterIntThanZero', function (values, value) {
   return (value % 1 === 0 && value >= 0)
@@ -282,10 +281,6 @@ var ActivityAdministration = React.createClass({
     this.props.context.executeAction(createAction, payload)
   },
 
-  remove: function () {
-    this.props.context.executeAction(deleteAction, {id: this.state.activity.id})
-  },
-
   map: function() {
     if(!this.state.mapReady || !this.state.activity.lat_lon) {
       return (<div />)
@@ -417,11 +412,6 @@ var ActivityAdministration = React.createClass({
       createButton2 = <input type="submit" value="Utwórz publiczne zadanie" disabled={!this.state.canSubmit} />
     }
 
-    var removeButton = []
-    if (this.props.creationMode == false) {
-      removeButton = <input type="button" onClick={this.remove} value="Usuń" />
-    }
-
     var showButton = []
     if (this.props.creationMode == false) {
       showButton = <NavLink href={'/zadania/'+this.state.activity.id} >Wyświetl</NavLink>
@@ -551,7 +541,6 @@ var ActivityAdministration = React.createClass({
           <br/>
           <br/>
           <div id="activityEditToolbar" className="text--center">
-            {removeButton}
             {updateButton}
             {createButton}
             {createButton2}
