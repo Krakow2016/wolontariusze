@@ -1,17 +1,15 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var update = require('react-addons-update')
-var moment = require('moment')
 
 var TaskFilters = require('./TaskFilters.jsx')
-var ProfilePic = require('../ProfilePic.jsx')
+var List = require('./List.jsx')
 var ActivitiesStore = require('../../stores/Activities.js')
-var ActivityStore = require('../../stores/Activity')
 var ActivitiesSearchForm = require('./Search.jsx')
 var actions = require('../../actions')
 var AddActivityButton = require('./AddActivityButton.jsx')
 
-var Tasks = React.createClass({
+var Bank = React.createClass({
 
   propTypes: {
     context: React.PropTypes.object
@@ -19,7 +17,6 @@ var Tasks = React.createClass({
 
   getInitialState: function () {
     var state = this.props.context.getStore(ActivitiesStore).dehydrate()
-    state.activity = this.props.context.getStore(ActivityStore).getState()
     return state
   },
 
@@ -30,14 +27,10 @@ var Tasks = React.createClass({
   componentDidMount: function() {
     this.props.context.getStore(ActivitiesStore)
       .addChangeListener(this._changeListener)
-    this.props.context.getStore(ActivityStore)
-      .addChangeListener(this._changeListener)
   },
 
   componentWillUnmount: function() {
     this.props.context.getStore(ActivitiesStore)
-      .removeChangeListener(this._changeListener)
-    this.props.context.getStore(ActivityStore)
       .removeChangeListener(this._changeListener)
   },
 
@@ -100,57 +93,6 @@ var Tasks = React.createClass({
       }
     }
 
-    var tasks = this.state.all.map(function(task) {
-      if(!task) { return }
-      var volunteers = (task.volunteers || []).map(function(id) {
-        return (
-          <ProfilePic
-            src={'https://krakow2016.s3.eu-central-1.amazonaws.com/'+id+'/thumb'}
-            className='profileThumbnail'
-            key={id} />
-        )
-      })
-
-      var more
-      if (task.description.length > 200){
-        more = (<span>...</span>)
-      }
-
-      return (
-        <div className="row task" key={task.id}>
-          <div className="col col1 task-color">
-            <img src={task.act_type === 'wzialem_od_sdm' ? '/img/flaga2.png' : '/img/flaga.png'} />
-          </div>
-
-          <div className="col col11 task-content">
-            <h1 className={task.is_urgent ? 'urgent' : ''}>
-              <NavLink href={'/zadania/'+task.id}>
-                {task.name}
-              </NavLink>
-            </h1>
-            <span className="task-meta">
-              <span>Autor: </span>
-              <NavLink href={'/zadania?created_by='+ task.created_by.id}>
-                {task.created_by.first_name} {task.created_by.last_name}
-              </NavLink>
-            </span>
-            <span className="task-meta">Wolnych miejsc: { task.limit != 0 ? (task.limit - (task.volunteers || []).length) : 'Bez limitu'}</span>
-            <span className="task-meta">{((task.tags || []).length != 0) ? (task.tags || []).join(', ') : 'Brak kategorii' }</span>
-            <span className="task-meta">Termin zgłoszeń mija: { task.datetime ? moment(task.datetime).calendar() : 'nigdy'}</span>
-            <p>
-              <NavLink href={'/zadania/'+task.id}>
-                { task.description.substring(0,200) }
-                { more }
-              </NavLink>
-            </p>
-            <div className="task-volunteers">
-              {volunteers}
-            </div>
-          </div>
-        </div>
-      )
-    })
-
     if (user) {
       return (
         <div className="task-bank">
@@ -169,7 +111,7 @@ var Tasks = React.createClass({
               query={this.state.query} />
 
           {this.state.all.length > 3 ? this.addActivityButton() : ''}
-          {tasks}
+          <List tasks={this.state.all} />
           {this.addActivityButton()}
         </div>
       )
@@ -189,4 +131,4 @@ var Tasks = React.createClass({
 })
 
 /* Module.exports instead of normal dom mounting */
-module.exports = Tasks
+module.exports = Bank

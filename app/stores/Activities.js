@@ -6,7 +6,7 @@ var ActivitiesStore = createStore({
   storeName: 'Activities',
   handlers: {
     'LOAD_ACTIVITIES' : 'loadAll',
-    'LOAD_ACTIVITIES_QUERY': 'loadQuery'
+    'LOAD_ACTIVITIES_QUERY': 'loadQuery',
   },
 
   initialize: function () {

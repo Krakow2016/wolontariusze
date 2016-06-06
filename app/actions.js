@@ -29,6 +29,46 @@ module.exports = {
     )
   },
 
+  showVolunteerActivity: function(context, payload, cb) {
+    var query = {
+      query: {
+        nested: {
+          path: 'doc',
+          query: {
+            bool: {
+              must: [
+                { term: { 'doc.volunteers': payload.id } },
+                { or: [
+                  {
+                    term: {
+                      'doc.is_archived': true
+                    }
+                  }, {
+                    range: {
+                      'doc.datetime': {
+                        lte: 'now'
+                      }
+                    }
+                  }
+                ]}
+              ]
+            }
+          }
+        }
+      }
+    }
+    context.service.create('ActivitiesES', {}, query, function (err, data) {
+      if (err) {
+        debug(err)
+      } else {
+        context.dispatch('LOAD_ACTIVITIES', {
+          all: data
+        })
+      }
+      cb(data)
+    })
+  },
+
   showVolunteers: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
     context.service.read('Volunteers', payload, {},

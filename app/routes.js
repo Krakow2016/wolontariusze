@@ -74,7 +74,9 @@ module.exports = {
       var volunteerId  = payload.params.id
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Aktywności wolontariusza' })
       context.executeAction(actions.showVolunteer, { id: volunteerId }, function() {
-        done()
+        context.executeAction(actions.showVolunteerActivity, { id: volunteerId }, function() {
+          done()
+        })
       })
     }
   },
@@ -120,7 +122,7 @@ module.exports = {
   open_tasks: {
     path: '/zadania',
     method: 'get',
-    handler: require('./components/TaskBank/Tasks.jsx'),
+    handler: require('./components/TaskBank/Bank.jsx'),
     action: function(context, payload, done) {
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy' })
       context.dispatch('LOAD_ACTIVITIES_QUERY', payload.query)
