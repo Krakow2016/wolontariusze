@@ -17,8 +17,8 @@ var ActivitiesStore = createStore({
   },
 
   loadAll: function(data) {
-    this.all = data.all
-    this.query = data.query
+    this.all = data.all || {}
+    this.query = data.query || {}
     this.emitChange()
   },
 
