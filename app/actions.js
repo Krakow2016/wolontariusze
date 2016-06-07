@@ -688,5 +688,20 @@ module.exports = {
     }
 
     request.send(JSON.stringify(query))
+  },
+
+  setInstagram: function(context, data) {
+    request
+      .post('/instagram')
+      .send({ username: data.instagram.username })
+      .end(function(err, resp){
+        if(err) {
+          context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: Podany użytkownik nie został znaleziony.')
+        } else if (resp.body.result) {
+          context.dispatch('LOAD_VOLUNTEER', data)
+        } else {
+          context.dispatch('SAVE_FLASH_FAILURE', 'Wystąpił nieznany błąd.')
+        }
+      })
   }
 }

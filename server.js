@@ -224,6 +224,7 @@ module.exports = function(server) {
         var json = JSON.parse(body).data[0]
         if (!json) {
           // Niepoprawny login
+          res.status(404).send({status: 'not_found'})
           return
         }
 

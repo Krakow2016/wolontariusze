@@ -3,9 +3,8 @@ var NavLink = require('fluxible-router').NavLink
 
 var VolunteerStore = require('../../stores/Volunteer')
 var ApplicationStore = require('../../stores/ApplicationStore')
-var updateVolunteer = require('../../actions').updateVolunteer
+var actions = require('../../actions')
 var MyTextField = require('./../Formsy/MyTextField.jsx')
-var request = require('superagent')
 
 var InstagramSetting = React.createClass({
 
@@ -35,29 +34,16 @@ var InstagramSetting = React.createClass({
 
   removeInstagram: function() {
     var profile = this.props.context.getStore(VolunteerStore).profile
-    this.props.context.executeAction(updateVolunteer, ({
+    this.props.context.executeAction(actions.updateVolunteer, ({
       id: profile.id,
       instagram: null
     }))
   },
 
   handleSubmit: function(data){
-    var that = this
-    request
-      .post('/instagram')
-      .send({
-        username: data.name
-      })
-      .end(function(err, resp){
-        if(err) {
-          return
-        }
-        if (resp.status == 200) {
-          that.setState({
-            instagram: resp.body.result
-          })
-        } // TODO: obsługa błędów
-      })
+    var profile = Object.assign({}, this.props.context.getStore(VolunteerStore).profile)
+    profile.instagram = { username: data.username }
+    this.props.context.executeAction(actions.setInstagram, profile)
   },
 
   render: function() {
@@ -76,8 +62,8 @@ var InstagramSetting = React.createClass({
         <Formsy.Form ref="form" className="input-group-container" onSubmit={this.handleSubmit}>
           <div className="input-group-text">
             <MyTextField required
-              id="name"
-              name="name"
+              id="username"
+              name="username"
               placeholder="Nazwa użytkownika"
               validations="minLength:3"
               validationError="Nazwa jest wymagana" />
