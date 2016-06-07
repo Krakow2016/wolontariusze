@@ -45,10 +45,10 @@ var Shell = React.createClass({
   },
 
   render: function() {
-    let profile = this.state.profile || {}
-    let given = []
-    let received = []
-    let all = this.state.activities ? this.state.activities.all : []
+    var profile = this.state.profile || {}
+    var given = []
+    var received = []
+    var all = this.state.activities ? this.state.activities.all : []
     all.forEach(function(activity) {
       if(activity.act_type === 'wzialem_od_sdm') {
         received.push(activity)
