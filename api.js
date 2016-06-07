@@ -326,21 +326,27 @@ server.post('/api/v2/joints/:id', is_admin, function(req, res) {
 
 // Lista noclegowa grup pielgrzymów
 server.get('/api/v2/pilgrims', bearer, function(req, res) {
-  Pilgrims.read(req, 'Pilgrims', {}, {}, function(err, result) {
+
+  var params = {}
+  if(req.query.to) {
+    params.key = parseInt(req.query.to, 10)
+  }
+
+  Pilgrims.read(req, 'Pilgrims', params, {}, function(err, to) {
     if(err) {
       res.status(500).send(error('DBError', err))
     } else {
       if(req.query.from) { // Pobierz diff
-        Pilgrims.read(req, 'Pilgrims', { key: parseInt(req.query.from, 10) }, {}, function(err, base) {
+        Pilgrims.read(req, 'Pilgrims', { key: parseInt(req.query.from, 10) }, {}, function(err, from) {
           if(err) {
             res.status(500).send(error('DBError', err))
           } else {
-            var diff = jiff.diff(base[0], result[0])
+            var diff = jiff.diff(from[0], to[0])
             res.send(success({ diff: diff }))
           }
         })
       } else { // Pobierz ostatnią wersję
-        res.send(success({ pilgrims: result[0] }))
+        res.send(success({ pilgrims: to[0] }))
       }
     }
   })

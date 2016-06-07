@@ -613,12 +613,13 @@ GET https://wolontariusze.krakow2016.com/api/v2/pilgrims
 ### Pobieranie aktualizacji do bazy danych (wersjonowanie)
 
 Zwraca zmiany które nastąpiły od ostatniej aktualizacji (numer wersji należy
-podać w parametrze `from`) w formacie JSON w implementacji JSON Patch RFC6902
-(implementacja przez bibliotekę [jiff](https://github.com/cujojs/jiff)).
+podać w parametrze `from`) do dzisiaj (lub do wartości podanej w parametrze
+`to`) w formacie JSON w implementacji JSON Patch RFC6902 (implementacja przez
+bibliotekę [jiff](https://github.com/cujojs/jiff)).
 
 **Ścieżka:**  
 ```
-GET https://wolontariusze.krakow2016.com/api/v2/pilgrims?from=:date
+GET https://wolontariusze.krakow2016.com/api/v2/pilgrims?from=:from_date&to=:to_date
 ```
 
 **Przykładowe zapytanie:**  
