@@ -34,7 +34,7 @@ var Activities = module.exports = {
       index: 'sdm',
       type: 'activity',
       body: body,
-      size: params.size
+      size: params.size || 50
     }
 
     client.search(query)
