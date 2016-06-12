@@ -161,6 +161,11 @@ var Activity = React.createClass({
   handleNewUpdate: function() {
 
     var rawState = Draft.convertToRaw(this.state.newUpdateState.getCurrentContent())
+    // Zignoruj jeżeli brak treści
+    if(rawState.blocks.length === 1 && rawState.blocks[0].text === ''){
+      return
+    }
+
     var updates = this.state.activity.updates || []
     updates.push({
       raw: rawState,
