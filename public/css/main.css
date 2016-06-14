@@ -611,7 +611,8 @@ textarea.settings {
 	font-size: 1.5rem;
   padding: 0;
   margin: 10px 50px;
-  color: initial
+  color: initial;
+  z-index: 1
 }
 
 .message .alert {
