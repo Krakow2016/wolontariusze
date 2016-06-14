@@ -229,7 +229,6 @@ module.exports = {
     handler: require('./components/Texts/Why.jsx'),
     action: function(context, payload, done){
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Czemu Góra Dobra?' })
-      context.dispatch('LOAD_QUERY', payload.query)
       done()
     }
   },
@@ -240,7 +239,6 @@ module.exports = {
     handler: require('./components/Texts/What.jsx'),
     action: function(context, payload, done){
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Czym Jest Góra Dobra?' })
-      context.dispatch('LOAD_QUERY', payload.query)
       done()
     }
   },
@@ -251,7 +249,6 @@ module.exports = {
     handler: require('./components/Texts/How.jsx'),
     action: function(context, payload, done){
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Jak Działa Góra Dobra?' })
-      context.dispatch('LOAD_QUERY', payload.query)
       done()
     }
   },
@@ -262,7 +259,6 @@ module.exports = {
     handler: require('./components/Texts/Who.jsx'),
     action: function(context, payload, done){
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Kto Jest Zaangażowany?' })
-      context.dispatch('LOAD_QUERY', payload.query)
       done()
     }
   },
@@ -272,7 +268,6 @@ module.exports = {
     handler: require('./components/Contact.jsx'),
     action: function(context, payload, done){
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Kontakt' })
-      context.dispatch('LOAD_QUERY', payload.query)
       done()
     }
   },
