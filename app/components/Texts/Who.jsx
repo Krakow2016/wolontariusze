@@ -1,6 +1,6 @@
 var React = require('react')
 
-var Instagram = React.createClass({
+module.exports = React.createClass({
 
   render: function(){
     return (
@@ -26,5 +26,3 @@ var Instagram = React.createClass({
     )
   }
 })
-
-module.exports = Instagram

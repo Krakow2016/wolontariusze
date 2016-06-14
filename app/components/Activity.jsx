@@ -321,7 +321,6 @@ var Activity = React.createClass({
               <p className="activity-profile-responsibilities ">
                 {creator.responsibilities}
               </p>
-
               <table className="table--hoverRow activity-table">
                 <tbody>
                   <tr>

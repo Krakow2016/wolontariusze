@@ -890,6 +890,9 @@ body{
 	color: white;
 	background-color: #416A7D;
 }
+iframe{
+	border: 0;
+}
 article.main-content{
 	background-color: white;
 	color: #003753;
@@ -1400,6 +1403,13 @@ article.main-content a.task-add-btn{
 .bg--warning:hover{
 	background-color: #F3CC49 !important;
 }
+
+/*----------------CONTACT-----------------*/
+
+.contact{
+	margin-bottom: -3rem;
+}
+
 
 /*----------------FOOTER----------------*/
 
