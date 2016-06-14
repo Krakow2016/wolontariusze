@@ -9,7 +9,7 @@ var ApplicationStore = require('../stores/ApplicationStore')
 var Search = React.createClass({
 
   propTypes: {
-     context: React.PropTypes.object
+    context: React.PropTypes.object
   },
 
   getInitialState: function() {
@@ -104,9 +104,7 @@ var Search = React.createClass({
           Potwierdź swoje uprawnienia:
         </p>
 
-        <p>
-          <input type="button" className="button button--bordered border--warning" value="Potwierdzam, kontynuuj..." onClick={this.consent} />
-        </p>
+        <input type="button" className="button bg--warning no-border" value="Potwierdzam, kontynuuj..." onClick={this.consent} />
       </div>
     )
 

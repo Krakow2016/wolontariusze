@@ -19,8 +19,12 @@ var APIClientStore = require('./stores/APIClient')
 var APIClientsStore = require('./stores/APIClients')
 var XlsStore = require('./stores/Xls')
 var IndexStore = require('./stores/Index')
+var AccountActivationStore = require('./stores/AccountActivation')
 
 var passportPlugin = require('./plugins/passportPlugin')
+
+var moment = require('moment')
+    moment.locale('pl')
 
 // Instancja kontenera aplikacji Fluxible
 var app = new Fluxible({
@@ -39,7 +43,8 @@ var app = new Fluxible({
     APIClientStore,
     APIClientsStore,
     XlsStore,
-    IndexStore
+    IndexStore,
+    AccountActivationStore
   ]
 })
 

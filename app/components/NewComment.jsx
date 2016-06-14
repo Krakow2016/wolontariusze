@@ -10,6 +10,10 @@ var connectToStores = addons.connectToStores
 
 var NewComment = React.createClass ({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function() {
     return this.props.context.getStore(NewCommentStore).getState()
   },
@@ -27,7 +31,10 @@ var NewComment = React.createClass ({
 
   _onStoreChange: function() {
     // Nastąpiła zmiana w stanie zasobu nowego komentarza - uaktualij widok.
-    this.setState(this.props.context.getStore(NewCommentStore).getState())
+    var store = this.props.context.getStore(NewCommentStore)
+    this.setState({
+      volunteerId: store.getState().volunteerId
+    })
   },
 
   onChange: function(editorState) {
@@ -42,12 +49,19 @@ var NewComment = React.createClass ({
       raw: Draft.convertToRaw(state),
       volunteerId: this.state.volunteerId
     })
+
+    var editorState = Draft.EditorState.push(this.state.editorState, Draft.ContentState.createFromText(''))
+    this.setState({
+      editorState: editorState
+    })
   },
 
   render: function() {
     return (
       <Editor editorState={this.state.editorState} onChange={this.onChange}>
-        <input type="submit" onClick={this.handleSave} value="Dodaj komentarz" />
+        <p className="text--right">
+          <input type="submit" onClick={this.handleSave} value="Dodaj komentarz" />
+        </p>
       </Editor>
     )
   }

@@ -24,7 +24,7 @@ var Authentication = React.createClass({
         {loginButton}
       </div>
     )
-  },
+  }
 })
 
 var LoginButton = React.createClass({

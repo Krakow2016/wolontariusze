@@ -6,6 +6,10 @@ var NavLink = require('fluxible-router').NavLink
 
 var TaskFilters = React.createClass({
 
+  propTypes: {
+    query: React.PropTypes.object
+  },
+
   getInitialState: function () {
     //var that = this
     return {

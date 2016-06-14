@@ -4,6 +4,11 @@ var actions = require('../../actions')
 
 var Invite = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object,
+    id: React.PropTypes.string
+  },
+
   getInitialState: function () {
     return {}
   },

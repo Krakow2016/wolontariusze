@@ -38,9 +38,11 @@ var Comments = createStore({
     var index = this.comments.findIndex(function(c) {
       return c.id === comment.id
     })
+    var comments = this.comments.slice()
+    comments[index] = comment
 
     if(index > -1) {
-      this.comments[index] = comment
+      this.comments = comments
       this.emitChange()
     }
   },

@@ -156,18 +156,19 @@ Przykłady użycia są zawarte w pliku:
 
 ### Atrybuty
 
-| Klucz                 | Pomijalny | Opis                                                    |
-| ---                   | ---       | ---                                                     |
-| `id`                  | Nie       |                                                         |
-| `email`               | Nie       | Adres e-mail.                                           |
-| `first_name`          | Nie       | Imię.                                                   |
-| `last_name`           | Nie       | Nazwisko.                                               |
-| `is_admin`            | Tak       | 'true' jeżeli użytkownik ma uprawnienia administratora. |
-| `is_approved`         | Tak       | 'true' jeżeli użytkownik może logować się w systemie.   |
-| `phone`               | Tak       | Numer telefonu kontaktowego. Np. `"+48 123456789"`.     |
-| `profile_picture_url` | Tak       | Adres url do zdjęcia profilowego.                       |
-| `tags`                | Tak       | Lista grup do których wolontariusz został przypisany.   |
-| `thumb_picture_url`   | Tak       | Adres url do miniatury zdjęcia profilowego.             |
+| Klucz                 | Pomijalny | Opis                                                                |
+| ---                   | ---       | ---                                                                 |
+| `id`                  | Nie       |                                                                     |
+| `email`               | Nie       | Adres e-mail.                                                       |
+| `first_name`          | Nie       | Imię.                                                               |
+| `last_name`           | Nie       | Nazwisko.                                                           |
+| `is_admin`            | Tak       | 'true' jeżeli użytkownik ma uprawnienia administratora.             |
+| `is_approved`         | Tak       | 'true' jeżeli użytkownik może logować się w systemie.               |
+| `phone`               | Tak       | Numer telefonu kontaktowego. Np. `"+48 123456789"`.                 |
+| `profile_picture_url` | Tak       | Adres url do zdjęcia profilowego.                                   |
+| `responsibilities`    | Tak       | Zakres obowiązków koordynatora (wypełniany tylko dla kont adminów). |
+| `tags`                | Tak       | Lista grup do których wolontariusz został przypisany.               |
+| `thumb_picture_url`   | Tak       | Adres url do miniatury zdjęcia profilowego.                         |
 
 ### Tworzenie obiektu wolontariusza
 
@@ -268,21 +269,21 @@ pojedynczych aktywności jak i całej listy aktywności.
 Przykłady użycia są zawarte w pliku:
 <https://github.com/Krakow2016/wolontariusze/blob/master/spec/api_activity_spec.js>.
 
-| Klucz         | Pomijalny | Opis                                                                       |
-| ---           | ---       | ---                                                                        |
-| `id`          | Nie       |                                                                            |
-| `created_at`  | Nie       | Czas utworzenia aktywności.                                                |
-| `created_by`  | Nie       | Obiekt użytkownika dodającego zadanie.                                     |
-| `description` | Nie       | Opis aktywności. Format: *RawDraftContentState* (patrz niżej).             |
-| `name`        | Nie       | Nazwa aktywności.                                                          |
-| `volunteers`  | Nie       | Tablica wolontariuszy zgłoszonych do wykonania zadania.                    |
-| `duration`    | Tak       | Opis słowny czasu trwania zadania.                                         |
-| `starts_at`   | Tak       | Data i czas rozpoczęcia zadania. Np. ""                                    |
-| `is_urgent`   | Tak       | `true` dla zadań oznaczonych jako pilne.                                   |
-| `lat_lon`     | Tak       | Współrzędne geograficzne miejsca wykonywania aktywności. Np. `[0.0, 0.0]`. |
-| `limit`       | Tak       | Limit osób które mogą zgłosić się do zadania. Np. `10`.                    |
-| `place`       | Tak       | Opis miejsca wykonywania zadania. Np. `"Sankruarium św. Jana Pawła II"`.   |
-| `updates`     | Tak       | Tablica aktualizacji do treści zadania.                                    |
+| Klucz         | Pomijalny | Opis                                                                                                                                              |
+| ---           | ---       | ---                                                                                                                                               |
+| `id`          | Nie       |                                                                                                                                                   |
+| `created_at`  | Nie       | Czas utworzenia aktywności.                                                                                                                       |
+| `created_by`  | Nie       | Obiekt użytkownika dodającego zadanie. Zawiera pola: `id`, `first_name`, `last_name` oraz opcjonalnie `profile_picture_url` i `responsibilities`. |
+| `description` | Nie       | Opis aktywności. Format: *RawDraftContentState* (patrz niżej).                                                                                    |
+| `name`        | Nie       | Nazwa aktywności.                                                                                                                                 |
+| `volunteers`  | Nie       | Tablica wolontariuszy zgłoszonych do wykonania zadania.                                                                                           |
+| `duration`    | Tak       | Opis słowny czasu trwania zadania.                                                                                                                |
+| `starts_at`   | Tak       | Data i czas rozpoczęcia zadania. Np. ""                                                                                                           |
+| `is_urgent`   | Tak       | `true` dla zadań oznaczonych jako pilne.                                                                                                          |
+| `lat_lon`     | Tak       | Współrzędne geograficzne miejsca wykonywania aktywności. Np. `[0.0, 0.0]`.                                                                        |
+| `limit`       | Tak       | Limit osób które mogą zgłosić się do zadania. Np. `10`.                                                                                           |
+| `place`       | Tak       | Opis miejsca wykonywania zadania. Np. `"Sankruarium św. Jana Pawła II"`.                                                                          |
+| `updates`     | Tak       | Tablica aktualizacji do treści zadania.                                                                                                           |
 
 ### Opis obiektu aktualizacji zadania:
 
@@ -308,7 +309,7 @@ POST https://wolontariusze.krakow2016.com/api/v2/activities
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/activities -d '{"name": "nazwa", "description": "opis"}'
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities -d '{"name": "nazwa"}'
 ```
 
 **Przykładowa odpowiedź:**  
@@ -318,7 +319,6 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/activities -d '{"name": "nazw
     "data": {
         "activity": {
             "created_at": "2016-02-01T22:50:08.906Z",
-            "description": "opis",
             "id": "0565ea98-86bf-4d5f-a3da-3236c8c3a876",
             "name": "nazwa",
             "user_id": "1"
@@ -336,7 +336,7 @@ GET https://wolontariusze.krakow2016.com/api/v2/activities/:id
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f-a3da-3236c8c3a876
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities/5102bb7d-651e-49b1-84a9-6f9460287fce
 ```
 
 **Przykładowa odpowiedź:**  
@@ -345,11 +345,53 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f
     "status": "success",
     "data": {
         "activity": {
-            "id": "0565ea98-86bf-4d5f-a3da-3236c8c3a876",
-            "name": "nazwa",
-            "description": "opis",
-            "created_at": "2016-02-01T22:50:08.906Z",
-            "volunteers": []
+            "act_type": "",
+            "created_at": "2016-03-28T21:16:52.689Z",
+            "created_by": {
+                "first_name": "Karol",
+                "id": "2",
+                "last_name": "Wojty\u0142a",
+                "profile_picture_url": "https://krakow2016.s3.eu-central-1.amazonaws.com/2/avatar?57ae215a9beb713e4475fc9e7623132a\"",
+                "responsibilities": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis viverra vel neque sit amet condimentum. Vestibulum sit amet ornare nisl. Nam porttitor arcu sed ultrices dapibus. Nullam ultrices ligula in dignissim commodo. "
+            },
+            "datetime": "2016-05-24T21:01:45.489Z",
+            "description": {
+                "blocks": [
+                    {
+                        "depth": 0,
+                        "entityRanges": [],
+                        "inlineStyleRanges": [],
+                        "key": "asu40",
+                        "text": "Tre\u015b\u0107 zadania",
+                        "type": "unstyled"
+                    }
+                ],
+                "entityMap": {}
+            },
+            "duration": "",
+            "id": "5102bb7d-651e-49b1-84a9-6f9460287fce",
+            "limit": 5,
+            "name": "Tytu\u0142 zadania",
+            "place": "",
+            "updated_at": "2016-05-24T21:01:49.887Z",
+            "volunteers": [
+                {
+                    "first_name": "Karol",
+                    "id": "98630ba85f5f5fc7273fba5ecc125f740d1a727a8cac905f98b3ecc34782bccc",
+                    "last_name": "Wojty\u0142a",
+                    "profile_picture_url": "https://krakow2016.s3.eu-central-1.amazonaws.com/2/avatar?57ae215a9beb713e4475fc9e7623132a\"",
+                    "thumb_picture_url": "https://krakow2016.s3.eu-central-1.amazonaws.com/2/thumb?ba35a3d499405de4f1114b796b2904c9\"",
+                    "user_id": "2"
+                },
+                {
+                    "first_name": "Faustyna",
+                    "id": "00ea70c378b01bdc332edce822189edd40af94c982f6148047fb285b24adeb77",
+                    "last_name": "Kowalska",
+                    "profile_picture_url": "https://krakow2016.s3.eu-central-1.amazonaws.com/1/avatar?03a8646cff472ee1a1a2de2e247355b2",
+                    "thumb_picture_url": "https://krakow2016.s3.eu-central-1.amazonaws.com/1/thumb?40e207b3121deb0e4486ef0397e78a14",
+                    "user_id": "1"
+                }
+            ]
         }
     }
 }
@@ -388,6 +430,8 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/activities/0565ea98-86bf-4d5f
 
 ### Listowanie aktywności
 
+Zwraca listę aktywności wraz z obiektem autora (`id`, `first_name`, `last_name`, `profile_picture_url`). Parametry wyszukiwania należy przekazywać w parametrze `query` w formacie [Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html) (format jest zdefiniowany przez ElasticSearch).
+
 **Ścieżka:**  
 ```
 GET https://wolontariusze.krakow2016.com/api/v2/activities
@@ -395,12 +439,44 @@ GET https://wolontariusze.krakow2016.com/api/v2/activities
 
 **Przykładowe zapytanie:**  
 ```
-$ curl https://wolontariusze.krakow2016.com/api/v2/activities
+$ curl https://wolontariusze.krakow2016.com/api/v2/activities?query[bool][should][0][term][doc.tags]=kategoria1
 ```
 
 **Przykładowa odpowiedź:**  
 ```
-{}
+{
+    "status": "success",
+    "data": {
+        "activities": [
+            {
+                "act_type": "dalem_dla_sdm",
+                "created_at": "2016-03-28T21:16:52.689Z",
+                "created_by": {
+                    "id": "2",
+                    "first_name": "Karol",
+                    "last_name": "Wojty\u0142a",
+                    "profile_picture_url": "https://krakow2016.s3.eu-central-1.amazonaws.com/2/avatar?57ae215a9beb713e4475fc9e7623132a\""
+                },
+                "description": "Tre\u015b\u0107 zadania",
+                "duration": "",
+                "id": "5102bb7d-651e-49b1-84a9-6f9460287fce",
+                "limit": 5,
+                "name": "Tytu\u0142 zadania",
+                "place": "",
+                "volunteers": [
+                    "1",
+                    "2"
+                ],
+                "limit_reached": false,
+                "datetime": "2016-05-24T21:01:45.489Z",
+                "updated_at": "2016-05-24T22:44:09.553Z",
+                "tags": [
+                    "kategoria1"
+                ]
+            }
+        ]
+    }
+}
 ```
 
 ### Wysłanie zgłoszenia do aktywności
@@ -537,11 +613,13 @@ GET https://wolontariusze.krakow2016.com/api/v2/pilgrims
 ### Pobieranie aktualizacji do bazy danych (wersjonowanie)
 
 Zwraca zmiany które nastąpiły od ostatniej aktualizacji (numer wersji należy
-podać w parametrze `from`) w formacie path na bazie w formacie pretty json.
+podać w parametrze `from`) do dzisiaj (lub do wartości podanej w parametrze
+`to`) w formacie JSON w implementacji JSON Patch RFC6902 (implementacja przez
+bibliotekę [jiff](https://github.com/cujojs/jiff)).
 
 **Ścieżka:**  
 ```
-GET https://wolontariusze.krakow2016.com/api/v2/pilgrims?from=:date
+GET https://wolontariusze.krakow2016.com/api/v2/pilgrims?from=:from_date&to=:to_date
 ```
 
 **Przykładowe zapytanie:**  
@@ -554,7 +632,60 @@ $ curl https://wolontariusze.krakow2016.com/api/v2/pilgrims?from=20160416
 {
     "status": "success",
     "data": {
-        "patch": "Index: Pilgrims.json\n===================================================================\n--- Pilgrims.json\n+++ Pilgrims.json\n@@ -1,16 +1,16 @@\n {\n-  \"created_at\": 20160416,\n+  \"created_at\": 20160418,\n   \"data\": [\n     {\n-      \"guardian\": \"Jan Kowalski\",\n-      \"id\": \"foo\",\n+      \"guardian\": \"Joanna Nowak\",\n+      \"id\": \"bar\",\n       \"lat_lon\": [\n         0,\n         0\n       ],\n-      \"location\": \"parafia \u015bw. Szczepana\",\n-      \"phone\": \"+48123456789\"\n+      \"location\": \"parafia \u015bw. Salawy\",\n+      \"phone\": \"+48111222333\"\n     }\n   ],\n-  \"id\": \"eb63b33a-bd8d-4537-8b79-a29744b1f51c\"\n+  \"id\": \"c19a5c9c-da02-4aeb-b08b-558e83a27cbd\"\n }\n\\ No newline at end of file\n"
+        "patch": [
+            {
+                "op": "test",
+                "path": "/id",
+                "value": "eb63b33a-bd8d-4537-8b79-a29744b1f51c"
+            },
+            {
+                "op": "replace",
+                "path": "/id",
+                "value": "c19a5c9c-da02-4aeb-b08b-558e83a27cbd"
+            },
+            {
+                "op": "add",
+                "path": "/data/0",
+                "value": {
+                    "guardian": "Joanna Nowak",
+                    "id": "bar",
+                    "lat_lon": [
+                        0,
+                        0
+                    ],
+                    "location": "parafia \u015bw. Salawy",
+                    "phone": "+48111222333"
+                }
+            },
+            {
+                "op": "test",
+                "path": "/data/1",
+                "value": {
+                    "guardian": "Jan Kowalski",
+                    "id": "foo",
+                    "lat_lon": [
+                        0,
+                        0
+                    ],
+                    "location": "parafia \u015bw. Szczepana",
+                    "phone": "+48123456789"
+                }
+            },
+            {
+                "op": "remove",
+                "path": "/data/1"
+            },
+            {
+                "op": "test",
+                "path": "/created_at",
+                "value": 20160416
+            },
+            {
+                "op": "replace",
+                "path": "/created_at",
+                "value": 20160418
+            }
+        ]
     }
 }
 ```

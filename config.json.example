@@ -1,5 +1,6 @@
 {
   "production": {
+    "base_url": "https://wolontariusze.krakow2016.com",
     "port": 7000,
     "api_port": 3000,
     "domain": "localhost",
@@ -8,10 +9,15 @@
     "rethinkdb": {
       "host": "rethinkdb",
       "db": "sdm"
+    },
+    "s3": {
+      "region": "eu-central-1",
+      "bucket": "krakow2016"
     }
   },
 
   "development": {
+    "base_url": "http://localhost",
     "port": 7000,
     "api_port": 3000,
     "domain": "localhost",
@@ -20,6 +26,10 @@
     "rethinkdb": {
       "host": "rethinkdb",
       "db": "sdm"
+    },
+    "s3": {
+      "region": "eu-central-1",
+      "bucket": "krakow2016"
     }
   },
 

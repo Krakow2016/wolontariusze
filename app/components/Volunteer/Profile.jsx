@@ -5,6 +5,10 @@ var Instagram = require('./Instagram.jsx')
 
 var Shell = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     return this.props.context.getStore(VolunteerStore).profile
   },
@@ -37,11 +41,11 @@ var Shell = React.createClass({
 
         <div className="section row">
           <div className="col col12">
-            <img src="/img/profile/insta.svg" id="profilie-insta-ico" /><h1>#WYD2016</h1>
+            <img src="/img/profile/insta.svg" id="profile-insta-ico" /><h1>#KRAKOW2016</h1>
           </div>
         </div>
 
-        <Instagram user_id={this.state.id} context={this.props.context} />
+        <Instagram user_id={this.state.id} />
       </VolunteerShell>
     )
   }

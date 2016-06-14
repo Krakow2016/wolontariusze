@@ -37,7 +37,7 @@ var NewTag = React.createClass({
   },
 
   handleSave: function(evt, opts) {
-    this.props.onSave(opts.suggestionValue || this.state.value)
+    this.props.onSave(opts && opts.suggestionValue || this.state.value)
     this.setState({value: ''})
   },
 
@@ -76,7 +76,7 @@ var NewTag = React.createClass({
           getSuggestionValue={this.getSuggestionValue}
           onSuggestionSelected={this.handleSave}
           inputProps={inputProps} />
-        <div>
+        <div className="input-group-btn">
           <input type="button" className="bg--primary" value="Dodaj" onClick={this.handleSave} />
         </div>
       </div>

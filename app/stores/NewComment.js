@@ -10,14 +10,7 @@ var NewComment = createStore({
   },
 
   handlers: {
-    'COMMENT_CREATED' : 'reset',
     'LOAD_VOLUNTEER'  : 'update_volunteer'
-  },
-
-  reset: function() {
-    // Komentarz został zapisany na serwerze. Możemy wyczyścić pole.
-    this.initialize()
-    this.emitChange()
   },
 
   update_volunteer: function(volunteer) {
@@ -46,8 +39,7 @@ var NewComment = createStore({
   // FluxibleContext instances (usually retrieved from dehydrate) to
   // rehydrate them to the same state as they were on the server
   rehydrate: function (state) {
-    var blocks = Draft.convertFromRaw(state.editorState)
-    var contentState = Draft.ContentState.createFromBlockArray(blocks)
+    var contentState = Draft.convertFromRaw(state.editorState)
     this.editorState = Draft.EditorState.createWithContent(contentState)
     this.volunteerId = state.volunteerId
   }

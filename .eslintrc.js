@@ -19,6 +19,10 @@ module.exports = {
         "no-trailing-spaces": [
             2
         ],
+        "no-shadow": [
+            2,
+            {"allow": ["err"]}
+        ]
     },
     "env": {
         "es6": true,

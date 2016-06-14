@@ -7,6 +7,10 @@ var actions = require('../actions')
 
 var App = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     return this.props.context.getStore(IndexStore).data || {}
   },
@@ -16,18 +20,14 @@ var App = React.createClass({
   },
 
   componentDidMount: function() {
-    this.loadInsta()
+    //this.loadInsta()
     this.props.context.getStore(IndexStore)
       .addChangeListener(this._changeListener)
 
-    var user = this.props.context.getUser()
-    if(user && user.is_admin) {
-      context.executeAction(actions.showIndex, {}, function() {})
-    }
+    context.executeAction(actions.showIndex, {}, function() {})
   },
 
   componentWillUnmount: function() {
-    this.loadInsta()
     this.props.context.getStore(IndexStore)
       .removeChangeListener(this._changeListener)
   },
@@ -59,7 +59,7 @@ var App = React.createClass({
     if(this.state.media){
       var media = this.state.media.map(function(img) {
         return (
-          <a href={img.link}><img src={img.images.low_resolution.url} key={img.id}/></a>
+          <a href={img.link} key={img.id}><img src={img.images.low_resolution.url}/></a>
         )
       })
       insta_content = (
@@ -71,77 +71,71 @@ var App = React.createClass({
     if(user && user.is_admin) {
       stats = (
         <table style={{width: '100%'}}>
-          <tr>
-            <td>
-              Liczba kont w systemie:
-            </td>
-            <td>
-              {this.state.total_accounts}
-            </td>
-            <td>
-              <NavLink href="/rejestracja">
-                Dodaj
-              </NavLink>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Liczba wolontariuszy krótkoterminowych:
-            </td>
-            <td>
-              <NavLink href="/wyszukiwarka?raw.is_volunteer=true">
-                {this.state.total_volunteers}
-              </NavLink>
-            </td>
-            <td>
-              <NavLink href="/import">
-                Importuj
-              </NavLink>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Liczba aktywnych kont w systemie:
-            </td>
-            <td>
-              <NavLink href="/wyszukiwarka?doc.has_password=true">
-                {this.state.total_active}
-              </NavLink>
-            </td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>
-              Liczba administratorów w systemie:
-            </td>
-            <td>
-              <NavLink href="/wyszukiwarka?doc.is_admin=true">
-                {this.state.total_admins}
-              </NavLink>
-            </td>
-            <td></td>
-          </tr>
+          <tbody>
+            <tr>
+              <td>
+                Liczba kont w systemie:
+              </td>
+              <td>
+                {this.state.total_accounts}
+              </td>
+              <td>
+                <NavLink href="/rejestracja">
+                  Dodaj
+                </NavLink>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Liczba wolontariuszy krótkoterminowych:
+              </td>
+              <td>
+                <NavLink href="/wyszukiwarka?raw.is_volunteer=true">
+                  {this.state.total_volunteers}
+                </NavLink>
+              </td>
+              <td>
+                <NavLink href="/import">
+                  Importuj
+                </NavLink>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Liczba aktywnych kont w systemie:
+              </td>
+              <td>
+                <NavLink href="/wyszukiwarka?doc.has_password=true">
+                  {this.state.total_active}
+                </NavLink>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                Liczba administratorów w systemie:
+              </td>
+              <td>
+                <NavLink href="/wyszukiwarka?doc.is_admin=true">
+                  {this.state.total_admins}
+                </NavLink>
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
         </table>
       )
     }
 
     return (
       <div>
-        <img src="/img/homepage/inspiration.svg" id="inspiration-img" />
+        <div id="inspiration-img"><img src="/img/homepage/inspiration.svg" /></div>
         <img src="/img/homepage/graph.png" style={{width: '100%'}} alt="" />
         <div className="graph-filter">
           <div className="row">
             <div className="col col4">
-              <div className="row">
-                <div className="col col6">
-                  <img src="/img/homepage/VOLUNTEERS.svg" alt="" />
-                  <p>WOLONTARIUSZE</p>
-                </div>
-                <div className="col col6 graph-filter-input-container">
-                  <input type="text" className="graph-filter-input" placeholder="NAZWA" />
-                  <input type="text" className="graph-filter-input" placeholder="NUMER ID" />
-                </div>
-              </div>
+              <img src="/img/homepage/VOLUNTEERS.svg" alt="" />
+              <p>WOLONTARIUSZ</p>
             </div>
             <div className="col col4"><img src="/img/homepage/HOUR.svg" alt="" /><p>GODZINA</p></div>
             <div className="col col4"><img src="/img/homepage/LOCATION.svg" alt="" /><p>LOKALIZACJA</p></div>
@@ -155,17 +149,17 @@ var App = React.createClass({
                 <img src="/img/homepage/bialy_chlopek.svg" alt="" />
                 <img src="/img/homepage/biala_babka.svg" alt="" />
                 <p>WOLONTARIUSZE</p>
-                <p className="dashboard-hours">?</p>
+                <p className="dashboard-hours">{ this.state.total_active }</p>
               </div>
               <div className="col col4">
                 <img src="/img/homepage/biale_buty.svg" alt="" />
                 <p>WYKONANE ZADANIA</p>
-                <p className="dashboard-hours">?</p>
+                <p className="dashboard-hours">{ this.state.total_archived }</p>
               </div>
               <div className="col col4">
                 <img src="/img/homepage/bialy_zegar.svg" alt="" />
                 <p>POŚWIĘCONY CZAS</p>
-                <p className="dashboard-hours">?</p>
+                <p className="dashboard-hours">24h/7d</p>
               </div>
             </div>
           </div>
@@ -236,16 +230,6 @@ var App = React.createClass({
             </div>
           </div>
         </section>
-
-        <div className="insta">
-          <div className="insta-header">
-            <img src="/img/homepage/aparacik.svg" alt="" />
-            <span>#KRAKOW2016</span>
-          </div>
-          <div className="insta-content">
-            {insta_content}
-          </div>
-        </div>
 
         {stats}
       </div>

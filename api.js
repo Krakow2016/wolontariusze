@@ -4,11 +4,13 @@
  * Module dependencies.
  */
 var express = require('express')
+var layout = require('express-layout')
 var passport = require('passport')
 var util = require('util')
 var bodyParser = require('body-parser')
 var expressSession = require('express-session')
-var JsDiff = require('diff')
+var jiff = require('jiff')
+var qs = require('qs')
 
 var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
@@ -59,12 +61,16 @@ var error = function(type, message) {
 
 var server = module.exports = express();
 
-server.set('view engine', 'ejs');
-server.set('views', process.cwd() + '/oauth/views')
+server.set('query parser', function(query, options) {
+  return qs.parse(query, { depth: 10 })
+})
+
 //server.use(express.logger());
 //server.use(express.cookieParser());
 server.use(bodyParser.json())
 server.use(bodyParser.urlencoded({ extended: true }))
+server.use(layout())
+server.use(express.static(__dirname +'/public'))
 /*
 server.use(function(req, res, next) {
   console.log('-- session --');
@@ -77,6 +83,10 @@ server.use(function(req, res, next) {
 //server.use(server.router);
 //server.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 
+server.set('view engine', 'ejs');
+server.set('views', process.cwd() + '/oauth/views')
+server.set('layout', 'layout')
+
 // Passport configuration
 
 require('./auth');
@@ -84,7 +94,9 @@ require('./oauth/auth');
 
 // Formularz do logowania dla wolontariuszy chcących dać dostęp do swojego
 // konta wybranej aplikacji.
-server.get('/api/v2/login', session, function(req, res) { res.render('login') })
+server.get('/api/v2/login', session, function(req, res) {
+  res.render('login', { layout: 'layout' })
+})
 server.post('/api/v2/login', session, passport.authenticate('local', {
   successReturnToOrRedirect: '/api/v2/',
   failureRedirect: '/api/v2/login'
@@ -193,17 +205,20 @@ server.post('/api/v2/activities', bearer, function(req, res) {
 
 // Lista aktywności
 server.get('/api/v2/activities', bearer, function(req, res) {
-  ActivitiesES.create(req, 'ActivitiesES', {}, req.query, {}, function (err, activities) {
-    if(err) { res.status(500).send(error(err)) }
-    else {
-      res.send(success({
-        activities: activities.map(function(activity) {
-          var source = activity._source
-          return Object.assign(source.doc, {
-            volunteers: source.volunteers
-          })
-        })
-      }))
+  var query = req.query.query || { "match_all": {} }
+  ActivitiesES.create(req, 'ActivitiesES', {}, {
+    "query": {
+      "nested": {
+        "path": "doc",
+        "query": query
+      }
+    }
+  }, {}, function (err, activities) {
+    if(err) {
+      var code = err.statusCode || 500
+      res.status(code).send(error(err))
+    } else {
+      res.send(success({ activities: activities }))
     }
   })
 })
@@ -312,26 +327,29 @@ server.post('/api/v2/joints/:id', is_admin, function(req, res) {
 // Lista noclegowa grup pielgrzymów
 server.get('/api/v2/pilgrims', bearer, function(req, res) {
 
-    Pilgrims.read(req, 'Pilgrims', {}, {}, function(err, result) {
-      if(err) {
-        res.status(500).send(error('DBError', err))
-      } else {
-        if(req.query.from) { // Pobierz diff
-          Pilgrims.read(req, 'Pilgrims', { key: parseInt(req.query.from, 10) }, {}, function(err, base) {
-            if(err) {
-              res.status(500).send(error('DBError', err))
-            } else {
-              var oldStr = JSON.stringify(base[0], null, 2)
-              var newStr = JSON.stringify(result[0], null, 2)
-              var patch = JsDiff.createPatch('Pilgrims.json', oldStr, newStr)
-              res.send(success({ patch: patch }))
-            }
-          })
-        } else { // Pobierz ostatnią wersję
-          res.send(success({ pilgrims: result[0] }))
-        }
+  var params = {}
+  if(req.query.to) {
+    params.key = parseInt(req.query.to, 10)
+  }
+
+  Pilgrims.read(req, 'Pilgrims', params, {}, function(err, to) {
+    if(err) {
+      res.status(500).send(error('DBError', err))
+    } else {
+      if(req.query.from) { // Pobierz diff
+        Pilgrims.read(req, 'Pilgrims', { key: parseInt(req.query.from, 10) }, {}, function(err, from) {
+          if(err) {
+            res.status(500).send(error('DBError', err))
+          } else {
+            var diff = jiff.diff(from[0], to[0])
+            res.send(success({ diff: diff }))
+          }
+        })
+      } else { // Pobierz ostatnią wersję
+        res.send(success({ pilgrims: to[0] }))
       }
-    })
+    }
+  })
 })
 
 // Domyślna ścieżka

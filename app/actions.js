@@ -29,6 +29,46 @@ module.exports = {
     )
   },
 
+  showVolunteerActivity: function(context, payload, cb) {
+    var query = {
+      query: {
+        nested: {
+          path: 'doc',
+          query: {
+            bool: {
+              must: [
+                { term: { 'doc.volunteers': payload.id } },
+                { or: [
+                  {
+                    term: {
+                      'doc.is_archived': true
+                    }
+                  }, {
+                    range: {
+                      'doc.datetime': {
+                        lte: 'now'
+                      }
+                    }
+                  }
+                ]}
+              ]
+            }
+          }
+        }
+      }
+    }
+    context.service.create('ActivitiesES', {}, query, function (err, data) {
+      if (err) {
+        debug(err)
+      } else {
+        context.dispatch('LOAD_ACTIVITIES', {
+          all: data
+        })
+      }
+      cb(data)
+    })
+  },
+
   showVolunteers: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
     context.service.read('Volunteers', payload, {},
@@ -62,8 +102,10 @@ module.exports = {
 
     context.service.update('Volunteers', {}, volunteer, function (err) {
       if (err) { // Błąd po stronie serwera
+        context.dispatch('SAVE_FLASH_FAILURE', 'Wystąpił nieznany błąd')
         context.dispatch('VOLUNTEER_UPDATE_FAILURE')
       } else {
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Zapisano.')
         context.dispatch('VOLUNTEER_UPDATE_SUCCESS', volunteer)
       }
       cb()
@@ -248,8 +290,7 @@ module.exports = {
         // TODO tymczasowe rozwiązanie
 
         var Draft = require('draft-js')
-        var blocks = Draft.convertFromRaw(payload.description)
-        var contentState = Draft.ContentState.createFromBlockArray(blocks)
+        var contentState = Draft.convertFromRaw(payload.description)
         payload.description = Draft.EditorState.createWithContent(contentState)
 
         context.dispatch('ACTIVITY_UPDATED', payload)
@@ -263,6 +304,7 @@ module.exports = {
     context.service.update('Activities', {}, payload, function (err, data) {
       if(err) { debug(err) }
       else {
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Aktualizacja do zadania została pomyślnie opublikowana.')
         context.dispatch('UPDATE_ADDED', payload.updates)
         cb()
       }
@@ -272,8 +314,9 @@ module.exports = {
   joinActivity: function(context, payload, cb) {
     context.service.create('Joints', {}, payload, function (err, data) {
       if (err) { // Błąd po stronie serwera
-        //context.dispatch('JOINT_CREATED_FAILURE', [])
+        context.dispatch('SAVE_FLASH_FAILURE', 'Wystąpił nieznany błąd')
       } else {
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Dziękujemy za zgłoszenie!')
         var user = context.getUser()
         context.dispatch('JOINT_CREATED', Object.assign({}, user, {
           id: data.changes[0].new_val.id,
@@ -329,22 +372,15 @@ module.exports = {
     })
   },
 
-  deleteActivity: function(context, payload, cb) {
-    context.service.delete('Activities', payload, {}, function (err, data) {
-      if(err) { debug(err) }
-      else {
-        context.dispatch('ACTIVITY_DELETED', data)
-        context.executeAction(navigateAction, {url: '/zadania'})
-      }
-      cb()
-    })
-  },
-
   createComment: function(context, payload, cb) {
     debug('profile comment create')
     context.service.create('Comments', payload, {}, function (err, data) {
-      if(err) { debug(err) }
-      else { context.dispatch('COMMENT_CREATED', data) }
+      if(err) {
+        debug(err)
+      } else {
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Komentarz do profilu został pomyślnie dodany.')
+        context.dispatch('COMMENT_CREATED', data)
+      }
       cb()
     })
   },
@@ -704,5 +740,41 @@ module.exports = {
     }
 
     request.send(JSON.stringify(query))
+  },
+
+  activateAccount: function(context, state) {
+    var query = { email: state.email }
+    var request = new XMLHttpRequest()
+
+    request.open('POST', '/register', true)
+    request.setRequestHeader('Content-Type', 'application/json')
+    request.onload = function() {
+      var json = JSON.parse(request.responseText)
+      context.dispatch('LOAD_ACCOUNT_ACTIVATION_MESSAGE', {
+        email: state.email,
+        message: json.message
+      })
+    }
+
+    request.onerror = function() {
+      // There was a connection error of some sort
+    }
+
+    request.send(JSON.stringify(query))
+  },
+
+  setInstagram: function(context, data) {
+    request
+      .post('/instagram')
+      .send({ username: data.instagram.username })
+      .end(function(err, resp){
+        if(err) {
+          context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: Podany użytkownik nie został znaleziony.')
+        } else if (resp.body.result) {
+          context.dispatch('LOAD_VOLUNTEER', data)
+        } else {
+          context.dispatch('SAVE_FLASH_FAILURE', 'Wystąpił nieznany błąd.')
+        }
+      })
   }
 }

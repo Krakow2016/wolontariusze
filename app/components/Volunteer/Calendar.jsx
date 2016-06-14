@@ -4,6 +4,10 @@ var VolunteerStore = require('../../stores/Volunteer')
 
 var Shell = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     return this.props.context.getStore(VolunteerStore).getState().profile
   },

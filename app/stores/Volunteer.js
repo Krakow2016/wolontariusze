@@ -9,7 +9,7 @@ var VolunteerStore = createStore({
     //'VOLUNTEER_CREATION_SUCCESS': 'onSuccess',
     'VOLUNTEER_UPDATE_FAILURE': 'onFailure',
     'VOLUNTEER_UPDATE_SUCCESS': 'onSuccess',
-    'INVITATION_SEND': 'onInvited',
+    'INVITATION_SEND': 'onInvited'
   },
 
   initialize: function () {
@@ -49,11 +49,6 @@ var VolunteerStore = createStore({
       profile: this.profile,
       error: this.error,
       success: this.success
-    }
-
-    // Domyślna wartość TODO czy nie da się inaczej?
-    if(!state.profile.profile_picture_url) {
-      state.profile.profile_picture_url = '/img/profile/face.svg'
     }
 
     return state

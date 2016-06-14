@@ -18,11 +18,23 @@ var ApplicationStore = createStore({
   saveFailure: function(message) {
     this.flashFailure = message
     this.emitChange()
+
+    var that = this
+    setTimeout(function() {
+      that.flashFailure = false
+      that.emitChange()
+    }, 7000)
   },
 
   saveSuccess: function(message) {
     this.flashSuccess = message
     this.emitChange()
+
+    var that = this
+    setTimeout(function() {
+      that.flashSuccess = false
+      that.emitChange()
+    }, 7000)
   },
 
   getFailure: function() {
@@ -55,7 +67,7 @@ var ApplicationStore = createStore({
       route: this.currentRoute,
       title: this.title,
       flashSuccess: this.flashSuccess,
-      flashFailure: this.flashFailure,
+      flashFailure: this.flashFailure
     }
   },
 
@@ -71,6 +83,13 @@ var ApplicationStore = createStore({
     this.title = state.title
     this.flashSuccess = state.flashSuccess
     this.flashFailure = state.flashFailure
+
+    var that = this
+    setTimeout(function() {
+      that.flashSuccess = false
+      that.flashFailure = false
+      that.emitChange()
+    }, 7000)
   }
 })
 

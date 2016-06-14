@@ -8,14 +8,17 @@ input, input:focus, input:hover, input:active{
 	outline: 0;
 	text-decoration: none;
 }
-button.bg--primary:hover{
-	color: #90E4FF;
-}
 a, a:focus, a:hover, a:active{
 	color:white;
 }
 input, input:focus, input:hover, input:active{
 	color:rgb(0, 100, 146);
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0
+  }
 }
 
 /*--------------------TEXTS------------------------*/
@@ -27,7 +30,7 @@ h2, h3, h4 {
 	font-family: "Open Sans",Arial;
 	font-weight: 600;
 }
-.p-space{
+.p-space{ 
 	padding-left: 9rem;
 }
 .big-text{
@@ -121,6 +124,7 @@ input.menu-search-box {
 }
 
 /* Base for label styling */
+
 [type="checkbox"]:not(:checked),
 [type="checkbox"]:checked {
 	position: absolute;
@@ -194,8 +198,10 @@ input[type="checkbox"] + label{
 }
 
 /* hover style just for information */
+
 label:hover:before {
 	border: 1px solid #4778d9!important;
+
 }
 
 /*--------GROUP INPUTS----------*/
@@ -207,10 +213,10 @@ label:hover:before {
 	margin: 10px 0;
 }
 .input-group-text,
-.input-group-text > input,
+.input-group-text input,
 .input-group-btn{
 	display: table-cell;
-	height: 36px !important;
+	height: 35px !important;
 }
 .react-autosuggest__container{
 	position: relative;
@@ -220,10 +226,14 @@ label:hover:before {
 	color: #555;
 }
 .input-group-text,
-.input-group-text > input{
-	
+.input-group-text input,
+.input-group-btn,
+.input-group-btn button,
+.input-group-btn input{
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
+	vertical-align: middle;
+	height: 34px !important;
 }
 
 .input-group-btn{
@@ -233,7 +243,8 @@ label:hover:before {
 	width: 1%;
 	vertical-align: middle;
 }
-.input-group-btn > button{
+.input-group-btn button,
+.input-group-btn input{
 	position: relative;
 	z-index: 2;
 	margin-left: -1px;
@@ -258,6 +269,7 @@ label:hover:before {
 	border-radius: 4px;
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
+	color: white;
 }
 
 .btn-category-remove{
@@ -356,6 +368,7 @@ label:hover:before {
 }
 
 /*--------ALERTY----------*/
+
 #alert-err, #alert-ok {
 	position:fixed;
 	bottom:0px;
@@ -393,15 +406,31 @@ label:hover:before {
 	transition: transform 0.5s ease;
 }
 
-.alert{
-	font-size: 1rem;
+.alert-normal{
+	background-color: rgba(0, 100, 146, 0.48);
+    padding: 10px;
+    font: 400 1rem/1.5rem "Open Sans", Arial;
+    color: #FFFFFF;
+    border: none;
 }
 
-#prolife-photo {
+.alert{
+	font: 400 1rem/1.5rem "Open Sans", Arial;
+}
+.alert a{
+	color: rgb(140, 140, 140) !important;
+}
+
+
+.prolife-photo {
 	height:22rem;
 	display: block;
 	margin: 1rem auto;
 	border-radius: 100%;
+}
+.profile-row{
+	margin: 1rem -1rem;
+	background-color: #008AC3;
 }
 #profile-name{
 	margin-top: 2rem;
@@ -444,7 +473,8 @@ label:hover:before {
 	margin: 0;
 }
 .profile-ribon {
-	margin: 1rem 0 1rem 0;
+	margin: 0;
+	padding: 0;
 	display: -ms-flexbox;
 	display: -webkit-flex;
 	display: flex;
@@ -479,34 +509,22 @@ label:hover:before {
 	position: relative;
 	color: white !important;
 }
-.profile-ribon-cell:first-child{
-	border-radius: 2rem 0 0 2rem;
-	margin-left: 0;
-}
-.profile-ribon-cell:last-child{
-	border-radius: 0 2rem 2rem 0;
-}
 .profile-ribon-cell:active {
-	background-color: #0082BD;
+	background-color: #006492;
 }
 .profile-ribon-cell.active {
-	background-color: #0082BD;
+	background-color: #006492;
 }
+.profile-insta{
+	margin-top: 2rem;
+ }
 #profile-ribon-txt {
 	color:#fff;
-	position: absolute;
-	text-align: center;
-	top: 50%;
-	left: 50%;
-	-webkit-transform: translate(-50%,-50%);
-	-ms-transform: translate(-50%,-50%);
-	-o-transform: translate(-50%,-50%);
-	transform: translate(-50%,-50%);
 }
-#profilie-insta-ico{
-	height: 2rem;
+#profile-insta-ico{
+	height: 3rem;
 	float: left;
-	margin: 2rem 1rem 0 0;
+	margin: 0.8rem 1rem 0 0;
 }
 
 .profile-insta-photo {
@@ -587,11 +605,17 @@ textarea.settings {
 	position: fixed;
 	left: 0;
 	right: 0;
-	bottom: 0;
-	background-color: #416A7D;
-	color: white;
+	top: 0;
+	background-color: #fff;
 	text-align: center;
 	font-size: 1.5rem;
+  padding: 0;
+  margin: 10px 50px;
+  color: initial
+}
+
+.message .alert {
+  margin: 0
 }
 
 .tasks-filters-filterType {
@@ -627,7 +651,7 @@ textarea.settings {
 
 .leaflet-container {
 	height: 500px;
-	margin-bottom: 11px;
+	margin: 1rem 0;
 }
 
 .RichEditor-root {
@@ -866,7 +890,9 @@ body{
 	color: white;
 	background-color: #416A7D;
 }
-
+iframe{
+	border: 0;
+}
 article.main-content{
 	background-color: white;
 	color: #003753;
@@ -880,6 +906,9 @@ article.main-content a{
 	padding: 1rem;
 	background-color: #008AC3;
 	color: white;
+}
+.no-border{
+	border: none !important;
 }
 
 /*-------HEADER-------*/
@@ -920,6 +949,7 @@ nav#head-nav .head-section{
 }
 nav#head-nav #head-search{
 	text-align: center;
+	z-index: 2;
 }
 nav#head-nav #head-search > a{
     margin-top: 6px;
@@ -930,20 +960,25 @@ nav#head-nav #head-search #menu-search-submit{
 	z-index: 12;
 	right: 2rem;
 }
-ul#nav-list{
+ul#nav-list,
+ul.nav{
 	list-style: outside none none;
 	margin: 0;
 	padding: 0;
 	text-align: center;
 	position: relative;
 }
-ul#nav-list li{
+ul#nav-list li,
+ul.nav li{
 	display: inline-block;
 	padding: 0 1.5rem;
 	text-transform: uppercase;
 	font-size: 17px;
 	border-left: 0.1rem solid white;
 	font: 400 1rem/1.5rem "Open Sans", Arial;
+}
+ul#nav-list li{
+	border-left: 0.1rem solid white;
 }
 ul#nav-list li:first-child{
 	border-left: 0;
@@ -1009,9 +1044,9 @@ section:last-of-type{
 #inspiration-img{
 	border-bottom: 12px solid white;
 	width: 100%;
+	overflow: hidden;
 }
-#inspiration-img{
-	border-bottom: 12px solid white;
+#inspiration-img img{
 	width: 100%;
 }
 
@@ -1109,6 +1144,127 @@ input.graph-filter-input{
 	background-color: #008AC3;
 }
 
+/*------TASK-BANK------*/
+.task-bank{
+  background-color: white;
+}
+
+.task-bank .row{
+  width: 100%;
+  margin: 0;
+}
+
+.task-bank .task-nav{
+  margin-top: -1rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
+}
+
+.task{
+  border-bottom: 0.5rem solid #008AC3;
+  color: #008AC3;
+}
+
+.task .image{
+  padding: 1rem;
+  /*border-right: 0.1rem solid #008AC3;*/
+}
+
+.mapka img{
+	width: 100%;
+}
+.task .mapka{
+  width: 100%;
+  box-shadow:0 0 6px black;
+}
+
+.mapka .leaflet-container{
+	height: auto;
+	position: relative;
+	width: 100%;
+	padding-top: 100%;
+}
+
+
+.task h1{
+  /*font-family: 'GloriolaMedium';*/
+  font-size: 2rem;
+  color: #006492;
+	margin-bottom: 0.2rem;
+  font-weight: normal
+}
+
+.task h1.urgent{
+  font-weight: bold
+}
+
+.task p{
+  /*font-family: 'Gloriola-Regular';*/
+	font-size: 1.5rem;
+	min-height: 6rem;
+}
+
+.task-meta{
+  /*font-family: 'Gloriola-Italic';*/
+	font-style: italic;
+	display: inline;
+  color: #416A7D;
+  border-right: 2px solid #578ea8;
+  padding: 0 0.5rem;
+}
+
+.task-meta:last-of-type{
+  border-right: none;
+}
+
+.task-meta:first-of-type{
+  padding-left: 0;
+}
+
+.task:last-of-type{
+  border: none;
+}
+
+.task-volunteers:not(:empty){
+	width: 100%;
+	border-top: 1px solid #578ea8;
+  max-height: 121px;
+  overflow-y: auto
+}
+
+.task-volunteers .profileThumbnail{
+	height: 50px;
+	width: 50px;
+	margin-right: 5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.task-color{
+	height: 200px;
+}
+
+.task-color img{
+	width: 100%;
+	margin-top: 1rem;
+}
+
+.task-content{
+	padding-right: 0;
+}
+.task-fotter{
+  background-color: #008AC3;
+  text-align: center;
+}
+
+article ul#nav-list a{
+	color: white;
+}
+
+
+
+
+
 /*------INSTA------*/
 
 .insta-header{
@@ -1137,49 +1293,57 @@ input.graph-filter-input{
 .insta{
 	margin-bottom: 4rem;
 }
+#insta-tags{
+	font-size: 12;
+    color: gray;
+    width: 100%;
+    text-align: center;
+    background-color: rgba(0, 138, 195, 0.12);
+    border-radius: 4px;
+    height: 44px;
+    line-height: 44px;
+    font: 400 10pt/44px &quot;Open Sans&quot;, Arial;
+}
 
 /*---------ACTIVITY--------*/
 
 
 .activity-header > h1{
-	font:600 3.5rem/2.5rem "Open Sans", Arial;
-}
-.activity-help{
-	margin: 1rem 0 1rem 0;
-}
-.activity-help:hover{
-	background-color: rgb(65, 106, 125);
-	color: white;
+	font:400 3.5rem/2.5rem "Open Sans", Arial;
+	margin-bottom: 1.5rem;
+  line-height: 3rem;
 }
 .activity-table{
 	width: 100%;
+	margin: 40px 0;
+  font-size: 80%;
+}
+button + .activity-table{
+	border-bottom: 0;
 }
 .activity-table td[scope]{
-	font-size: 0.8rem;
-	background-color: #E6E6E6;
-	border-bottom: 2px solid #E2E2E2;
+  width: 50%;
+  text-align: right
 }
 .activity-table .urgent{
-	color: red;
+	color: #FF4141;
 }
 .activity-table .normal{
 	color: #3B98FF;
 }
-.activity-image{
-	position: relative;
-}
-.activity-image a{
-  position: absolute;
-  width: 100%;
+.activity-profile-name {
   text-align: center;
-  background-color: #FFFFFF;
-  left: 0;
-  bottom: 15px;
-  border-radius: 4px;
+  font-size: 1.7rem;
+  margin: 20px 0
+}
+.activity-profile-responsibilities {
+  text-align: justify;
+  margin: 20px 40px;
 }
 .activity-image img {
-	width: 200px;
-	height: 200px;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%
 }
 
 /*--------TEXTS--------*/
@@ -1215,6 +1379,38 @@ input.graph-filter-input{
 .content-texts{
 	padding: 1rem 1rem 3rem 1rem;
 }
+article.main-content a.task-add-btn{
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	color: white;
+	font-size: 18pt;
+	font-family: 'Open Sans', Arial;
+	font-weight: 600;
+}
+.bg--task{
+	background-color: rgb(41, 83, 102);
+	width: 92.8%;
+	float: right;
+}
+.bg--task:hover{
+	background-color: rgb(61, 112, 135);
+	color: white;
+}
+.button--full{
+	width: 100%;
+}
+.bg--warning:hover{
+	background-color: #F3CC49 !important;
+}
+
+/*----------------CONTACT-----------------*/
+
+.contact{
+	margin-bottom: -3rem;
+}
+
+
 /*----------------FOOTER----------------*/
 
 footer{
@@ -1225,6 +1421,178 @@ footer{
 
 }
 
+/*----------DRAFT JS MENTION PLUGIN---------*/
+
+.draftJsMentionPlugin__mention__29BEd, .draftJsMentionPlugin__mention__29BEd:visited {
+  color: #575f67;
+  cursor: pointer;
+  display: inline-block;
+  background: #e6f3ff;
+  padding-left: 2px;
+  padding-right: 2px;
+  border-radius: 2px;
+  text-decoration: none;
+}
+
+.draftJsMentionPlugin__mention__29BEd:hover, .draftJsMentionPlugin__mention__29BEd:focus {
+  color: #677584;
+  background: #edf5fd;
+  outline: 0; /* reset for :focus */
+}
+
+.draftJsMentionPlugin__mention__29BEd:active {
+  color: #222;
+  background: #455261;
+}
+.draftJsMentionPlugin__mentionSuggestionsEntry__3mSwm {
+  padding: 7px 10px 3px 10px;
+  -webkit-transition: background-color 0.4s cubic-bezier(.27,1.27,.48,.56);
+  transition: background-color 0.4s cubic-bezier(.27,1.27,.48,.56);
+}
+
+.draftJsMentionPlugin__mentionSuggestionsEntry__3mSwm:active {
+  background-color: #cce7ff;
+}
+
+.draftJsMentionPlugin__mentionSuggestionsEntryFocused__3LcTd {
+  background-color: #e6f3ff;
+}
+
+.draftJsMentionPlugin__mentionSuggestionsEntryText__3Jobq {
+  display: inline-block;
+  margin-left: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 368px;
+  font-size: 0.9em;
+  margin-bottom: 0.2em;
+}
+
+.draftJsMentionPlugin__mentionSuggestionsEntryAvatar__1xgA9 {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+}
+.draftJsMentionPlugin__mentionSuggestions__2DWjA {
+  border: 1px solid #eee;
+  margin-top: 1.75em;
+  position: absolute;
+  min-width: 220px;
+  max-width: 440px;
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0px 4px 30px 0px rgba(220,220,220,1);
+  cursor: pointer;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  z-index: 2;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  box-sizing: border-box;
+  -webkit-transform: scale(0);
+          transform: scale(0);
+}
+
+.draftJsEmojiPlugin__emoji__2oqBk {
+  /* make sure the background the image is only shown once */
+  background-repeat: no-repeat;
+  /* move it a bit further down to align it nicer with the text */
+  vertical-align: middle;
+
+  /*
+  We need to limit the emoji width because it can be multiple characters
+  long if it is a 32bit unicode. Since the proper width depends on the font and
+  it's relationship between 0 and other characters it's not ideal. 1.85ch is not
+  the best value, but hopefully a good enough approximation for most fonts.
+  */
+  display: inline-block;
+  overflow: hidden;
+  max-width: 1.95ch;
+  /*
+  Needed for iOS rendering to avoid some icons using a lot of height without
+  actually needing it.
+  */
+  max-height: 1em;
+  line-height: inherit;
+}
+
+.draftJsEmojiPlugin__emojiCharacter__osX-n {
+  /*
+  Hide the original Emoji icon no matter what system it is. color: transparent
+  would have been nice to avoid the extra span, but it doesn't work on iOS.
+  */
+  opacity: 0;
+}
+.draftJsEmojiPlugin__emojiSuggestionsEntry__2-2p_ {
+  padding: 5px 10px 1px 10px;
+  -webkit-transition: background-color 0.4s cubic-bezier(.27,1.27,.48,.56);
+  transition: background-color 0.4s cubic-bezier(.27,1.27,.48,.56);
+}
+
+.draftJsEmojiPlugin__emojiSuggestionsEntry__2-2p_:active {
+  background-color: #cce7ff;
+}
+
+.draftJsEmojiPlugin__emojiSuggestionsEntryFocused__XDntY {
+  background-color: #e6f3ff;
+}
+
+.draftJsEmojiPlugin__emojiSuggestionsEntryText__2sPjk {
+  display: inline-block;
+  margin-left: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 368px;
+  font-size: 0.9em;
+}
+
+.draftJsEmojiPlugin__emojiSuggestionsEntryIcon__1qC2V {
+  width: 1em;
+  height: 1em;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+  display: inline-block;
+}
+.draftJsEmojiPlugin__emojiSuggestions__2ffcV {
+  border: 1px solid #eee;
+  margin-top: 1.75em;
+  position: absolute;
+  min-width: 220px;
+  max-width: 440px;
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0px 4px 30px 0px rgba(220,220,220,1);
+  cursor: pointer;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  z-index: 2;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  box-sizing: border-box;
+  -webkit-transform: scale(0);
+          transform: scale(0);
+}
+
+.error {
+  color: red;
+}
+
+.error input {
+  border-color: red
+}
+
+.activity--updateBox {
+  position: initial
+}
 
 /*-----------------ANIMATION--------------------*/
 
@@ -1267,13 +1635,13 @@ footer{
 	.tiles-container h1{
 		font-size: 1.8rem
 	}
+	#inspiration-img img{
+		width: 160%;
+		left: -30%;
+		position: relative;
+	}
 }
 @media only screen and (max-width: 768px) {
-	.col { 	margin: 1% 0 1% 0%; }
-	.span_2_of_4, .span_3_of_4, .span_4_of_4 { width: 100%; }
-	.span_1_of_4 { width: 50%; }
-	.THE-margin {margin: auto; width: 85%;}
-	nav {height: inherit;}
 	ul#nav-list li{
 		line-height: 1.5rem;
 		font-size: 0.7rem;
@@ -1311,11 +1679,43 @@ footer{
 	.graph-filter{
 		padding: 0.5rem 4rem;
 	}
-	#prolife-photo{
+	.prolife-photo{
 		height: auto;
 		width: 100%;
 	}
 	.menu-search-box{ margin: 0 0 0.5rem 0;}
 	#menu-search-submit { top: 1rem;}
+
+	/*TASK BANK*/
 	.task p{height: auto;}
+	.task-color{
+		height: 50px;
+	}
+	.task-color img{
+		width: auto;
+		height: 100%;
+	}
+}
+@media only screen and (max-width: 375px){
+	ul#nav-list li{
+		line-height: 1.1rem;
+		font-size: 0.6rem;
+		padding: 0.3rem;
+	}
+}
+
+.profilePicSettings {
+  width: 350px
+}
+
+.avatar-change {
+  text-align: center
+}
+
+.rdtActive {
+  background-color: #e0e0e0;
+}
+
+.rdtToday {
+  border: 2px #e0e0e0 solid;
 }

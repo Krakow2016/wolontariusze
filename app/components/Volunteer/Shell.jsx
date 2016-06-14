@@ -1,11 +1,14 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
-
-var VolunteerStore = require('../../stores/Volunteer')
-
-var actions = require('../../actions')
+var ProfilePic = require('../ProfilePic.jsx')
 
 var Volunteer = React.createClass({
+
+  propTypes: {
+    children: React.PropTypes.element,
+    context: React.PropTypes.object,
+    profile: React.PropTypes.object
+  },
 
   render: function () {
     var user = this.user()
@@ -55,7 +58,7 @@ var Volunteer = React.createClass({
       <div className="volonteer">
         <div className="section row">
           <div className="col col6">
-            <img src={this.props.profile.profile_picture_url} id="prolife-photo" />
+            <ProfilePic src={this.props.profile.profile_picture_url} className="prolife-photo" />
           </div>
           <div className="col col6">
             <h1 className="profile-name">{this.name()}</h1>
@@ -65,7 +68,7 @@ var Volunteer = React.createClass({
           </div>
         </div>
 
-        <div className="section row">
+        <div className="profile-row row">
           <div className="col col12 profile-ribon">
             {tabs}
           </div>
@@ -202,13 +205,13 @@ var Volunteer = React.createClass({
 
 //})
 
-var ExtraAttributesVisible = React.createClass({
-  render: function() {
-    return(
-      <p style={{color: 'red'}}><b>Doświadczenie </b>{this.props.experience}</p>
-    )
-  }
-})
+//var ExtraAttributesVisible = React.createClass({
+  //render: function() {
+    //return(
+      //<p style={{color: 'red'}}><b>Doświadczenie </b>{this.props.experience}</p>
+    //)
+  //}
+//})
 
 // Module.exports instead of normal dom mounting
 module.exports = Volunteer

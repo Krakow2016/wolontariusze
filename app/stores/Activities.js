@@ -6,7 +6,7 @@ var ActivitiesStore = createStore({
   storeName: 'Activities',
   handlers: {
     'LOAD_ACTIVITIES' : 'loadAll',
-    'LOAD_ACTIVITIES_QUERY': 'loadQuery'
+    'LOAD_ACTIVITIES_QUERY': 'loadQuery',
   },
 
   initialize: function () {
@@ -17,8 +17,8 @@ var ActivitiesStore = createStore({
   },
 
   loadAll: function(data) {
-    this.all = data.all
-    this.query = data.query
+    this.all = data.all || {}
+    this.query = data.query || {}
     this.emitChange()
   },
 

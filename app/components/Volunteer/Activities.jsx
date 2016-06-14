@@ -1,64 +1,73 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
+var List = require('../TaskBank/List.jsx')
 var VolunteerShell = require('./Shell.jsx')
 var VolunteerStore = require('../../stores/Volunteer')
+var ActivitiesStore = require('../../stores/Activities.js')
 
 var Shell = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
-    return this.props.context.getStore(VolunteerStore).getState().profile
+    return {
+      profile: this.props.context.getStore(VolunteerStore).getState().profile,
+      activities: this.props.context.getStore(ActivitiesStore).dehydrate()
+    }
   },
 
   _changeListener: function() {
-    this.replaceState(this.props.context.getStore(VolunteerStore).getState().profile)
+    this.setState({
+      profile: this.props.context.getStore(VolunteerStore).getState().profile
+    })
+  },
+
+  _changeListener2: function() {
+    this.setState({
+      activities: this.props.context.getStore(ActivitiesStore).dehydrate()
+    })
   },
 
   componentDidMount: function() {
     this.props.context.getStore(VolunteerStore)
       .addChangeListener(this._changeListener)
+    this.props.context.getStore(ActivitiesStore)
+      .addChangeListener(this._changeListener2)
   },
 
   componentWillUnmount: function() {
     this.props.context.getStore(VolunteerStore)
       .removeChangeListener(this._changeListener)
+    this.props.context.getStore(ActivitiesStore)
+      .removeChangeListener(this._changeListener2)
   },
 
   render: function() {
+    var profile = this.state.profile || {}
+    var given = []
+    var received = []
+    var all = this.state.activities ? this.state.activities.all : []
+    all.forEach(function(activity) {
+      if(activity.act_type === 'wzialem_od_sdm') {
+        received.push(activity)
+      } else {
+        given.push(activity)
+      }
+    })
+
     return (
-      <VolunteerShell context={this.props.context} profile={this.state}>
-        <div className="section row">
+      <VolunteerShell context={this.props.context} profile={profile}>
+        <div className="container">
+          <div className="row">
             <div className="col col6">
-                <h1>Dałem dla ŚDM:</h1>
-                <h2>Udzielam się w sekcjach:</h2>
-                <p className="p-space">Patolodzy dla ŚDM</p>
-                <p className="p-space">Pierwsza Pomoc Przedmedyczna</p>
-                <h2>Borę udział w projektach:</h2>
-                <p className="p-space">Wolontariat +</p>
-                <h2>Oprócz tego:</h2>
-                <ul>
-                    <li>Suscipit a urna urna non venenatis quisque</li>
-                    <li>A sit ullamcorper litora parturient enim velit ad ante montes </li>
-                    <li>scing facilisi a conubia ipsum parturient mattis </li>
-                    <li>suspendisse mi rutrum at egestas cum </li>
-                    <li>erat augue facilisis quisque fusce at.</li>
-                    <li>Arcu ut etiam dis ad a sed sem convallis turpis id </li>
-                    <li>quisque pulvinar penatibus lobortis non. Adipisc</li>
-                    <li>To jest lista aktywności wolontariusza. Za implementację odpowiada Paweł.</li>
-                    <li><NavLink href="/zadania/nowe">Dodaj aktywność</NavLink></li>
-                </ul>
+              <List tasks={given} />
             </div>
             <div className="col col6">
-                <h1>Otrzymałem od ŚDM:</h1>
-                <ul>
-                    <li>Suscipit a urna urna non venenatis quisque</li>
-                    <li>A sit ullamcorper litora parturient enim velit ad ante montes </li>
-                    <li>scing facilisi a conubia ipsum parturient mattis </li>
-                    <li>suspendisse mi rutrum at egestas cum </li>
-                    <li>erat augue facilisis quisque fusce at.</li>
-                    <li>Arcu ut etiam dis ad a sed sem convallis turpis id </li>
-                    <li>quisque pulvinar penatibus lobortis non. Adipisc</li>
-                </ul>
+              <List tasks={received} />
             </div>
+          </div>
         </div>
       </VolunteerShell>
     )

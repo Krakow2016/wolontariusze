@@ -6,7 +6,6 @@ var navigateAction = require('fluxible-router').navigateAction
 var provideContext = addons.provideContext
 
 var ApplicationStore = require('../stores/ApplicationStore')
-
 var Authentication = require('./Authentication.jsx')
 var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
 var Message = require('./Message.jsx')
@@ -20,18 +19,22 @@ injectTapEventPlugin()
 
 var Application = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   contextTypes: {
-    getStore      : React.PropTypes.func,
-    executeAction : React.PropTypes.func,
-    getUser       : React.PropTypes.func
+    getStore: React.PropTypes.func,
+    executeAction: React.PropTypes.func,
+    getUser: React.PropTypes.func
   },
 
   getInitialState: function() {
     // Wyświetl komunikat flash
     var applicationStore = this.props.context.getStore(ApplicationStore)
     return {
-      infoMessage: applicationStore.getSuccess(),
-      errorMessage: applicationStore.getFailure(),
+      flashSuccess: applicationStore.getSuccess(),
+      flashFailure: applicationStore.getFailure(),
       title: applicationStore.getPageTitle()
     }
   },
@@ -43,14 +46,6 @@ var Application = React.createClass({
   componentDidMount: function() {
     this.props.context.getStore(ApplicationStore)
       .addChangeListener(this._changeListener)
-
-    var that = this
-    setTimeout(function() {
-      that.setState({
-        infoMessage: false,
-        errorMessage: false
-      })
-    }, 5000)
   },
 
   componentWillUnmount: function() {
@@ -60,13 +55,13 @@ var Application = React.createClass({
 
   handleInfoSnackbarRequestClose: function() {
     this.setState({
-      infoMessage: false
+      flashSuccess: false
     })
   },
 
   handleErrorSnackbarRequestClose: function() {
     this.setState({
-      errorMessage: false
+      flashFailure: false
     })
   },
 
@@ -82,8 +77,8 @@ var Application = React.createClass({
 
     var searchForm
     var advancedSearch
-    var infoMessage
-    var errorMessage
+    var flashSuccess
+    var flashFailure
     var article
 
     if(this.user()) {
@@ -120,18 +115,18 @@ var Application = React.createClass({
       )
     }
 
-    if(this.state.infoMessage) {
-      infoMessage = (
+    if(this.state.flashSuccess) {
+      flashSuccess = (
         <Message>
-          <b>{this.state.infoMessage}</b>
+          <b>{this.state.flashSuccess}</b>
         </Message>
       )
     }
 
-    if(this.state.errorMessage) {
-      errorMessage = (
-        <Message>
-          <b>{this.state.errorMessage}</b>
+    if(this.state.flashFailure) {
+      flashFailure = (
+        <Message className="alert--error">
+          <b>{this.state.flashFailure}</b>
         </Message>
       )
     }
@@ -151,13 +146,13 @@ var Application = React.createClass({
         </header>
 
         {article}
-        {infoMessage}
-        {errorMessage}
+        {flashSuccess}
+        {flashFailure}
         <footer>
           <p>
             Strona została zbudowana przez wolontariuszy ŚDM KRAKÓW 2016.
             <br />
-            <a href="mailto:goradobra@krakow2016.com" target="_balnk">Kontakt</a> | <NavLink href="/regulamin">Regulamin</NavLink> | <a href="https://github.com/Krakow2016/wolontariusze">Dla programistów</a>
+            <a href="mailto:goradobra@krakow2016.com" target="_balnk">E-mail</a> | <NavLink href="/kontakt">Kontakt</NavLink> | <NavLink href="/regulamin">Regulamin</NavLink> | <a href="https://github.com/Krakow2016/wolontariusze">Dla programistów</a>
           </p>
         </footer>
       </div>

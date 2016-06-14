@@ -18,7 +18,7 @@ describe('Activity API', function() {
           expect(json.data.activity.name).toBe("Nazwa zadania")
           expect(json.data.activity.description).toBe("Opis zadania")
           expect(json.data.activity.lat_lon).toEqual([13, 37])
-          expect(json.data.activity.user_id).toBe("2")
+          expect(json.data.activity.created_by).toBe("2")
           done()
         })
       })
@@ -27,6 +27,15 @@ describe('Activity API', function() {
 
   describe('get /activities', function() {
     it('should list all activities', function(done) {
+
+      var ActivitiesES = require('../app/services/es/activities')
+
+      // Nadpisuje metodę łączącą się z bazą danych ElasticSearch
+      spyOn(ActivitiesES, 'create')
+        .and.callFake(function(req, resource, params, body, config, callback) {
+          callback(null, [])
+        })
+
       apiRequest(function(r, cb){
         r.get('/activities', function(err, resp, body){
           expect(err).toBeNull()

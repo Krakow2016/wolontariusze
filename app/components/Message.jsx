@@ -4,7 +4,9 @@ var Message = React.createClass({
   render: function() {
     return (
       <div className="message">
-        {this.props.children}
+        <div className={ "alert " + this.props.className }>
+          { this.props.children }
+        </div>
       </div>
     )
   }

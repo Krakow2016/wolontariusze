@@ -14,6 +14,10 @@ var Integration = function(props) {
 
 var Settings = React.createClass({
 
+  propTypes: {
+    context: React.PropTypes.object
+  },
+
   getInitialState: function () {
     return {
       profile: this.props.context.getStore(VolunteerStore).getState().profile,
@@ -89,7 +93,7 @@ var Settings = React.createClass({
             id="who_question"
             name="who_question"
             placeholder=""
-            value={this.state.profile.who_question}
+            value={this.state.profile.who_question || ""}
             validations={{
               maxLength: 500
             }}
@@ -105,7 +109,7 @@ var Settings = React.createClass({
             id="what_question"
             name="what_question"
             placeholder=""
-            value={this.state.profile.what_question}
+            value={this.state.profile.what_question || ""}
             validations={{
               maxLength: 500
             }}
@@ -121,7 +125,7 @@ var Settings = React.createClass({
             id="why_question"
             name="why_question"
             placeholder=""
-            value={this.state.profile.why_question}
+            value={this.state.profile.why_question || ""}
             validations={{
               maxLength: 500
             }}
@@ -141,6 +145,7 @@ var Settings = React.createClass({
               <p>Lista integracji:</p>
               <ul>
                 <li><InstagramSetting context={this.props.context} /></li>
+                <div id="insta-tags">#krakow2016 #wyd2016 #sdm2016 #jmj2016 #gmg2016 #сдм2016 #wjt2016 #вдм2016</div>
               </ul>
               <p>Lista aplikacji:</p>
               <ul>
