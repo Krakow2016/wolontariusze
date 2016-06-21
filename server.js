@@ -434,6 +434,24 @@ module.exports = function(server) {
 
   // Wysyła link aktywacyjny do nieaktywnych krótkoterminowych wolontariuszy
   server.post('/register', jsonParser, function(req, res){
+    var ok = function(user, res) {
+      approve(user, function(update) {
+        // Zapisz w token w bazie
+        Volunteers.update({force_admin: true}, 'Volunteers', {
+          id: user.id
+        }, update, {}, function (err) {
+          if(err) {
+            res.status(500).send(err)
+          } else {
+            res.status(200).send({
+              status: 'ok',
+              message: 'Dziękujemy za zgłoszenie! Na podany adres email został wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę.'
+            })
+          }
+        })
+      })
+    }
+
     var email = req.body.email
     if(email) {
       // Znajdź konto o podanym adresie email
@@ -451,9 +469,11 @@ module.exports = function(server) {
             message: 'Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. Jeżeli nie pamiętasz swojego hasła, skontaktuj się z goradobra@krakow2016.com.'
           })
         } else if (user.approved) {
-          return res.status(400).send({
-            status: 'error',
-            message: 'Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. Jeżeli masz problem z ustawieniem hasła, skontaktuj się z goradobra@krakow2016.com.'
+          // Zablokuj i odblokuj konto
+          Volunteers.update({ force_admin: true }, 'Volunteers', {
+            id: user.id
+          }, { approved: false }, {}, function (err) {
+            return ok(user, res)
           })
         } else {
           Xls.read({force_admin: true}, 'Imports', { email: email }, { index: 'rg_email' }, function (err2, importedUser) {
@@ -463,21 +483,7 @@ module.exports = function(server) {
                 message: 'Brak informacji o zgłoszeniu do wolontariatu krótkoterminowego. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane.'
               })
             } else {
-              approve(user, function(update) {
-                // Zapisz w token w bazie
-                Volunteers.update({force_admin: true}, 'Volunteers', {
-                  id: user.id
-                }, update, {}, function (err) {
-                  if(err) {
-                    res.status(500).send(err)
-                  } else {
-                    res.status(200).send({
-                      status: 'ok',
-                      message: 'Dziękujemy za zgłoszenie! Na podany adres email został wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę.'
-                    })
-                  }
-                })
-              })
+              ok(user, res)
             }
           })
         }
