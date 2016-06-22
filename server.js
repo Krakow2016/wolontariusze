@@ -503,7 +503,7 @@ module.exports = function(server) {
       // Parsuje plik xml do formatu json
       excelParser.parse({
         inFile: req.files.image.path, // TODO: co jeżeli > 1?
-        worksheet: 'Volontari'
+        worksheet: 'Volunteers'
       }, function(err, records){
         if(err) {
           res.status(500).send(err)
