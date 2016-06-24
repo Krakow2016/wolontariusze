@@ -60,7 +60,9 @@ module.exports = {
             url: '/'
           }, done)
         } else {
+          context.executeAction(actions.showVolunteerActivity, { id: volunteerId }, function() {
           done()
+        })
         }
       })
     }

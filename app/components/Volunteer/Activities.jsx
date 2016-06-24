@@ -49,6 +49,7 @@ var Shell = React.createClass({
     var given = []
     var received = []
     var all = this.state.activities ? this.state.activities.all : []
+    
     all.forEach(function(activity) {
       if(activity.act_type === 'wzialem_od_sdm') {
         received.push(activity)

@@ -2,6 +2,8 @@ var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var ProfilePic = require('../ProfilePic.jsx')
 
+var ActivitiesStore = require('../../stores/Activities.js')
+
 var Volunteer = React.createClass({
 
   propTypes: {
@@ -10,8 +12,32 @@ var Volunteer = React.createClass({
     profile: React.PropTypes.object
   },
 
+  getInitialState: function () {
+    return {
+      activities: this.props.context.getStore(ActivitiesStore).dehydrate()
+    }
+  },
+
+  _changeListener: function() {
+    this.setState({
+      activities: this.props.context.getStore(ActivitiesStore).dehydrate()
+    })
+  },
+
+  componentDidMount: function() {
+    this.props.context.getStore(ActivitiesStore)
+      .addChangeListener(this._changeListener)
+  },
+
+  componentWillUnmount: function() {
+    this.props.context.getStore(ActivitiesStore)
+      .removeChangeListener(this._changeListener)
+  },
+
+
   render: function () {
     var user = this.user()
+    var all = this.state.activities ? this.state.activities.all : []
 
     var email
     var tabs = [
@@ -37,36 +63,55 @@ var Volunteer = React.createClass({
         )
 
         email = (
-          <h2>
+          <h3>
             <b>E-mail: </b>
             <span>
-              <a href={'mailto:'+ this.props.profile.email} target="_blank">
+              <a href={'mailto:'+ this.props.profile.email} target="_blank" id="prolife-data-mail">
                 {this.props.profile.email}
               </a>
             </span>
-          </h2>
+          </h3>
         )
       }
     }
 
     var tags
     if(this.props.profile.tags) {
-      tags = (<h2><b>Tagi:</b> <span>{ this.props.profile.tags.join(', ') }</span></h2>)
+      tags = (<div className="row">
+                <p>Tagi</p>
+                <div className="col col6 stone-left">
+                    <img className="prolife-stone-img" src="/img/homepage/bialy_tag.svg" />
+                </div>
+                <div className="col col6 stone-right ">
+                    <p id="stone-tag">{ this.props.profile.tags.join(', ') }</p>
+                </div>
+              </div>)
     }
 
     return (
-      <div className="volonteer">
-        <div className="section row">
-          <div className="col col6">
+      <div className="volunteer">
+        <section className="section row vcard">
+          <div className="col col4">
             <ProfilePic src={this.props.profile.profile_picture_url} className="prolife-photo" />
           </div>
-          <div className="col col6">
+          <div className="col col4 prolife-data">
             <h1 className="profile-name">{this.name()}</h1>
-            <h2><b>Kraj:</b> <span>{ this.props.profile.nationality || 'Polska' }</span></h2>
-            {tags}
+            <h3><b>Kraj:</b> <span>{ this.props.profile.nationality || 'Polska' }</span></h3>
             {email}
           </div>
-        </div>
+          <div className="col col4 prolife-stone">
+              <div className="row">
+                <p>WYKONANE ZADANIA</p>
+                <div className="col col6 stone-left">
+                  <img className="prolife-stone-img" src="/img/homepage/biale_buty.svg" />
+                </div>
+                <div className="col col6 stone-right ">
+                  <p>{all.length}</p>
+                </div>
+              </div>
+              {tags}
+          </div>
+        </section>
 
         <div className="profile-row row">
           <div className="col col12 profile-ribon">

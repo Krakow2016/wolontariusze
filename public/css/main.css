@@ -421,56 +421,72 @@ label:hover:before {
 	color: rgb(140, 140, 140) !important;
 }
 
+/*------PROFILE--------*/
 
+.volunteer{
+	margin: -1rem -1rem 0 -1rem;
+}
 .prolife-photo {
-	height:22rem;
+	width: 100%;
 	display: block;
-	margin: 1rem auto;
+	margin: 1rem 0rem;
+	border: solid 0.5rem #008AC3;
 	border-radius: 100%;
 }
 .profile-row{
-	margin: 1rem -1rem;
+	margin: 0;
+	margin-bottom: 1rem;
 	background-color: #008AC3;
 }
-#profile-name{
-	margin-top: 2rem;
+.section.vcard {
+	background-color: #006492;
+	margin: 0;
+	overflow: hidden;
 }
-#profile-grow-title {
-	margin: 4rem auto;
+
+.prolife-data {
+	margin-top: 3rem;
 }
-#profile-stone-box {
-	position:relative;
-	text-align: center;
-}
-#prolife-stone-img {
-	height:10rem;
-	display: block;
-	margin: 1rem auto;
-}
-#profile-stone-tasks{
-	line-height: 0.9;
-	position: absolute;
-	top: 4rem;
-	left: 50%;
-	-webkit-transform: translate(-50%,0%);
-	-ms-transform: translate(-50%,0%);
-	-o-transform: translate(-50%,0%);
-	transform: translate(-50%,0%);
-}
-#profile-stone-tasks>b{
+.prolife-data>h1, .prolife-data>h3{
+	margin: 1rem 0 3rem 0;
 	color: #fff;
 }
-#profile-stone-tasks-nr {
-	font-size: 2.75rem;
+#prolife-data-mail{
+	color:#a4c8e6;
 }
-#prolife-contant-ico {
-	height: 3rem;
-	float: left;
-	margin: 0 2rem 0 3rem;
+#prolife-data-mail:hover{
+	text-decoration: underline;
 }
-#prolife-contant-data {
-	line-height: 3rem;
+.prolife-stone>.row:nth-child(1){
+	margin-top: 3rem;
+}
+.prolife-stone>.row:nth-child(2){
+	margin-top: 1rem;
+}
+.prolife-stone>.row>p{
 	margin: 0;
+}
+.prolife-stone{
+	text-align: center;
+}
+.prolife-stone>.row{
+	color: fff;
+}
+.stone-left{
+	text-align: right;
+}
+.prolife-stone-img {
+	margin:1rem 0 0.5rem 0;
+}
+.stone-right {
+	color: #fff;
+	font-size: 4rem;
+	text-align: left;
+	vertical-align: center;
+}
+#stone-tag {
+	font-size: 1.5rem;
+	margin-top: 1rem;
 }
 .profile-ribon {
 	margin: 0;
@@ -517,7 +533,7 @@ label:hover:before {
 }
 .profile-insta{
 	margin-top: 2rem;
- }
+}
 #profile-ribon-txt {
 	color:#fff;
 }
@@ -540,6 +556,7 @@ label:hover:before {
 	display: block;
 	padding-top: 100%;
 }
+
 .square-content{
 	position:absolute;
 	top: 0;
@@ -1105,6 +1122,9 @@ input.graph-filter-input{
 }
 .questions > p{
 	font-size: 1.5rem;
+}
+.questions{
+	margin: 0 1rem;
 }
 
 /*------HOW-AND-WHO------*/

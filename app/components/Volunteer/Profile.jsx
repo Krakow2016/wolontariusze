@@ -30,25 +30,32 @@ var Shell = React.createClass({
   render: function() {
     return (
       <VolunteerShell context={this.props.context} profile={this.state}>
-        <div className="section group questions">
-            <h1>Kim jestem?</h1>
-            <p>{this.state.who_question}</p>
-            <h1>Co chciałbym robić w życiu najbardziej?</h1>
-            <p>{this.state.what_question}</p>
-            <h1>Dlaczego angażuję się w wolontariat ŚDM?</h1>
-            <p>{this.state.why_question}</p>
+        <div className="row questions">
+            <div className="col col4" >
+              <h1>Kim jestem?</h1>
+              <p>{this.state.who_question}</p>
+            </div>
+            <div className="col col4" >
+              <h1>Co chciałbym robić w życiu najbardziej?</h1>
+              <p>{this.state.what_question}</p>
+            </div>
+            <div className="col col4" >
+              <h1>Dlaczego angażuję się w wolontariat ŚDM?</h1>
+              <p>{this.state.why_question}</p>
+            </div>
         </div>
 
-        <div className="section row">
-          <div className="col col12">
-            <img src="/img/profile/insta.svg" id="profile-insta-ico" /><h1>#KRAKOW2016</h1>
-          </div>
-        </div>
-
-        <Instagram user_id={this.state.id} />
       </VolunteerShell>
     )
   }
 })
 
 module.exports = Shell
+
+        // <div className="section row">
+        //   <div className="col col12">
+        //     <img src="/img/profile/insta.svg" id="profile-insta-ico" /><h1>#KRAKOW2016</h1>
+        //   </div>
+        // </div>
+
+        // <Instagram user_id={this.state.id} />
