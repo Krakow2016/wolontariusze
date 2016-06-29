@@ -83,6 +83,10 @@ var approve = function(user, cb) {
   })
 }
 
+var admin = {
+  user: { id: '', is_admin: true }
+}
+
 // Konfiguracja middleware-u Passport definująca metodę weryfikacji poprawności
 // logowania.
 require('./auth')
@@ -91,7 +95,7 @@ require('./auth')
 passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
   function(req, apikey, done) {
     // Znajdź konto na które podany token został wygenerowany
-    Volunteers.read({force_admin: true}, 'Volunteers', { key: apikey }, { index: 'token' }, function (err, users) {
+    Volunteers.read(admin, 'Volunteers', { key: apikey }, { index: 'token' }, function (err, users) {
       var user = users[0]
       if (err) { return done(err) } // Błąd bazy danych
       if (!user) {
@@ -120,7 +124,7 @@ passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
           })
         } else { // Autoryzacja przebiegła pomyślnie
           token.used = { datetime: new Date(), ip: req.ip, headers: req.headers }
-          Volunteers.update({force_admin: true}, 'Volunteers', {id: user.id}, {
+          Volunteers.update(admin, 'Volunteers', {id: user.id}, {
             access_tokens: tokens
           }, {}, function (err) {
             if(err) {
@@ -262,7 +266,7 @@ module.exports = function(server) {
     var id = req.params.id
     var tags = ['krakow2016', 'wyd2016', 'sdm2016', 'jmj2016', 'gmg2016', 'сдм2016', 'wjt2016', 'вдм2016']
 
-    Volunteers.read({force_admin: true}, 'Volunteers', {id: id}, {}, function (err, user) {
+    Volunteers.read(admin, 'Volunteers', {id: id}, {}, function (err, user) {
       var instagram = user.instagram
 
       if(err) { return res.send(500) }
@@ -437,7 +441,7 @@ module.exports = function(server) {
     var ok = function(user, res) {
       approve(user, function(update) {
         // Zapisz w token w bazie
-        Volunteers.update({force_admin: true}, 'Volunteers', {
+        Volunteers.update(admin, 'Volunteers', {
           id: user.id
         }, update, {}, function (err) {
           if(err) {
@@ -455,7 +459,7 @@ module.exports = function(server) {
     var email = req.body.email
     if(email) {
       // Znajdź konto o podanym adresie email
-      Volunteers.read({force_admin: true}, 'Volunteers', { key: email }, { index: 'email' }, function (err, users) {
+      Volunteers.read(admin, 'Volunteers', { key: email }, { index: 'email' }, function (err, users) {
         if (err || !users) { return res.status(500).send(err) } // Błąd bazy danych
         var user = users[0]
         if (!user) {
@@ -470,13 +474,13 @@ module.exports = function(server) {
           })
         } else if (user.approved) {
           // Zablokuj i odblokuj konto
-          Volunteers.update({ force_admin: true }, 'Volunteers', {
+          Volunteers.update(admin, 'Volunteers', {
             id: user.id
           }, { approved: false }, {}, function (err) {
             return ok(user, res)
           })
         } else {
-          Xls.read({force_admin: true}, 'Imports', { email: email }, { index: 'rg_email' }, function (err2, importedUser) {
+          Xls.read(admin, 'Imports', { email: email }, { index: 'rg_email' }, function (err2, importedUser) {
             if (!importedUser) {
               return res.status(400).send({
                 status: 'error',
@@ -646,7 +650,7 @@ module.exports = function(server) {
             profile_picture_url: data[1].Location +'?'+ data[0].ETag.replace(reg, ''),
             thumb_picture_url: data[2].Location +'?'+ data[1].ETag.replace(reg, '')
           }
-          Volunteers.update({force_admin: true}, 'Volunteers', {id: req.user.id}, changes, {returnChanges: true}, function(err, result) {
+          Volunteers.update(admin, 'Volunteers', {id: req.user.id}, changes, {returnChanges: true}, function(err, result) {
             if(err) {
               res.status(500).send('Wystąpił nieznany błąd bazy danych.')
               console.error(err)

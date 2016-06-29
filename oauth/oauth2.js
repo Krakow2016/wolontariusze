@@ -13,6 +13,10 @@ var conf = config.rethinkdb
 
 var APIClients = require('../app/services/'+config.service+'/apiclients')
 
+var admin = {
+  user: { id: '', is_admin: true }
+}
+
 // create OAuth 2.0 server
 var server = oauth2orize.createServer();
 
@@ -34,7 +38,7 @@ server.serializeClient(function(client, done) {
 });
 
 server.deserializeClient(function(id, done) {
-  APIClients.read({force_admin: true}, 'APIClients', { id: id }, {}, function (err, client) {
+  APIClients.read(admin, 'APIClients', { id: id }, {}, function (err, client) {
     if (err) { return done(err) }
     return done(null, client)
   })
@@ -144,7 +148,7 @@ server.exchange(oauth2orize.exchange.code(function(client, code, redirectURI, do
 exports.authorization = [
   login.ensureLoggedIn('/api/v2/login'),
   server.authorization(function(clientId, redirectURI, done) {
-    APIClients.read({force_admin: true}, 'APIClients', { id: clientId }, {}, function (err, client) {
+    APIClients.read(admin, 'APIClients', { id: clientId }, {}, function (err, client) {
       if (err) { return done(null, false, err) }
 
       // WARNING: For security purposes, it is highly advisable to check that

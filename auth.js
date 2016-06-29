@@ -8,6 +8,10 @@ var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
 var Volunteers = require('./app/services/volunteers')(config.service)
 
+var admin = {
+  user: { id: '', is_admin: true }
+}
+
 /**
  * LocalStrategy
  *
@@ -18,7 +22,7 @@ var Volunteers = require('./app/services/volunteers')(config.service)
 passport.use(new LocalStrategy(
   function(username, password, done) {
     // Próba logowania
-    Volunteers.read({force_admin: true}, 'Volunteers', { key: username }, { index: 'email' }, function (err, users) {
+    Volunteers.read(admin, 'Volunteers', { key: username }, { index: 'email' }, function (err, users) {
       // Wystąpił niespodziewany błąd
       if (err) { return done(null, false, err) }
       var user = users[0]
@@ -51,7 +55,7 @@ passport.serializeUser(function(user, done) {
 // Zdefiniuj metodę odtworzenia obiektu użytkownika na podstawie wcześniej
 // zapamiętanej referencji (numeru id w bazie danych).
 passport.deserializeUser(function(id, done) {
-  Volunteers.read({force_admin: true}, 'Volunteers', { id: id }, {}, function (err, user) {
+  Volunteers.read(admin, 'Volunteers', { id: id }, {}, function (err, user) {
     done(err, user)
   })
 })

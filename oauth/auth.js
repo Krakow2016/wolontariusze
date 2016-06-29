@@ -14,6 +14,10 @@ var APIClients = require('../app/services/'+config.service+'/apiclients')
 var APITokens = require('../app/services/'+config.service+'/apitokens')
 var Volunteers = require('../app/services/volunteers')(config.service)
 
+var admin = {
+  user: { id: '', is_admin: true }
+}
+
 /**
  * BasicStrategy & ClientPasswordStrategy
  *
@@ -39,7 +43,7 @@ var Volunteers = require('../app/services/volunteers')(config.service)
 //));
 
 passport.use(new ClientPasswordStrategy(function(clientId, clientSecret, done) {
-  APIClients.read({force_admin: true}, 'APIClients', { id: clientId }, {}, function (err, client) {
+  APIClients.read(admin, 'APIClients', { id: clientId }, {}, function (err, client) {
     if (err) { return done(err) }
     if (!client) { return done(null, false, {message: "API client not found."}) }
     if (client.secret != clientSecret) { return done(null, false) }
@@ -57,12 +61,12 @@ passport.use(new ClientPasswordStrategy(function(clientId, clientSecret, done) {
  */
 passport.use(new BearerStrategy(
   function(accessToken, done) {
-    APITokens.read({force_admin: true}, 'APITokens', { id: accessToken }, {}, function (err, token) {
+    APITokens.read(admin, 'APITokens', { id: accessToken }, {}, function (err, token) {
       if (err) { return done(err) }
       if (!token) { return done(null, false) }
 
       if(token.userId != null) {
-        Volunteers.read({force_admin: true}, 'Volunteers', { id: token.userId }, {}, function (err, user) {
+        Volunteers.read(admin, 'Volunteers', { id: token.userId }, {}, function (err, user) {
           if (err) { return done(err) }
           if (!user) { return done(null, false) }
           done(null, user)
@@ -70,7 +74,7 @@ passport.use(new BearerStrategy(
       } else {
         //The request came from a client only since userId is null
         //therefore the client is passed back instead of a user
-        APIClients.read({force_admin: true}, 'APIClients', { id: token.clientId }, {}, function (err, client) {
+        APIClients.read(admin, 'APIClients', { id: token.clientId }, {}, function (err, client) {
           if(err) { return done(err) }
           if(!client) { return done(null, false) }
           done(null, client)

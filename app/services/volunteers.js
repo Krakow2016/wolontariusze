@@ -1,5 +1,6 @@
 module.exports = function(service) {
   var service = require('./'+ service +'/volunteers')
+  var restrict = require('./helpers/restrict')
   var protect = require('./helpers/protect')
   var output = {
     name: service.name
@@ -46,5 +47,5 @@ module.exports = function(service) {
     update(req, resource, params, body, config, callback)
   }
 
-  return protect(output)
+  return restrict(protect(output))
 }
