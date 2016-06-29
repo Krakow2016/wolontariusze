@@ -32,15 +32,15 @@ var Shell = React.createClass({
       <VolunteerShell context={this.props.context} profile={this.state}>
         <div className="row questions">
             <div className="col col4" >
-              <h1>Kim jestem?</h1>
+              <h3>Kim jestem?</h3>
               <p>{this.state.who_question}</p>
             </div>
             <div className="col col4" >
-              <h1>Co chciałbym robić w życiu najbardziej?</h1>
+              <h3>Co chciałbym robić w życiu najbardziej?</h3>
               <p>{this.state.what_question}</p>
             </div>
             <div className="col col4" >
-              <h1>Dlaczego angażuję się w wolontariat ŚDM?</h1>
+              <h3>Dlaczego angażuję się w wolontariat ŚDM?</h3>
               <p>{this.state.why_question}</p>
             </div>
         </div>

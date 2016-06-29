@@ -427,7 +427,8 @@ label:hover:before {
 	margin: -1rem -1rem 0 -1rem;
 }
 .prolife-photo {
-	width: 100%;
+	width: 350px;
+	height: 350px;
 	display: block;
 	margin: 1rem 0rem;
 	border: solid 0.5rem #008AC3;
@@ -463,30 +464,25 @@ label:hover:before {
 .prolife-stone>.row:nth-child(2){
 	margin-top: 1rem;
 }
-.prolife-stone>.row>p{
-	margin: 0;
-}
-.prolife-stone{
-	text-align: center;
-}
 .prolife-stone>.row{
 	color: fff;
 }
-.stone-left{
-	text-align: right;
-}
 .prolife-stone-img {
-	margin:1rem 0 0.5rem 0;
+  margin: 10px;
+  width: 75px;
 }
-.stone-right {
-	color: #fff;
-	font-size: 4rem;
-	text-align: left;
-	vertical-align: center;
+.prolife-stone-header {
+  margin: 0 0 0 95px
+}
+.prolife-stone-text {
+  line-height: 95px
 }
 #stone-tag {
 	font-size: 1.5rem;
 	margin-top: 1rem;
+}
+.prolife-stone-number {
+	font-size: 4rem;
 }
 .profile-ribon {
 	margin: 0;

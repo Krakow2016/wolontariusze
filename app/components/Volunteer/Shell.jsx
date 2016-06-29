@@ -78,13 +78,9 @@ var Volunteer = React.createClass({
     var tags
     if(this.props.profile.tags) {
       tags = (<div className="row">
-                <p>Tagi</p>
-                <div className="col col6 stone-left">
-                    <img className="prolife-stone-img" src="/img/homepage/bialy_tag.svg" />
-                </div>
-                <div className="col col6 stone-right ">
-                    <p id="stone-tag">{ this.props.profile.tags.join(', ') }</p>
-                </div>
+                <p className="prolife-stone-header">PROJEKTY</p>
+                <img className="prolife-stone-img" src="/img/homepage/bialy_tag.svg" />
+                <span id="stone-tag" className="prolife-stone-text">{ this.props.profile.tags.join(', ') }</span>
               </div>)
     }
 
@@ -101,13 +97,9 @@ var Volunteer = React.createClass({
           </div>
           <div className="col col4 prolife-stone">
               <div className="row">
-                <p>WYKONANE ZADANIA</p>
-                <div className="col col6 stone-left">
-                  <img className="prolife-stone-img" src="/img/homepage/biale_buty.svg" />
-                </div>
-                <div className="col col6 stone-right ">
-                  <p>{all.length}</p>
-                </div>
+                <p className="prolife-stone-header">WYKONANE ZADANIA</p>
+                <img className="prolife-stone-img" src="/img/homepage/biale_buty.svg" />
+                <span className="prolife-stone-text prolife-stone-number">{all.length}</span>
               </div>
               {tags}
           </div>
