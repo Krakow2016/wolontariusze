@@ -13,6 +13,7 @@ var Volunteer = React.createClass({
   },
 
   getInitialState: function () {
+    // TODO ActivitiesStore nie zawsze jest zainicjalizowany
     return {
       activities: this.props.context.getStore(ActivitiesStore).dehydrate()
     }
@@ -37,6 +38,7 @@ var Volunteer = React.createClass({
 
   render: function () {
     var user = this.user()
+    // TODO: to nie są wszystkie aktywności, tylko 10 ostatnich
     var all = this.state.activities ? this.state.activities.all : []
 
     var email
@@ -114,23 +116,6 @@ var Volunteer = React.createClass({
         {this.props.children}
       </div>
     )
-          //<div className="col span_1_of_4">
-            //<p id="profile-grow-title"><b>Lorem sprawił/a, że Góra Dobra urosła o</b></p>
-          //</div>
-          //<div className="col span_1_of_4" id="profile-stone-box">
-            //<img src="/img/profile/stone.svg" id="prolife-stone-img" />
-            //<p id="profile-stone-tasks">
-              //<b id="profile-stone-tasks-nr">100</b><br />
-              //<b>zadań</b>
-            //</p>
-          //</div>
-
-          //<div className="col span_2_of_4">
-            //<img src="/img/profile/phone.svg" id="prolife-contant-ico"/>
-            //<div>
-              //<h2 id="prolife-contant-data">0048 777 888 999</h2>
-            //</div>
-          //</div>
   },
 
   name: function() {
