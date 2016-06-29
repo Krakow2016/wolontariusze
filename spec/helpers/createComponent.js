@@ -5,6 +5,7 @@ var routes = require('../../app/routes')
 var RouteStore = require('fluxible-router').RouteStore;
 var ApplicationStore = require('../../app/stores/ApplicationStore')
 var VolunteerStore = require('../../app/stores/Volunteer')
+var ActivitiesStore = require('../../app/stores/Activities')
 
 var passportPlugin = require('../../app/plugins/passportPlugin')
 
@@ -36,7 +37,8 @@ createComponent = function(component, props, children) {
     stores: [
       RouteStore.withStaticRoutes(routes),
       ApplicationStore,
-      VolunteerStore
+      VolunteerStore,
+      ActivitiesStore,
     ]
   })
 
