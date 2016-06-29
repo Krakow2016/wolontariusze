@@ -22,4 +22,4 @@ wolontariusze:
     - rethinkdb
   ports:
     - "80:80"
-    - "443:443"
+    - "443:443" 
