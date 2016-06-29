@@ -6,7 +6,6 @@ var IntegrationsStore = require('../../stores/Integrations')
 var BasicInfo = require('./BasicInfo.jsx')
 var ProfileSettings = require('./ProfileSettings.jsx')
 var MyTextarea = require('./../Formsy/MyTextarea.jsx')
-var InstagramSetting = require('./InstagramSetting.jsx')
 
 var Integration = function(props) {
   return (<li>Aplikacja: <b>{props.name}</b></li>)
@@ -142,11 +141,6 @@ var Settings = React.createClass({
         <div className="container">
           <div className="row">
             <div className="col col7">
-              <p>Lista integracji:</p>
-              <ul>
-                <li><InstagramSetting context={this.props.context} /></li>
-                <div id="insta-tags">#krakow2016 #wyd2016 #sdm2016 #jmj2016 #gmg2016 #сдм2016 #wjt2016 #вдм2016</div>
-              </ul>
               <p>Lista aplikacji:</p>
               <ul>
                 {integrations}
@@ -154,11 +148,6 @@ var Settings = React.createClass({
               <NavLink href="/ustawienia/developer">Dla deweloperów</NavLink>
             </div>
             <div className="col col5">
-              <div className="alert">
-                <p>
-                  Informacja o tym jakie są możliwe integracje.
-                </p>
-              </div>
             </div>
           </div>
         </div>
