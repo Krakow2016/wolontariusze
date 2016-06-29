@@ -468,14 +468,14 @@ label:hover:before {
 	color: fff;
 }
 .prolife-stone-img {
-  margin: 10px;
+  margin: 0 10px;
   width: 75px;
 }
 .prolife-stone-header {
-  margin: 0 0 0 95px
+  margin: 0 0 0 95px !important
 }
 .prolife-stone-text {
-  line-height: 95px
+  line-height: 75px
 }
 #stone-tag {
 	font-size: 1.5rem;
