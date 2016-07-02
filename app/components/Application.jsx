@@ -152,7 +152,7 @@ var Application = React.createClass({
           <p>
             Strona została zbudowana przez wolontariuszy ŚDM KRAKÓW 2016.
             <br />
-            <a href="mailto:goradobra@krakow2016.com" target="_balnk">E-mail</a> | <NavLink href="/kontakt">Kontakt</NavLink> | <NavLink href="/regulamin">Regulamin</NavLink> | <a href="https://github.com/Krakow2016/wolontariusze">Dla programistów</a>
+            <a href="mailto:goradobra@krakow2016.com" target="_balnk">E-mail</a> | <NavLink href="/kontakt">Kontakt</NavLink> | <NavLink href="/regulamin">Regulamin</NavLink> | <a href="https://github.com/Krakow2016/wolontariusze">Dla programistów</a> | <a href="/faq">Najczęściej zadawane pytania</a>
           </p>
         </footer>
       </div>

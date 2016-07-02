@@ -924,6 +924,9 @@ article.main-content a{
 .no-border{
 	border: none !important;
 }
+.smooth{
+	font-weight: 200
+}
 
 /*-------HEADER-------*/
 
@@ -1383,10 +1386,6 @@ button + .activity-table{
 .btn-submit{
 	margin-top: 1rem;
 }
-
-.content-texts-container{
-	margin: 0 -1rem;
-}
 .content-texts-container > img{
 	width: 100%;
 }
@@ -1425,6 +1424,19 @@ article.main-content a.task-add-btn{
 
 .contact{
 	margin-bottom: -3rem;
+}
+
+/*----------------FAQ------------------*/
+
+#faq-header{
+    padding-bottom: 1rem;
+    border-bottom: solid 2px #D6D6D6;
+}
+.faq-content dt{
+	margin: 0 -1rem;
+	padding: 1rem;
+	background-color: #003753;
+	color: white;
 }
 
 

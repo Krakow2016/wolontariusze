@@ -289,6 +289,15 @@ module.exports = {
       done()
     }
   },
+  faq: {
+    path: '/faq',
+    method: 'get',
+    handler: require('./components/Texts/Faq.jsx'),
+    action: function(context, payload, done){
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'FAQ' })
+      done()
+    }
+  },
 
 
   import: {
