@@ -1432,11 +1432,37 @@ article.main-content a.task-add-btn{
     padding-bottom: 1rem;
     border-bottom: solid 2px #D6D6D6;
 }
-.faq-content dt{
+.faq-one-question{
 	margin: 0 -1rem;
 	padding: 1rem;
 	background-color: #003753;
 	color: white;
+	cursor: pointer;
+	font-size: 15pt;
+}
+.faq-one-content p{
+	margin: 0;
+}
+.faq-one-content{
+	height: 0;
+	margin: 0;
+	position: relative;
+	overflow: hidden;
+	-moz-transition: .2s;
+	-webkit-transition: .2s;
+	transition: .2s;
+}
+.faq-one-content.open{
+	height: 8rem;
+	margin: 1rem;
+}
+.faq-one-question.open{
+	background-color: #006492;
+}
+.faq-one-content.empty,
+.faq-one-question.empty{
+	cursor: normal;
+	pointer-events: none;
 }
 
 
