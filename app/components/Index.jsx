@@ -1,6 +1,7 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var request = require('superagent')
+var FormattedMessage = require('react-intl').FormattedMessage
 
 var IndexStore = require('../stores/Index')
 var actions = require('../actions')
@@ -148,17 +149,17 @@ var App = React.createClass({
               <div className="col col4">
                 <img src="/img/homepage/bialy_chlopek.svg" alt="" />
                 <img src="/img/homepage/biala_babka.svg" alt="" />
-                <p>WOLONTARIUSZE</p>
+                <p><FormattedMessage id="volunteers_hp" /></p>
                 <p className="dashboard-hours">{ this.state.total_active }</p>
               </div>
               <div className="col col4">
                 <img src="/img/homepage/biale_buty.svg" alt="" />
-                <p>WYKONANE ZADANIA</p>
+                <p><FormattedMessage id="tasks_hp" /></p>
                 <p className="dashboard-hours">{ this.state.total_archived }</p>
               </div>
               <div className="col col4">
                 <img src="/img/homepage/bialy_zegar.svg" alt="" />
-                <p>POŚWIĘCONY CZAS</p>
+                <p><FormattedMessage id="time_hp" /></p>
                 <p className="dashboard-hours">24h/7d</p>
               </div>
             </div>
@@ -168,31 +169,26 @@ var App = React.createClass({
         <section className="tiles-container why-and-what">
           <div className="row">
             <div className="col col6">
-              <h1 className="text--center">CZEMU GÓRA DOBRA?</h1>
+              <h1 className="text--center"><FormattedMessage id="why_gd" /></h1>
               <div className="row">
                 <div className="col col6"><img src="/img/homepage/why.jpg" alt="" /></div>
                 <div className="col col6">
                   <p>
-                  Na pewno zdarzyło Ci się kiedyś patrzeć na góry.
-                  Nieważne czy lubisz zdobywać szczyty czy nie, spojrzałeś w górę i ogarnął Cię ich ogrom.
-                  Możesz to sobie w każdej chwili wyobrazić...
+                    <FormattedMessage id="why_gd_answer" />
                   </p>
-                  <a href="/czemu-gora-dobra">CZYTAJ WIĘCEJ</a>
+                  <NavLink href="/czemu-gora-dobra"><FormattedMessage id="read_more" /></NavLink>
 
                 </div>
               </div>
             </div>
 
             <div className="col col6">
-              <h1 className="text--center">CZYM JEST GÓRA DOBRA?</h1>
+              <h1 className="text--center"><FormattedMessage id="what_gd" /></h1>
               <div className="row">
                 <div className="col col6"><img src="/img/homepage/what.jpg" alt="" /></div>
                 <div className="col col6">
-                  <p>
-                   „Góra Dobra to portal dla Wolontariuszy Światowych Dni Młodzieży Kraków 2016 w całości przygotowywany przez nich.
-                   Góra Dobra to też wspólnota młodych i zaangażowanych osób pełnych pasji...
-                  </p>
-                  <a href="/czym-jest-gora-dobra">CZYTAJ WIĘCEJ</a>
+                  <p><FormattedMessage id="what_gd_answer" /></p>
+                  <NavLink href="/czym-jest-gora-dobra"><FormattedMessage id="read_more" /></NavLink>
                 </div>
               </div>
             </div>
@@ -202,29 +198,23 @@ var App = React.createClass({
         <section className="tiles-container how-and-who">
           <div className="row">
             <div className="col col6">
-              <h1 className="text--center">JAK TO DZIAŁA?</h1>
+              <h1 className="text--center"><FormattedMessage id="how_gd" /></h1>
               <div className="row">
                 <div className="col col6"><img src="/img/homepage/how.jpg" alt="" /></div>
                 <div className="col col6">
-                  <p>Indywidualne profile dają możliwość udziału w wydarzeniach, umieszczania wpisów czy  dzielenia się efektami swojej pracy. Połączenie z Instagramem pomoże w uwiecznianiu najwspanialszych momentów...
-                  </p>
-                  <a href="/jak-dziala-gora-dobra">CZYTAJ WIĘCEJ</a>
+                  <p><FormattedMessage id="how_gd_answer" /></p>
+                  <NavLink href="/jak-dziala-gora-dobra"><FormattedMessage id="read_more" /></NavLink>
                 </div>
               </div>
             </div>
 
             <div className="col col6">
-              <h1 className="text--center">KTO TWORZY GD?</h1>
+              <h1 className="text--center"><FormattedMessage id="who_gd" /></h1>
               <div className="row">
                 <div className="col col6"><img src="/img/homepage/who.jpg" alt="" /></div>
                 <div className="col col6">
-                  <p>
-                    Górę Dobra tworzą:<br/>
-                    Wolontariusze ŚDM Kraków 2016<br/>
-                    Koordynatorzy wolontariatu<br/>
-                    Potrzebujemy osób takich jak Ty- chętnych do współpracy ...
-                  </p>
-                  <a href="/kto-jest-zaangazowany">CZYTAJ WIĘCEJ</a>
+                  <p><FormattedMessage id="who_gd_answer" /></p>
+                  <NavLink href="/kto-jest-zaangazowany"><FormattedMessage id="read_more" /></NavLink>
                 </div>
               </div>
             </div>

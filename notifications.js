@@ -63,92 +63,97 @@ r.connect(config.rethinkdb, function(err, conn) {
           .run(conn, function(err, activity) {
 
             r.table('Volunteers').get(joint.created_by)
-              .run(conn, function(err, author) { // Pobierz autora zadania
+              .run(conn, function(err, author) { // Pobierz osobę która przypisała nas do zadania
 
-                if(!joint.is_canceled) {
-                  var paragraphs = backdraft(activity.description, {
-                    'BOLD': ['<strong>', '</strong>'],
-                    'ITALIC': ['<i>', '</i>'],
-                    'UNDERLINE': ['<u>', '</u>'],
-                    'CODE': ['<span style="font-family: monospace">', '</span>']
-                  }).join('<br/>')
+                r.table('Volunteers').get(activity.created_by)
+                  .run(conn, function(err, owner) { // Pobierz osobę która stworzyła zadanie
 
-                  var html = ['<p>:what_happend</p>' + paragraphs]
-
-                  if(activity.updates) {
-                    activity.updates.forEach(function(update) { // Dodaje wszystkie aktualizacje
-                      //text.push(to_text(update.raw))
-                      html.push(backdraft(update.raw, {
+                    if(!joint.is_canceled) {
+                      var paragraphs = backdraft(activity.description, {
                         'BOLD': ['<strong>', '</strong>'],
                         'ITALIC': ['<i>', '</i>'],
                         'UNDERLINE': ['<u>', '</u>'],
                         'CODE': ['<span style="font-family: monospace">', '</span>']
-                      }).join('<br/>'))
-                    })
-                  }
+                      }).join('<br/>')
 
-                  // Pobierz wolontariusza który się zgłosił
-                  r.table('Volunteers').get(change.new_val.user_id).run(conn, function(err, volunteer) {
-                    var email = new sendgrid.Email({
-                      to:       volunteer.email,
-                      from:     'goradobra@krakow2016.com',
-                      fromname: 'Góra Dobra',
-                      replyto:  author.email,
-                      subject:  'Zadanie: '+ activity.name,
-                      html:     html.join('<hr/>')
-                    })
+                      var html = ['<p>:what_happend</p>' + paragraphs]
 
-                    email.addCategory('join')
-                    email.addSubstitution(':name', volunteer.first_name)
-                    email.addSubstitution(':what_happend', joint.user_id === joint.created_by ? ':has_joined' : ':was_joined')
-                    email.setFilters({
-                      'templates': {
-                        'settings': {
-                          'enable': 1,
-                          'template_id': sendgrid_template
-                        }
+                      if(activity.updates) {
+                        activity.updates.forEach(function(update) { // Dodaje wszystkie aktualizacje
+                          //text.push(to_text(update.raw))
+                          html.push(backdraft(update.raw, {
+                            'BOLD': ['<strong>', '</strong>'],
+                            'ITALIC': ['<i>', '</i>'],
+                            'UNDERLINE': ['<u>', '</u>'],
+                            'CODE': ['<span style="font-family: monospace">', '</span>']
+                          }).join('<br/>'))
+                        })
                       }
-                    })
-                    email.addSection(':has_joined', 'Właśnie przypisałeś/aś się do zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> i bierzesz w nim udział. Dziękujemy.')
-                    email.addSection(':was_joined', author.first_name +' '+ author.last_name +' - przypisał/a Cię do zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>. Prosimy, potwierdź w nim swój udział mailem zwrotnym. Dziękujemy.')
 
-                    sendgrid.send(email, function(err, json) {
-                      console.log('sendgrid:', err, json)
-                    })
-                  })
-                }
+                      // Pobierz wolontariusza który się zgłosił
+                      r.table('Volunteers').get(change.new_val.user_id).run(conn, function(err, volunteer) {
+                        var email = new sendgrid.Email({
+                          to:       volunteer.email,
+                          bcc:      owner.email,
+                          from:     'goradobra@krakow2016.com',
+                          fromname: 'Góra Dobra',
+                          replyto:  joint.user_id === joint.created_by ? owner.email : author.email,
+                          subject:  'Zadanie: '+ activity.name,
+                          html:     html.join('<hr/>')
+                        })
 
-                // Sprawdź czy nie został osiągnięty limit zgłoszeń
-                r.table('Joints')
-                  .getAll(activity.id, { index: 'activity_id' })
-                  .filter(r.row('is_canceled').eq(true).default(false).not())
-                  .count()
-                  .run(conn, function(err, count) {
-                    var limit = parseInt(activity.limit, 10)
-                    if(limit && count === limit) { // Ostatnie zgłoszenie - wyśwli wiadomość autorowi zadania
-                      var email = new sendgrid.Email({
-                        to:       author.email,
-                        from:     'goradobra@krakow2016.com',
-                        fromname: 'Góra Dobra',
-                        subject:  'Komplet zgłoszeń w zadaniu: '+ activity.name,
-                        html:     '<p>Komplet zgłoszeń!</p><p>Gratulacje - do Twojego zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">"'+ activity.name +'"</a> właśnie zgłosiła się ostatnia osoba. Teraz możesz być w kontakcie z wszystkimi zgłoszonymi uczestnikami, dodając aktualizacje na stronie zadania. Możesz również zrobić to, wysyłając bezpośrednio do każdego wiadomość drogą mailową.</p>'
-                      })
-
-                      email.addCategory('full')
-                      email.addSubstitution(':name', author.first_name)
-                      email.setFilters({
-                        'templates': {
-                          'settings': {
-                            'enable': 1,
-                            'template_id': sendgrid_template
+                        email.addCategory('join')
+                        email.addSubstitution(':name', volunteer.first_name)
+                        email.addSubstitution(':what_happend', joint.user_id === joint.created_by ? ':has_joined' : ':was_joined')
+                        email.setFilters({
+                          'templates': {
+                            'settings': {
+                              'enable': 1,
+                              'template_id': sendgrid_template
+                            }
                           }
-                        }
-                      })
+                        })
+                        email.addSection(':has_joined', 'Właśnie przypisałeś/aś się do zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> i bierzesz w nim udział. Dziękujemy.')
+                        email.addSection(':was_joined', author.first_name +' '+ author.last_name +' - przypisał/a Cię do zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>. Prosimy, potwierdź w nim swój udział mailem zwrotnym. Dziękujemy.')
 
-                      sendgrid.send(email, function(err, json) {
-                        console.log('sendgrid:', err, json)
+                        sendgrid.send(email, function(err, json) {
+                          console.log('sendgrid:', err, json)
+                        })
                       })
                     }
+
+                    // Sprawdź czy nie został osiągnięty limit zgłoszeń
+                    r.table('Joints')
+                      .getAll(activity.id, { index: 'activity_id' })
+                      .filter(r.row('is_canceled').eq(true).default(false).not())
+                      .count()
+                      .run(conn, function(err, count) {
+                        var limit = parseInt(activity.limit, 10)
+                        if(limit && count === limit) { // Ostatnie zgłoszenie - wyśwli wiadomość autorowi zadania
+                          var email = new sendgrid.Email({
+                            to:       author.email,
+                            from:     'goradobra@krakow2016.com',
+                            fromname: 'Góra Dobra',
+                            subject:  'Komplet zgłoszeń w zadaniu: '+ activity.name,
+                            html:     '<p>Komplet zgłoszeń!</p><p>Gratulacje - do Twojego zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">"'+ activity.name +'"</a> właśnie zgłosiła się ostatnia osoba. Teraz możesz być w kontakcie z wszystkimi zgłoszonymi uczestnikami, dodając aktualizacje na stronie zadania. Możesz również zrobić to, wysyłając bezpośrednio do każdego wiadomość drogą mailową.</p>'
+                          })
+
+                          email.addCategory('full')
+                          email.addSubstitution(':name', author.first_name)
+                          email.setFilters({
+                            'templates': {
+                              'settings': {
+                                'enable': 1,
+                                'template_id': sendgrid_template
+                              }
+                            }
+                          })
+
+                          sendgrid.send(email, function(err, json) {
+                            console.log('sendgrid:', err, json)
+                          })
+                        }
+                      })
                   })
               })
           })

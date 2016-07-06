@@ -687,6 +687,9 @@ module.exports = function(server) {
       context.getActionContext().dispatch('SAVE_FLASH_FAILURE', failure)
     }
 
+    // Ustaw język
+    context.getActionContext().dispatch('SET_LANGUAGE',  req.headers['accept-language'])
+
     // Google Analytics Measurement Protocol
     if(req.visitor) {
       req.visitor.pageview({

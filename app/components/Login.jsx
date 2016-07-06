@@ -1,5 +1,6 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
+var FormattedMessage = require('react-intl').FormattedMessage
 
 var App = React.createClass({
   render: function () {
@@ -9,11 +10,16 @@ var App = React.createClass({
           <form action="/login" method="POST">
             <label htmlFor="login">E-mail</label>
             <input type="text" name="username" className="form login" /><br />
-            <label htmlFor="pass">Hasło</label>
+            <label htmlFor="pass"><FormattedMessage id="password" /></label>
             <input type="password" name="password" className="form login" /><br />
-            <input type="submit" value="Wejdź" className="submit" />
+            <button type="submit" className="submit">
+              <FormattedMessage id="login" />
+            </button>
           </form>
-          <p>Nie masz konta a jesteś wolontariuszem? <NavLink href="/aktywacja">Kliknij tutaj!</NavLink></p>
+          <p>
+            <FormattedMessage id="no_account_message" />{' '}
+            <NavLink href="/aktywacja"><FormattedMessage id="click_here" /></NavLink>
+          </p>
         </div>
       </div>
     )

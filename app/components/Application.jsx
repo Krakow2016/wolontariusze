@@ -10,6 +10,13 @@ var Authentication = require('./Authentication.jsx')
 var ActivityVolonteersList = require('./ActivityVolonteersList.jsx')
 var Message = require('./Message.jsx')
 
+var IntlProvider = require('react-intl').IntlProvider
+var FormattedMessage = require('react-intl').FormattedMessage
+
+var pl = require('react-intl/locale-data/pl')
+var addLocaleData = require('react-intl').addLocaleData
+addLocaleData([...pl])
+
 var injectTapEventPlugin = require('react-tap-event-plugin')
 //Needed for onTouchTap
 //Can go away when react 1.0 release
@@ -35,12 +42,16 @@ var Application = React.createClass({
     return {
       flashSuccess: applicationStore.getSuccess(),
       flashFailure: applicationStore.getFailure(),
-      title: applicationStore.getPageTitle()
+      title: applicationStore.getPageTitle(),
+      lang: applicationStore.lang,
+      messages: applicationStore.messages[applicationStore.lang]
     }
   },
 
   _changeListener: function() {
-    this.setState(this.props.context.getStore(ApplicationStore).getState())
+    var state = this.props.context.getStore(ApplicationStore).getState()
+    state.messages = state.messages[state.lang]
+    this.setState(state)
   },
 
   componentDidMount: function() {
@@ -71,7 +82,6 @@ var Application = React.createClass({
     })
   },
 
-          //<input type="text" className="form" id="menu-search-box" />
   render: function() {
     var Handler = this.props.currentRoute.handler
 
@@ -131,31 +141,33 @@ var Application = React.createClass({
       )
     }
 
-    //render content
+    // render content
     return (
-      <div id="">
-        <header>
-          <div className="head-photo">
-            <NavLink href="/"><img src="/img/homepage/1.svg" id="head-img" alt="" draggable="false" /></NavLink>
-          </div>
-          <nav id="head-nav" className="row">
-            <Authentication user_id={this.user_id()} user_name={this.user_name()} search_status={searchForm || false} />
-            {searchForm}
-          </nav>
+      <IntlProvider locale={this.state.lang} messages={this.state.messages}>
+        <div>
+          <header>
+            <div className="head-photo">
+              <NavLink href="/"><img src="/img/homepage/1.svg" id="head-img" alt="" draggable="false" /></NavLink>
+            </div>
+            <nav id="head-nav" className="row">
+              <Authentication user_id={this.user_id()} user_name={this.user_name()} search_status={searchForm || false} />
+              {searchForm}
+            </nav>
 
-        </header>
+          </header>
 
-        {article}
-        {flashSuccess}
-        {flashFailure}
-        <footer>
-          <p>
-            Strona została zbudowana przez wolontariuszy ŚDM KRAKÓW 2016.
-            <br />
-            <a href="mailto:goradobra@krakow2016.com" target="_balnk">E-mail</a> | <NavLink href="/kontakt">Kontakt</NavLink> | <NavLink href="/regulamin">Regulamin</NavLink> | <a href="https://github.com/Krakow2016/wolontariusze">Dla programistów</a> | <a href="/faq">Najczęściej zadawane pytania</a>
-          </p>
-        </footer>
-      </div>
+          {article}
+          {flashSuccess}
+          {flashFailure}
+          <footer>
+            <p>
+              <FormattedMessage id="footer" />
+              <br />
+              <a href="mailto:goradobra@krakow2016.com" target="_balnk">E-mail</a> | <NavLink href="/kontakt"><FormattedMessage id="footer_contact" /></NavLink> | <NavLink href="/regulamin"><FormattedMessage id="footer_terms" /></NavLink> | <a href="https://github.com/Krakow2016/wolontariusze"><FormattedMessage id="footer_devs" /></a> | <NavLink href="/faq">Najczęściej zadawane pytania</NavLink>
+            </p>
+          </footer>
+        </div>
+      </IntlProvider>
     )
   },
           //   <section className="inspiration">
