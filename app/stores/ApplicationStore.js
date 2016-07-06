@@ -1,5 +1,6 @@
 'use strict'
 var createStore = require('fluxible/addons').createStore
+var messages = require('../messages')
 
 var ApplicationStore = createStore({
   storeName: 'ApplicationStore',
@@ -8,11 +9,18 @@ var ApplicationStore = createStore({
     'UPDATE_PAGE_TITLE'    : 'updatePageTitle',
     'SAVE_FLASH_SUCCESS'   : 'saveSuccess',
     'SAVE_FLASH_FAILURE'   : 'saveFailure',
-    'ADMIN_CONSENT'        : 'setConsent'
+    'ADMIN_CONSENT'        : 'setConsent',
+    'SET_LANGUAGE'         : 'setLang'
   },
 
   initialize: function () {
     this.title = ''
+
+    this.messages = messages
+  },
+
+  setLang: function(lang) {
+    this.lang = lang.match(/^pl/) ? 'pl' : 'en'
   },
 
   saveFailure: function(message) {
@@ -67,7 +75,9 @@ var ApplicationStore = createStore({
       route: this.currentRoute,
       title: this.title,
       flashSuccess: this.flashSuccess,
-      flashFailure: this.flashFailure
+      flashFailure: this.flashFailure,
+      lang: this.lang,
+      messages: this.messages
     }
   },
 
@@ -83,6 +93,7 @@ var ApplicationStore = createStore({
     this.title = state.title
     this.flashSuccess = state.flashSuccess
     this.flashFailure = state.flashFailure
+    this.lang = state.lang
 
     var that = this
     setTimeout(function() {
