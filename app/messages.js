@@ -26,7 +26,12 @@ module.exports = {
     "how_gd": "JAK TO DZIAŁA?",
     "how_gd_answer": "Indywidualne profile dają możliwość udziału w wydarzeniach, umieszczania wpisów czy  dzielenia się efektami swojej pracy. Połączenie z Instagramem pomoże w uwiecznianiu najwspanialszych momentów...",
     "who_gd": "KTO TWORZY GD?",
-    "who_gd_answer": "Górę Dobra tworzą: Wolontariusze ŚDM Kraków 2016 Koordynatorzy wolontariatu Potrzebujemy osób takich jak Ty - chętnych do współpracy ..."
+    "who_gd_answer": "Górę Dobra tworzą: Wolontariusze ŚDM Kraków 2016 Koordynatorzy wolontariatu Potrzebujemy osób takich jak Ty - chętnych do współpracy ...",
+
+    "disclamer_1": "Twoje dane już są w naszej bazie, gdyż zarejestrowałeś się jako wolontariusz krótkoterminowy ŚDM, Kraków 2016.",
+    "disclamer_2": "Twoje dane osobowe w portalu Góra Dobra są umieszczone  zgodnie z wyrażoną przez Ciebie zgodą w Oświadczeniu o przetwarzaniu danych osobowych podczas rejestracji jako wolontariusz krótkoterminowy.",
+    "disclamer_3": "W sytuacji, jeśli masz zastrzeżenia do umieszczonych Twoich danych w portalu Góra Dobra, prosimy o niezwłoczny kontakt:",
+    "disclamer_4": "<strong>Komitet Organizacyjny ŚDM Kraków 2016</strong><br /> Departament Wolontariatu / Volunteer's Department<br /> Phone: +48 518 309 704<br /> E-mail: <a href='mailto:goradobra@krakow2016.com' target='_blank'>goradobra@krakow2016.com</a>"
   },
   "en": {
     "login": "Sign in",
@@ -55,6 +60,11 @@ module.exports = {
     "how_gd": "HOW IT WORKS?",
     "how_gd_answer": "Individual profiles give the possibility to participate in events, publish posts and share the effects of your work. Connection with the Instagram will help you to keep the best moments. Work bank- the opportunity to join tasks, plan and coordinate work. It is the set of all actual projects and tasks that are necessary to be done in order to prepare the events of WYD and keep them going efficiently. Building your own Mountain of Good composed of the activities that are visible on your profile and mutual motivation to work.",
     "who_gd": "WHO CREATES THE MOUNTAIN OF GOOD?",
-    "who_gd_answer": "It is created by: Volunteers of WYD Kraków 2016 Coordinators of the voluntary service We need people like you- willing to cooperate, passionate and with head full of ideas. People who like to make new friends, want to develop themselves and share their talents with others. By creating the Mountain of Good we want to show that one can do great things with small steps.  In the book “The bamboo principle” K. Lodi quotes the story about three bricklayers: “A man walking past the three bricklayers working  together asks them what they are doing.  - I am laying the bricks for 20$ per hour- the first answers.  - I am building the wall- the second says.  - I am raising the cathedral in which my daughter will be getting married one day."
+    "who_gd_answer": "It is created by: Volunteers of WYD Kraków 2016 Coordinators of the voluntary service We need people like you- willing to cooperate, passionate and with head full of ideas. People who like to make new friends, want to develop themselves and share their talents with others. By creating the Mountain of Good we want to show that one can do great things with small steps.  In the book “The bamboo principle” K. Lodi quotes the story about three bricklayers: “A man walking past the three bricklayers working  together asks them what they are doing.  - I am laying the bricks for 20$ per hour- the first answers.  - I am building the wall- the second says.  - I am raising the cathedral in which my daughter will be getting married one day.",
+
+    "disclamer_1": "Your data are in our system already because you have registered as a short time volunteer for World Youth Day before. To finish the registration process prepare and add the password which you will use every time when you log in to your profile.",
+    "disclamer_2": "Your data in Gora Dobra system are added with your agreement of processing personal data which you confirm in Statement for doing so as a short time volunteer:",
+    "disclamer_3": "In situation when you have any complaints to the data placed in Gora Dobra portal you are asked for the contact immediately:",
+    "disclamer_4": "Departament Wolontariatu / Volunteer's Department<br /> Komitet Organizacyjny ŚDM Kraków 2016<br /> Phone: +48 518 309 704<br /> E-mail: <a href='mailto:goradobra@krakow2016.com' target='_blank'>wolontariat@krakow2016.com</a>."
   }
 }
