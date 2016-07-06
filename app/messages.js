@@ -10,6 +10,7 @@ module.exports = {
     "click_here": "Kliknij tutaj!",
 
     "footer": "Strona została zbudowana przez wolontariuszy ŚDM KRAKÓW 2016.",
+    "footer_faq": "Najczęściej zadawane pytania",
     "footer_contact": "Kontakt",
     "footer_terms": "Regulamin",
     "footer_devs": "Dla programistów",
@@ -44,6 +45,7 @@ module.exports = {
     "click_here": "Click here!",
 
     "footer": "Website build by volunteers of the WYD KRAKÓW 2016.",
+    "footer_faq": "Frequently asked questions",
     "footer_contact": "Contact",
     "footer_terms": "Terms of service",
     "footer_devs": "For developers",

@@ -163,7 +163,7 @@ var Application = React.createClass({
             <p>
               <FormattedMessage id="footer" />
               <br />
-              <NavLink href="/faq">Najczęściej zadawane pytania</NavLink> | <a href="mailto:goradobra@krakow2016.com" target="_balnk">E-mail</a> | <NavLink href="/kontakt"><FormattedMessage id="footer_contact" /></NavLink> | <NavLink href="/regulamin"><FormattedMessage id="footer_terms" /></NavLink> | <a href="https://github.com/Krakow2016/wolontariusze"><FormattedMessage id="footer_devs" /></a>
+              <NavLink href="/faq"><FormattedMessage id="footer_faq" /></NavLink> | <a href="mailto:goradobra@krakow2016.com" target="_balnk">E-mail</a> | <NavLink href="/kontakt"><FormattedMessage id="footer_contact" /></NavLink> | <NavLink href="/regulamin"><FormattedMessage id="footer_terms" /></NavLink> | <a href="https://github.com/Krakow2016/wolontariusze"><FormattedMessage id="footer_devs" /></a>
             </p>
           </footer>
         </div>
