@@ -37,6 +37,9 @@ var LoginButton = React.createClass({
             <FormattedMessage id="login" />
           </NavLink>
         </li>
+        <li>
+          <a href="/faq">FAQ</a>
+        </li>
       </ul>
     )
   }
@@ -57,6 +60,9 @@ var LogoutButton = React.createClass({
         </li>
         <li>
           <a href="/logout"><FormattedMessage id="logout" /></a>
+        </li>
+        <li>
+          <a href="/faq">FAQ</a>
         </li>
       </ul>
     )
