@@ -170,27 +170,25 @@ var App = React.createClass({
           <div className="row">
             <div className="col col6">
               <h1 className="text--center"><FormattedMessage id="why_gd" /></h1>
-              <div className="row">
-                <div className="col col6"><img src="/img/homepage/why.jpg" alt="" /></div>
-                <div className="col col6">
-                  <p>
-                    <FormattedMessage id="why_gd_answer" />
-                  </p>
-                  <NavLink href="/czemu-gora-dobra"><FormattedMessage id="read_more" /></NavLink>
-
-                </div>
-              </div>
+              <FormattedMessage id="why_gd_answer"
+                tagName="p"
+                values={{
+                  img: <img src="/img/homepage/why.jpg" align="left" alt="" />
+                }}
+              />
+              <NavLink href="/czemu-gora-dobra"><FormattedMessage id="read_more" /></NavLink>
             </div>
 
             <div className="col col6">
               <h1 className="text--center"><FormattedMessage id="what_gd" /></h1>
-              <div className="row">
-                <div className="col col6"><img src="/img/homepage/what.jpg" alt="" /></div>
-                <div className="col col6">
-                  <p><FormattedMessage id="what_gd_answer" /></p>
-                  <NavLink href="/czym-jest-gora-dobra"><FormattedMessage id="read_more" /></NavLink>
-                </div>
-              </div>
+              <FormattedMessage
+                id="what_gd_answer"
+                tagName="p"
+                values={{
+                  img: <img src="/img/homepage/what.jpg" align="left" alt="" />
+                }}
+              />
+              <NavLink href="/czym-jest-gora-dobra"><FormattedMessage id="read_more" /></NavLink>
             </div>
           </div>
         </section>
@@ -199,24 +197,26 @@ var App = React.createClass({
           <div className="row">
             <div className="col col6">
               <h1 className="text--center"><FormattedMessage id="how_gd" /></h1>
-              <div className="row">
-                <div className="col col6"><img src="/img/homepage/how.jpg" alt="" /></div>
-                <div className="col col6">
-                  <p><FormattedMessage id="how_gd_answer" /></p>
-                  <NavLink href="/jak-dziala-gora-dobra"><FormattedMessage id="read_more" /></NavLink>
-                </div>
-              </div>
+                <FormattedMessage
+                  id="how_gd_answer"
+                  tagName="p"
+                  values={{
+                    img: <img src="/img/homepage/how.jpg" align="left" alt="" />
+                  }}
+                />
+              <NavLink href="/jak-dziala-gora-dobra"><FormattedMessage id="read_more" /></NavLink>
             </div>
 
             <div className="col col6">
               <h1 className="text--center"><FormattedMessage id="who_gd" /></h1>
-              <div className="row">
-                <div className="col col6"><img src="/img/homepage/who.jpg" alt="" /></div>
-                <div className="col col6">
-                  <p><FormattedMessage id="who_gd_answer" /></p>
-                  <NavLink href="/kto-jest-zaangazowany"><FormattedMessage id="read_more" /></NavLink>
-                </div>
-              </div>
+              <FormattedMessage
+                id="who_gd_answer"
+                tagName="p"
+                values={{
+                  img: <img src="/img/homepage/who.jpg" align="left" alt="" />
+                }}
+              />
+              <NavLink href="/kto-jest-zaangazowany"><FormattedMessage id="read_more" /></NavLink>
             </div>
           </div>
         </section>
@@ -226,7 +226,6 @@ var App = React.createClass({
     )
   }
 })
-
 
 /* Module.exports instead of normal dom mounting */
 module.exports = App

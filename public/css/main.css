@@ -1151,9 +1151,11 @@ input.graph-filter-input{
 }
 
 .tiles-container img{
-	width: 100%;
+  float: left;
+  width: 250px;
 	border: 0.5rem solid #FFFFFF;
 	border-radius: 1.3rem;
+  margin: 0 15px 15px 0
 }
 
 .how-and-who{
