@@ -111,8 +111,12 @@ module.exports = {
     "message_thank_you": "Dziękujemy za zgłoszenie! Na podany adres email został wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę.",
     "message_no_mail": "Podany adres e-mail nie istnieje w bazie danych. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane.",
     "message_not_active": "Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. Jeżeli nie pamiętasz swojego hasła, skontaktuj się z goradobra@krakow2016.com.",
-    "message_no_application": "Brak informacji o zgłoszeniu do wolontariatu krótkoterminowego. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane."
-    "message_logged_out": "Zostałeś wylogowany"
+    "message_no_application": "Brak informacji o zgłoszeniu do wolontariatu krótkoterminowego. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane.",
+    "message_logged_out": "Zostałeś wylogowany",
+
+    "message_incorrect_username": "Niepoprawny e-mail",
+    "message_incorrect_password": "Niepoprawne hasło",
+    "message_ban": "Konto nieaktywne",
   },
   "en": {
     "login": "Sign in",
@@ -227,6 +231,10 @@ module.exports = {
     "message_no_mail": "This e-mail address is not in the database. Your application for a short-term volunteer has not been confirmed yet.",
     "message_not_active": "An activation link has not been sent because your account is already active in the system. If you have any problems with setting a password, please contact us on the e-mail address: goradobra@krakow2016.com.",
     "message_no_application": "There is no information about the registration for short-term voluntary service. Your application for a short-term volunteer has not been confirmed yet.",
-    "message_logged_out": "You've logged out"
+    "message_logged_out": "You've logged out",
+
+    "message_incorrect_username": "Incorrect username",
+    "message_incorrect_password": "Incorrect password",
+    "message_ban": "You have been banned",
   }
 }

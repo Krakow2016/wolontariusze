@@ -209,7 +209,7 @@ module.exports = function(server) {
 
   server.get('/logout', function(req, res){
     req.logout()
-    req.flash('success', 'Wylogowano.')
+    req.flash('success', 'message_logged_out')
     res.redirect('/')
   })
 

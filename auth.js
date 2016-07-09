@@ -28,17 +28,17 @@ passport.use(new LocalStrategy(
       var user = users[0]
       // Nie znaleziono użytkownika o danym loginie
       if (!user) {
-        return done(null, false, { message: 'Incorrect username.' })
+        return done(null, false, { message: 'message_incorrect_username' })
       }
       // Sprawdź poprawność hasła
       bcrypt.compare(password, user.password, function(err, res) {
         if (!res) {
-          return done(null, false, { message: 'Incorrect password.' })
+          return done(null, false, { message: 'message_incorrect_password' })
         } else if (!user.approved) {
-          return done(null, false, { message: 'You have been banned.' })
+          return done(null, false, { message: 'message_ban' })
         } else {
           // Zalogowano poprawnie, zwróć obiekt zalogowanego użytkownika
-          return done(null, user, { message: 'Welcome!' })
+          return done(null, user, { message: 'welcome_' })
         }
       })
     })
