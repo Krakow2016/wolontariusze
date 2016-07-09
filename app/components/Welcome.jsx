@@ -66,6 +66,12 @@ var Welcome = React.createClass({
   },
 
   render: function() {
+    var spinner
+
+    if (!this.state.hasLoaded) {
+      spinner = <div className="spinner" />
+    }
+
     return (
       <div>
         <Formsy.Form className="settingsForm" onSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton}>
@@ -78,6 +84,8 @@ var Welcome = React.createClass({
           <FormattedMessage id="welcome_password" tagName="h4" />
 
           <div className="alert">
+
+            {spinner}
 
             <Password disabled={!this.state.hasLoaded} />
 
