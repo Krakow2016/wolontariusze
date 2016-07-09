@@ -98,6 +98,12 @@ module.exports = {
     "welcome_agreement2_details": "„Zgodnie z zapisami Ustawy o prawie autorskim i prawach pokrewnych z dnia 4 lutego 1994 roku (Dz. U. z 2006 r., Nr 90, poz. 631 z późn. zm.) oświadczam, że wyrażam zgodę na nieodpłatne utrwalenie, wykorzystanie i powielanie zdjęć oraz nagrań video z moim wizerunkiem wyłącznie w celu promowania Światowych Dni Młodzieży 2016 w Krakowie oraz umieszczeniem ich na stronach internetowych oraz materiałach promujących Światowe Dni Młodzieży 2016 w Krakowie.”",
     "welcome_agreement3": "Oświadczenie o przetwarzaniu danych osobowych",
     "welcome_agreement3_details": "“Wyrażam zgodę na  przetwarzanie zamieszczonych danych osobowych przez Papieską Radę ds.  Świeckich i przez Archidiecezję Krakowską wyłącznie dla celów organizacyjnych Światowych Dni Młodzieży. Dane zostaną przesłane w razie potrzeby tylko tym przedsiębiorstwom i instytucjom, które w imieniu wyżej wymienionych jednostek będą zaangażowane w organizację Światowych Dni Młodzieży. Jednocześnie oświadczam, iż  zostałem poinformowany, że: administratorem danych jest Papieska Rada ds. Świeckich z siedzibą - Piazza San Calisto 16, 00153 Roma, która w Polsce przekaże dane do Archidiecezji Krakowskiej z siedzibą w Krakowie, 31-004, ul. Franciszkańska 3; przekazanie wyżej wskazanych danych jest dobrowolne; przysługuje mi prawo dostępu do swoich danych oraz ich poprawiania.”",
+
+    "settings_alert": "Zachęcamy Cię do uzupełnienia go o dodatkowe informacje, które pozwolą Cię lepiej poznać.  Profil będzie Twoją wizytówką. Informacje, które tutaj zamieścisz będą widoczne dla wszystkich odwiedzających portal. Będziesz mieć możliwość dzielenia się z innymi swoimi doświadczeniami i zaangażowaniem w ŚDM. Pokażesz ogrom wniesionego wkładu i efektów pracy, które będą tworzyć prawdziwą &quot;Górę Dobra&quot;. Zastanów się też nad tym, co chcesz opublikować, a które informacje wolisz zostawić dla siebie. <br/><br/> <b>Daj się poznać i zainspiruj innych! Uzupełnij swój profil już dziś!</b>",
+
+    "profile_question1": "Kim jestem?",
+    "profile_question2": "Co chciałbym robić w życiu najbardziej?",
+    "profile_question3": "Dlaczego angażuję się w wolontariat ŚDM?",
   },
   "en": {
     "login": "Sign in",
@@ -197,6 +203,12 @@ module.exports = {
     "welcome_agreement2": "Statement of acceptance of the image use ",
     "welcome_agreement2_details": "“According to the Copyright law and related laws from Feb, 4 1994 (Dz. U. z 2006 r., z późn. zm) I declare that I accept making, using, and copying non-paid pictures and video recordings of my image in purpose of promoting World Youth Day 2016 in Cracow and placing them on internet websites and materials promoting World Youth Day 2016 in Cracow.”",
     "welcome_agreement3": "Privacy Policy Declaration",
-    "welcome_agreement3_details": "“I hereby give consent for my personal data to be processed by the Pontifical Council for the Laity and the Archdiocese of Kraków only for organisational purposes during the World Youth Day. If necessary, my data will be passed to enterprises and institutions, engaged by the above-mentioned units to organise the WYD. I also declare that I have been properly informed about the Pontifical Council for the Laity (based in Piazza San Calisto 16, 00153 Roma, Italy) administrating and transferring my data to the Archdiocese of Kraków in Poland (based in ul. Franciszkańska 3, 31-004 Kraków); I acknowledge that the submission of my personal data is voluntary and that I have the right to access and to correct it.”"
+    "welcome_agreement3_details": "“I hereby give consent for my personal data to be processed by the Pontifical Council for the Laity and the Archdiocese of Kraków only for organisational purposes during the World Youth Day. If necessary, my data will be passed to enterprises and institutions, engaged by the above-mentioned units to organise the WYD. I also declare that I have been properly informed about the Pontifical Council for the Laity (based in Piazza San Calisto 16, 00153 Roma, Italy) administrating and transferring my data to the Archdiocese of Kraków in Poland (based in ul. Franciszkańska 3, 31-004 Kraków); I acknowledge that the submission of my personal data is voluntary and that I have the right to access and to correct it.”",
+
+    "settings_alert": "We encourage you to complete it with some extra information that will let other get to know you better. Your profile will be your calling card. The information that you place here will be visible for each person visiting our portal. You will be able to share you experience and commitment in WYD with other people. You will show the enormity of a contribution and effects of your work which will create the real “Mountain of Good”. Think also about which information you want to publish and which one you prefer to keep for yourself.<br/><br/> <b>Let others get to know you and inspire them! Complete you profile right now!</b>",
+
+    "profile_question1": "Who am I?",
+    "profile_question2": "What would I like to do in life the most?",
+    "profile_question3": "Why do I volunteer for the WYD?",
   }
 }

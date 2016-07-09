@@ -1,5 +1,6 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
+var FormattedMessage = require('react-intl').FormattedMessage
 
 var VolunteerStore = require('../../stores/Volunteer')
 var IntegrationsStore = require('../../stores/Integrations')
@@ -85,7 +86,7 @@ var Settings = React.createClass({
           state_formsy={state_formsy}>
 
           <label htmlFor="first_name">
-            <h2>Kim jestem?</h2>
+            <FormattedMessage id="profile_question1" tagName="h2" />
           </label>
 
           <MyTextarea
@@ -101,7 +102,7 @@ var Settings = React.createClass({
             }} />
 
           <label htmlFor="first_name">
-            <h2>Co chciałbym robić w życiu najbardziej?</h2>
+            <FormattedMessage id="profile_question2" tagName="h2" />
           </label>
 
           <MyTextarea
@@ -117,7 +118,7 @@ var Settings = React.createClass({
             }} />
 
           <label htmlFor="first_name">
-            <h2>Dlaczego angażuję się w wolontariat ŚDM?</h2>
+            <FormattedMessage id="profile_question3" tagName="h2" />
           </label>
 
           <MyTextarea

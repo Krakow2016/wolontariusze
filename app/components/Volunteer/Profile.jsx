@@ -1,4 +1,5 @@
 var React = require('react')
+var FormattedMessage = require('react-intl').FormattedMessage
 var VolunteerShell = require('./Shell.jsx')
 var VolunteerStore = require('../../stores/Volunteer')
 var Instagram = require('./Instagram.jsx')
@@ -32,15 +33,15 @@ var Shell = React.createClass({
       <VolunteerShell context={this.props.context} profile={this.state}>
         <div className="row questions">
             <div className="col col4" >
-              <h3>Kim jestem?</h3>
+              <FormattedMessage id="profile_question1" tagName="h3" />
               <p>{this.state.who_question}</p>
             </div>
             <div className="col col4" >
-              <h3>Co chciałbym robić w życiu najbardziej?</h3>
+              <FormattedMessage id="profile_question2" tagName="h3" />
               <p>{this.state.what_question}</p>
             </div>
             <div className="col col4" >
-              <h3>Dlaczego angażuję się w wolontariat ŚDM?</h3>
+              <FormattedMessage id="profile_question3" tagName="h3" />
               <p>{this.state.why_question}</p>
             </div>
         </div>

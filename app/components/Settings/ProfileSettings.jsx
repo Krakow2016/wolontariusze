@@ -1,4 +1,5 @@
 var React = require('react')
+var FormattedHTMLMessage = require('react-intl').FormattedHTMLMessage
 
 var updateVolunteer = require('../../actions').updateVolunteer
 
@@ -37,20 +38,11 @@ var ProfileSettings = React.createClass({
       alert_col = (
         <div className="col col5">
           <div className="alert">
-            <p>
-              Zachęcamy Cię do uzupełnienia go o dodatkowe informacje, które pozwolą Cię lepiej poznać.
-              Profil będzie Twoją wizytówką. Informacje, które tutaj zamieścisz będą widoczne dla wszystkich
-              odwiedzających portal. Będziesz mieć możliwość dzielenia się z innymi swoimi doświadczeniami i
-              zaangażowaniem w ŚDM. Pokażesz ogrom wniesionego wkładu i efektów pracy, które będą
-              tworzyć prawdziwą &quot;Górę Dobra&quot;. Zastanów się też nad tym, co chcesz opublikować, a które
-              informacje wolisz zostawić dla siebie. <br/><br/>
-              <b>Daj się poznać i zainspiruj innych! Uzupełnij swój profil już dziś!</b>
-            </p>
+            <FormattedHTMLMessage id="settings_alert" tagName="p" />
           </div>
         </div>
       )
     }
-
 
     return (
       <div>
