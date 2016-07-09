@@ -3,11 +3,14 @@ module.exports = {
     "login": "Zaloguj się",
     "bank": "Bank pracy",
     "welcome": "Witaj",
+    "welcome_": "Witaj!",
     "settings": "Ustawienia",
     "logout": "Wyloguj się",
     "password": "Hasło",
+    "password_repeat": "Powtórz hasło",
     "no_account_message": "Nie masz konta a jesteś wolontariuszem?",
     "click_here": "Kliknij tutaj!",
+    "continue": "Kontynuuj",
 
     "footer": "Strona została zbudowana przez wolontariuszy ŚDM KRAKÓW 2016.",
     "footer_faq": "Najczęściej zadawane pytania",
@@ -86,18 +89,28 @@ module.exports = {
     "faq_26_answer": "Tak. Dostp do aplikacji będzie odbywał sie przez portal Góra Dobra.",
     "faq_add_task": "Dodawanie zadań",
     "faq_mobile": "Aplikacja mobilna",
-    "faq_general": "Ogólne"
+    "faq_general": "Ogólne",
 
+    "welcome_password": "By dokończyć rejestrację, wprowadź  hasło, którego będziesz używać za każdym razem logując się do swojego profilu. Login to Twoj adres email podany przy rejestracji na wolontariat krótkoterminowy.",
+    "welcome_agreement1": "Regulamin serwisu Góra Dobra",
+    "welcome_agreement1_link": "(kliknij tutaj aby przeczytać)",
+    "welcome_agreement2": "Oświadczenie o wyrażeniu zgody na wykorzystanie wizerunku",
+    "welcome_agreement2_details": "„Zgodnie z zapisami Ustawy o prawie autorskim i prawach pokrewnych z dnia 4 lutego 1994 roku (Dz. U. z 2006 r., Nr 90, poz. 631 z późn. zm.) oświadczam, że wyrażam zgodę na nieodpłatne utrwalenie, wykorzystanie i powielanie zdjęć oraz nagrań video z moim wizerunkiem wyłącznie w celu promowania Światowych Dni Młodzieży 2016 w Krakowie oraz umieszczeniem ich na stronach internetowych oraz materiałach promujących Światowe Dni Młodzieży 2016 w Krakowie.”",
+    "welcome_agreement3": "Oświadczenie o przetwarzaniu danych osobowych",
+    "welcome_agreement3_details": "“Wyrażam zgodę na  przetwarzanie zamieszczonych danych osobowych przez Papieską Radę ds.  Świeckich i przez Archidiecezję Krakowską wyłącznie dla celów organizacyjnych Światowych Dni Młodzieży. Dane zostaną przesłane w razie potrzeby tylko tym przedsiębiorstwom i instytucjom, które w imieniu wyżej wymienionych jednostek będą zaangażowane w organizację Światowych Dni Młodzieży. Jednocześnie oświadczam, iż  zostałem poinformowany, że: administratorem danych jest Papieska Rada ds. Świeckich z siedzibą - Piazza San Calisto 16, 00153 Roma, która w Polsce przekaże dane do Archidiecezji Krakowskiej z siedzibą w Krakowie, 31-004, ul. Franciszkańska 3; przekazanie wyżej wskazanych danych jest dobrowolne; przysługuje mi prawo dostępu do swoich danych oraz ich poprawiania.”",
   },
   "en": {
     "login": "Sign in",
     "bank": "Work bank",
     "welcome": "Welcome",
+    "welcome_": "Welcome!",
     "settings": "Settings",
     "logout": "Sign out",
     "password": "Password",
+    "password_repeat": "Repeat password",
     "no_account_message": "Don't have an account but you are a volunteer?",
     "click_here": "Click here!",
+    "continue": "Continue",
 
     "footer": "Website build by volunteers of the WYD KRAKÓW 2016.",
     "footer_faq": "Frequently asked questions",
@@ -178,5 +191,12 @@ module.exports = {
     "faq_mobile": "The mobile application",
     "faq_general": "General",
 
+    "welcome_password": "Your data are in our system already because you have registered as a short time volunteer for World Youth Day before. To finish the registration process prepare and add the password which you will use every time when you log in to your profile.",
+    "welcome_agreement1": "Regulations of the “Mountain of Good” system",
+    "welcome_agreement1_link": "(link to the regulations document)",
+    "welcome_agreement2": "Statement of acceptance of the image use ",
+    "welcome_agreement2_details": "“According to the Copyright law and related laws from Feb, 4 1994 (Dz. U. z 2006 r., z późn. zm) I declare that I accept making, using, and copying non-paid pictures and video recordings of my image in purpose of promoting World Youth Day 2016 in Cracow and placing them on internet websites and materials promoting World Youth Day 2016 in Cracow.”",
+    "welcome_agreement3": "Privacy Policy Declaration",
+    "welcome_agreement3_details": "“I hereby give consent for my personal data to be processed by the Pontifical Council for the Laity and the Archdiocese of Kraków only for organisational purposes during the World Youth Day. If necessary, my data will be passed to enterprises and institutions, engaged by the above-mentioned units to organise the WYD. I also declare that I have been properly informed about the Pontifical Council for the Laity (based in Piazza San Calisto 16, 00153 Roma, Italy) administrating and transferring my data to the Archdiocese of Kraków in Poland (based in ul. Franciszkańska 3, 31-004 Kraków); I acknowledge that the submission of my personal data is voluntary and that I have the right to access and to correct it.”"
   }
 }

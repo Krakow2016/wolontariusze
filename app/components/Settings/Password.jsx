@@ -1,4 +1,5 @@
 var React = require('react')
+var FormattedMessage = require('react-intl').FormattedMessage
 var MyTextField = require('./../Formsy/MyTextField.jsx')
 
 var Password = React.createClass({
@@ -7,7 +8,7 @@ var Password = React.createClass({
       <div>
         <div className="pure-g">
           <div className="pure-u-1 pure-u-md-1-3">
-            <label htmlFor="password">Hasło</label>
+            <label htmlFor="password"><FormattedMessage id="password" /></label>
           </div>
           <div className="pure-u-1 pure-u-md-2-3">
             <MyTextField required
@@ -21,7 +22,7 @@ var Password = React.createClass({
           </div>
 
           <div className="pure-u-1 pure-u-md-1-3">
-            <label htmlFor="password_">Powtórz hasło</label>
+            <label htmlFor="password_"><FormattedMessage id="password_repeat" /></label>
           </div>
           <div className="pure-u-1 pure-u-md-2-3">
             <MyTextField required
