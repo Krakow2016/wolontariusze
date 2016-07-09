@@ -128,7 +128,7 @@ var Application = React.createClass({
     if(this.state.flashSuccess) {
       flashSuccess = (
         <Message>
-          <b>{this.state.flashSuccess}</b>
+          <FormattedMessage id={this.state.flashSuccess} tagName="b" />
         </Message>
       )
     }
@@ -136,7 +136,7 @@ var Application = React.createClass({
     if(this.state.flashFailure) {
       flashFailure = (
         <Message className="alert--error">
-          <b>{this.state.flashFailure}</b>
+          <FormattedMessage id={this.state.flashFailure} tagName="b" />
         </Message>
       )
     }

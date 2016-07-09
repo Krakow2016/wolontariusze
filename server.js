@@ -116,11 +116,11 @@ passport.use(new LocalAPIKeyStrategy({passReqToCallback: true},
 
         if(token.used) { // Sprawdź czy token nie został już użyty
           return done(null, false, {
-            message: 'Błąd! Jednorazowy token dostępu został już użyty. Skontaktuj się z goradobra@krakow2016.com aby uzyskać nowy.'
+            message: 'message_used_token'
           })
         } else if(new Date() > expiration_date) { // Sprawdź czy token nie wygasł
           return done(null, false, {
-            message: 'Błąd! Wygasły token dostępu :( Skontaktuj się z goradobra@krakow2016.com aby uzyskać nowy.'
+            message: 'message_old_token'
           })
         } else { // Autoryzacja przebiegła pomyślnie
           token.used = { datetime: new Date(), ip: req.ip, headers: req.headers }
@@ -449,7 +449,7 @@ module.exports = function(server) {
           } else {
             res.status(200).send({
               status: 'ok',
-              message: 'Dziękujemy za zgłoszenie! Na podany adres email został wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę.'
+              message: 'message_thank_you'
             })
           }
         })
@@ -465,12 +465,12 @@ module.exports = function(server) {
         if (!user) {
           return res.status(400).send({
             status: 'error',
-            message: 'Podany adres e-mail nie istnieje w bazie danych. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane.'
+            message: 'message_no_mail'
           })
         } else if (user.password) {
           return res.status(400).send({
             status: 'error',
-            message: 'Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. Jeżeli nie pamiętasz swojego hasła, skontaktuj się z goradobra@krakow2016.com.'
+            message: 'message_not_active'
           })
         } else if (user.approved) {
           // Zablokuj i odblokuj konto
@@ -484,7 +484,7 @@ module.exports = function(server) {
             if (!importedUser) {
               return res.status(400).send({
                 status: 'error',
-                message: 'Brak informacji o zgłoszeniu do wolontariatu krótkoterminowego. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane.'
+                message: 'message_no_application'
               })
             } else {
               ok(user, res)

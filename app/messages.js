@@ -104,6 +104,15 @@ module.exports = {
     "profile_question1": "Kim jestem?",
     "profile_question2": "Co chciałbym robić w życiu najbardziej?",
     "profile_question3": "Dlaczego angażuję się w wolontariat ŚDM?",
+
+    "message_used_token": "Błąd! Jednorazowy token dostępu został już użyty. Skontaktuj się z goradobra@krakow2016.com aby uzyskać nowy.",
+    "message_old_token": "Błąd! Wygasły token dostępu :( Skontaktuj się z goradobra@krakow2016.com aby uzyskać nowy.",
+
+    "message_thank_you": "Dziękujemy za zgłoszenie! Na podany adres email został wysłany link aktywacyjny do portalu Góra Dobra. Sprawdź swoją pocztę.",
+    "message_no_mail": "Podany adres e-mail nie istnieje w bazie danych. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane.",
+    "message_not_active": "Nie wysłano linku aktywującego, ponieważ Twoje konto jest już aktywne w systemie. Jeżeli nie pamiętasz swojego hasła, skontaktuj się z goradobra@krakow2016.com.",
+    "message_no_application": "Brak informacji o zgłoszeniu do wolontariatu krótkoterminowego. Twoje zgłoszenie na wolontariusza krótkoterminowego nie zostało jeszcze zwalidowane."
+    "message_logged_out": "Zostałeś wylogowany"
   },
   "en": {
     "login": "Sign in",
@@ -210,5 +219,14 @@ module.exports = {
     "profile_question1": "Who am I?",
     "profile_question2": "What would I like to do in life the most?",
     "profile_question3": "Why do I volunteer for the WYD?",
+
+    "message_used_token": "Error! One time access token has already been used. Please contact goradobra@krakow2016.com to get a new one.",
+    "message_old_token": "Error! Access token has expired :( Please contact goradobra@krakow2016.com to get a new one.",
+
+    "message_thank_you": "Thank you for your application! An activation link to the portal “Mountain of Good” has been sent. Please check your inbox.",
+    "message_no_mail": "This e-mail address is not in the database. Your application for a short-term volunteer has not been confirmed yet.",
+    "message_not_active": "An activation link has not been sent because your account is already active in the system. If you have any problems with setting a password, please contact us on the e-mail address: goradobra@krakow2016.com.",
+    "message_no_application": "There is no information about the registration for short-term voluntary service. Your application for a short-term volunteer has not been confirmed yet.",
+    "message_logged_out": "You've logged out"
   }
 }
