@@ -94,7 +94,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                       r.table('Volunteers').get(change.new_val.user_id).run(conn, function(err, volunteer) {
                         var email = new sendgrid.Email({
                           to:       volunteer.email,
-                          bcc:      owner.email,
+                          cc:       owner.email,
                           from:     'goradobra@krakow2016.com',
                           fromname: 'Góra Dobra',
                           replyto:  joint.user_id === joint.created_by ? owner.email : author.email,
