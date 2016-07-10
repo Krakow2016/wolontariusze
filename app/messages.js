@@ -104,6 +104,11 @@ module.exports = {
     "profile_question1": "Kim jestem?",
     "profile_question2": "Co chciałbym robić w życiu najbardziej?",
     "profile_question3": "Dlaczego angażuję się w wolontariat ŚDM?",
+    "profile_image_change": "Kliknij w zdjęcie aby je zmienić",
+
+    "activity_volunteer": "Zgłaszam się!",
+    "activity_volunteer_cancel": "Wypisz mnie",
+    "activity_volunteers_count": "Wolontariusze, którzy biorą udział",
 
     "message_used_token": "Błąd! Jednorazowy token dostępu został już użyty. Skontaktuj się z goradobra@krakow2016.com aby uzyskać nowy.",
     "message_old_token": "Błąd! Wygasły token dostępu :( Skontaktuj się z goradobra@krakow2016.com aby uzyskać nowy.",
@@ -227,6 +232,11 @@ module.exports = {
     "profile_question1": "Who am I?",
     "profile_question2": "What would I like to do in life the most?",
     "profile_question3": "Why do I volunteer for the WYD?",
+    "profile_image_change": "Click image to change it",
+
+    "activity_volunteer": "I volunteer!",
+    "activity_volunteer_cancel": "Unsubscribe",
+    "activity_volunteers_count": "Volunteers already taking part",
 
     "message_used_token": "Error! One time access token has already been used. Please contact goradobra@krakow2016.com to get a new one.",
     "message_old_token": "Error! Access token has expired :( Please contact goradobra@krakow2016.com to get a new one.",

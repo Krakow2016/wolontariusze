@@ -4,6 +4,7 @@ var Draft = require('draft-js')
 var fromJS = require('immutable').fromJS
 var _ = require('lodash')
 var moment = require('moment')
+var FormattedMessage = require('react-intl').FormattedMessage
 
 var Editor = require('./Editor.jsx')
 var ProfilePic = require('./ProfilePic.jsx')
@@ -244,9 +245,9 @@ var Activity = React.createClass({
 
     var button
     if (!has_joined && (volunteers.length < activity.limit || activity.limit==0)) { //acceptButton
-      button = (<button className="button--xlg button--full" onClick={this.onAcceptButtonClick}>Zgłaszam się!</button>)
+      button = (<button className="button--xlg button--full" onClick={this.onAcceptButtonClick}><FormattedMessage id="activity_volunteer" /></button>)
     } else if (has_joined) { // canceButton
-      button = (<button className="button--xsm button--full bg--muted" onClick={this.onCancelButtonClick}>Wypisz mnie</button>)
+      button = (<button className="button--xsm button--full bg--muted" onClick={this.onCancelButtonClick}><FormattedMessage id="activity_volunteer_cancel" /></button>)
     }
 
     var volonteersLimit = (activity.limit == 0) ? 'Brak' : activity.limit
@@ -364,7 +365,7 @@ var Activity = React.createClass({
 
         { this.map() }
 
-        <b className="big-text">Wolontariusze, którzy biorą udział ({volunteers.length}):</b>
+        <b className="big-text"><FormattedMessage id="activity_volunteers_count" /> ({volunteers.length}):</b>
         <p>
           {activeVolonteersList}
         </p>

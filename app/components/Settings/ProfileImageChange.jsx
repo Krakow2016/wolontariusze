@@ -1,5 +1,6 @@
 var React = require('react')
 var Dropzone = require('react-dropzone')
+var FormattedMessage = require('react-intl').FormattedMessage
 var ProfilePic = require('../ProfilePic.jsx')
 var actions = require('../../actions')
 
@@ -30,7 +31,7 @@ var ProfileImageChange = React.createClass({
     return (
       <div className={classNameWrapper}>
         <ProfilePic src={this.props.src} className="profilePicSettings" onClick={this.onOpenClick} />
-        <p>Kliknij w zdjęcie aby je zmienić</p>
+        <FormattedMessage id="profile_image_change" tagName="p" />
         <Dropzone ref="dropzone" onDrop={this.onDrop} className={classDropzone}>
           <div>Upuść tu zdjęcie.</div>
         </Dropzone>
