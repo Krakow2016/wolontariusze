@@ -92,13 +92,26 @@ r.connect(config.rethinkdb, function(err, conn) {
 
                       // Pobierz wolontariusza który się zgłosił
                       r.table('Volunteers').get(change.new_val.user_id).run(conn, function(err, volunteer) {
+                        var has_joined
+                        var was_joined
+
+                        if (volunteer.nationality === "Polska") { // PL
+                          subject = 'Zadanie: '+ activity.name
+                          has_joined = 'Właśnie przypisałeś/aś się do zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> i bierzesz w nim udział. Dziękujemy.'
+                          was_joined = author.first_name +' '+ author.last_name +' - przypisał/a Cię do zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>. Prosimy, potwierdź w nim swój udział mailem zwrotnym. Dziękujemy.'
+                        } else { // EN
+                          subject = 'Task: '+ activity.name
+                          has_joined = 'You just signed up to the task <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> and you are taking part in it. Thank you.'
+                          was_joined = author.first_name +' '+ author.last_name +' - signed you up for the task <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>. Please confirm your participation by replying to this email. Thank you.'
+                        }
+
                         var email = new sendgrid.Email({
                           to:       volunteer.email,
                           cc:       owner.email,
                           from:     'goradobra@krakow2016.com',
                           fromname: 'Góra Dobra',
                           replyto:  joint.user_id === joint.created_by ? owner.email : author.email,
-                          subject:  'Zadanie: '+ activity.name,
+                          subject:  subject,
                           html:     html.join('<hr/>')
                         })
 
@@ -113,8 +126,9 @@ r.connect(config.rethinkdb, function(err, conn) {
                             }
                           }
                         })
-                        email.addSection(':has_joined', 'Właśnie przypisałeś/aś się do zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> i bierzesz w nim udział. Dziękujemy.')
-                        email.addSection(':was_joined', author.first_name +' '+ author.last_name +' - przypisał/a Cię do zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>. Prosimy, potwierdź w nim swój udział mailem zwrotnym. Dziękujemy.')
+
+                        email.addSection(':has_joined', has_joined)
+                        email.addSection(':was_joined', was_joined)
 
                         sendgrid.send(email, function(err, json) {
                           console.log('sendgrid:', err, json)
@@ -169,7 +183,11 @@ r.connect(config.rethinkdb, function(err, conn) {
 
         var activity = change.new_val
         var update = activity.updates.pop()
-        var html = '<p>Nastąpiła najnowsza aktualizacja zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>, w którym uczestniczysz:</p>'
+        var html
+        var subject = activity.name
+
+        html = '<p>PL: Nastąpiła najnowsza aktualizacja zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>, w którym uczestniczysz:</p><p>EN: There was an update to the task <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> you are participating in:</p>'
+
         html += backdraft(update.raw, {
           'BOLD': ['<strong>', '</strong>'],
           'ITALIC': ['<i>', '</i>'],
@@ -212,6 +230,7 @@ r.connect(config.rethinkdb, function(err, conn) {
 
                 cursor.toArray(function(err, volunteers) {
                   if(!volunteers.length) { return } // Nie ma do kogo wysłać
+
                   // TODO: dodaj autora aktualizacji
                   // Build the smtpapi header
                   var header = new smtpapi()
@@ -232,7 +251,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                     from:     'goradobra@krakow2016.com',
                     fromname: 'Góra Dobra',
                     replyto:  author.email,
-                    subject:  'Zadanie: '+ activity.name,
+                    subject:  subject,
                     html:     html,
                     headers:  { 'x-smtpapi': header.jsonString() }
                   })
@@ -253,13 +272,22 @@ r.connect(config.rethinkdb, function(err, conn) {
         var row = change.new_val
         var token = row.access_tokens[row.access_tokens.length-1]
         var url = config.base_url +'/invitation?apikey='+ token.token
-        var html = '<p>Chcemy zaprosić Cię do Góry Dobra - portalu dla wolontariuszy, który będzie równocześnie naszą główną platformą komunikacji podczas Światowych Dni Młodzieży w Krakowie oraz narzędziem do organizacji projektów i wydarzeń.</p><p>To tutaj chcemy stworzyć środowisko młodych i zaangażowanych ludzi, dzielić się tym, co robimy i przekazywać Ci ważne informacje o ŚDM i zadaniach, jakie czekają na realizację.</p><p>Dzięki Górze Dobra będziesz mógł pochwalić się efektami swojej pracy. W tym też miejscu będziesz miał możliwość zobaczenia i dzielenia się z innymi informacjami o tym, jak dużo serca, i aktywności wolontariackiej dajesz na rzecz Światowych Dni Młodzieży w Krakowie.</p><p>Aby aktywować swoje konto kliknij w poniższy link:</p><p><a href="'+ url +'">'+ url +'</a></p><p>WAŻNE! Link, jaki otrzymujesz teraz do zalogowania, jest aktywny tylko przez 72h. W wypadku jakichkolwiek problemów bądź pytań, prosimy o kontakt na: goradobra@krakow2016.com.</p><p>Nie zwlekaj ani chwili dłużej i zostań już dziś Wolontariuszem ŚDM Kraków 2016.</p>'
+        var html
+        var subject
+
+        if (row.nationality === "Polska") { // PL
+          subject = 'Zaproszenie do Góry Dobra!'
+          html = '<p>Chcemy zaprosić Cię do Góry Dobra - portalu dla wolontariuszy, który będzie równocześnie naszą główną platformą komunikacji podczas Światowych Dni Młodzieży w Krakowie oraz narzędziem do organizacji projektów i wydarzeń.</p><p>To tutaj chcemy stworzyć środowisko młodych i zaangażowanych ludzi, dzielić się tym, co robimy i przekazywać Ci ważne informacje o ŚDM i zadaniach, jakie czekają na realizację.</p><p>Dzięki Górze Dobra będziesz mógł pochwalić się efektami swojej pracy. W tym też miejscu będziesz miał możliwość zobaczenia i dzielenia się z innymi informacjami o tym, jak dużo serca, i aktywności wolontariackiej dajesz na rzecz Światowych Dni Młodzieży w Krakowie.</p><p>Aby aktywować swoje konto kliknij w poniższy link:</p><p><a href="'+ url +'">'+ url +'</a></p><p>WAŻNE! Link, jaki otrzymujesz teraz do zalogowania, jest aktywny tylko przez 72h. W wypadku jakichkolwiek problemów bądź pytań, prosimy o kontakt na: goradobra@krakow2016.com.</p><p>Nie zwlekaj ani chwili dłużej i zostań już dziś Wolontariuszem ŚDM Kraków 2016.</p>'
+        } else { // EN
+          subject = 'Invitation to WYD Volunteers portal'
+          html = '<p>We would like to invite you to the “Mountain of Good” - a portal for volunteers. The portal will be the main means of communication during the World Youth Days in Krakow and a tool for managing projects and events.  This is a place for building a community of young and engaged people, for sharing what we do, for providing you important news regarding World Youth Days, and for sharing information about tasks waiting for volunteers.</p><p> Thanks to the “Mountain of Good” you will be able to share the results of your volunteer work. You will be able to see and share how much heart and energy you and the other volunteers are giving for the World Youth Days Krakow 2016.</p><p> To activate your account please click on the following link:</p> <p><a href="'+ url +'">'+ url +'</a></p> <p>Important! The link you have just received is valid only for 72 hours. In case of any problems or questions please contact us using email - goradobra@krakow2016.com.</p><p>Do not hesitate any longer and become the World Youth Days 2016 Krakow Volunteer today!</p>'
+        }
 
         var email = new sendgrid.Email({
           to:       row.email,
           from:     'goradobra@krakow2016.com',
           fromname: 'Góra Dobra',
-          subject:  'Zaproszenie do Góry Dobra!',
+          subject:  subject,
           html:     html
         })
 
