@@ -12,6 +12,7 @@ var Message = require('./Message.jsx')
 
 var IntlProvider = require('react-intl').IntlProvider
 var FormattedMessage = require('react-intl').FormattedMessage
+var FormattedHTMLMessage = require('react-intl').FormattedHTMLMessage
 
 var pl = require('react-intl/locale-data/pl')
 var addLocaleData = require('react-intl').addLocaleData
@@ -147,7 +148,7 @@ var Application = React.createClass({
         <div>
           <header>
             <div className="head-photo">
-              <NavLink href="/"><img src="/img/homepage/1.svg" id="head-img" alt="" draggable="false" /></NavLink>
+              <NavLink href="/"><FormattedHTMLMessage id="home-img" /></NavLink>
             </div>
             <nav id="head-nav" className="row">
               <Authentication user_id={this.user_id()} user_name={this.user_name()} search_status={searchForm || false} />
