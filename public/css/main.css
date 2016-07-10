@@ -1467,6 +1467,15 @@ article.main-content a.task-add-btn{
 	pointer-events: none;
 }
 
+/*----------------TERMS------------------*/
+
+#terms-list{
+	list-style: none;
+}
+#terms-list li{
+	padding-left: 20px;
+}
+
 
 /*----------------FOOTER----------------*/
 
