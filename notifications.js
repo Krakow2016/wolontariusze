@@ -531,7 +531,7 @@ r.connect(config.rethinkdb, function(err, conn) {
       cursor.each(function(err, change){
         var row = change.new_val
         request
-          .put('http://eventory-beta.coders-mill.com/webapi/v1/sdm/sync')
+          .put('https://eventory.cc/webapi/v1/sdm/sync')
           .send({
             volunteer_id: row.id,
             photo: row.profile_picture_url
