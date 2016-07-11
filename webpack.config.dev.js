@@ -5,6 +5,7 @@ module.exports = {
   // or devtool: 'eval' to debug issues with compiled output:
   devtool: 'cheap-module-eval-source-map',
   entry: [
+    'babel-polyfill',
     // listen to code updates emitted by hot middleware:
     'webpack-hot-middleware/client',
     // your code:
@@ -22,7 +23,7 @@ module.exports = {
   module: {
     loaders: [{
       test: /\.jsx?$/,
-      loaders: ['babel'],
+      loader: 'babel',
       include: path.join(__dirname, 'app')
     }]
   }

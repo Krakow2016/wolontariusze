@@ -73,6 +73,9 @@ var Html = React.createClass({
         <body>
           <div className="container" id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
           <script dangerouslySetInnerHTML={{__html: this.props.state}}></script>
+          <script src="/js/Intl.min.js"></script>
+          <script src="/js/en.js"></script>
+          <script src="/js/pl.js"></script>
           <script src="/js/client.js"></script>
         </body>
       </html>
