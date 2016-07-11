@@ -2,6 +2,7 @@ var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var request = require('superagent')
 var FormattedMessage = require('react-intl').FormattedMessage
+var FormattedHTMLMessage = require('react-intl').FormattedHTMLMessage
 
 var IndexStore = require('../stores/Index')
 var actions = require('../actions')
@@ -130,7 +131,7 @@ var App = React.createClass({
 
     return (
       <div>
-        <div id="inspiration-img"><img src="/img/homepage/inspiration.svg" /></div>
+        <div id="inspiration-img"><FormattedHTMLMessage id="inspiration-img" /></div>
         <img src="/img/homepage/graph.png" style={{width: '100%'}} alt="" />
         <div className="graph-filter">
           <div className="row">

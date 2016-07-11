@@ -1455,7 +1455,7 @@ article.main-content a.task-add-btn{
 	transition: .2s;
 }
 .faq-one-content.open{
-	max-height: 12rem;
+	max-height: 65rem;
 	margin: 1rem;
 }
 .faq-one-question.open{
