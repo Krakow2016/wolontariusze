@@ -1,7 +1,7 @@
 .git/
 node_modules/
 rethinkdb_data/
-public/js/
+public/js/client.*
 spec/
 logs/
 config.json
