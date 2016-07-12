@@ -367,7 +367,9 @@ module.exports = function(server) {
     r.connect(config.rethinkdb, function(err, conn) {
       r.table('Volunteers').map(function(vol) {
         return vol('tags').default([])
-      }).reduce(function(left, right) {
+      }).union(r.table('Activities').map(function(act) {
+        return act('tags').default([])
+      })).reduce(function(left, right) {
         return left.union(right)
       }).distinct().run(conn, function(err, result) {
         res.send(result)

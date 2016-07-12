@@ -4,7 +4,8 @@ var Search = React.createClass({
 
   propTypes: {
     handleChange: React.PropTypes.func,
-    query: React.PropTypes.object
+    query: React.PropTypes.object,
+    submit:  React.PropTypes.func
   },
 
   render: function() {
@@ -60,6 +61,11 @@ var Search = React.createClass({
           name="availabilityState"
           onChange={this.props.handleChange}
           value={this.props.query.availabilityState} />
+        <input
+          type="hidden"
+          name="page"
+          onChange={this.props.handleChange}
+          value={this.props.query.page} />
         <input type="hidden" value="Szukaj" onClick={this.props.submit} />
       </div>
     )

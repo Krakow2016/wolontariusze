@@ -57,7 +57,7 @@ h2, h3, h4 {
 	height: 0;
 	width: 100%;
 }
-#menu-search-submit {
+#menu-search-submit{
 	width:auto;
 	border:none;
 	position: absolute;
@@ -1283,6 +1283,91 @@ article ul#nav-list a{
 	color: white;
 }
 
+#task-search {
+  width: 30%;
+  margin: 0 auto 0 auto;
+  padding: 4.5rem 0 0.5rem 0;
+  
+}
+
+#task-search-row {
+  display: block;
+  width: 100%;
+  margin: 0 0 10px 0;
+  border-bottom: 0.5rem solid #008AC3;
+}
+
+#task-search-submit { 
+  width:auto;
+  border:none;
+  position: relative;
+  top: -1.0rem;
+  right: 1.0rem;
+  float: right;
+  padding: 0;
+  margin: 0;
+  -webkit-transform: translate(0%,-50%);
+  -ms-transform: translate(0%,-50%);
+  -o-transform: translate(0%,-50%);
+  transform: translate(0%,-50%);
+  height: 1rem;
+  min-height: auto;
+  font-size: auto;
+  z-index: 12;
+}
+
+
+#task-search .react-autosuggest__suggestion {
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* https://css-tricks.com/all-about-floats/ - The Easy Clearing Method */
+#task-search .react-autosuggest__suggestion:after {
+   content: "."; 
+   visibility: hidden; 
+   display: block; 
+   height: 0; 
+   clear: both;
+}
+
+.react-autosuggest__suggestion .task-search-highlighted-text {
+  color: #FFFFFF;
+  background-color: #008AC3;
+}
+
+.react-autosuggest__suggestion:hover .task-search-highlighted-text{
+  color: #008AC3;
+  background-color: #FFFFFF ;
+}
+
+.tasks-filters-open, .tasks-filters-closed {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.tasks-pagination {
+  font-size: 1.2rem
+}
+
+.tasks-pagination-leftIcons {
+  display: inline-block;
+  margin: 0 0 0 5px;
+  color: #001A2D;
+  cursor: pointer;
+}
+
+.tasks-pagination-rightIcons {
+  display: inline-block;
+  margin: 0 5px 0 0;
+  color: #001A2D;
+  cursor: pointer;
+}
+
+.tasks-pagination-content {
+  display: inline-block;
+  margin: 0 10px 0 10px;
+}
 
 
 
@@ -1763,6 +1848,13 @@ footer{
 		width: auto;
 		height: 100%;
 	}
+	
+  #task-search {
+    width: 70%;
+    margin: 0 auto 0 auto;
+    padding: 5.0rem 0 0.5rem 0;
+  }
+	#task-search-submit { top: -1.5rem;}
 }
 @media only screen and (max-width: 375px){
 	ul#nav-list li{

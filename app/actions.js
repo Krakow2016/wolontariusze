@@ -5,6 +5,9 @@ var VolunteerStore = require('./stores/Volunteer')
 var navigateAction = require('fluxible-router').navigateAction
 var request = require('superagent')
 
+// ilość zadań na stronie (do paginacji)
+var TASKS_PER_PAGE = 5
+
 module.exports = {
 
   showIndex: function(context, payload, cb) {
@@ -172,30 +175,27 @@ module.exports = {
       ]
     }
 
-    var availableQuery = {
+    var notAvailableQuery = {
       term: {
         'doc.limit_reached': true
       }
     }
 
-    //Jeżeli otwarta jest zakładka Bank Pracy, Biorę Udział w w to potrzeba zwrócić trwające i wolne zadania
-    //a w zakładce Moje Zadania zwracamy wszystkie lub wybrane
+    if(!!state.created_by || !!state.volunteer) { //zakładka Biorę udział w, Moje Zadania
+      if(state.availabilityState == 'wolne') {
+        must_not.push(notAvailableQuery)
+      } else if (state.availabilityState == 'pelne') {
+        must.push(notAvailableQuery)
+      }
 
-    if(!state.created_by) {
-      must_not.push(finishedQuery)
-      must_not.push(availableQuery)
-    } else {
       if(state.timeState == 'trwajace') {
         must_not.push(finishedQuery)
       } else if (state.timeState == 'zakonczone') {
         must.push(finishedQuery)
       }
-
-      if(state.availabilityState == 'wolne') {
-        must_not.push(availableQuery)
-      } else if (state.availabilityState == 'pelne') {
-        must.push(availableQuery)
-      }
+    } else {    //zakładka BankPracy
+      must_not.push(finishedQuery)
+      must_not.push(notAvailableQuery)
     }
 
     if(state.created_by) {
@@ -261,13 +261,14 @@ module.exports = {
       query : query
     }
 
+    var page = (!!state.page) ? state.page : 1
     var payload = {
       query: params,
       config: {
-        size: 50
+        size: (page == -1) ? 50 : TASKS_PER_PAGE,
+        from: (page == -1) ? 0 : (page-1)*TASKS_PER_PAGE
       }
     }
-
     // Pobiera zadania z elastic searcha
     context.service.create('ActivitiesES', payload.config, payload.query, function (err, data) {
       if(err) { debug(err) }

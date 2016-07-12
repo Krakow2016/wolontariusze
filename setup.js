@@ -36,9 +36,12 @@ r.connect({host: conf.rethinkdb.host}, function(err, conn) {
 
   return new Promise(function(resolve, reject) {
     // ElasticSearch index
+    // settings for ngram search https://www.elastic.co/guide/en/elasticsearch/guide/current/_index_time_search_as_you_type.html
+    // https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-ngram-tokenizer.html
     request({
       method: 'PUT',
-      uri: conf.elasticSearch
+      uri: conf.elasticSearch,
+      body: fs.readFileSync('./config/es_settings.json', 'utf8') 
     }, function(err) {
       if(err) {
         reject('Błąd: brak połączenia z ElasticSearch.')

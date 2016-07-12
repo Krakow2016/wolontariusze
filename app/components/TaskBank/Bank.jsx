@@ -9,6 +9,9 @@ var ActivitiesSearchForm = require('./Search.jsx')
 var actions = require('../../actions')
 var AddActivityButton = require('./AddActivityButton.jsx')
 
+// ilość zadań na stronie (do paginacji)
+var TASKS_PER_PAGE = 5
+
 var Bank = React.createClass({
 
   propTypes: {
@@ -73,6 +76,81 @@ var Bank = React.createClass({
 
     history.replaceState({}, '', base +'?'+ attributes)
   },
+  
+  pagination: function () {
+  
+    var query = this.state.query
+    var page = Number(!!query.page ? query.page : 1)
+    var totalTasks = (this.state.all[0]) ? this.state.all[0].totalHits : 0
+    //console.log("total tasks", totalTasks)
+    var pageCount = (totalTasks > 0 ) ? Math.ceil(Number(totalTasks/TASKS_PER_PAGE)) : 1
+    
+    var leftIcons
+    var rightIcons
+    if (page > 1) {
+      leftIcons = <span>
+                    <div className="tasks-pagination-leftIcons" onClick={this.handleFirstPage}>&#x276e;&#x276e;</div>
+                    <div className="tasks-pagination-leftIcons" onClick={this.handlePreviousPage}>&#x276e;</div>
+                  </span>
+    }
+    if (page < pageCount) {
+      rightIcons = <span>
+                    <div className="tasks-pagination-rightIcons" onClick={this.handleNextPage}>&#x276f;</div>
+                    <div className="tasks-pagination-rightIcons" onClick={this.handleLastPage}>&#x276f;&#x276f;</div>
+                  </span>
+    }
+
+    var content = <div className="tasks-pagination-content">Strona {page} z {pageCount}</div>
+    
+    return (
+      <span className="tasks-pagination">
+        {leftIcons}
+        {content}
+        {rightIcons}
+      </span>
+    )
+  },
+  
+  
+  handleFirstPage: function () {
+    var query = this.state.query
+    query['page'] = 1
+    this.setState({
+      query: query
+    })
+    this.onSubmit()
+  },
+  
+  handlePreviousPage: function () {
+    var query = this.state.query
+    var page = !!query.page ? query.page : 1
+    query['page'] = Number(page)-1
+    this.setState({
+      query: query
+    })
+    this.onSubmit()
+  },
+  
+  handleNextPage: function () {
+    var query = this.state.query
+    var page = !!query.page ? query.page : 1
+    query['page'] = Number(page)+1
+    this.setState({
+      query: query
+    })
+    this.onSubmit()
+  },
+  
+  handleLastPage: function () {
+    var query = this.state.query
+    var totalTasks = (this.state.all[0]) ? this.state.all[0].totalHits : 0
+    var pageCount = Math.ceil(Number(totalTasks/TASKS_PER_PAGE))
+    query['page'] = pageCount
+    this.setState({
+      query: query
+    })
+    this.onSubmit()
+  },
 
   render: function () {
     var user = this.user()
@@ -108,11 +186,13 @@ var Bank = React.createClass({
               saveTag={this.saveTag}
               removeTag={this.removeTag}
               onSubmit={this.onSubmit}
-              query={this.state.query} />
+              query={this.state.query} 
+              context={this.props.context} />
 
           {this.state.all.length > 3 ? this.addActivityButton() : ''}
           <List tasks={this.state.all} />
           {this.addActivityButton()}
+          {this.pagination()}
         </div>
       )
     } else {

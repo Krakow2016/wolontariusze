@@ -4,10 +4,14 @@
       "type": "nested",
       "properties" : {
         "name" : {
-          "type" : "string"
+          "type" : "string",
+          "analyzer":  "autocomplete",
+          "search_analyzer": "standard"
         },
         "description" : {
-          "type" : "string"
+          "type" : "string",
+          "analyzer":  "autocomplete",
+          "search_analyzer": "standard"
         },
         "act_type" : {
           "type" : "string"
