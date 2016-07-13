@@ -337,7 +337,7 @@ server.get('/api/v2/pilgrims', bearer, function(req, res) {
       res.status(500).send(error('DBError', err))
     } else {
       if(req.query.from) { // Pobierz diff
-        Pilgrims.read(req, 'Pilgrims', { key: parseInt(req.query.from, 10) }, {}, function(err, from) {
+        Pilgrims.read(req, 'Pilgrims', { key: req.query.from }, {}, function(err, from) {
           if(err) {
             res.status(500).send(error('DBError', err))
           } else {

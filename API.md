@@ -591,7 +591,7 @@ GET https://wolontariusze.krakow2016.com/api/v2/pilgrims
     "status": "success",
     "data": {
         "pilgrims": {
-            "created_at": 20160418,
+            "created_at": "20160418",
             "data": [
                 {
                     "guardian": "Joanna Nowak",
