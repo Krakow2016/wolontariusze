@@ -655,7 +655,8 @@ module.exports = function(server) {
               res.status(500).send('Wystąpił nieznany błąd bazy danych.')
               console.error(err)
             } else {
-              res.status(201).send(result.changes[0].new_val)
+              var changes = result.changes[0]
+              res.status(201).send(changes && changes.new_val)
             }
           })
         }

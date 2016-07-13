@@ -20,7 +20,7 @@ var ApplicationStore = createStore({
   },
 
   setLang: function(lang) {
-    this.lang = lang.match(/pl/) ? 'pl' : 'en'
+    this.lang = (lang && lang.match(/pl/)) ? 'pl' : 'en'
     this.emitChange()
   },
 
