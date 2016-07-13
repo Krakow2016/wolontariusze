@@ -9,7 +9,7 @@ var passport = require('passport')
 var util = require('util')
 var bodyParser = require('body-parser')
 var expressSession = require('express-session')
-var jiff = require('jiff')
+var jsonpatch = require('fast-json-patch');
 var qs = require('qs')
 
 var env = process.env.NODE_ENV || 'development'
@@ -341,8 +341,14 @@ server.get('/api/v2/pilgrims', bearer, function(req, res) {
           if(err) {
             res.status(500).send(error('DBError', err))
           } else {
-            var diff = jiff.diff(from[0], to[0])
-            res.send(success({ diff: diff }))
+            try {
+              var base = from[0] || {}
+              res.send(success({
+                diff: jsonpatch.compare(base, to[0])
+              }))
+            } catch(e) {
+              res.send(error('UnknownError'))
+            }
           }
         })
       } else { // Pobierz ostatnią wersję
