@@ -1,16 +1,23 @@
 <form action="/api/v2/login" method="post">
   <h3>
-    Zaloguj się, aby przejść dalej:
+    Please log in to continue:
   </h3>
+
+  <div class="success">
+      <%= success %>
+  </div>
+
+  <div class="error"><%= error %></div>
+
   <div>
     <label for="email">E-mail:</label>
     <input id="email" type="text" name="username"/>
   </div>
   <div>
-    <label for="password">Hasło:</label>
+    <label for="password">Password:</label>
     <input id="password" type="password" name="password"/>
   </div>
   <div>
-    <input type="submit" value="Zaloguj się"/>
+    <input type="submit" value="Log in" />
   </div>
 </form>

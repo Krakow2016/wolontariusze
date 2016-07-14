@@ -11,7 +11,9 @@ var bodyParser = require('body-parser')
 var expressSession = require('express-session')
 var jsonpatch = require('fast-json-patch');
 var qs = require('qs')
+var flash = require('connect-flash')
 
+var messages = require('./app/messages')['en']
 var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
 var oauth2 = require('./oauth/oauth2')
@@ -37,7 +39,7 @@ var session = [expressSession({
     resave: true,
     saveUninitialized: true,
     store: config.service === 'rethinkdb' ? new RDBStore(session_store) : new expressSession.MemoryStore()
-}), passport.initialize(), passport.session()]
+}), flash(), passport.initialize(), passport.session()]
 
 // Format każdego poprawnie wykonanego zapytania
 var success = function(data) {
@@ -95,11 +97,17 @@ require('./oauth/auth');
 // Formularz do logowania dla wolontariuszy chcących dać dostęp do swojego
 // konta wybranej aplikacji.
 server.get('/api/v2/login', session, function(req, res) {
-  res.render('login', { layout: 'layout' })
+  res.render('login', {
+    layout: 'layout',
+    error: messages[req.flash('error')],
+    success: messages[req.flash('success')]
+  })
 })
 server.post('/api/v2/login', session, passport.authenticate('local', {
   successReturnToOrRedirect: '/api/v2/',
-  failureRedirect: '/api/v2/login'
+  failureRedirect: '/api/v2/login',
+  failureFlash: true,
+  successFlash: true
 }))
 
 server.get('/api/v2/logout', session, function(req, res) {
