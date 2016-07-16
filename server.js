@@ -31,6 +31,11 @@ var debug = require('debug')('Server')
 var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
 
+// Konfiguracja zapisu danych sesji w bazie danych
+var r2 = require('rethinkdbdash')({
+  servers: [ config.rethinkdb ]
+})
+
 require('node-jsx').install({extension: '.jsx'})
 var HtmlComponent = React.createFactory(require('./app/components/Html.jsx'))
 
@@ -49,11 +54,6 @@ var Xls = require('./app/services/'+config.service+'/xls')
 var app = require('./app/fluxible')
 // Get access to the fetchr plugin instance
 var fetchrPlugin = app.getPlugin('FetchrPlugin')
-
-// Konfiguracja zapisu danych sesji w bazie danych
-var session_store = {
-  servers: [ config.rethinkdb ]
-}
 
 // Get information from html forms
 var jsonParser = bodyParser.json()
@@ -152,7 +152,7 @@ module.exports = function(server) {
 
   server.use(session({
     secret: 'secret',
-    store: config.service === 'rethinkdb' ? new RDBStore(session_store) : new session.MemoryStore()
+    store: config.service === 'rethinkdb' ? new RDBStore(r2) : new session.MemoryStore()
   }))
   // Middleware służący do wyświetlania komunikatów flash
   server.use(flash())
