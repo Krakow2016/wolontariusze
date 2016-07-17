@@ -30,15 +30,15 @@ var RDBStore = require('session-rethinkdb')(expressSession)
 // Express configuration
 
 // Konfiguracja zapisu danych sesji w bazie danych
-var session_store = {
+var r2 = require('rethinkdbdash')({
   servers: [ config.rethinkdb ]
-}
+})
 
 var session = [expressSession({
     secret: 'secret',
     resave: true,
     saveUninitialized: true,
-    store: config.service === 'rethinkdb' ? new RDBStore(session_store) : new expressSession.MemoryStore()
+    store: config.service === 'rethinkdb' ? new RDBStore(r2) : new expressSession.MemoryStore()
 }), flash(), passport.initialize(), passport.session()]
 
 // Format każdego poprawnie wykonanego zapytania
