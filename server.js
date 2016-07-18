@@ -16,7 +16,6 @@ var express = require('express'),
   crypto = require('crypto'),
   multipart = require('connect-multiparty'),
   excelParser = require('excel-parser'),
-  r = require('rethinkdb'),
   AWS = require('aws-sdk'),
   async = require('async'),
   sharp = require('sharp'),
@@ -31,8 +30,8 @@ var debug = require('debug')('Server')
 var env = process.env.NODE_ENV || 'development'
 var config = require('./config.json')[env]
 
-// Konfiguracja zapisu danych sesji w bazie danych
-var r2 = require('rethinkdbdash')({
+// Konfiguracja bazy danych
+var r = require('rethinkdbdash')({
   servers: [ config.rethinkdb ]
 })
 
@@ -152,7 +151,7 @@ module.exports = function(server) {
 
   server.use(session({
     secret: 'secret',
-    store: config.service === 'rethinkdb' ? new RDBStore(r2) : new session.MemoryStore()
+    store: config.service === 'rethinkdb' ? new RDBStore(r) : new session.MemoryStore()
   }))
   // Middleware służący do wyświetlania komunikatów flash
   server.use(flash())
@@ -364,75 +363,68 @@ module.exports = function(server) {
 
   // Zwraca listę unikalnych tagów przypisanych do wolontariuszy
   server.get('/tags', function(req, res) {
-    r.connect(config.rethinkdb, function(err, conn) {
-      r.table('Volunteers').map(function(vol) {
-        return vol('tags').default([])
-      }).reduce(function(left, right) {
-        return left.union(right)
-      }).distinct().run(conn, function(err, result) {
-        res.send(result)
-      })
+    r.table('Volunteers').map(function(vol) {
+      return vol('tags').default([])
+    }).reduce(function(left, right) {
+      return left.union(right)
+    }).distinct().run().then(function(result) {
+      res.send(result)
     })
   })
 
   server.get('/stats', function(req, res) {
     var result = {}
-    r.connect(config.rethinkdb, function(err, conn) {
-      // Błąd połączenia z bazą danych
-      if(err) { return res.send(500) }
-
-      var stats = [
-        // Liczba użytkowników który mogą się zalogować do systemu
-        function(cb) {
-          r.table('Volunteers').count(function(volunteer) {
-            return volunteer.hasFields('password')
-          }).run(conn, function(err, count) {
-            result.total_active = count
-            cb(err)
-          })
-        },
-        // Liczba wykonanych zadań
-        function(cb) {
-          r.table('Activities').count(function(activity) {
-            return activity('is_archived').default(false).eq(true)
-          }).run(conn, function(err, count) {
-            result.total_archived = count
-            cb(err)
-          })
-        }
-      ]
-
-      if(req.user && req.user.is_admin) {
-        stats = stats.concat([
-          function(cb){
-            r.table('Volunteers').count().run(conn, function(err, count) {
-              // Liczba wszystkich kont w systemie
-              result.total_accounts = count
-              cb(err)
-            })
-          }, function(cb) {
-            r.table('Imports').count().run(conn, function(err, count) {
-              // Liczba wolontariuszy importowanych z bazy watykańskiej
-              result.total_volunteers = count
-              cb(err)
-            })
-          }, function(cb) {
-            r.table('Volunteers')('is_admin').count(true).run(conn, function(err, count) {
-              // Liczba administratorów
-              result.total_admins = count
-              cb(err)
-            })
-          }
-        ])
+    var stats = [
+      // Liczba użytkowników który mogą się zalogować do systemu
+      function(cb) {
+        r.table('Volunteers').count(function(volunteer) {
+          return volunteer.hasFields('password')
+        }).run().then(function(count) {
+          result.total_active = count
+          cb()
+        })
+      },
+      // Liczba wykonanych zadań
+      function(cb) {
+        r.table('Activities').count(function(activity) {
+          return activity('is_archived').default(false).eq(true)
+        }).run().then(function(count) {
+          result.total_archived = count
+          cb()
+        })
       }
+    ]
 
-      async.parallel(stats, function(err) {
-        if(err) {
-          res.send(500)
-        } else {
-          res.send(result)
+    if(req.user && req.user.is_admin) {
+      stats = stats.concat([
+        function(cb){
+          r.table('Volunteers').count().run().then(function(count) {
+            // Liczba wszystkich kont w systemie
+            result.total_accounts = count
+            cb()
+          })
+        }, function(cb) {
+          r.table('Imports').count().run().then(function(count) {
+            // Liczba wolontariuszy importowanych z bazy watykańskiej
+            result.total_volunteers = count
+            cb()
+          })
+        }, function(cb) {
+          r.table('Volunteers')('is_admin').count(true).run().then(function(count) {
+            // Liczba administratorów
+            result.total_admins = count
+            cb()
+          })
         }
-      })
+      ])
+    }
+
+    async.parallel(stats, function(err) {
+      if(err) {
+        res.send(500)
+      } else {
+        res.send(result)
+      }
     })
   })
 
@@ -545,43 +537,28 @@ module.exports = function(server) {
           }
         })
 
-        r.connect(config.rethinkdb, function(err, conn) {
-          // Dane do ElasticSearcha najpierw lądują w tabeli `Imports` żeby
-          // później zostać automatycznie przeniesione i zcalone z odpowiadającym
-          // im dokumentem wolontariusza poprzez narzędzie LogStash.
-          r.table('Imports').insert(docs, {
-            conflict: 'replace'
-          }).run(conn, function(err) {
-            if(err) { return res.status(500).send(err) }
-
-            var table = r.table('Volunteers')
-            emails.push({index: 'email'})
-            // Pobierz wszystkie duplikaty
-            table.getAll.apply(table, emails).run(conn, function(err, cursor) {
-              if(err) {
-                return res.send(500)
-              } else {
-                cursor.toArray(function(err, result) {
-                  var docs = []
-                  // Usuń duplikaty
-                  result.forEach(function(volunteer) {
-                    delete volunteers[volunteer.email]
-                  })
-                  // Przekonwertuj obiekt na tablicę
-                  Object.keys(volunteers).forEach(function(key) {
-                    docs.push(volunteers[key])
-                  })
-                  // Zapisz nieistniejących wolontariuszy w bazie danych
-                  r.table('Volunteers').insert(docs).run(conn, function(err, result) {
-                    if(err) {
-                      res.status(500).send(err)
-                    } else {
-                      res.send(result)
-                    }
-                    conn.close()
-                  })
-                })
-              }
+        // Dane do ElasticSearcha najpierw lądują w tabeli `Imports` żeby
+        // później zostać automatycznie przeniesione i zcalone z odpowiadającym
+        // im dokumentem wolontariusza poprzez narzędzie LogStash.
+        r.table('Imports').insert(docs, {
+          conflict: 'replace'
+        }).run().then(function() {
+          var table = r.table('Volunteers')
+          emails.push({index: 'email'})
+          // Pobierz wszystkie duplikaty
+          table.getAll.apply(table, emails).run().then(function(result) {
+            var docs = []
+            // Usuń duplikaty
+            result.forEach(function(volunteer) {
+              delete volunteers[volunteer.email]
+            })
+            // Przekonwertuj obiekt na tablicę
+            Object.keys(volunteers).forEach(function(key) {
+              docs.push(volunteers[key])
+            })
+            // Zapisz nieistniejących wolontariuszy w bazie danych
+            r.table('Volunteers').insert(docs).run().then(function(result) {
+              res.send(result)
             })
           })
         })

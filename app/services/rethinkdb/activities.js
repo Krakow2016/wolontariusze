@@ -1,79 +1,61 @@
 'use strict'
-var r = require('rethinkdb')
-
 var env = process.env.NODE_ENV || 'development'
 var configuration = require('../../../config.json')[env]
 //var sendgrid_apikey = configuration.sendgrid_apikey
 var dbConf = configuration.rethinkdb
 var tableName = 'Activities'
 
+// Konfiguracja bazy danych
+var r = require('rethinkdbdash')({
+  servers: [ dbConf ]
+})
+
 var Activities = module.exports = {
   name: tableName,
   read: function(req, resource, params, config, callback) {
-     // Połącz się z bazą danych `sdm`
-    r.connect(dbConf, function(error, conn){
-      if(error) { // Wystąpił błąd przy połączeniu z bazą danych
-        callback(error)
-        return
-      }
+    if(params.id) { // Pobierz krotkę o danym numerze id
+      r.table(tableName)
+        .get(params.id.toString())
+        .merge(function(activity){
+          return {
+            created_by: r.db('sdm').table('Volunteers').get(activity('created_by')).pluck(['id', 'first_name', 'last_name', 'profile_picture_url', 'responsibilities'])
+          }
+        })
+        .run().then(function(activity){
 
-      if(params.id) { // Pobierz krotkę o danym numerze id
-        r.table(tableName)
-          .get(params.id.toString())
-          .merge(function(activity){
-            return {
-              created_by: r.db('sdm').table('Volunteers').get(activity('created_by')).pluck(['id', 'first_name', 'last_name', 'profile_picture_url', 'responsibilities'])
-            }
-          })
-          .run(conn, function(err, activity){
+          if (!activity) {
+            return callback(404)
+          }
 
-            if(err) {
-              return callback(err)
-            } else if (!activity) {
-              return callback(404)
-            }
-
-            r.table('Joints')
-            .getAll(params.id, {index: 'activity_id'})
-            .filter(function(x){
-              return x.hasFields('is_canceled').not()
-            }, {default: true})
-            .eqJoin('user_id', r.table('Volunteers'))
-            .map(
-              function(doc){
-                return doc.merge(function(){
-                  return {'right': {'user_id': doc('right')('id')}}
-                })
-              })
-            .pluck({'left': ['id', 'created_at'], 'right': ['user_id', 'first_name', 'last_name', 'profile_picture_url', 'thumb_picture_url']})
-            .zip()
-            .orderBy(r.row('created_at'))
-            .run(conn, function(err, cursor){
-              if (err) { return callback(500) }
-              cursor.toArray(function(err, volunteers) {
-                activity.volunteers = volunteers || []
-                //console.log('ACTIVITY', activity)
-                callback(null, activity)
+          r.table('Joints')
+          .getAll(params.id, {index: 'activity_id'})
+          .filter(function(x){
+            return x.hasFields('is_canceled').not()
+          }, {default: true})
+          .eqJoin('user_id', r.table('Volunteers'))
+          .map(
+            function(doc){
+              return doc.merge(function(){
+                return {'right': {'user_id': doc('right')('id')}}
               })
             })
+          .pluck({'left': ['id', 'created_at'], 'right': ['user_id', 'first_name', 'last_name', 'profile_picture_url', 'thumb_picture_url']})
+          .zip()
+          .orderBy(r.row('created_at'))
+          .run().then(function(volunteers){
+            activity.volunteers = volunteers || []
+            //console.log('ACTIVITY', activity)
+            callback(null, activity)
           })
-      } else {
-        callback(400)
-      }
-    })
+        })
+    } else {
+      callback(400)
+    }
   },
 
   create: function(req, resource, params, body, config, callback) {
-     // Połącz się z bazą danych `sdm`
-    r.connect(dbConf, function(err, conn) {
-      if(err) {
-        callback(err)
-        return
-      }
-
-      r.table(tableName).insert(body, {returnChanges: true}).run(conn, function (err, resp) {
-        callback(err, resp)
-      })
+    r.table(tableName).insert(body, {returnChanges: true}).run().then(function (resp) {
+      callback(null, resp)
     })
   },
 
@@ -84,45 +66,23 @@ var Activities = module.exports = {
       callback(400)
       return
     }
-    // Połącz się z bazą danych `sdm`
-    r.connect(dbConf, function(err, conn) {
-      if(err) {
-        callback(err)
-        return
-      }
-
-      // Wykonaj zapytanie do bazy danych
-      r.table(tableName).get(id).update(body, {returnChanges: true}).run(conn, function (err, resp) {
-        callback(err, resp)
-      })
+    // Wykonaj zapytanie do bazy danych
+    r.table(tableName).get(id).update(body, {returnChanges: true}).run().then(function (resp) {
+      callback(null, resp)
     })
   },
 
   delete: function(req, resource, params, config, callback) {
-    // Połącz się z bazą danych `sdm`
-    r.connect(dbConf, function(err, conn) {
-      if(err) {
-        callback(err)
-        return
-      }
-      r.table(tableName).get(params.id).run(conn, function (err1, resp1) {
-        if (err1) {
-          callback(err1, resp1)
-        }
-        r.table(tableName).get(params.id).delete().run(conn, function (err2, resp2) {
-          if(err2) {
-            callback(err2)
-            return
-          }
-          // Usuń wszystkie zgłoszenia do aktywności
-          r.table('Joints')
-            .getAll(params.id, {index: 'activity_id'})
-            .delete()
-            .run(conn, function(err3){
-                // ok
-              callback(err3, resp2)
-            })
-        })
+    r.table(tableName).get(params.id).run().then(function (resp1) {
+      r.table(tableName).get(params.id).delete().run().then(function (resp2) {
+        // Usuń wszystkie zgłoszenia do aktywności
+        r.table('Joints')
+          .getAll(params.id, {index: 'activity_id'})
+          .delete()
+          .run().then(function(){
+              // ok
+            callback(null, resp2)
+          })
       })
     })
   },
