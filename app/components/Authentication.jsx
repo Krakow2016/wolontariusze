@@ -29,42 +29,95 @@ var Authentication = React.createClass({
 })
 
 var LoginButton = React.createClass({
+    getInitialState: function(){
+    var state = {
+      open: false
+    }
+    return state
+  },
+
+  onClicked: function(){
+    this.setState({
+      open: !this.state.open
+    })
+  },
+
   render: function() {
+    var open = this.state.open ? "open" : "";
     return (
-      <ul id="nav-list">
-        <li>
-          <NavLink href="/login">
-            <FormattedMessage id="login" />
-          </NavLink>
-        </li>
-        <li>
-          <a href="/faq">FAQ</a>
-        </li>
-      </ul>
+      <div>
+        <div id="overlay" className={open} onClick={this.onClicked}></div>
+        <div id="mobile-nav">
+          <a href="#" className="menu-mobile-btn" onClick={this.onClicked}><img src="/img/menu.svg" /></a>
+          <div id="mobile-nav-content" className={open} onClick={this.onClicked}>
+            <NavLink href="/login"><FormattedMessage id="login" /></NavLink>
+            <a href="/faq">FAQ</a>
+          </div>
+        </div>
+        <ul id="nav-list">
+          <li>
+            <NavLink href="/login">
+              <FormattedMessage id="login" />
+            </NavLink>
+          </li>
+          <li>
+            <a href="/faq">FAQ</a>
+          </li>
+        </ul>
+      </div>
     )
   }
 })
 
 var LogoutButton = React.createClass({
+
+
+  getInitialState: function(){
+    var state = {
+      open: false
+    }
+    return state
+  },
+
+  onClicked: function(){
+    this.setState({
+      open: !this.state.open
+    })
+  },
+
   render: function() {
+    var open = this.state.open ? "open" : "";
     return (
-      <ul id="nav-list">
-        <li>
-          <NavLink href="/zadania"><FormattedMessage id="bank" /></NavLink>
-        </li>
-        <li>
-          <NavLink href={'/wolontariusz/'+this.props.user_id}><FormattedMessage id="welcome" /> {this.props.user_name}!</NavLink>
-        </li>
-        <li>
-          <NavLink href="/ustawienia"><FormattedMessage id="settings" /></NavLink>
-        </li>
-        <li>
-          <a href="/logout"><FormattedMessage id="logout" /></a>
-        </li>
-        <li>
-          <a href="/faq">FAQ</a>
-        </li>
-      </ul>
+      <div>
+        <div id="overlay" className={open} onClick={this.onClicked}></div>
+        <div id="mobile-nav">
+          <a href="#" className="menu-mobile-btn" onClick={this.onClicked} ><img src="/img/menu.svg" alias="Menu Button"/></a>
+          <div id="mobile-nav-content" className={open} onClick={this.onClicked}>
+            <NavLink href="/zadania"><FormattedMessage id="bank" /></NavLink>
+            <NavLink href={'/wolontariusz/'+this.props.user_id}><FormattedMessage id="welcome" /> <b>{this.props.user_name}!</b></NavLink>
+            <NavLink href="/ustawienia"><FormattedMessage id="settings" /></NavLink>
+            <a href="/logout"><FormattedMessage id="logout" /></a>
+            <a href="/faq">FAQ</a>
+          </div>
+        </div>
+        <ul id="nav-list">
+          <li>
+            <NavLink href="/zadania"><FormattedMessage id="bank" /></NavLink>
+          </li>
+          <li>
+            <NavLink href={'/wolontariusz/'+this.props.user_id}><FormattedMessage id="welcome" /> {this.props.user_name}!</NavLink>
+          </li>
+          <li>
+            <NavLink href="/ustawienia"><FormattedMessage id="settings" /></NavLink>
+          </li>
+          <li>
+            <a href="/logout"><FormattedMessage id="logout" /></a>
+          </li>
+          <li>
+            <a href="/faq">FAQ</a>
+          </li>
+        </ul>
+      </div>
     )
   }
 })
