@@ -3,6 +3,7 @@ var NavLink = require('fluxible-router').NavLink
 
 var SearchResult = React.createClass({
   render: function() {
+    // console.log(this.props);
     return (
       <div>
         <NavLink href={'/wolontariusz/'+ this.props.id +'/admin'}>
