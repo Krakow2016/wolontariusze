@@ -83,6 +83,16 @@ var Application = React.createClass({
     })
   },
 
+  setPol: function(){
+    document.cookie = "lang=pl"
+    location.reload();
+  },
+
+  setEng: function(){
+    document.cookie = "lang=en"
+    location.reload();
+  },
+
   render: function() {
     var Handler = this.props.currentRoute.handler
 
@@ -154,6 +164,10 @@ var Application = React.createClass({
               <Authentication user_id={this.user_id()} user_name={this.user_name()} search_status={searchForm || false} />
               {searchForm}
             </nav>
+            <div id="languages">
+              <a href="#" onClick={this.setPol}><span className="flag-icon flag-icon-pl"></span></a>
+              <a href="#" onClick={this.setEng}><span className="flag-icon flag-icon-gb"></span></a>
+            </div>
 
           </header>
 

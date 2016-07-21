@@ -52,11 +52,6 @@ var Volunteer = React.createClass({
     ]
 
     if(user) {
-      tabs.push(
-        <NavLink key="schedule" href={'/wolontariusz/' + this.props.profile.id +'/grafik'} className="profile-ribon-cell">
-          <b id="profile-ribon-txt">Grafik</b>
-        </NavLink>
-      )
       if(user.is_admin) {
         tabs.push(
           <NavLink key="details" href={'/wolontariusz/' + this.props.profile.id +'/admin'} className="profile-ribon-cell">
