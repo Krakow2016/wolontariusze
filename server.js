@@ -665,8 +665,10 @@ module.exports = function(server) {
       context.getActionContext().dispatch('SAVE_FLASH_FAILURE', failure)
     }
 
+
     // Ustaw język
-    context.getActionContext().dispatch('SET_LANGUAGE',  req.headers['accept-language'])
+    var cookies = parseCookies(req)
+    context.getActionContext().dispatch('SET_LANGUAGE', typeof cookies != "undefined" && typeof cookies.lang != "undefined" ?  cookies.lang : req.headers['accept-language'])
 
     // Google Analytics Measurement Protocol
     if(req.visitor) {
@@ -712,6 +714,18 @@ module.exports = function(server) {
       res.send(html)
     })
   })
+
+  function parseCookies (request) {
+      var list = {},
+          rc = request.headers.cookie;
+
+      rc && rc.split(';').forEach(function( cookie ) {
+          var parts = cookie.split('=');
+          list[parts.shift().trim()] = decodeURI(parts.join('='));
+      });
+
+      return list;
+  }
 
   return server
 }

@@ -907,6 +907,9 @@ body{
 iframe{
 	border: 0;
 }
+.container > div > header{
+	position: relative;
+}
 article.main-content{
 	background-color: white;
 	color: #003753;
@@ -943,6 +946,17 @@ article.main-content a{
 	text-align: center;
 	width: 100%;
 	color: white;
+}
+
+/*---LANGUAGES---*/
+
+#languages{
+	position: absolute;
+	top: 36px;
+	right: 36px;
+}
+#languages a{
+	padding: 10px;
 }
 
 /*---NAV---*/
@@ -1768,6 +1782,10 @@ footer{
 		left: -30%;
 		position: relative;
 	}
+	#languages{
+		top: 25px;
+		right: 25px;
+	}
 }
 @media only screen and (max-width: 768px) {
 	ul#nav-list li{
@@ -1834,6 +1852,13 @@ footer{
 	}
 	.profilePicSettings{
 		width: 100%;
+	}
+	#languages{
+		top: 15px;
+		right: 15px;
+	}
+	#languages a{
+		padding: 5px;
 	}
 }
 

@@ -63,6 +63,7 @@ var Html = React.createClass({
           <meta name="theme-color" content="#ffffff" />
 
           <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600&subset=latin-ext' rel='stylesheet' type='text/css' />
+          <link rel="stylesheet" href="/css/flag-icon.min.css" />
           <link rel="stylesheet" href="/css/concise.css" />
           <link rel="stylesheet" href="/css/Draft.css" />
           <link rel="stylesheet" href="/css/leaflet.css" />
