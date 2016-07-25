@@ -306,7 +306,7 @@ r.connect(config.rethinkdb, function(err, conn) {
           console.log('sendgrid:', err, json)
         })
       })
-    })`
+    })
 
   r.table('Volunteers').changes()
     .filter(r.row('old_val')('is_admin').default(false).eq(true).not().and(r.row('new_val')('is_admin').eq(true)))
