@@ -517,7 +517,7 @@ r.connect(config.rethinkdb, function(err, conn) {
       cursor.each(function(err, change){
         var row = change.new_val
         request
-          .put('http://eventory.cc/webapi/v1/sdm/sync')
+          .put('https://eventory.cc/webapi/v1/sdm/sync')
           .send({volunteer_id: row.id, groups: row.tags})
           .set('X-Operator-Api-Token', process.env.EVENTORY_API)
           .end()
