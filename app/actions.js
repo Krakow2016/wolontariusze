@@ -123,6 +123,37 @@ module.exports = {
     })
   },
 
+  removeVolunteerData: function(context, payload, cb) {
+    request
+      .post('/removeVolunteerData')
+      .send(payload)
+      .end(function(err, resp){
+        if(err) {
+          context.dispatch('SAVE_FLASH_FAILURE', 'Wystąpił nieznany błąd 1')
+          context.dispatch('VOLUNTEER_REMOVEDATA_FAILURE')
+        } else if (resp.status == 200) {
+          context.dispatch('SAVE_FLASH_SUCCESS', 'Zapisano.')
+          context.dispatch('VOLUNTEER_REMOVEDATA_SUCCESS')
+
+          //podwójne navigateAction aby odświeżyć avatar
+          context.executeAction(navigateAction, {url: '/wolontariusz/'+payload.id})
+            .then(function () {
+              context.executeAction(navigateAction, {url: '/wolontariusz/'+payload.id+'/admin'})  
+            })
+                
+          //context.executeAction(navigateAction, {url: '/'})
+          //timeout(function () {
+          //  context.executeAction(navigateAction, {url: '/wolontariusz/'+payload.id+'/admin'})
+          //}, 3000)
+          //context.executeAction(navigateAction, {url: '/wolontariusz/'+payload.id+'/admin'})
+        } else {
+          context.dispatch('SAVE_FLASH_FAILURE', 'Wystąpił nieznany błąd 2')
+          context.dispatch('VOLUNTEER_REMOVEDATA_FAILURE')
+        }
+        cb()
+      })
+  },
+
   showXls: function(context, payload, cb) {
     // Pobierz dane wolontariusza z bazy danych
     context.service.read('Xls', payload, {},
