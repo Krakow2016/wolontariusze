@@ -6,6 +6,7 @@ var moment = require('moment')
 
 var VolunteerStore = require('../../stores/Volunteer')
 var XlsStore = require('../../stores/Xls')
+var removeVolunteerData = require('../../actions').removeVolunteerData
 var updateVolunteer = require('../../actions').updateVolunteer
 var Invite = require('./Invite.jsx')
 var Tags = require('../Tags/Tags.jsx')
@@ -85,6 +86,14 @@ var VolunteerAdministration = React.createClass({
       .removeChangeListener(this._changeListener2)
   },
 
+  _onRemoveDataDialogSubmit: function() {
+    this.props.context.executeAction(removeVolunteerData, {
+      id: this.state.profile.id,
+      email: this.state.profile.email
+    })
+    window.location.hash = 'close'
+  },
+
   _onRejectionDialogSubmit: function() {
     this.props.context.executeAction(updateVolunteer, {
       id: this.state.profile.id,
@@ -149,6 +158,19 @@ var VolunteerAdministration = React.createClass({
     var tags = this.state.profile.tags || []
     var approved_at = this.state.profile.approved_at ? moment(this.state.profile.approved_at).calendar() : 'niewiadomo kiedy'
 
+    if(this.state.profile.email) {
+      papers.push(
+        <div className="card" key="removeData">
+          <div className="card-content text--center">
+            <h3>Uwaga!</h3>
+            <p>Naciśnięcie tego przycisku spowoduje usunięcie danych wolontariusza z bazy danych (Operacja nieodwracalna)</p>
+            <div style={{textAlign: 'center'}}>
+              <a href="#removeData" className="button">Usuń dane</a>
+            </div>
+          </div>
+        </div>
+      )
+    }
     if(this.state.profile.approved) {
       papers.push(
         <div className="card" key="invitation">
@@ -215,113 +237,151 @@ var VolunteerAdministration = React.createClass({
         </div>
       )
     }
+    
+    if (this.state.profile.email) {
+      return (
+            <VolunteerShell context={this.props.context} profile={this.state.profile}>
 
-    return (
-      <VolunteerShell context={this.props.context} profile={this.state.profile}>
+              <div className="alert alert--warning">
+                <p>
+                  <strong>Uwaga!</strong> Ta strona jest do wglądu wyłącznie dla
+                  koordynatorów.  Korzystając z niej zobowiązujesz się do zachowania w
+                  tajemnicy i nie ujawniania osobom trzecim otrzymanych tu informacji i
+                  danych osobowych o charakterze poufnym.
+                </p>
+              </div>
 
-        <div className="alert alert--warning">
-          <p>
-            <strong>Uwaga!</strong> Ta strona jest do wglądu wyłącznie dla
-            koordynatorów.  Korzystając z niej zobowiązujesz się do zachowania w
-            tajemnicy i nie ujawniania osobom trzecim otrzymanych tu informacji i
-            danych osobowych o charakterze poufnym.
-          </p>
-        </div>
+              <div className="container">
+                <div className="row">
+                  <div className="col col7">
 
-        <div className="container">
-          <div className="row">
-            <div className="col col7">
+                    {papers}
 
-              {papers}
+                    <Details {...this.state.details} />
 
-              <Details {...this.state.details} />
+                    <div className="card" key="projects">
+                      <div className="card-content">
+                        <b>Projekty: </b>
+                        <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
+                      </div>
+                    </div>
 
-              <div className="card" key="projects">
-                <div className="card-content">
-                  <b>Projekty: </b>
-                  <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
+                  </div>
+                  <div className="col col5">
+                    <Comments context={this.props.context} />
+                  </div>
+
                 </div>
               </div>
 
-            </div>
-            <div className="col col5">
-              <Comments context={this.props.context} />
-            </div>
+              <div id="removeData" className="modal">
+                <div className="modal-container">
+                  <div className="modal-header">
+                    Potwierdzenie wymagane
 
-          </div>
-        </div>
+                    <a href="#close" className="modal-close">&times;</a>
+                  </div>
 
-        <div id="confirm" className="modal">
-          <div className="modal-container">
-            <div className="modal-header">
-              Potwierdzenie wymagane
+                  <div className="modal-body">
+                    <p>
+                      Czy jesteś pewien, że chcesz usunąć dane wolontariusza z bazy danych ?
+                    </p>
+                  </div>
 
-              <a href="#close" className="modal-close">&times;</a>
-            </div>
+                  <div className="modal-footer">
+                    <p>
+                      <button onClick={this._onRemoveDataDialogSubmit}>Tak</button>
+                      <a href="#close" className="button">Anuluj</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-            <div className="modal-body">
-              <p>
-                Czy jesteś pewien?
-              </p>
-            </div>
+              <div id="confirm" className="modal">
+                <div className="modal-container">
+                  <div className="modal-header">
+                    Potwierdzenie wymagane
 
-            <div className="modal-footer">
-              <p>
-                <button onClick={this._onRejectionDialogSubmit}>Tak</button>
-                <a href="#close" className="button">Anuluj</a>
-              </p>
-            </div>
-          </div>
-        </div>
+                    <a href="#close" className="modal-close">&times;</a>
+                  </div>
 
-        <div id="admin" className="modal">
-          <div className="modal-container">
-            <div className="modal-header">
-              Czy jesteś pewien?
+                  <div className="modal-body">
+                    <p>
+                      Czy jesteś pewien?
+                    </p>
+                  </div>
 
-              <a href="#close" className="modal-close">&times;</a>
-            </div>
+                  <div className="modal-footer">
+                    <p>
+                      <button onClick={this._onRejectionDialogSubmit}>Tak</button>
+                      <a href="#close" className="button">Anuluj</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-            <div className="modal-body">
-              <p>
-                <strong>{this.state.profile.first_name} {this.state.profile.last_name}</strong> zyska prawa koordynatora. Czy jesteś pewien że chcesz to zrobić?
-              </p>
-            </div>
+              <div id="admin" className="modal">
+                <div className="modal-container">
+                  <div className="modal-header">
+                    Czy jesteś pewien?
 
-            <div className="modal-footer">
-              <p>
-                <button className="bg--error" onClick={this._onAdminDialogSubmit}>Tak, nadaj prawa koordynatora</button>
-                <a href="#close" className="button">Anuluj</a>
-              </p>
-            </div>
-          </div>
-        </div>
+                    <a href="#close" className="modal-close">&times;</a>
+                  </div>
 
-        <div id="reject_admin" className="modal">
-          <div className="modal-container">
-            <div className="modal-header">
-              Czy jesteś pewien?
+                  <div className="modal-body">
+                    <p>
+                      <strong>{this.state.profile.first_name} {this.state.profile.last_name}</strong> zyska prawa koordynatora. Czy jesteś pewien że chcesz to zrobić?
+                    </p>
+                  </div>
 
-              <a href="#close" className="modal-close">&times;</a>
-            </div>
+                  <div className="modal-footer">
+                    <p>
+                      <button className="bg--error" onClick={this._onAdminDialogSubmit}>Tak, nadaj prawa koordynatora</button>
+                      <a href="#close" className="button">Anuluj</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-            <div className="modal-body">
-              <p>
-                <strong>{this.state.profile.first_name} {this.state.profile.last_name}</strong> straci prawa koordynatora. Czy jesteś pewien że chcesz to zrobić?
-              </p>
-            </div>
+              <div id="reject_admin" className="modal">
+                <div className="modal-container">
+                  <div className="modal-header">
+                    Czy jesteś pewien?
 
-            <div className="modal-footer">
-              <p>
-                <button className="bg--error" onClick={this._onAdminRejectDialogSubmit}>Tak, usuń prawa koordynatora</button>
-                <a href="#close" className="button">Anuluj</a>
-              </p>
-            </div>
-          </div>
-        </div>
+                    <a href="#close" className="modal-close">&times;</a>
+                  </div>
 
-      </VolunteerShell>
-    )
+                  <div className="modal-body">
+                    <p>
+                      <strong>{this.state.profile.first_name} {this.state.profile.last_name}</strong> straci prawa koordynatora. Czy jesteś pewien że chcesz to zrobić?
+                    </p>
+                  </div>
+
+                  <div className="modal-footer">
+                    <p>
+                      <button className="bg--error" onClick={this._onAdminRejectDialogSubmit}>Tak, usuń prawa koordynatora</button>
+                      <a href="#close" className="button">Anuluj</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </VolunteerShell>
+          )
+    } else {
+      return (
+            <VolunteerShell context={this.props.context} profile={this.state.profile}>
+
+              <div className="alert alert--warning">
+                <p>
+                  <strong>Uwaga!</strong> Dane użytkownika zostały usunięte z bazy danych.
+                </p>
+              </div>
+
+            </VolunteerShell>
+      )
+    }
+    
   }
 })
 
