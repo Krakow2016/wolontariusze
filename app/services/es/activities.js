@@ -16,6 +16,9 @@ var Activities = module.exports = {
   // Używamy create ze względu na potrzebę przesyłu zapytania w ciele zapytania POST
   create: function(req, resource, params, body, config, callback) {
 
+    // Ogranicza dostęp do zalogowanych użytkowników
+    if(!req.user) { return callback({statusCode: 403}) }
+
     body.sort = [{
       'doc.is_urgent' : {
         'order' : 'desc',

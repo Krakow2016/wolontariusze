@@ -22,7 +22,10 @@ module.exports = {
     // Pobierz dane wolontariusza z bazy danych
     context.service.read('Volunteers', payload, {},
       function (err, data) {
-        if (err) { debug(err) }
+        if (err) { 
+          debug(err) 
+          context.dispatch('LOAD_VOLUNTEER', [])
+        }
         else { context.dispatch('LOAD_VOLUNTEER', data) }
         cb(data)
       }
@@ -308,7 +311,7 @@ module.exports = {
           query: state
         })
       }
-      cb()
+      cb(err, data)
     })
   },
 

@@ -337,6 +337,9 @@ module.exports = function(server) {
         return r.table('Volunteers').get(payload.id).update({deleted_by: result.deleted_by}).run()
       }).then(function (result) {
         console.log('After trying to add deleted_by:', result)
+        return r.table('session').filter({session: { passport: { user: payload.id } } }).delete().run()
+      }).then(function (result) {
+        console.log('After trying to remove data from sessions:', result)
         return r.table('Imports').getAll(payload.email.toString(), {index: 'rg_email'}).delete().run()
       }).then (function (result) {
         console.log('After trying to remove data from Imports table:', result)
