@@ -9,6 +9,8 @@ var VolunteerStore = createStore({
     //'VOLUNTEER_CREATION_SUCCESS': 'onSuccess',
     'VOLUNTEER_UPDATE_FAILURE': 'onFailure',
     'VOLUNTEER_UPDATE_SUCCESS': 'onSuccess',
+    'VOLUNTEER_REMOVEDATA_FAILURE': 'onFailure',
+    'VOLUNTEER_REMOVEDATA_SUCCESS': 'onSuccess',
     'INVITATION_SEND': 'onInvited'
   },
 

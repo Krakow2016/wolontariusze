@@ -115,8 +115,13 @@ module.exports = {
     action: function(context, payload, done) {
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy' })
       context.dispatch('LOAD_ACTIVITIES_QUERY', payload.query)
-      context.executeAction(actions.loadActivities, payload.query, function(err) {
-        if(!err) {
+      context.executeAction(actions.loadActivities, payload.query, function(err, data) {
+        if(err) {
+          context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: Użytkownik nie istnieje w systemie.')
+            context.executeAction(navigateAction, {
+              url: '/'
+            }, done)
+        } else {
           done()
         }
       })
@@ -189,10 +194,17 @@ module.exports = {
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Ustawienia' })
       var user = context.getUser()
       if(user) {
-        context.executeAction(actions.showVolunteer, { id: user.id }, function() {
-          context.executeAction(actions.showIntegrations, { user_id: user.id }, function() {
-            done()
-          })
+        context.executeAction(actions.showVolunteer, { id: user.id }, function(data) {
+          if(!data) {
+            context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: Użytkownik nie istnieje w systemie.')
+            context.executeAction(navigateAction, {
+              url: '/'
+            }, done)
+          } else {
+            context.executeAction(actions.showIntegrations, { user_id: user.id }, function() {
+              done()
+            })
+          }
         })
       } else {
         done()

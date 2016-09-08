@@ -326,6 +326,43 @@ module.exports = function(server) {
     }
   })
 
+  server.post('/removeVolunteerData', jsonParser, function(req, res) {
+    var payload = req.body
+    if(req.user && req.user.is_admin) {
+      r.table('Volunteers').get(payload.id).replace(function (vol) {
+        return vol.pluck("id", "first_name", "last_name")
+      }).run().then(function(result) {
+        console.log('After trying to reduce voluteer data to id, first_name, last_name:', result)
+        result.deleted_by = req.user.id
+        return r.table('Volunteers').get(payload.id).update({deleted_by: result.deleted_by}).run()
+      }).then(function (result) {
+        console.log('After trying to add deleted_by:', result)
+        return r.table('session').filter({session: { passport: { user: payload.id } } }).delete().run()
+      }).then(function (result) {
+        console.log('After trying to remove data from sessions:', result)
+        return r.table('Imports').getAll(payload.email.toString(), {index: 'rg_email'}).delete().run()
+      }).then (function (result) {
+        console.log('After trying to remove data from Imports table:', result)
+        var elasticSearch = config.elasticSearch +'/volunteer/'+payload.email
+        request({method: 'DELETE', url: elasticSearch, timeout: 3000}, function (error, response, body) {
+          console.log('After trying to remove data from Elastic Search:', body)
+          if (error) {
+            console.log(error)
+            res.send(500)
+          } else {
+            res.send(200)
+          }
+        })
+      }).catch(function (error) {
+        console.log('CATCH removeVolunteerData', error)
+      })
+    } else {
+      res.status(403).send({
+        status: 'error'
+      })
+    }
+  })
+
   server.get('/invitation', passport.authenticate('localapikey', {
     successRedirect: '/witaj',
     failureRedirect: '/login',

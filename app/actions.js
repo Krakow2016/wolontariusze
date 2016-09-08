@@ -22,7 +22,10 @@ module.exports = {
     // Pobierz dane wolontariusza z bazy danych
     context.service.read('Volunteers', payload, {},
       function (err, data) {
-        if (err) { debug(err) }
+        if (err) { 
+          debug(err) 
+          context.dispatch('LOAD_VOLUNTEER', [])
+        }
         else { context.dispatch('LOAD_VOLUNTEER', data) }
         cb(data)
       }
@@ -121,6 +124,37 @@ module.exports = {
       context.dispatch('VOLUNTEER_UPDATE_SUCCESS', resp.body)
       cb()
     })
+  },
+
+  removeVolunteerData: function(context, payload, cb) {
+    request
+      .post('/removeVolunteerData')
+      .send(payload)
+      .end(function(err, resp){
+        if(err) {
+          context.dispatch('SAVE_FLASH_FAILURE', 'Wystąpił nieznany błąd 1')
+          context.dispatch('VOLUNTEER_REMOVEDATA_FAILURE')
+        } else if (resp.status == 200) {
+          context.dispatch('SAVE_FLASH_SUCCESS', 'Zapisano.')
+          context.dispatch('VOLUNTEER_REMOVEDATA_SUCCESS')
+
+          //podwójne navigateAction aby odświeżyć avatar
+          context.executeAction(navigateAction, {url: '/wolontariusz/'+payload.id})
+            .then(function () {
+              context.executeAction(navigateAction, {url: '/wolontariusz/'+payload.id+'/admin'})  
+            })
+                
+          //context.executeAction(navigateAction, {url: '/'})
+          //timeout(function () {
+          //  context.executeAction(navigateAction, {url: '/wolontariusz/'+payload.id+'/admin'})
+          //}, 3000)
+          //context.executeAction(navigateAction, {url: '/wolontariusz/'+payload.id+'/admin'})
+        } else {
+          context.dispatch('SAVE_FLASH_FAILURE', 'Wystąpił nieznany błąd 2')
+          context.dispatch('VOLUNTEER_REMOVEDATA_FAILURE')
+        }
+        cb()
+      })
   },
 
   showXls: function(context, payload, cb) {
@@ -277,7 +311,7 @@ module.exports = {
           query: state
         })
       }
-      cb()
+      cb(err, data)
     })
   },
 
