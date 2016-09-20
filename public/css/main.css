@@ -1561,6 +1561,36 @@ footer{
 
 }
 
+/*-----------------COOKIE-----------------*/
+
+.cookie-container{
+	width: 100%;
+	height: 48px;
+	position: fixed;
+	bottom: -48px;
+	left: 0;
+	background-color: white;
+	text-align: center;
+	-webkit-transition: all .2s;
+	-moz-transition: all .2s;
+	-o-transition: all .2s;
+	transition: all .2s;
+}
+.cookie-container p {
+	color: #4591aa;
+	width: 100%;
+	line-height: 48px;
+}
+.cookie-container button{
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.cookie-container.open{
+	bottom: 0;
+}
+
+
 /*----------DRAFT JS MENTION PLUGIN---------*/
 
 .draftJsMentionPlugin__mention__29BEd, .draftJsMentionPlugin__mention__29BEd:visited {
@@ -1842,6 +1872,15 @@ footer{
 	.task-color img{
 		width: auto;
 		height: 100%;
+	}
+
+	/*COOKIES*/
+	.cookie-container p {
+		width: 80%;
+	}
+	.cookie-container button{
+		padding: 0;
+		width: 20%;
 	}
 }
 @media only screen and (max-width: 375px){

@@ -37,7 +37,7 @@ var Application = React.createClass({
     getUser: React.PropTypes.func
   },
 
-  getInitialState: function() {
+  getInitialState: function () {
     // Wyświetl komunikat flash
     var applicationStore = this.props.context.getStore(ApplicationStore)
     return {
@@ -49,51 +49,58 @@ var Application = React.createClass({
     }
   },
 
-  _changeListener: function() {
+  _changeListener: function () {
     var state = this.props.context.getStore(ApplicationStore).getState()
     state.messages = state.messages[state.lang]
     this.setState(state)
   },
 
-  componentDidMount: function() {
+  componentDidMount: function () {
     this.props.context.getStore(ApplicationStore)
       .addChangeListener(this._changeListener)
   },
 
-  componentWillUnmount: function() {
+  componentWillUnmount: function () {
     this.props.context.getStore(ApplicationStore)
       .removeChangeListener(this._changeListener)
   },
 
-  handleInfoSnackbarRequestClose: function() {
+  handleInfoSnackbarRequestClose: function () {
     this.setState({
       flashSuccess: false
     })
   },
 
-  handleErrorSnackbarRequestClose: function() {
+  handleErrorSnackbarRequestClose: function () {
     this.setState({
       flashFailure: false
     })
   },
 
-  addActiveVolonteer: function(volunteer) {
+  addActiveVolonteer: function (volunteer) {
     this.context.executeAction(navigateAction, {
-      url: '/wolontariusz/'+ volunteer.user_id
+      url: '/wolontariusz/' + volunteer.user_id
     })
   },
 
-  setPol: function(){
-    document.cookie = "lang=pl"
+  setPol: function () {
+    setCookie("lang", "pl", 365)
     location.reload();
   },
 
-  setEng: function(){
-    document.cookie = "lang=en"
+  setEng: function () {
+    setCookie("lang", "en", 365)
     location.reload();
   },
 
-  render: function() {
+  setAgree: function(){
+    setCookie("cookie", "true", 365)
+    this.setState({
+      "cookie": "true"
+    })
+  },
+
+  render: function () {
     var Handler = this.props.currentRoute.handler
 
     var searchForm
@@ -101,10 +108,17 @@ var Application = React.createClass({
     var flashSuccess
     var flashFailure
     var article
+    var cookie
 
-    if(this.user()) {
+    if(getCookie("cookie") === "" || typeof this.state.cookie === undefined){
+      cookie = "open"
+    }else{
+      cookie = ""
+    }
 
-      if(this.user().is_admin) {
+    if (this.user()) {
+
+      if (this.user().is_admin) {
         advancedSearch = (
           <NavLink href="/wyszukiwarka">Zaawansowane wyszukiwanie</NavLink>
         )
@@ -122,13 +136,13 @@ var Application = React.createClass({
       )
     }
 
-    if(this.props.currentRoute.name == 'home' || this.props.currentRoute.name == 'login'){
+    if (this.props.currentRoute.name == 'home' || this.props.currentRoute.name == 'login') {
       article = (
         <article>
           <Handler context={this.context} />
         </article>
       )
-    }else{
+    } else {
       article = (
         <article className="main-content">
           <Handler context={this.context} />
@@ -136,7 +150,7 @@ var Application = React.createClass({
       )
     }
 
-    if(this.state.flashSuccess) {
+    if (this.state.flashSuccess) {
       flashSuccess = (
         <Message>
           <FormattedMessage id={this.state.flashSuccess} tagName="b" />
@@ -144,7 +158,7 @@ var Application = React.createClass({
       )
     }
 
-    if(this.state.flashFailure) {
+    if (this.state.flashFailure) {
       flashFailure = (
         <Message className="alert--error">
           <FormattedMessage id={this.state.flashFailure} tagName="b" />
@@ -161,7 +175,7 @@ var Application = React.createClass({
               <NavLink href="/"><FormattedHTMLMessage id="home-img" /></NavLink>
             </div>
             <nav id="head-nav" className="row">
-              <Authentication user_id={this.user_id()} user_name={this.user_name()} search_status={searchForm || false} />
+              <Authentication user_id={this.user_id() } user_name={this.user_name() } search_status={searchForm || false} />
               {searchForm}
             </nav>
             <div id="languages">
@@ -181,37 +195,42 @@ var Application = React.createClass({
               <NavLink href="/faq"><FormattedMessage id="footer_faq" /></NavLink> | <a href="mailto:goradobra@krakow2016.com" target="_balnk">E-mail</a> | <NavLink href="/kontakt"><FormattedMessage id="footer_contact" /></NavLink> | <NavLink href="/regulamin"><FormattedMessage id="footer_terms" /></NavLink> | <a href="https://github.com/Krakow2016/wolontariusze"><FormattedMessage id="footer_devs" /></a>
             </p>
           </footer>
+          <div className={cookie + " cookie-container"}>
+            <p>Ta strona używa plików Cookies</p>
+            <button onClick={this.setAgree}>Akceptuje</button>
+          </div>
         </div>
+
       </IntlProvider>
     )
   },
-          //   <section className="inspiration">
-          //   <h2 className="text--center">Do not be afraid</h2>
-          //   <p className="text--center">St John Paul II</p>
-          // </section>
+  //   <section className="inspiration">
+  //   <h2 className="text--center">Do not be afraid</h2>
+  //   <p className="text--center">St John Paul II</p>
+  // </section>
   // <header>
   //    <h1 id="THE-title">{this.state.title}</h1>
   //  </header>
   //<Snackbar
-    //open={!!this.state.infoSnack}
-    //message={this.state.infoSnack || ''}
-    //autoHideDuration={5000}
-    //onRequestClose={this.handleInfoSnackbarRequestClose} />
+  //open={!!this.state.infoSnack}
+  //message={this.state.infoSnack || ''}
+  //autoHideDuration={5000}
+  //onRequestClose={this.handleInfoSnackbarRequestClose} />
   //<Snackbar
-    //open={!!this.state.errorSnack}
-    //message={this.state.errorSnack || ''}
-    //autoHideDuration={5000}
-    //onRequestClose={this.handleErrorSnackbarRequestClose} />
+  //open={!!this.state.errorSnack}
+  //message={this.state.errorSnack || ''}
+  //autoHideDuration={5000}
+  //onRequestClose={this.handleErrorSnackbarRequestClose} />
 
-  user: function() {
+  user: function () {
     return this.props.context.getUser()
   },
 
-  user_id: function() {
+  user_id: function () {
     return this.user() && this.user().id
   },
 
-  user_name: function() {
+  user_name: function () {
     return this.user() && this.user().first_name
   }
 })
@@ -222,3 +241,25 @@ Application = handleHistory(Application)
 module.exports = provideContext(Application, {
   getUser: React.PropTypes.func.isRequired
 })
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
