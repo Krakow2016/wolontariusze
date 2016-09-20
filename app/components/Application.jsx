@@ -58,6 +58,10 @@ var Application = React.createClass({
   componentDidMount: function () {
     this.props.context.getStore(ApplicationStore)
       .addChangeListener(this._changeListener)
+    console.log(document.cookie.indexOf("cookie=true"))
+    this.setState({
+      "cookie": document.cookie.indexOf("cookie=true")
+    })
   },
 
   componentWillUnmount: function () {
@@ -84,17 +88,17 @@ var Application = React.createClass({
   },
 
   setPol: function () {
-    setCookie("lang", "pl", 365)
+    document.cookie = "lang=pl"
     location.reload();
   },
 
   setEng: function () {
-    setCookie("lang", "en", 365)
+    document.cookie = "lang=en"
     location.reload();
   },
 
   setAgree: function(){
-    setCookie("cookie", "true", 365)
+    document.cookie = "cookie=true"
     this.setState({
       "cookie": "true"
     })
@@ -110,7 +114,7 @@ var Application = React.createClass({
     var article
     var cookie
 
-    if(getCookie("cookie") === "" || typeof this.state.cookie === undefined){
+    if(typeof this.state.cookie === undefined || this.state.cookie == -1){
       cookie = "open"
     }else{
       cookie = ""
@@ -241,25 +245,3 @@ Application = handleHistory(Application)
 module.exports = provideContext(Application, {
   getUser: React.PropTypes.func.isRequired
 })
-
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
-}
-
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
