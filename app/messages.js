@@ -6,6 +6,7 @@ module.exports = {
     "home-img": '<img src="/img/homepage/1.svg" id="head-img" alt="" draggable="false" />',
 
     "login": "Zaloguj się",
+    "news" : "Aktualności",
     "bank": "Bank pracy",
     "welcome": "Witaj",
     "welcome_": "Witaj!",
@@ -115,6 +116,9 @@ module.exports = {
     "activity_volunteer_cancel": "Wypisz mnie",
     "activity_volunteers_count": "Wolontariusze, którzy biorą udział",
 
+    "news_accept": "Chcę otrzymywać aktualności na na adres e-mail!",
+    "news_cancel": "Wypisuję się",
+
     "message_used_token": "Błąd! Jednorazowy token dostępu został już użyty. Skontaktuj się z goradobra@krakow2016.com aby uzyskać nowy.",
     "message_old_token": "Błąd! Wygasły token dostępu :( Skontaktuj się z goradobra@krakow2016.com aby uzyskać nowy.",
 
@@ -139,6 +143,7 @@ module.exports = {
     "home-img": '<img src="/img/homepage/1-eng.svg" id="head-img" alt="" draggable="false" />',
 
     "login": "Sign in",
+    "news": "News",
     "bank": "Work bank",
     "welcome": "Welcome",
     "welcome_": "Welcome!",
@@ -247,6 +252,9 @@ module.exports = {
     "activity_volunteer": "I volunteer!",
     "activity_volunteer_cancel": "Unsubscribe",
     "activity_volunteers_count": "Volunteers already taking part",
+
+    "news_accept": "I want to receive news via email!",
+    "news_cancel": "Unsubscribe",
 
     "message_used_token": "Error! One time access token has already been used. Please contact goradobra@krakow2016.com to get a new one.",
     "message_old_token": "Error! Access token has expired :( Please contact goradobra@krakow2016.com to get a new one.",

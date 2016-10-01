@@ -406,6 +406,37 @@ module.exports = {
     })
   },
 
+  postNewsCreate: function(context, payload, cb) {
+    context.service.update('Activities', {}, payload, function (err, data) {
+      if(err) { debug(err) }
+      else {
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Aktualność została pomyślnie opublikowana.')
+        context.dispatch('UPDATE_ADDED', payload.updates)
+        cb()
+      }
+    })
+  },
+  postNewsEdit: function(context, payload, cb) {
+    context.service.update('Activities', {}, payload, function (err, data) {
+      if(err) { debug(err) }
+      else {
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Aktualność została pomyślnie wyedytowana.')
+        context.dispatch('UPDATE_ADDED', payload.updates)
+        cb()
+      }
+    })
+  },
+  postNewsRemove: function(context, payload, cb) {
+    context.service.update('Activities', {}, payload, function (err, data) {
+      if(err) { debug(err) }
+      else {
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Aktualność została pomyślnie usunięta.')
+        context.dispatch('UPDATE_ADDED', payload.updates)
+        cb()
+      }
+    })
+  },
+
   createComment: function(context, payload, cb) {
     debug('profile comment create')
     context.service.create('Comments', payload, {}, function (err, data) {

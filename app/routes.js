@@ -240,6 +240,28 @@ module.exports = {
     }
   },
 
+
+  news: {
+    path: '/aktualnosci',
+    method: 'get',
+    handler: require('./components/News.jsx'),
+    action: function (context, payload, done) {
+      var activityId  = 'news'
+
+      context.executeAction(actions.showActivity, { id: activityId }, function(activity) {
+        if(activity) {
+          context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
+          done()
+        } else {
+          context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: musisz być zalogowany żeby zobaczyć zadanie.')
+          context.executeAction(navigateAction, {
+            url: '/'
+          }, done)
+        }
+      })
+    }
+  },
+
   why_gd: {
     path: '/czemu-gora-dobra',
     method: 'get',
