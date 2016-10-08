@@ -51,6 +51,12 @@ var Shell = React.createClass({
     var all = this.state.activities ? this.state.activities.all : []
     
     all.forEach(function(activity) {
+
+      // Aby nie wyświetlać na stronie aktywności wolontariusza, jeśli jest przypisany do Newslettera
+      if (activity.id == 'news') {
+        return
+      }
+
       if(activity.act_type === 'wzialem_od_sdm') {
         received.push(activity)
       } else {
