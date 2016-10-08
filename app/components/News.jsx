@@ -12,6 +12,9 @@ var ProfilePic = require('./ProfilePic.jsx')
 var ActivityStore = require('../stores/Activity')
 var actions = require('../actions')
 var update = require('react-addons-update')
+var navigateAction = require('fluxible-router').navigateAction
+
+var NEWS_PER_PAGE = 5
 
 var NewsItem = React.createClass({
 
@@ -145,7 +148,8 @@ var News = React.createClass({
       volunteers: state.volunteers,
       activityState: activityState,
       newUpdateState: newUpdateState,
-      updates: state.updates
+      updates: state.updates,
+      updatesPage: state.updatesPage
     })
   },
 
@@ -211,44 +215,118 @@ var News = React.createClass({
   },
 
   handleNewUpdate: function() {
-
     var rawState = Draft.convertToRaw(this.state.newUpdateState.getCurrentContent())
     // Zignoruj jeżeli brak treści
     if(rawState.blocks.length === 1 && rawState.blocks[0].text === ''){
       return
     }
 
-    var updates = this.state.activity.updates || []
-    updates.push({
+    var update ={
       raw: rawState,
       created_at: new Date(),
       created_by: this.user().id,
       created_by_name: this.user().first_name+" "+this.user().last_name
-    })
+    }
 
+    delete this.state.updates
     context.executeAction(actions.postNewsCreate, {
       id: this.state.activity.id,
-      updates: updates
+      update: update,
+      isToBeAdded: true,
+      page: this.state.updatesPage,
+      isNews: true
     })
   },
 
   handleUpdatesChange: function (index, update) {
-      console.log('index ', index)
-    var updates = this.state.activity.updates || []
+    console.log('index ', index)
+    var updates = this.state.updates || []
     updates[index].raw = update.raw || []
 
+    delete this.state.updates
     if (update.toBeRemoved) {
         updates.splice(index,1)
         context.executeAction(actions.postNewsRemove, {
             id: this.state.activity.id,
-            updates: updates
+            update: updates[index],
+            index: index,
+            isToBeRemoved: true,
+            page: this.state.updatesPage,
+            isNews: true
         })
     } else {
+        var goToPreviousPage = (this.state.updatesPage > 1) && ( (this.state.activity.updates_size - 1) % NEWS_PER_PAGE == 0) 
         context.executeAction(actions.postNewsEdit, {
-        id: this.state.activity.id,
-        updates: updates
+          id: this.state.activity.id,
+          update: updates[index],
+          index: index,
+          page: this.state.updatesPage,
+          goToPreviousPage: goToPreviousPage,
+          isNews: true
         })
     }
+  },
+
+  //Paginacja
+ /**/
+  pagination: function () {
+    var page = this.state.updatesPage
+    var totalNews = (this.state.activity.updates_size) ? this.state.activity.updates_size : 0
+    var pageCount = (totalNews > 0 ) ? Math.ceil(Number(totalNews/NEWS_PER_PAGE)) : 1
+    
+    var leftIcons
+    var rightIcons
+    if (page > 1) {
+      leftIcons = <span>
+                    <div className="news-pagination-leftIcons" onClick={this.handleFirstPage}>&#x276e;&#x276e;</div>
+                    <div className="news-pagination-leftIcons" onClick={this.handlePreviousPage}>&#x276e;</div>
+                  </span>
+    }
+    if (page < pageCount) {
+      rightIcons = <span>
+                    <div className="news-pagination-rightIcons" onClick={this.handleNextPage}>&#x276f;</div>
+                    <div className="news-pagination-rightIcons" onClick={this.handleLastPage}>&#x276f;&#x276f;</div>
+                  </span>
+    }
+ 
+    var content = <div className="news-pagination-content">Strona {page} z {pageCount}</div>
+    
+    return (
+      <div>
+        <br/>
+        <span className="news-pagination">
+          {leftIcons}
+          {content}
+          {rightIcons}
+        </span>
+      </div>
+    )
+  },
+  
+  
+  handleFirstPage: function () {
+    delete this.state.updates
+    context.executeAction(navigateAction, {url: '/aktualnosci'})
+  },
+  
+  handlePreviousPage: function () {
+    var page = (Number(this.state.updatesPage)-1) > 0 ? (Number(this.state.updatesPage)-1) : 1
+    delete this.state.updates
+    context.executeAction(navigateAction, {url: '/aktualnosci;page='+page})
+  },
+  
+  handleNextPage: function () {
+    var page = (Number(this.state.updatesPage)+1)
+    delete this.state.updates
+    context.executeAction(navigateAction, {url: '/aktualnosci;page='+page})
+  },
+  
+  handleLastPage: function () {
+    var query = this.state.query
+    var totalNews = (this.state.activity.updates_size) ? this.state.activity.updates_size : 0
+    var pageCount = Math.ceil(Number(totalNews/NEWS_PER_PAGE))
+    delete this.state.updates
+    context.executeAction(navigateAction, {url: '/aktualnosci;page='+pageCount})
   },
 
   render: function () {
@@ -314,7 +392,7 @@ var News = React.createClass({
                     {...update} />
               })}
 
-
+              {this.pagination()}
             </div>
            </div>
         </div>

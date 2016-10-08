@@ -242,13 +242,16 @@ module.exports = {
 
 
   news: {
-    path: '/aktualnosci',
+    path: '/aktualnosci(;page=)?:pagenumber(\\d?)',
     method: 'get',
     handler: require('./components/News.jsx'),
     action: function (context, payload, done) {
       var activityId  = 'news'
-
-      context.executeAction(actions.showActivity, { id: activityId }, function(activity) {
+      var pageNumber = 1
+      if (payload.params.pagenumber) {
+        pageNumber = payload.params.pagenumber
+      }
+      context.executeAction(actions.showActivity, { id: activityId, page: pageNumber }, function(activity) {
         if(activity) {
           context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
           done()
