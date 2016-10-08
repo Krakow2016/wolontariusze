@@ -377,7 +377,7 @@ var News = React.createClass({
           <div className="row">
             <div className="col col12">
               <div className="text--center activity-header">
-                <h1>{this.state.activity.name}</h1>
+                <h1><FormattedMessage id="news" /></h1>
               </div>
 
               {updateForm}

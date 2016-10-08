@@ -3,3 +3,12 @@ public/js/
 rethinkdb_data/
 config.json
 logs/
+
+
+#idea
+jsLibraryMappings.xml
+modules.xml
+vcs.xml
+watcherTasks.xml
+wolontariusze.iml
+workspace.xml
