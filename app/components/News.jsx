@@ -289,7 +289,7 @@ var News = React.createClass({
                   </span>
     }
  
-    var content = <div className="news-pagination-content">Strona {page} z {pageCount}</div>
+    var content = <div className="news-pagination-content"><FormattedMessage id="pagination_page" /> {page} <FormattedMessage id="pagination_of" /> {pageCount}</div>
     
     return (
       <div>
