@@ -338,7 +338,7 @@ var News = React.createClass({
     var updateForm
     if(this.user() && this.user().is_admin) {
       updateForm = (
-        <div className="alert activity--updateBox">
+        <div className="alert alert--warning">
           <p>
             Jako koordynator masz możliwość dodawania aktualizacji do
             które oprócz tego, że wyświetlą się na tej stronie
@@ -347,7 +347,7 @@ var News = React.createClass({
           </p>
           <Editor editorState={this.state.newUpdateState} onChange={this.onChange} style={{'minHeight': 'initial'}}>
             <p className="clearfix">
-              <button className="float--right" onClick={this.handleNewUpdate} style={{'marginTop': 10}}>
+              <button className="button bg--warning no-border float--right" onClick={this.handleNewUpdate} style={{'marginTop': 10}}>
                 Dodaj aktualizację
               </button>
             </p>
@@ -379,9 +379,6 @@ var News = React.createClass({
               <div className="text--center activity-header">
                 <h1><FormattedMessage id="news" /></h1>
               </div>
-
-              {updateForm}
-
               {button}
 
               {updates.map(function(update, i) {
@@ -393,6 +390,10 @@ var News = React.createClass({
               })}
 
               {this.pagination()}
+
+
+              {updateForm}
+
             </div>
            </div>
         </div>
