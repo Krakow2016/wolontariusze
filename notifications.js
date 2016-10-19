@@ -186,7 +186,14 @@ r.connect(config.rethinkdb, function(err, conn) {
         var html
         var subject = activity.name
 
-        html = '<p>PL: Nastąpiła najnowsza aktualizacja zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>, w którym uczestniczysz:</p><p>EN: There was an update to the task <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> you are participating in:</p>'
+        if (activity.id == 'news') {
+          subject = "Góra Dobra - News"
+          html =  '<p>Nowe informacje na Górze Dobra. Zobacz <a href ="'+config.base_url+'/aktualnosci">Aktualności</a></p>+
+                  '<p>EN: There are new infomation at the Mountain of Good portal. See <a href ="'+config.base_url+'/aktualnosci">News</a></p>'
+        } else {
+          html = '<p>PL: Nastąpiła najnowsza aktualizacja zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>, w którym uczestniczysz:</p><p>EN: There was an update to the task <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> you are participating in:</p>'
+        }
+
 
         html += backdraft(update.raw, {
           'BOLD': ['<strong>', '</strong>'],
@@ -211,8 +218,16 @@ r.connect(config.rethinkdb, function(err, conn) {
               'CODE': ['<span style="font-family: monospace">', '</span>']
             }).join('<br/>')
 
-            var title = author.first_name +' '+ author.last_name +' wspomina Cię w zadaniu \"'+ activity.name +'\"'
-            var mention_html = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w aktualizacji do zadania.</p><p>'+ body +'</p><p>Kliknij w poniższy link, aby przejść do zadania: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>.</p>'
+            var title = ''
+            var mention_html = ''
+            if (activity.id == 'news') {
+              title= 'Góra Dobra - News (You were mentioned)'
+              mention_html = '<p>PL: '+ author.first_name +' '+ author.last_name +' wspomina Cię w aktualności na Górze Dobra. Zobacz <a href ="'+config.base_url+'/aktualnosci">Aktualności</a></p><p>'+body+'</p>'
+                             '<p>EN: You were mentioned by'+ author.first_name +' '+ author.last_name +' in News at the Mountain of Good portal. See <a href ="'+config.base_url+'/aktualnosci">News</a></p><p>'+body+'</p>'
+            } else {
+              title= author.first_name +' '+ author.last_name +' wspomina Cię w zadaniu \"'+ activity.name +'\"'
+              mention_html = '<p>'+ author.first_name +' '+ author.last_name +' wspomina Cię w aktualizacji do zadania.</p><p>'+ body +'</p><p>Kliknij w poniższy link, aby przejść do zadania: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>.</p>'
+            }
 
             var table = r.table('Volunteers')
             table.getAll.apply(table, receivers) // Pobierz wolontariuszy
