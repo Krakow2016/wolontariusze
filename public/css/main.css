@@ -1912,3 +1912,27 @@ footer{
 .rdtToday {
   border: 2px #e0e0e0 solid;
 }
+
+
+.news-pagination {
+   font-size: 1.2rem
+ }
+ 
+ .news-pagination-leftIcons {
+   display: inline-block;
+   margin: 0 0 0 5px;
+   color: #001A2D;
+   cursor: pointer;
+ }
+ 
+ .news-pagination-rightIcons {
+   display: inline-block;
+   margin: 0 5px 0 0;
+   color: #001A2D;
+   cursor: pointer;
+ }
+ 
+ .news-pagination-content {
+   display: inline-block;
+   margin: 0 10px 0 10px;
+ }

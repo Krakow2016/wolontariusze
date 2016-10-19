@@ -240,6 +240,31 @@ module.exports = {
     }
   },
 
+
+  news: {
+    path: '/aktualnosci(;page=)?:pagenumber(\\d?)',
+    method: 'get',
+    handler: require('./components/News.jsx'),
+    action: function (context, payload, done) {
+      var activityId  = 'news'
+      var pageNumber = 1
+      if (payload.params.pagenumber) {
+        pageNumber = payload.params.pagenumber
+      }
+      context.executeAction(actions.showActivity, { id: activityId, page: pageNumber }, function(activity) {
+        if(activity) {
+          context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
+          done()
+        } else {
+          context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: musisz być zalogowany żeby zobaczyć zadanie.')
+          context.executeAction(navigateAction, {
+            url: '/'
+          }, done)
+        }
+      })
+    }
+  },
+
   why_gd: {
     path: '/czemu-gora-dobra',
     method: 'get',

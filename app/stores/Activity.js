@@ -5,6 +5,8 @@ var Draft = require('draft-js')
 var fromJS = require('immutable').fromJS
 var _ = require('lodash')
 
+var NEWS_PER_PAGE = 5
+
 var ActivityStore = createStore({
   storeName: 'Activity',
   handlers: {
@@ -13,7 +15,9 @@ var ActivityStore = createStore({
     'ACTIVITY_UPDATED': 'update',
     'JOINT_CREATED': 'join',
     'JOINT_DELETED': 'leave',
-    'UPDATE_ADDED': 'update_published'
+    'UPDATE_ADDED': 'update_published',
+    'LOAD_NEWS_PAGE': 'load_page',
+    'NEWS_CHANGED': 'update_published'
   },
 
   initialize: function () {
@@ -28,9 +32,10 @@ var ActivityStore = createStore({
     this.activityState = Draft.EditorState.createEmpty()
     this.newUpdateState = Draft.EditorState.createEmpty()
     this.updates = []
+    this.updatesPage = 1
   },
 
-  load: function(data) {
+  load: function(data, page) {
     var that = this
     var volunteers = data.volunteers || []
     delete data.volunteers
@@ -47,6 +52,7 @@ var ActivityStore = createStore({
 
     // Aktualizacje
     this.updates = data.updates
+    this.updatesPage = 1
 
     this.emitChange()
   },
@@ -86,13 +92,21 @@ var ActivityStore = createStore({
     this.emitChange()
   },
 
+  load_page: function(page) {
+    if (page) {
+      this.updatesPage = page
+    }
+    this.emitChange()
+  },
+
   getState: function () {
     return {
       activity: this.activity,
       activityState: this.activityState,
       volunteers: this.volunteers,
       updates: this.updates,
-      newUpdateState: this.newUpdateState
+      newUpdateState: this.newUpdateState,
+      updatesPage: this.updatesPage
     }
   },
 
@@ -102,7 +116,8 @@ var ActivityStore = createStore({
       volunteers: this.volunteers,
       activityState: Draft.convertToRaw(this.activityState.getCurrentContent()),
       newUpdateState: Draft.convertToRaw(this.newUpdateState.getCurrentContent()),
-      updates: this.updates
+      updates: this.updates,
+      updatesPage: this.updatesPage
     }
   },
 
@@ -110,6 +125,7 @@ var ActivityStore = createStore({
     this.activity = state.activity
     this.volunteers = state.volunteers
     this.updates = state.updates
+    this.updatesPage = state.updatesPage
 
     _.forEach(state.activityState.entityMap, function(val, key) {
       val.data.mention = fromJS(val.data.mention)
@@ -145,6 +161,7 @@ ActivityStore.attributes = function() {
     'tags',
     'updated_at',
     'updates',
+    'updates_size',
     'volunteers',
     // dane autora (pochodzą z joina)
     'first_name',

@@ -85,6 +85,7 @@ var LogoutButton = React.createClass({
         <div id="mobile-nav">
           <a href="#" className="menu-mobile-btn" onClick={this.props.onClicked} ><img src="/img/menu.svg" alias="Menu Button"/></a>
           <div id="mobile-nav-content" className={open} onClick={this.props.onClicked}>
+            <NavLink href="/aktualnosci"><FormattedMessage id="news" /></NavLink>
             <NavLink href="/zadania"><FormattedMessage id="bank" /></NavLink>
             <NavLink href={'/wolontariusz/'+this.props.user_id}><FormattedMessage id="welcome" /> <b>{this.props.user_name}!</b></NavLink>
             <NavLink href="/ustawienia"><FormattedMessage id="settings" /></NavLink>
@@ -93,6 +94,9 @@ var LogoutButton = React.createClass({
           </div>
         </div>
         <ul id="nav-list">
+          <li>
+            <NavLink href="/aktualnosci"><FormattedMessage id="news" /></NavLink>
+          </li>
           <li>
             <NavLink href="/zadania"><FormattedMessage id="bank" /></NavLink>
           </li>

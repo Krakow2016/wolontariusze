@@ -5,6 +5,8 @@ var configuration = require('../../../config.json')[env]
 var dbConf = configuration.rethinkdb
 var tableName = 'Activities'
 
+var NEWS_PER_PAGE = 5
+
 // Konfiguracja bazy danych
 var r = require('rethinkdbdash')({
   servers: [ dbConf ]
@@ -43,6 +45,13 @@ var Activities = module.exports = {
           .zip()
           .orderBy(r.row('created_at'))
           .run().then(function(volunteers){
+            // Wspiera paginację dla aktualności
+            activity.updates = activity.updates || []
+            activity.updates_size=activity.updates.length
+            if(params.page) {
+              activity.updates = activity.updates.reverse().slice(NEWS_PER_PAGE*(params.page-1), NEWS_PER_PAGE*params.page)
+            }
+
             activity.volunteers = volunteers || []
             //console.log('ACTIVITY', activity)
             callback(null, activity)
@@ -66,10 +75,37 @@ var Activities = module.exports = {
       callback(400)
       return
     }
-    // Wykonaj zapytanie do bazy danych
-    r.table(tableName).get(id).update(body, {returnChanges: true}).run().then(function (resp) {
-      callback(null, resp)
-    })
+
+    if (params.isNews) {
+      r.table(tableName).get(id).run().then (function (news) {
+        var data;
+        if (params.isToBeAdded) {
+          news.updates.push(params.update)
+          news.updates.reverse()
+          data = news.updates.slice(NEWS_PER_PAGE*(params.page-1), NEWS_PER_PAGE*params.page)
+          news.updates.reverse()
+        } else if (params.isToBeRemoved) {
+          news.updates.reverse()
+          news.updates.splice((params.page-1)*NEWS_PER_PAGE+params.index,1)
+          data = news.updates.slice(NEWS_PER_PAGE*(params.page-1), NEWS_PER_PAGE*params.page)
+          news.updates.reverse()
+        } else { //it needs to be edited
+          news.updates.reverse()
+          news.updates.splice((params.page-1)*NEWS_PER_PAGE+params.index,1,params.update)
+          data = news.updates.slice(NEWS_PER_PAGE*(params.page-1), NEWS_PER_PAGE*params.page)
+          news.updates.reverse()
+        }
+        r.table(tableName).get(id).update(news, {returnChanges: true}).run().then(function (resp) {
+          callback(null, data)
+        })
+      })
+    } else {
+      // Wykonaj zapytanie do bazy danych
+      r.table(tableName).get(id).update(body, {returnChanges: true}).run().then(function (resp) {
+        callback(null, resp)
+      })
+    }
+
   },
 
   delete: function(req, resource, params, config, callback) {

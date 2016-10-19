@@ -179,6 +179,7 @@ module.exports = {
         debug('Błąd ładowania aktywności')
       } else {
         context.dispatch('LOAD_ACTIVITY', data)
+        context.dispatch('LOAD_NEWS_PAGE', payload.page)
       }
       cb(data)
     })
@@ -402,6 +403,41 @@ module.exports = {
           context.executeAction(navigateAction, {url: '/zadania/'+id})
           cb()
         })
+      }
+    })
+  },
+
+  postNewsCreate: function(context, payload, cb) {
+    context.service.update('Activities', payload, {}, function (err, data) {
+      if(err) { debug(err) }
+      else {
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Aktualność została pomyślnie opublikowana.')
+        context.executeAction(navigateAction, {url: '/aktualnosci'})
+        cb()
+      }
+    })
+  },
+  postNewsEdit: function(context, payload, cb) {
+    context.service.update('Activities', payload, {}, function (err, data) {
+      if(err) { debug(err) }
+      else {
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Aktualność została pomyślnie wyedytowana.')
+        context.dispatch('NEWS_CHANGED', data)
+        cb()
+      }
+    })
+  },
+  postNewsRemove: function(context, payload, cb) {
+    context.service.update('Activities', payload, {}, function (err, data) {
+      if(err) { debug(err) }
+      else {
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Aktualność została pomyślnie usunięta.')
+        if (payload.goToPreviousPage) {
+          context.executeAction(navigateAction, {url: '/aktualnosci;page='+(payload.page-1)})
+        } else {
+          context.executeAction(navigateAction, {url: '/aktualnosci;page='+payload.page})
+        }    
+        cb()
       }
     })
   },
