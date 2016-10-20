@@ -191,7 +191,7 @@ r.connect(config.rethinkdb, function(err, conn) {
 
         if (activity.id == 'news') {
           subject = "Góra Dobra - News"
-          html =  '<p>Nowe informacje na Górze Dobra. Zobacz <a href ="'+config.base_url+'/aktualnosci">Aktualności</a></p>+
+          html =  '<p>Nowe informacje na Górze Dobra. Zobacz <a href ="'+config.base_url+'/aktualnosci">Aktualności</a></p>'+
                   '<p>EN: There are new infomation at the Mountain of Good portal. See <a href ="'+config.base_url+'/aktualnosci">News</a></p>'
         } else {
           html = '<p>PL: Nastąpiła najnowsza aktualizacja zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>, w którym uczestniczysz:</p><p>EN: There was an update to the task <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> you are participating in:</p>'
