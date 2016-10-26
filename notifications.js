@@ -59,7 +59,7 @@ r.connect(config.rethinkdb, function(err, conn) {
       cursor.each(function(err, change){ // Nowe zgłoszenie!
         var joint = change.new_val
         // Pobierz aktywność
-        if (joint.activity_id != 'news') {
+        if (joint && joint.activity_id != 'news') {
           r.table('Activities').get(joint.activity_id)
             .run(conn, function(err, activity) {
 
