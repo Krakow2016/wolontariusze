@@ -32,7 +32,7 @@ var Activities = module.exports = {
           r.table('Joints')
           .getAll(params.id, {index: 'activity_id'})
           .filter(function(x){
-            return x.hasFields('is_canceled').not()
+            return x.hasFields('is_canceled').not().and(x('activity_id').ne('news').or(x('activity_id').eq('news').and(x('user_id').eq(req.user.id))))
           }, {default: true})
           .eqJoin('user_id', r.table('Volunteers'))
           .map(
