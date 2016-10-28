@@ -118,6 +118,8 @@ module.exports = {
 
     "news_accept": "Chcę otrzymywać newsletter z aktualnościami na swój e-mail",
     "news_cancel": "Wypisuję się z newslettera",
+    "news_open": "Więcej...",
+    "news_close": "Zwiń",
 
     "message_used_token": "Błąd! Jednorazowy token dostępu został już użyty. Skontaktuj się z goradobra@krakow2016.com aby uzyskać nowy.",
     "message_old_token": "Błąd! Wygasły token dostępu :( Skontaktuj się z goradobra@krakow2016.com aby uzyskać nowy.",
@@ -258,6 +260,8 @@ module.exports = {
 
     "news_accept": "I want to receive news via email!",
     "news_cancel": "Unsubscribe from newsletter",
+    "news_open": "More...",
+    "news_close": "Hide content",
 
     "message_used_token": "Error! One time access token has already been used. Please contact goradobra@krakow2016.com to get a new one.",
     "message_old_token": "Error! Access token has expired :( Please contact goradobra@krakow2016.com to get a new one.",
