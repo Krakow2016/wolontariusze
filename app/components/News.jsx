@@ -91,15 +91,17 @@ var NewsItem = React.createClass({
     var editorStyle = {}
     var currentText = this.state.editorState.getCurrentContent().getPlainText()
     if (!this.state.isEdited && currentText.length > CLOSED_NEWS_TEXT_LENGTH) {
+      var btnOpenStyle = {'marginTop': 10, 'backgroundColor': '#33697b' }
+      btnOpenStyle['width'] = this.props.is_admin ? '85%' : '100%';
       if (this.state.isOpen) {
         buttons.push(
-          <button className="float--right" onClick={this.toggleOpen} style={{'marginTop': 10}}>
+          <button onClick={this.toggleOpen} style={btnOpenStyle}>
             <FormattedMessage id="news_close" />
           </button>
         )
       } else {
         buttons.push(
-          <button className="float--right" onClick={this.toggleOpen} style={{'marginTop': 10}}>
+          <button onClick={this.toggleOpen} style={btnOpenStyle}>
             <FormattedMessage id="news_open" />
           </button>
         )
@@ -107,25 +109,27 @@ var NewsItem = React.createClass({
       }
     }
     if (this.props.is_admin) {
+        var btnManageStyle = {'marginTop': 10}
         if (!this.state.isEdited) { 
+            btnManageStyle['width'] = '15%';
             buttons.push(
-              <button className="float--right" onClick={this.edit} style={{'marginTop': 10}}>
+              <button className="float--right" onClick={this.edit} style={btnManageStyle}>
                 Edytuj
               </button>
              )
         } else {
             buttons.push(
-              <button className="float--right" onClick={this.save} style={{'marginTop': 10}}>
+              <button className="float--right" onClick={this.save} style={btnManageStyle}>
                 Zapisz
               </button>
              )
             buttons.push(
-              <button className="float--right" onClick={this.remove} style={{'marginTop': 10}}>
+              <button className="float--right" onClick={this.remove} style={btnManageStyle}>
                 Usuń
               </button>
              )
             buttons.push(
-              <button className="float--right" onClick={this.cancel} style={{'marginTop': 10}}>
+              <button className="float--right" onClick={this.cancel} style={btnManageStyle}>
                 Anuluj
               </button>
              )
