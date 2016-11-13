@@ -112,6 +112,7 @@ var NewsItem = React.createClass({
         var btnManageStyle = {'marginTop': 10}
         if (!this.state.isEdited) { 
             btnManageStyle['width'] = '15%';
+            btnManageStyle['padding'] = '0';
             buttons.push(
               <button className="float--right" onClick={this.edit} style={btnManageStyle}>
                 Edytuj
