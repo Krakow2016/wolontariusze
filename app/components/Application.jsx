@@ -58,7 +58,6 @@ var Application = React.createClass({
   componentDidMount: function () {
     this.props.context.getStore(ApplicationStore)
       .addChangeListener(this._changeListener)
-    console.log(document.cookie.indexOf("cookie=true"))
     this.setState({
       "cookie": document.cookie.indexOf("cookie=true")
     })

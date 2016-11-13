@@ -15,6 +15,8 @@ var update = require('react-addons-update')
 var navigateAction = require('fluxible-router').navigateAction
 
 var NEWS_PER_PAGE = 5
+var CLOSED_NEWS_TEXT_LENGTH = 500
+var CLOSED_NEWS_HEIGHT = "100px"
 
 var NewsItem = React.createClass({
 
@@ -30,7 +32,8 @@ var NewsItem = React.createClass({
     return {
       editorState: editorState,
       savedEditorState: editorState,
-      isEdited: false
+      isEdited: false,
+      isOpen: false
     }
   },
 
@@ -42,7 +45,8 @@ var NewsItem = React.createClass({
 
   edit: function () {
     this.setState(update(this.state, {
-      isEdited: {$set: true}
+      isEdited: {$set: true},
+      isOpen: {$set: true}
     }))
   },
 
@@ -70,6 +74,11 @@ var NewsItem = React.createClass({
         {raw: Draft.convertToRaw(this.state.editorState.getCurrentContent()) })
   },
 
+  toggleOpen: function () {
+    this.setState(update(this.state, {
+      isOpen: {$set: !this.state.isOpen},
+    }))
+  },
 
 
   render: function() {
@@ -79,26 +88,48 @@ var NewsItem = React.createClass({
     }
 
     var buttons = []
+    var editorStyle = {}
+    var currentText = this.state.editorState.getCurrentContent().getPlainText()
+    if (!this.state.isEdited && currentText.length > CLOSED_NEWS_TEXT_LENGTH) {
+      var btnOpenStyle = {'marginTop': 10, 'backgroundColor': '#33697b' }
+      btnOpenStyle['width'] = this.props.is_admin ? '85%' : '100%';
+      if (this.state.isOpen) {
+        buttons.push(
+          <button onClick={this.toggleOpen} style={btnOpenStyle}>
+            <FormattedMessage id="news_close" />
+          </button>
+        )
+      } else {
+        buttons.push(
+          <button onClick={this.toggleOpen} style={btnOpenStyle}>
+            <FormattedMessage id="news_open" />
+          </button>
+        )
+        editorStyle = { textOverflow: 'ellipsis', height: CLOSED_NEWS_HEIGHT, overflow: 'hidden'}
+      }
+    }
     if (this.props.is_admin) {
-        if (!this.state.isEdited) {
-             buttons.push(
-              <button className="float--right" onClick={this.edit} style={{'marginTop': 10}}>
+        var btnManageStyle = {'marginTop': 10}
+        if (!this.state.isEdited) { 
+            btnManageStyle['width'] = '15%';
+            buttons.push(
+              <button className="float--right" onClick={this.edit} style={btnManageStyle}>
                 Edytuj
               </button>
              )
         } else {
             buttons.push(
-              <button className="float--right" onClick={this.save} style={{'marginTop': 10}}>
+              <button className="float--right" onClick={this.save} style={btnManageStyle}>
                 Zapisz
               </button>
              )
             buttons.push(
-              <button className="float--right" onClick={this.remove} style={{'marginTop': 10}}>
+              <button className="float--right" onClick={this.remove} style={btnManageStyle}>
                 Usuń
               </button>
              )
             buttons.push(
-              <button className="float--right" onClick={this.cancel} style={{'marginTop': 10}}>
+              <button className="float--right" onClick={this.cancel} style={btnManageStyle}>
                 Anuluj
               </button>
              )
@@ -114,7 +145,7 @@ var NewsItem = React.createClass({
         <p className="small italic">
             {info}
         </p>
-        <Editor editorState={this.state.editorState} onChange={this.onChange} readOnly={!this.state.isEdited} />
+        <Editor editorState={this.state.editorState} onChange={this.onChange} readOnly={!this.state.isEdited} style={editorStyle} />
         <p className="clearfix">
             {buttons}
         </p>
