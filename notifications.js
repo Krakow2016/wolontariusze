@@ -247,13 +247,13 @@ r.connect(config.rethinkdb, function(err, conn) {
               .run(conn, function(err, cursor) {
 
                 cursor.toArray(function(err, all_volunteers) {
-                  let size = all_volunteers.length
+                  var size = all_volunteers.length
                   if(!size) { return } // Nie ma do kogo wysłać
 
                   // Podziel listę odbiorców na segmenty po 1000 adresów
                   _.times(Math.ceil(size / 1000), function() {
                     // Lista 1000 osbiorców
-                    let volunteers = all_volunteers.splice(0, 1000)
+                    var volunteers = all_volunteers.splice(0, 1000)
 
                     // TODO: dodaj autora aktualizacji
                     // Build the smtpapi header
