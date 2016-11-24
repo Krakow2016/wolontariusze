@@ -100,6 +100,52 @@ var Editor = React.createClass({
       })
   },
 
+
+  //https://github.com/facebook/draft-js/blob/69890ed57b5f4256cc93ae8e9ea178296851a23e/src/model/modifier/RichTextEditorUtil.js
+  handleReturn(e) {
+      var that = this
+        this.props.onChange(function () {
+
+              var contentState = Draft.Modifier.splitBlock (
+                that.props.editorState.getCurrentContent(),
+                that.props.editorState.getSelection()
+              );
+
+              var newEditorState = Draft.EditorState.push(
+                that.props.editorState,
+                contentState,
+                'split-block'
+              );
+
+              var newState = Draft.EditorState.forceSelection(
+                newEditorState,
+                contentState.getSelectionAfter()
+              );
+
+              var contentState2 = Draft.Modifier.insertText(
+                newState.getCurrentContent(),
+                newState.getSelection(),
+                '\u200E',
+                newState.getCurrentInlineStyle(),
+                null
+              );
+
+              var newEditorState2 = Draft.EditorState.push(
+                newState,
+                contentState2,
+                'insert-characters'
+              );
+
+              return Draft.EditorState.forceSelection(
+                newEditorState2,
+                contentState2.getSelectionAfter()
+              );
+          }());
+
+      return true;
+   
+  },
+
   toggleInlineStyle: function(inlineStyle) {
     this.props.onChange(
       Draft.RichUtils.toggleInlineStyle(
@@ -146,7 +192,9 @@ var Editor = React.createClass({
               this.state.emojiPlugin
             ]}
             readOnly={this.props.readOnly}
-            onChange={this.props.onChange} />
+            onChange={this.props.onChange}
+            handleReturn={this.handleReturn} />
+            
         </div>
 
         {this.props.children}
