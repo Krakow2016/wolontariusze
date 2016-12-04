@@ -3,6 +3,7 @@ module.exports = {
 
     // IMAGES
     "inspiration-img": '<img src="/img/homepage/inspiration.svg" />',
+    "meet-graph": "Spotkajmy się !!",
     "home-img": '<img src="/img/homepage/1.svg" id="head-img" alt="" draggable="false" />',
 
     "login": "Zaloguj się",
@@ -145,6 +146,7 @@ module.exports = {
 
     // IMAGES
     "inspiration-img": '<img src="/img/homepage/inspiration-eng.svg" />',
+    "meet-graph": "Spotkajmy się !!",
     "home-img": '<img src="/img/homepage/1-eng.svg" id="head-img" alt="" draggable="false" />',
 
     "login": "Sign in",

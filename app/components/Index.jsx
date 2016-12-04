@@ -132,16 +132,8 @@ var App = React.createClass({
     return (
       <div>
         <div id="inspiration-img"><FormattedHTMLMessage id="inspiration-img" /></div>
-        <img src="/img/homepage/graph.png" style={{width: '100%'}} alt="" />
-        <div className="graph-filter">
-          <div className="row">
-            <div className="col col4">
-              <img src="/img/homepage/VOLUNTEERS.svg" alt="" />
-              <p>WOLONTARIUSZ</p>
-            </div>
-            <div className="col col4"><img src="/img/homepage/HOUR.svg" alt="" /><p>GODZINA</p></div>
-            <div className="col col4"><img src="/img/homepage/LOCATION.svg" alt="" /><p>LOKALIZACJA</p></div>
-          </div>
+        <div id="btn-home-meet">
+          <a href="/spotkajmy-sie"><h1><FormattedMessage id="meet-graph" /></h1></a>
         </div>
 
         <section className="volunteer-dashboard">

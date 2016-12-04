@@ -313,6 +313,15 @@ module.exports = {
       done()
     }
   },
+  meet: {
+    path: '/spotkajmy-sie',
+    method: 'get',
+    handler: require('./components/Graph/MeetTogether.jsx'),
+    action: function(context, payload, done){
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Kontakt' })
+      done()
+    }
+  },
   faq: {
     path: '/faq',
     method: 'get',
