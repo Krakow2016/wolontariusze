@@ -416,7 +416,9 @@ module.exports = function(server) {
   server.get('/tags', function(req, res) {
     r.table('Volunteers').map(function(vol) {
       return vol('tags').default([])
-    }).reduce(function(left, right) {
+    }).union(r.table('Activities').map(function(act) {
+      return act('tags').default([])
+    })).reduce(function(left, right) {
       return left.union(right)
     }).distinct().run().then(function(result) {
       res.send(result)
