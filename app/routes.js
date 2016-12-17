@@ -98,7 +98,7 @@ module.exports = {
           }, done)
         } else {
           context.executeAction(actions.showXls, { email: data.email }, function() {
-            context.service.read('Comments', {volunteerId: volunteerId}, {}, function (err, data) {
+            context.service.read('Comments', {volunteerId: volunteerId, activityId: null}, {}, function (err, data) {
               context.dispatch('LOAD_COMMENTS', data)
               done()
             })
@@ -150,7 +150,10 @@ module.exports = {
       context.executeAction(actions.showActivity, { id: activityId }, function(activity) {
         if(activity) {
           context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
-          done()
+          context.service.read('Comments', {volunteerId: null, activityId: activityId}, {}, function (err, data) {
+            context.dispatch('LOAD_COMMENTS', data)
+            done()
+          })
         } else {
           context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: musisz być zalogowany żeby zobaczyć zadanie.')
           context.executeAction(navigateAction, {

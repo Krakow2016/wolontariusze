@@ -1459,6 +1459,54 @@ button + .activity-table{
   border-radius: 50%
 }
 
+/*--------COMMENTS--------*/
+.comment {
+	margin-bottom: 45px;
+} 
+
+.comments-list-space {
+	height: 20px;
+} 
+
+.comments-volonteer-label {
+	float: left;
+	width: 120px;
+	height: 120px;
+	margin-left: 20px;
+	z-index: 10;
+	position: relative;
+}
+
+.comments-text-block {
+	margin-top: 10px;
+	margin-left: 5px;
+}
+
+.comments-controls{
+	float: right;
+	position: relative;
+	bottom: 15px;
+}
+
+.comments-controls-active{
+	position: relative;
+	float: right;
+	top: 5px;
+}
+
+.comments-time {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #999;
+}
+
+.comments-more {
+	height: 20px;
+	width: 100%;
+	text-align: center;
+	cursor: pointer;
+}
+
 /*--------TEXTS--------*/
 .content-texts-container{
 	margin: 0 -1rem;

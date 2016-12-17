@@ -448,24 +448,25 @@ module.exports = {
       if(err) {
         debug(err)
       } else {
-        context.dispatch('SAVE_FLASH_SUCCESS', 'Komentarz do profilu został pomyślnie dodany.')
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Komentarz został pomyślnie dodany.')
         context.dispatch('COMMENT_CREATED', data)
       }
       cb()
     })
   },
 
-  profileCommentsUpdate: function(context, payload, cb) {
+  updateComment: function(context, payload, cb) {
     debug('profile comment update')
-    context.service.update('Comments', {}, payload, function (err) {
+    context.service.update('Comments', {isSafeToBeExecuted: true}, payload, function (err) {
       if(err) { debug(err) }
       else { context.dispatch('COMMENT_UPDATED', payload) }
       cb()
     })
   },
 
-  profileCommentsDelete: function(context, payload, cb) {
+  deleteComment: function(context, payload, cb) {
     debug('profile comment delete')
+    payload.isSafeToBeExecuted = true
     context.service.delete('Comments', payload, {}, function (err) {
       if(err) { debug(err) }
       else { context.dispatch('COMMENT_DELETED', payload) }

@@ -10,18 +10,27 @@ var NewComment = createStore({
   },
 
   handlers: {
-    'LOAD_VOLUNTEER'  : 'update_volunteer'
+    'LOAD_VOLUNTEER'  : 'update_volunteer',
+    'LOAD_ACTIVITY'  : 'update_activity'
   },
 
   update_volunteer: function(volunteer) {
     this.volunteerId = volunteer.id
+    this.activityId = null
+    this.emitChange()
+  },
+
+  update_activity: function(activity) {
+    this.volunteerId = null
+    this.activityId = activity.id
     this.emitChange()
   },
 
   getState: function() {
     return {
       editorState: this.editorState,
-      volunteerId: this.volunteerId
+      volunteerId: this.volunteerId,
+      activityId: this.activityId
     }
   },
 
@@ -31,7 +40,8 @@ var NewComment = createStore({
   dehydrate: function () {
     return {
       editorState: Draft.convertToRaw(this.editorState.getCurrentContent()),
-      volunteerId: this.volunteerId
+      volunteerId: this.volunteerId,
+      activityId: this.activityId
     }
   },
 
@@ -42,12 +52,22 @@ var NewComment = createStore({
     var contentState = Draft.convertFromRaw(state.editorState)
     this.editorState = Draft.EditorState.createWithContent(contentState)
     this.volunteerId = state.volunteerId
+    this.activityId = state.activityId
   }
 })
 
-// Oznacz wszystkie atrybuty jako dostępne tylko dla administratorów
 NewComment.attributes = function() {
-  return []
+  return [
+      'activityId',    
+      'adminId',
+      'creationTimestamp',
+      'id',
+      'raw',
+      'volunteerId',
+      'first_name',
+      'last_name',
+      'thumb_picture_url'
+    ]
 }
 
 module.exports = NewComment

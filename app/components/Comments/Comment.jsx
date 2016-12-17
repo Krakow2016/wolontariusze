@@ -6,11 +6,14 @@ var fromJS = require('immutable').fromJS
 var _ = require('lodash')
 
 var actions = require('../../actions')
-var updateAction = actions.profileCommentsUpdate
-var deleteAction = actions.profileCommentsDelete
+var updateAction = actions.updateComment
+var deleteAction = actions.deleteComment
 var Editor = require('../Editor.jsx')
 
-var EditedProfileComment = React.createClass({
+var ProfilePic = require('../ProfilePic.jsx')
+var FormattedMessage = require('react-intl').FormattedMessage
+
+var EditedComment = React.createClass({
 
   propTypes: {
     comment: React.PropTypes.object,
@@ -48,12 +51,14 @@ var EditedProfileComment = React.createClass({
 
   render: function () {
     return (
-      <Editor editorState={this.state.editorState} onChange={this.onChange}>
-        <div>
-          <input type="submit" onClick={this.handleSave} value="Aktualizuj" />
-          <span onClick={this.props.cancel}>Anuluj</span>
+      <div className="comment">
+        <Editor editorState={this.state.editorState} onChange={this.onChange}>
+        </Editor>
+        <div className="RichEditor-controls comments-controls-active">
+          <span className="RichEditor-styleButton" onClick={this.handleSave} key="handleSave"><FormattedMessage id="comments_update" /></span>
+          <span className="RichEditor-styleButton" onClick={this.props.cancel} key="cancel"><FormattedMessage id="comments_cancelEdit" /></span>
         </div>
-      </Editor>
+      </div>
     )
   }
 })
@@ -120,23 +125,40 @@ var ProfileComment = React.createClass({
   render: function (){
     if(this.props.comment.editMode) {
       return (
-        <EditedProfileComment
+        <EditedComment
           cancel={this.cancelEditComment}
           comment={this.props.comment}
           context={this.props.context} />
       )
     } else {
+      var buttons=[]
+      var isAdmin = this.props.context.getUser().is_admin
+      var isOwner = ( this.props.context.getUser().id == this.props.comment.adminId )
+
+      if (isAdmin || isOwner) {
+        buttons.push(<span className="RichEditor-styleButton" onClick={this.editComment} key="editComment"><FormattedMessage id="comments_edit" /></span>)
+        buttons.push(<span className="RichEditor-styleButton" onClick={this.deleteComment} key="deleteComment"><FormattedMessage id="comments_remove" /></span>)
+      }
       return (
-        <div>
-          <Editor editorState={this.state.editorState} onChange={this.onChange} readOnly={true} />
-          <div>
-            <NavLink href={'/wolontariusz/'+this.props.comment.adminId}>
-              {this.full_name()}
-            </NavLink>
-            { moment(this.props.comment.creationTimestamp).calendar() }
+        <div className="comment">
+          <div className="alert">
+            <div className="comments-time">
+              <b>{ moment(this.props.comment.creationTimestamp).calendar() }</b>
+            </div>
+            <div className="row">
+              <div className="comments-volonteer-label" >
+                <NavLink href={'/wolontariusz/'+this.props.comment.adminId} className="tooltip--bottom" data-hint={this.full_name()} >
+                  <ProfilePic src={this.props.comment.thumb_picture_url} className='profileThumbnail' />
+                </NavLink>
+              </div>
+              <div className="comments-text-block">
+                <Editor editorState={this.state.editorState} onChange={this.onChange} readOnly={true} />
+              </div>
+            </div>
           </div>
-          <input type="button" onClick={this.editComment} value="Edytuj" />
-          <input type="button" onClick={this.deleteComment} value="Usuń" />
+          <div className="RichEditor-controls comments-controls">
+              {buttons}
+          </div>
         </div>
       )
     }

@@ -122,6 +122,15 @@ module.exports = {
     "news_open": "Więcej...",
     "news_close": "Zwiń",
 
+    "comments_header": "Komentarze",
+    "comments_description": "Proszę być kulturalnym w komentarzach",
+    "comments_add": "Dodaj komentarz",
+    "comments_edit": "Edytuj",
+    "comments_remove": "Usuń",
+    "comments_cancelEdit": "Anuluj",
+    "comments_update": "Aktualizuj",
+    "comments_more": "Więcej komentarzy ...",
+
     "message_used_token": "Błąd! Jednorazowy token dostępu został już użyty. Skontaktuj się z goradobra@krakow2016.com aby uzyskać nowy.",
     "message_old_token": "Błąd! Wygasły token dostępu :( Skontaktuj się z goradobra@krakow2016.com aby uzyskać nowy.",
 
@@ -264,6 +273,15 @@ module.exports = {
     "news_cancel": "Unsubscribe from newsletter",
     "news_open": "More...",
     "news_close": "Hide content",
+
+    "comments_header": "Comments",
+    "comments_description": "Please be cultural in comments",
+    "comments_add": "Add a comment",
+    "comments_edit": "Edit",
+    "comments_remove": "Remove",
+    "comments_cancelEdit": "Cancel",
+    "comments_update": "Save",
+    "comments_more": "More comments ...",
 
     "message_used_token": "Error! One time access token has already been used. Please contact goradobra@krakow2016.com to get a new one.",
     "message_old_token": "Error! Access token has expired :( Please contact goradobra@krakow2016.com to get a new one.",
