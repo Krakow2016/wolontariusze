@@ -199,12 +199,26 @@ module.exports = function(server) {
 
   // W pierwszej kolejności sprawdź ścieżki z poza single-page
   // application
-  server.post('/login', jsonParser, urlencodedParser, passport.authenticate('local', {
-    successReturnToOrRedirect: '/',
-    failureRedirect: '/login',
-    failureFlash: true,
-    successFlash: true
-  }))
+  server.post('/login', jsonParser, urlencodedParser, function (req, res, next) {
+
+    var redirect_url = "/"
+    if (req.body.redirect_url) {
+      redirect_url=req.body.redirect_url
+    }
+
+    var modified_login_url = "/"
+    if (req.body.modified_login_url) {
+      modified_login_url=req.body.modified_login_url
+    }
+    
+    passport.authenticate('local', {
+      successReturnToOrRedirect: redirect_url,
+      failureRedirect: modified_login_url,
+      failureFlash: true,
+      successFlash: true
+    })(req, res, next)
+  }
+  )
 
   server.get('/logout', function(req, res){
     req.logout()

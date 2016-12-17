@@ -180,7 +180,7 @@ module.exports = {
   },
 
   login: {
-    path: '/login',
+    path: '/login(;redirect_url=.*)?',
     method: 'get',
     handler: require('./components/Login.jsx'),
     action: function (context, payload, done) {

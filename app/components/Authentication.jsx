@@ -47,6 +47,17 @@ var Authentication = React.createClass({
 })
 
 var LoginButton = React.createClass({
+  location: function () {
+    return (typeof(window) != 'undefined')  ? window.location.pathname : ""
+  },
+
+  redirect_url: function () {
+    var location = this.location()
+    var indexOfLogin = location.indexOf("/login") 
+    var modifiedLocation = location.replace(':', '%SECO%')
+    modifiedLocation = modifiedLocation.replace('/', '%SLASH%')
+    return (indexOfLogin > -1) ? "/login" : "/login;redirect_url="+modifiedLocation
+  },
 
   render: function() {
     var open = this.props.open ? "open" : "";
@@ -56,13 +67,13 @@ var LoginButton = React.createClass({
         <div id="mobile-nav">
           <a href="#" className="menu-mobile-btn" onClick={this.props.onClicked}><img src="/img/menu.svg" /></a>
           <div id="mobile-nav-content" className={open} onClick={this.props.onClicked}>
-            <NavLink href="/login"><FormattedMessage id="login" /></NavLink>
+            <NavLink href={this.redirect_url()}><FormattedMessage id="login" /></NavLink>
             <a href="/faq">FAQ</a>
           </div>
         </div>
         <ul id="nav-list">
           <li>
-            <NavLink href="/login">
+            <NavLink href={this.redirect_url()}>
               <FormattedMessage id="login" />
             </NavLink>
           </li>
