@@ -9,6 +9,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Index.jsx'),
     action: function (context, payload, done) {
+      context.dispatch('LOAD_URL', '/')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Strona główna' })
       done()
     }
@@ -19,6 +20,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Terms.jsx'),
     action: function (context, payload, done) {
+      context.dispatch('LOAD_URL', '/regulamin')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Regulamin' })
       done()
     }
@@ -29,6 +31,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Registration.jsx'),
     action: function (context, payload, done) {
+      context.dispatch('LOAD_URL', '/rejestracja')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Dodaj nowe konto w systemie' })
       done()
     }
@@ -39,6 +42,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Welcome.jsx'),
     action: function (context, payload, done) {
+      context.dispatch('LOAD_URL', '/witaj')
       var user = context.getUser()
       context.executeAction(actions.showVolunteer, { id: user.id }, function() {
         done()
@@ -52,12 +56,13 @@ module.exports = {
     handler: require('./components/Volunteer/Profile.jsx'),
     action: function (context, payload, done) {
       var volunteerId  = payload.params.id
+      context.dispatch('LOAD_URL', '/wolontariusz/'+volunteerId)
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Profil wolontariusza' })
       context.executeAction(actions.showVolunteer, { id: volunteerId }, function(data) {
         if(!data) {
           context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: Użytkownik nie istnieje w systemie.')
           context.executeAction(navigateAction, {
-            url: '/'
+            url: '/login'
           }, done)
         } else {
           context.executeAction(actions.showVolunteerActivity, { id: volunteerId }, function() {
@@ -74,6 +79,7 @@ module.exports = {
     handler: require('./components/Volunteer/Activities.jsx'),
     action: function (context, payload, done) {
       var volunteerId  = payload.params.id
+      context.dispatch('LOAD_URL', '/wolontariusz/'+volunteerId+'/aktywnosci')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Aktywności wolontariusza' })
       context.executeAction(actions.showVolunteer, { id: volunteerId }, function() {
         context.executeAction(actions.showVolunteerActivity, { id: volunteerId }, function() {
@@ -89,12 +95,13 @@ module.exports = {
     handler: require('./components/Volunteer/Administration.jsx'),
     action: function (context, payload, done) {
       var volunteerId  = payload.params.id
+      context.dispatch('LOAD_URL', '/wolontariusz/'+volunteerId+'/admin')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Szczegóły wolontariusza' })
       context.executeAction(actions.showVolunteer, { id: volunteerId }, function(data) {
         if(!data) {
           context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: Użytkownik nie istnieje w systemie.')
           context.executeAction(navigateAction, {
-            url: '/'
+            url: '/login'
           }, done)
         } else {
           context.executeAction(actions.showXls, { email: data.email }, function() {
@@ -113,13 +120,14 @@ module.exports = {
     method: 'get',
     handler: require('./components/TaskBank/Bank.jsx'),
     action: function(context, payload, done) {
+      context.dispatch('LOAD_URL', '/zadania')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Bank pracy' })
       context.dispatch('LOAD_ACTIVITIES_QUERY', payload.query)
       context.executeAction(actions.loadActivities, payload.query, function(err, data) {
         if(err) {
           context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: Użytkownik nie istnieje w systemie.')
             context.executeAction(navigateAction, {
-              url: '/'
+              url: '/login',
             }, done)
         } else {
           done()
@@ -133,6 +141,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/ActivityCreate.jsx'),
     action: function (context, payload, done) {
+      context.dispatch('LOAD_URL', '/zadania/nowe')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Nowa Aktywnosc' })
       context.dispatch('PRECREATE_ACTIVITY', {})
       done()
@@ -145,8 +154,7 @@ module.exports = {
     handler: require('./components/Activity.jsx'),
     action: function (context, payload, done) {
       var activityId  = payload.params.id
-
-
+      context.dispatch('LOAD_URL', '/zadania/'+activityId)
       context.executeAction(actions.showActivity, { id: activityId }, function(activity) {
         if(activity) {
           context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
@@ -157,7 +165,7 @@ module.exports = {
         } else {
           context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: musisz być zalogowany żeby zobaczyć zadanie.')
           context.executeAction(navigateAction, {
-            url: '/'
+            url: '/login'
           }, done)
         }
       })
@@ -170,6 +178,7 @@ module.exports = {
     handler: require('./components/ActivityEdit.jsx'),
     action: function (context, payload, done) {
       var activityId  = payload.params.id
+      context.dispatch('LOAD_URL', '/zadania/'+activityId+'/edytuj')
       context.executeAction(actions.showActivity, { id: activityId }, function(activity) {
         if(activity) {
           context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
@@ -180,10 +189,11 @@ module.exports = {
   },
 
   login: {
-    path: '/login(;redirect_url=.*)?',
+    path: '/login',
     method: 'get',
     handler: require('./components/Login.jsx'),
     action: function (context, payload, done) {
+      //BRAK LOAD_URL
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Zaloguj się' })
       done()
     }
@@ -194,6 +204,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Settings/Settings.jsx'),
     action: function (context, payload, done) {
+      context.dispatch('LOAD_URL', '/ustawienia')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Ustawienia' })
       var user = context.getUser()
       if(user) {
@@ -201,7 +212,7 @@ module.exports = {
           if(!data) {
             context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: Użytkownik nie istnieje w systemie.')
             context.executeAction(navigateAction, {
-              url: '/'
+              url: '/login;redirect_url=%SLASH%ustawienia'
             }, done)
           } else {
             context.executeAction(actions.showIntegrations, { user_id: user.id }, function() {
@@ -220,6 +231,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Settings/Developer.jsx'),
     action: function (context, payload, done) {
+      context.dispatch('LOAD_URL', '/ustawienia/developer')
       var user = context.getUser()
       if(user) {
         context.executeAction(actions.showAPIClients, { user_id: user.id }, function() {
@@ -236,6 +248,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Search.jsx'),
     action: function(context, payload, done) {
+      context.dispatch('LOAD_URL', '/wyszukiwarka')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Wyszukiwarka' })
       context.dispatch('LOAD_QUERY', payload.query)
       context.executeAction(actions.showResults, payload.query)
@@ -251,6 +264,7 @@ module.exports = {
     action: function (context, payload, done) {
       var activityId  = 'news'
       var pageNumber = 1
+      context.dispatch('LOAD_URL', '/aktualnosci;page='+pageNumber)
       if (payload.params.pagenumber) {
         pageNumber = payload.params.pagenumber
       }
@@ -261,7 +275,7 @@ module.exports = {
         } else {
           context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: musisz być zalogowany żeby zobaczyć zadanie.')
           context.executeAction(navigateAction, {
-            url: '/'
+            url: '/login;redirect_url=%SLASH%news'
           }, done)
         }
       })
@@ -273,6 +287,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Texts/Why.jsx'),
     action: function(context, payload, done){
+      context.dispatch('LOAD_URL', '/czemu-gora-dobra')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Czemu Góra Dobra?' })
       done()
     }
@@ -283,6 +298,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Texts/What.jsx'),
     action: function(context, payload, done){
+      context.dispatch('LOAD_URL', '/czym-jest-gora-dobra')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Czym Jest Góra Dobra?' })
       done()
     }
@@ -293,6 +309,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Texts/How.jsx'),
     action: function(context, payload, done){
+      context.dispatch('LOAD_URL', '/jak-dziala-gora-dobra')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Jak Działa Góra Dobra?' })
       done()
     }
@@ -303,6 +320,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Texts/Who.jsx'),
     action: function(context, payload, done){
+      context.dispatch('LOAD_URL', '/kto-jest-zaangazowany')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Kto Jest Zaangażowany?' })
       done()
     }
@@ -312,6 +330,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Contact.jsx'),
     action: function(context, payload, done){
+      context.dispatch('LOAD_URL', '/kontakt')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Kontakt' })
       done()
     }
@@ -321,6 +340,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Graph/MeetTogether.jsx'),
     action: function(context, payload, done){
+      context.dispatch('LOAD_URL', '/spotkajmy-sie')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Spotkajmy się!!' })
       done()
     }
@@ -330,6 +350,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Texts/Faq.jsx'),
     action: function(context, payload, done){
+      context.dispatch('LOAD_URL', '/faq')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'FAQ' })
       done()
     }
@@ -341,6 +362,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/Import.jsx'),
     action: function(context, payload, done) {
+      context.dispatch('LOAD_URL', '/import')
       done()
     }
   },
@@ -350,6 +372,7 @@ module.exports = {
     method: 'get',
     handler: require('./components/AccountActivation.jsx'),
     action: function(context, payload, done) {
+      context.dispatch('LOAD_URL', '/aktywacja')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Aktywuj konto' })
       done()
     }

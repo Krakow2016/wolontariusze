@@ -1,23 +1,34 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var FormattedMessage = require('react-intl').FormattedMessage
+var CurrentUrlStore = require('../stores/CurrentUrl')
 
 var App = React.createClass({
-  
+
+  getInitialState: function () {
+    var state = this.props.context.getStore(CurrentUrlStore).getState()
+    return state
+  },
+
+  _changeListener: function() {
+    var state = this.props.context.getStore(CurrentUrlStore).getState()
+    this.setState({
+      url: state.url
+    })
+  },
+
+  componentDidMount: function() {
+    this.props.context.getStore(CurrentUrlStore)
+      .addChangeListener(this._changeListener)
+  },
+
+  componentWillUnmount: function() {
+    this.props.context.getStore(CurrentUrlStore)
+      .removeChangeListener(this._changeListener)
+  },
+
   redirect_url: function () {
-    var redirect_url=""
-    if (typeof(window) != 'undefined') {
-      var location = window.location.href
-      var indexOfUrl = location.indexOf("=")
-      if (indexOfUrl > -1) {
-        var length = location.length
-        var modified_login_url = location.substr(indexOfUrl+1, length-1)
-        redirect_url = modified_login_url.replace('%SECO%', ':')
-        redirect_url = redirect_url.replace('%SLASH%', '/')
-        redirect_url = redirect_url.replace('%25SLASH%', '/')
-      }
-    }
-    return redirect_url
+    return this.state.url
   },
 
   modified_login_url: function () {
