@@ -1153,6 +1153,25 @@ section:last-of-type{
 	color: #008AC3;
 }
 
+#btn-home-what-we-do{
+	width: 100%;
+	background-color: #003753;
+	text-align: center;
+	border-bottom: 2px solid white;
+}
+#btn-home-what-we-do h1{
+	color: white;
+	padding: 50px;
+	margin: 0;
+	-webkit-transition: color .5s;
+	-moz-transition: color .5s;
+	-o-transition: color .5s;
+	transition: color .5s;
+}
+#btn-home-what-we-do:hover h1{
+	color: #008AC3;
+}
+
 /*--------GRAPH--------*/
 
 .graph-filter{

@@ -212,7 +212,7 @@ module.exports = {
           if(!data) {
             context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: Użytkownik nie istnieje w systemie.')
             context.executeAction(navigateAction, {
-              url: '/login;redirect_url=%SLASH%ustawienia'
+              url: '/login'
             }, done)
           } else {
             context.executeAction(actions.showIntegrations, { user_id: user.id }, function() {
@@ -275,9 +275,29 @@ module.exports = {
         } else {
           context.dispatch('SAVE_FLASH_FAILURE', 'Błąd: musisz być zalogowany żeby zobaczyć zadanie.')
           context.executeAction(navigateAction, {
-            url: '/login;redirect_url=%SLASH%news'
+            url: '/login'
           }, done)
         }
+      })
+    }
+  },
+
+  what_we_do: {
+    path: '/co-robimy(;page=)?:pagenumber(\\d?)',
+    method: 'get',
+    handler: require('./components/WhatWeDo.jsx'),
+    action: function (context, payload, done) {
+      var activityId  = 'what-we-do'
+      var pageNumber = 1
+      context.dispatch('LOAD_URL', '/co-robimy;page='+pageNumber)
+      if (payload.params.pagenumber) {
+        pageNumber = payload.params.pagenumber
+      }
+      context.executeAction(actions.showActivity, { id: activityId, page: pageNumber }, function(activity) {
+        if(activity) {
+          context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
+        } 
+        done()
       })
     }
   },

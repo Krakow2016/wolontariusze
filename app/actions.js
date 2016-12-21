@@ -409,10 +409,14 @@ module.exports = {
 
   postNewsCreate: function(context, payload, cb) {
     context.service.update('Activities', payload, {}, function (err, data) {
+      var redirect_url = "/aktualnosci"
+      if (payload.id == "what-we-do") {
+        redirect_url = "/co-robimy"
+      }
       if(err) { debug(err) }
       else {
         context.dispatch('SAVE_FLASH_SUCCESS', 'Aktualność została pomyślnie opublikowana.')
-        context.executeAction(navigateAction, {url: '/aktualnosci'})
+        context.executeAction(navigateAction, {url: redirect_url})
         cb()
       }
     })
@@ -429,13 +433,17 @@ module.exports = {
   },
   postNewsRemove: function(context, payload, cb) {
     context.service.update('Activities', payload, {}, function (err, data) {
+      var redirect_url = "/aktualnosci"
+      if (payload.id == "what-we-do") {
+        redirect_url = "/co-robimy"
+      }
       if(err) { debug(err) }
       else {
         context.dispatch('SAVE_FLASH_SUCCESS', 'Aktualność została pomyślnie usunięta.')
         if (payload.goToPreviousPage) {
-          context.executeAction(navigateAction, {url: '/aktualnosci;page='+(payload.page-1)})
+          context.executeAction(navigateAction, {url: redirect_url+';page='+(payload.page-1)})
         } else {
-          context.executeAction(navigateAction, {url: '/aktualnosci;page='+payload.page})
+          context.executeAction(navigateAction, {url: redirect_url+';page='+payload.page})
         }    
         cb()
       }

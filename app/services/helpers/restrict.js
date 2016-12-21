@@ -2,7 +2,8 @@ module.exports = function(service) {
 
   var read = service.read
   service.read = function(req, resource, params, config, callback) {
-    if(!req.user) { return callback({statusCode: 403}) }
+    var isWhatWeDoPage = (resource == 'Activities' && params.id == 'what-we-do' )
+    if(!req.user && !isWhatWeDoPage) { return callback({statusCode: 403}) }
     read(req, resource, params, config, callback)
   }
 

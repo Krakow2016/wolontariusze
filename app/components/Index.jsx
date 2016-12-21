@@ -135,6 +135,9 @@ var App = React.createClass({
         <div id="btn-home-meet">
           <a href="/spotkajmy-sie"><h1><FormattedMessage id="meet-graph" /></h1></a>
         </div>
+        <div id="btn-home-what-we-do">
+          <a href="/co-robimy"><h1><FormattedMessage id="what-we-do" /></h1></a>
+        </div>
 
         <section className="volunteer-dashboard">
           <div className="dashboard-container">
