@@ -1,4 +1,8 @@
 
+/* Komponent powstał na podstawie ctrl+c/ctrl+v z komponentu News,
+bo tak było najszybciej. Służy do zamieszczania podsumowania projektów, które
+robimy w ramach Góry Dobra*/
+
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var Draft = require('draft-js')
@@ -338,19 +342,19 @@ var News = React.createClass({
   
   handleFirstPage: function () {
     delete this.state.updates
-    context.executeAction(navigateAction, {url: '/aktualnosci'})
+    context.executeAction(navigateAction, {url: '/co-robimy'})
   },
   
   handlePreviousPage: function () {
     var page = (Number(this.state.updatesPage)-1) > 0 ? (Number(this.state.updatesPage)-1) : 1
     delete this.state.updates
-    context.executeAction(navigateAction, {url: '/aktualnosci;page='+page})
+    context.executeAction(navigateAction, {url: '/co-robimy;page='+page})
   },
   
   handleNextPage: function () {
     var page = (Number(this.state.updatesPage)+1)
     delete this.state.updates
-    context.executeAction(navigateAction, {url: '/aktualnosci;page='+page})
+    context.executeAction(navigateAction, {url: '/co-robimy;page='+page})
   },
   
   handleLastPage: function () {
@@ -358,7 +362,7 @@ var News = React.createClass({
     var totalNews = (this.state.activity.updates_size) ? this.state.activity.updates_size : 0
     var pageCount = Math.ceil(Number(totalNews/NEWS_PER_PAGE))
     delete this.state.updates
-    context.executeAction(navigateAction, {url: '/aktualnosci;page='+pageCount})
+    context.executeAction(navigateAction, {url: '/co-robimy;page='+pageCount})
   },
 
   render: function () {
@@ -372,10 +376,9 @@ var News = React.createClass({
       updateForm = (
         <div className="alert alert--warning">
           <p>
-            Jako koordynator masz możliwość dodawania aktualizacji,
-            które  wyświetlą się na tej stronie i
-            będą wysłane e-mailem do wolontariuszy,
-            którzy wyrażają na to zgodę.
+            Jako koordynator masz możliwość dodawania kolejnych aktualizacji na tej stronie.
+            Treść aktualizacji oraz Twoje imię i nazwisko będą udostępnione publicznie.
+            Dodając aktualizację, wyrażasz na to zgodę.
           </p>
           <Editor editorState={this.state.newUpdateState} onChange={this.onChange} style={{'minHeight': 'initial'}}>
             <p className="clearfix">
@@ -389,14 +392,6 @@ var News = React.createClass({
     }
 
     var volunteers = this.state.volunteers
-    var has_joined = !!this.mine()
-
-    var button
-    if (!has_joined && (volunteers.length < activity.limit || activity.limit==0)) { //acceptButton
-      button = (<button className="button--xlg button--full" onClick={this.onAcceptButtonClick}><FormattedMessage id="news_accept" /></button>)
-    } else if (has_joined) { // canceButton
-      button = (<button className="button--xsm button--full bg--muted" onClick={this.onCancelButtonClick}><FormattedMessage id="news_cancel" /></button>)
-    }
 
     var updates = this.state.updates || []
 
@@ -409,9 +404,8 @@ var News = React.createClass({
           <div className="row">
             <div className="col col12">
               <div className="text--center activity-header">
-                <h1><FormattedMessage id="news" /></h1>
+                <h1><FormattedMessage id="what-we-do" /></h1>
               </div>
-              {button}
 
               {updates.map(function(update, i) {
                 return <NewsItem key={'update_'+activity.id+'_'+i} 

@@ -99,6 +99,8 @@ module.exports = function(service) {
   var update = service.update
   service.update = function(req, resource, params, body, config, callback) {
     var id = body.id || params.id
+    var isSafeToBeExecuted = body.isSafeToBeExecuted || params.isSafeToBeExecuted
+
     // Iteruj po bezpiecznych parametrach
     // W przypadku zapytania xhr zmienna `req` reprezentuje obiekt tego
     // zapytania.
@@ -108,7 +110,8 @@ module.exports = function(service) {
     // Flaga właściciela profilu
     var is_owner = user && (id === user.id)
 
-    if(is_admin || is_owner) {
+
+    if(is_admin || is_owner || isSafeToBeExecuted) {
       // Wykonaj oryginalną metodę `create`
       update(req, resource, params, body, config, callback)
     } else {
@@ -118,11 +121,13 @@ module.exports = function(service) {
 
   var del = service.delete
   service.delete = function(req, resource, params, config, callback) {
+
+    var isSafeToBeExecuted = config.isSafeToBeExecuted || params.isSafeToBeExecuted
     var user = req.user
     // Flaga przywilejów administratora
     var is_admin = (user && user.is_admin) || req.force_admin
 
-    if(is_admin) {
+    if(is_admin || isSafeToBeExecuted ) {
       // Wykonaj oryginalną metodę `delete`
       del(req, resource, params, config, callback)
     } else {

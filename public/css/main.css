@@ -1140,7 +1140,8 @@ section:last-of-type{
 	background-color: white;
 	text-align: center;
 }
-#btn-home-meet h1{
+#btn-home-meet h1,
+#btn-home-what-we-do h1{
 	color: #003753;
 	padding: 50px;
 	margin: 0;
@@ -1150,6 +1151,15 @@ section:last-of-type{
 	transition: color .5s;
 }
 #btn-home-meet:hover h1{
+	color: #008AC3;
+}
+
+#btn-home-what-we-do{
+	width: 100%;
+	background-color: white;
+	text-align: center;
+}
+#btn-home-what-we-do:hover h1{
 	color: #008AC3;
 }
 
@@ -1223,12 +1233,15 @@ input.graph-filter-input{
 	width: 100%;
 	padding: 0 1.7rem;
 	padding-top: 2rem;
-	padding-bottom: 4.2rem;
+	padding-bottom: 5rem;
 }
 
 .tiles-container h1{
 	color: #FFFFFF;
 	font-weight: lighter;
+	margin: 0;
+	margin-bottom: 2rem;
+	margin-top: 2rem;
 }
 
 .tiles-container p{
@@ -1244,7 +1257,7 @@ input.graph-filter-input{
 .tiles-container img{
   float: left;
   width: 250px;
-	border: 0.5rem solid #FFFFFF;
+	border: 0.2rem solid #FFFFFF;
 	border-radius: 1.3rem;
   margin: 0 15px 15px 0
 }
@@ -1457,6 +1470,54 @@ button + .activity-table{
   width: 250px;
   height: 250px;
   border-radius: 50%
+}
+
+/*--------COMMENTS--------*/
+.comment {
+	margin-bottom: 45px;
+} 
+
+.comments-list-space {
+	height: 20px;
+} 
+
+.comments-volonteer-label {
+	float: left;
+	width: 120px;
+	height: 120px;
+	margin-left: 20px;
+	z-index: 10;
+	position: relative;
+}
+
+.comments-text-block {
+	margin-top: 10px;
+	margin-left: 5px;
+}
+
+.comments-controls{
+	float: right;
+	position: relative;
+	bottom: 15px;
+}
+
+.comments-controls-active{
+	position: relative;
+	float: right;
+	top: 5px;
+}
+
+.comments-time {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #999;
+}
+
+.comments-more {
+	height: 20px;
+	width: 100%;
+	text-align: center;
+	cursor: pointer;
 }
 
 /*--------TEXTS--------*/

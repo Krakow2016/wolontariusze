@@ -1,12 +1,13 @@
 var React = require('react')
 var Draft = require('draft-js')
 
-var createComment = require('../actions').createComment
-var NewCommentStore = require('../stores/NewComment')
-var Editor = require('./Editor.jsx')
+var createComment = require('../../actions').createComment
+var NewCommentStore = require('../../stores/NewComment')
+var Editor = require('../Editor.jsx')
 
 var addons = require('fluxible-addons-react')
 var connectToStores = addons.connectToStores
+var FormattedMessage = require('react-intl').FormattedMessage
 
 var NewComment = React.createClass ({
 
@@ -33,7 +34,8 @@ var NewComment = React.createClass ({
     // Nastąpiła zmiana w stanie zasobu nowego komentarza - uaktualij widok.
     var store = this.props.context.getStore(NewCommentStore)
     this.setState({
-      volunteerId: store.getState().volunteerId
+      volunteerId: store.getState().volunteerId,
+      activityId: store.getState().activityId,
     })
   },
 
@@ -47,7 +49,8 @@ var NewComment = React.createClass ({
     var state = this.state.editorState.getCurrentContent()
     this.props.context.executeAction(createComment, {
       raw: Draft.convertToRaw(state),
-      volunteerId: this.state.volunteerId
+      volunteerId: this.state.volunteerId,
+      activityId: this.state.activityId
     })
 
     var editorState = Draft.EditorState.push(this.state.editorState, Draft.ContentState.createFromText(''))
@@ -60,7 +63,7 @@ var NewComment = React.createClass ({
     return (
       <Editor editorState={this.state.editorState} onChange={this.onChange}>
         <p className="text--right">
-          <input type="submit" onClick={this.handleSave} value="Dodaj komentarz" />
+          <button className="button--xlg button--full"  onClick={this.handleSave}><FormattedMessage id="comments_add" /></button> 
         </p>
       </Editor>
     )

@@ -13,18 +13,20 @@ var Protect = require('../helpers/protect')
 module.exports = Protect({
   name: 'Comments',
   read: function(req, resource, params, config, callback) {
+    var volString = (params.volunteerId) ? params.volunteerId.toString() : "NULL_VALUE"
+    var actString = (params.activityId) ? params.activityId.toString() : "NULL_VALUE"
     r.table('Comments')
-      .filter({
-        volunteerId: params.volunteerId.toString()
-      })
+      .filter(r.row("volunteerId").or(r.row("activityId")))
+      .filter(r.row("volunteerId").eq(volString).or(r.row("volunteerId").not()))
+      .filter(r.row("activityId").eq(actString).or(r.row("activityId").not()))
       // Dołącz imię i nazwisko autora z tabeli wolontariuszy
       .eqJoin('adminId', r.table('Volunteers'))
       .pluck({ // Ogranicz do tylko wybranych atrybutów
         left: true, // Wszystkie parametry z tabeli komentarzy
-        right: ['first_name', 'last_name'] // Tylko imię i nwzwisko autora
+        right: ['first_name', 'last_name', 'thumb_picture_url'] // Tylko imię i nazwisko autora
       })
       .zip()
-      .limit(50)
+      .limit(150)
       .orderBy(r.desc('creationTimestamp')) // Sortowanie
       .run().then(function(result) {
         callback(null, result)

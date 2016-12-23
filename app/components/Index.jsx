@@ -132,11 +132,11 @@ var App = React.createClass({
     return (
       <div>
         <div id="inspiration-img"><FormattedHTMLMessage id="inspiration-img" /></div>
-        <div id="btn-home-meet">
-          <a href="/spotkajmy-sie"><h1><FormattedMessage id="meet-graph" /></h1></a>
+        <div id="btn-home-what-we-do">
+          <a href="/co-robimy"><h1><FormattedMessage id="what-we-do" /></h1></a>
         </div>
 
-        <section className="volunteer-dashboard">
+        <div className="volunteer-dashboard">
           <div className="dashboard-container">
             <div className="row">
               <div className="col col4">
@@ -157,9 +157,13 @@ var App = React.createClass({
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
-        <section className="tiles-container why-and-what">
+        <div id="btn-home-meet">
+          <a href="/spotkajmy-sie"><h1><FormattedMessage id="meet_together" /></h1></a>
+        </div>
+
+        <div className="tiles-container why-and-what">
           <div className="row">
             <div className="col col6">
               <h1 className="text--center"><FormattedMessage id="why_gd" /></h1>
@@ -184,7 +188,7 @@ var App = React.createClass({
               <NavLink href="/czym-jest-gora-dobra"><FormattedMessage id="read_more" /></NavLink>
             </div>
           </div>
-        </section>
+        </div>
 
         <section className="tiles-container how-and-who">
           <div className="row">

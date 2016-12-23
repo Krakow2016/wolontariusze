@@ -20,6 +20,7 @@ var APIClientsStore = require('./stores/APIClients')
 var XlsStore = require('./stores/Xls')
 var IndexStore = require('./stores/Index')
 var AccountActivationStore = require('./stores/AccountActivation')
+var CurrentUrlStore = require('./stores/CurrentUrl')
 
 var passportPlugin = require('./plugins/passportPlugin')
 
@@ -44,7 +45,8 @@ var app = new Fluxible({
     APIClientsStore,
     XlsStore,
     IndexStore,
-    AccountActivationStore
+    AccountActivationStore,
+    CurrentUrlStore
   ]
 })
 

@@ -1,6 +1,6 @@
 var React = require('react')
 var VolunteerShell = require('./Shell.jsx')
-var Comments = require('./Comments.jsx')
+var Comments = require('../Comments/Comments.jsx')
 var update = require('react-addons-update')
 var moment = require('moment')
 

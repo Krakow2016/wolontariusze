@@ -11,6 +11,8 @@ var ProfilePic = require('./ProfilePic.jsx')
 var ActivityStore = require('../stores/Activity')
 var actions = require('../actions')
 
+var Comments = require('./Comments/Comments.jsx')
+
 var ActivityUpdate = React.createClass({
 
   getInitialState: function() {
@@ -369,6 +371,9 @@ var Activity = React.createClass({
         <p>
           {activeVolonteersList}
         </p>
+
+        <Comments context={this.props.context} />
+
       </div>
     )
   }
