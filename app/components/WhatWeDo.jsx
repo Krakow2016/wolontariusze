@@ -22,6 +22,24 @@ var NEWS_PER_PAGE = 5
 var CLOSED_NEWS_TEXT_LENGTH = 500
 var CLOSED_NEWS_HEIGHT = "100px"
 
+var UpdateLink = React.createClass({
+  render: function () {
+    var link
+    if (typeof (this.props.link) != "undefined" && this.props.link != "") {
+        link = <span><b>Link do artykulu: </b><a href={"/co-robimy;link="+this.props.link} >LINK</a></span>  
+    } else {
+        link = <span><b>Link do artykulu: </b>BRAK</span>
+    }
+    return (
+      <div>
+        {link}
+        <input type="text" name="link" value={this.props.link} onChange={this.props.handleLinkChange} />
+      </div>
+    )
+
+  }
+})
+
 var NewsItem = React.createClass({
 
   getInitialState: function() {
@@ -37,7 +55,8 @@ var NewsItem = React.createClass({
       editorState: editorState,
       savedEditorState: editorState,
       isEdited: false,
-      isOpen: false
+      isOpen: false,
+      updateLink: this.props.link
     }
   },
 
@@ -65,7 +84,8 @@ var NewsItem = React.createClass({
   cancel: function () {
     this.setState(update(this.state, {
       isEdited: {$set: false},
-      editorState: {$set: this.state.savedEditorState}
+      editorState: {$set: this.state.savedEditorState},
+      updateLink: {$set: this.props.link}
     }))
   },
 
@@ -74,13 +94,21 @@ var NewsItem = React.createClass({
       isEdited: {$set: false},
       savedEditorState: {$set: this.state.editorState}
     }))
-    this.props.handleUpdatesChange(this.props.index, 
-        {raw: Draft.convertToRaw(this.state.editorState.getCurrentContent()) })
+    this.props.handleUpdatesChange(this.props.index, {
+        raw: Draft.convertToRaw(this.state.editorState.getCurrentContent()),
+        link: this.state.updateLink
+    })
   },
 
   toggleOpen: function () {
     this.setState(update(this.state, {
       isOpen: {$set: !this.state.isOpen},
+    }))
+  },
+
+  handleUpdateLinkChange: function (event) {
+    this.setState(update(this.state, {
+      updateLink: {$set: event.target.value}
     }))
   },
 
@@ -112,6 +140,7 @@ var NewsItem = React.createClass({
         editorStyle = { textOverflow: 'ellipsis', height: CLOSED_NEWS_HEIGHT, overflow: 'hidden'}
       }
     }
+    var showUpdateLink
     if (this.props.is_admin) {
         var btnManageStyle = {'marginTop': 10}
         if (!this.state.isEdited) { 
@@ -138,18 +167,22 @@ var NewsItem = React.createClass({
                 Anuluj
               </button>
              )
+             showUpdateLink=<UpdateLink link={this.state.updateLink} handleLinkChange={this.handleUpdateLinkChange} /> 
 
         }
 
     }
 
     info.push(<span>{ moment(this.props.created_at).calendar() }</span>)
+    
+
     return (
       <div className="activityUpdate">
         <hr />
         <p className="small italic">
             {info}
         </p>
+        {showUpdateLink}
         <Editor editorState={this.state.editorState} onChange={this.onChange} readOnly={!this.state.isEdited} style={editorStyle} />
         <p className="clearfix">
             {buttons}
@@ -185,7 +218,8 @@ var News = React.createClass({
       activityState: activityState,
       newUpdateState: newUpdateState,
       updates: state.updates,
-      updatesPage: state.updatesPage
+      updatesPage: state.updatesPage,
+      updateLink: ""
     })
   },
 
@@ -259,6 +293,7 @@ var News = React.createClass({
 
     var update ={
       raw: rawState,
+      link: this.state.updateLink,
       created_at: new Date(),
       created_by: this.user().id,
       created_by_name: this.user().first_name+" "+this.user().last_name
@@ -278,6 +313,7 @@ var News = React.createClass({
     console.log('index ', index)
     var updates = this.state.updates || []
     updates[index].raw = update.raw || []
+    updates[index].link = update.link || []
 
     delete this.state.updates
     if (update.toBeRemoved) {
@@ -301,6 +337,12 @@ var News = React.createClass({
           isNews: true
         })
     }
+  },
+
+  handleUpdateLinkChange: function (event) {
+    this.setState(update(this.state, {
+      updateLink: {$set: event.target.value}
+    }))
   },
 
   //Paginacja
@@ -380,6 +422,7 @@ var News = React.createClass({
             Treść aktualizacji oraz Twoje imię i nazwisko będą udostępnione publicznie.
             Dodając aktualizację, wyrażasz na to zgodę.
           </p>
+          <UpdateLink link={this.state.updateLink} handleLinkChange={this.handleUpdateLinkChange} /> 
           <Editor editorState={this.state.newUpdateState} onChange={this.onChange} style={{'minHeight': 'initial'}}>
             <p className="clearfix">
               <button className="button bg--warning no-border float--right" onClick={this.handleNewUpdate} style={{'marginTop': 10}}>

@@ -289,11 +289,31 @@ module.exports = {
     action: function (context, payload, done) {
       var activityId  = 'what-we-do'
       var pageNumber = 1
-      context.dispatch('LOAD_URL', '/co-robimy;page='+pageNumber)
       if (payload.params.pagenumber) {
         pageNumber = payload.params.pagenumber
       }
-      context.executeAction(actions.showActivity, { id: activityId, page: pageNumber }, function(activity) {
+      context.dispatch('LOAD_URL', '/co-robimy;page='+pageNumber)
+      context.executeAction(actions.showActivity, { id: activityId, page: pageNumber}, function(activity) {
+        if(activity) {
+          context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
+        } 
+        done()
+      })
+    }
+  },
+
+  what_we_do_with_link: {
+    path: '/co-robimy;link=:plink',
+    method: 'get',
+    handler: require('./components/WhatWeDo.jsx'),
+    action: function (context, payload, done) {
+      var activityId  = 'what-we-do'
+      var link = ""
+      if (payload.params.plink) {
+        link = payload.params.plink
+      }
+      context.dispatch('LOAD_URL', '/co-robimy;link='+link)
+      context.executeAction(actions.showActivity, { id: activityId, link: link }, function(activity) {
         if(activity) {
           context.dispatch('UPDATE_PAGE_TITLE', { title: activity.name })
         } 
