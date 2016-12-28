@@ -238,13 +238,16 @@ r.connect(config.rethinkdb, function(err, conn) {
         var update = activity.updates.pop()
         var html
         var subject = activity.name
+        var mailCategory
 
         if (activity.id == 'news') {
           subject = "New information on the Mountain of Good (Góra Dobra) portal"
           html =  '<p>Nowe informacje na Górze Dobra. Zobacz <a href ="'+config.base_url+'/aktualnosci">Aktualności</a></p>'+
                   '<p>EN: There are new infomation at the Mountain of Good portal. See <a href ="'+config.base_url+'/aktualnosci">News</a></p>'
+          mailCategory = 'newsletter'
         } else {
           html = '<p>PL: Nastąpiła najnowsza aktualizacja zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>, w którym uczestniczysz:</p><p>EN: There was an update to the task <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> you are participating in:</p>'
+          mailCategory = 'activity_update'
         }
 
 
@@ -304,7 +307,6 @@ r.connect(config.rethinkdb, function(err, conn) {
                   _.times(Math.ceil(size / 1000), function() {
                     // Lista 1000 osbiorców
                     var volunteers = all_volunteers.splice(0, 1000)
-
                     var request = new_sg.emptyRequest({
                       method: 'POST',
                       path: '/v3/mail/send',
@@ -336,7 +338,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                           email: author.email
                         },
                         categories: [
-                          'update'
+                          mailCategory.toString()
                         ],
                         template_id: sendgrid_template
                       },
