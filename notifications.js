@@ -468,12 +468,17 @@ r.connect(config.rethinkdb, function(err, conn) {
       })
     })
 
-  // Wzmianki w komentarzach
+  // Wzmianki w komentarzach na profilu wolontariuszy
   r.table('Comments').filter(r.row.hasFields({
     raw: {
       entityMap: {'0': true} // Tylko te które mają jakąś wzmiankę
-    }
+    },
+    volunteerId: true,
+    adminId: true
   })).changes()
+    .filter(
+      r.row('new_val').hasFields('adminId') // jeśli komentarz usunięty, to pomiń
+    )
     .run(conn, function(err, cursor){
       cursor.each(function(err, change){ // Nowy komentarz
 
@@ -496,6 +501,130 @@ r.connect(config.rethinkdb, function(err, conn) {
                 table.getAll.apply(table, receivers)
                   .filter(r.row('is_admin').eq(true)) // Powiadomienia dostają tylko koordynatorzy!
                   .run(conn, notifyMentioned(title, body, author.email)) // Pobierz wolontariusza
+              })
+          })
+      })
+    })
+
+  // Powiadomienia w komentarzach do aktywności
+  r.table('Comments').filter(r.row.hasFields({
+    raw: {
+      entityMap: {'0': true} // Tylko te które mają jakąś wzmiankę
+    },
+    activityId: true,
+    adminId: true
+  })).changes()
+    .filter(
+      r.row('new_val').hasFields('adminId') // jeśli komentarz usunięty, to pomiń
+    )
+    .run(conn, function(err, cursor){
+      cursor.each(function(err, change){ // Nowy komentarz
+
+        var comment = change.new_val
+        var tableActivities = r.table('Activities')
+        var tableVolunteers = r.table('Volunteers')
+
+        tableVolunteers.get(comment.adminId)
+          .run(conn, function(err, author) { // Pobierz autora komentarza
+            tableActivities.get(comment.activityId)
+              .run(conn, function(err, activity) { // Pobierz dane aktywności
+
+                // Identyfikatory odbiorców powiadomienia
+                var entities = comment.raw.entityMap || []
+                var receivers = _.compact(_.map(entities, function(map) {
+                  return map.data.mention && map.data.mention.id
+                }))
+                var title = 'You were mentioned in a comment on the Mountain of Good (Góra Dobra) portal'
+                var commentBody = backdraft(comment.raw, {
+                    'BOLD': ['<strong>', '</strong>'],
+                    'ITALIC': ['<i>', '</i>'],
+                    'UNDERLINE': ['<u>', '</u>'],
+                    'CODE': ['<span style="font-family: monospace">', '</span>']
+                  }).join('<br/>')
+                var body = '<p>PL: '+ author.first_name +' '+ author.last_name +' wspomina Cię w komentarzu do aktywności.</p><p>Kliknij w poniższy link, aby przejść do aktywności: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                          '<p>EN: '+ author.first_name +' '+ author.last_name +' mentioned you in a comment for an Activity</p><p>Click the link to go to Activity: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                          '<p>'+commentBody+'</p>'
+
+                tableVolunteers.getAll.apply(tableVolunteers, receivers)
+                  .run(conn, notifyMentioned(title, body, author.email)) // Pobierz wolontariusza
+              })
+          })
+      })
+    })
+
+  // Informacja o nowym komentarzu dla autora zadania
+  r.table('Comments').filter(r.row.hasFields({
+    activityId: true
+  })).changes()
+    .filter(
+      r.row('new_val').count().gt(r.row('old_val').count()).default(true)
+    )
+    .filter(
+      r.row('new_val').count().gt(0)
+    )
+    .run(conn, function(err, cursor){
+      cursor.each(function(err, change){ // Nowy komentarz
+
+        var comment = change.new_val
+        var tableActivities = r.table('Activities')
+        var tableVolunteers = r.table('Volunteers')
+
+        tableVolunteers.get(comment.adminId)
+          .run(conn, function(err, author) { // Pobierz autora komentarza
+            tableActivities.get(comment.activityId)
+              .run(conn, function(err, activity) { // Pobierz dane aktywności
+                tableVolunteers.get(activity.created_by)
+                  .run(conn, function(err, activityAuthor) { // Pobierz dane twórcy aktywności
+
+                    var title = 'Nowy komentarz do aktywności stworzonej przez Ciebie'
+                    var commentBody = backdraft(comment.raw, {
+                        'BOLD': ['<strong>', '</strong>'],
+                        'ITALIC': ['<i>', '</i>'],
+                        'UNDERLINE': ['<u>', '</u>'],
+                        'CODE': ['<span style="font-family: monospace">', '</span>']
+                      }).join('<br/>')
+                    var body = '<p>PL: '+ author.first_name +' '+ author.last_name +' dodał komentarz do aktywności.</p><p>Kliknij w poniższy link, aby przejść do aktywności: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                              '<p>EN: '+ author.first_name +' '+ author.last_name +' added a comment for an Activity</p><p>Click the link to go to Activity: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                              '<p>'+commentBody+'</p>'
+                    
+                    var request = new_sg.emptyRequest({
+                        method: 'POST',
+                        path: '/v3/mail/send',
+                        body: {
+                          personalizations: [
+                            {
+                                to: [
+                                  {
+                                    email: activityAuthor.email
+                                  }
+                                ],
+                                subject: title,
+                                substitutions: {
+                                  ":name": activityAuthor.first_name.toString(),
+                                }
+                            }
+                          ],
+                          from: {
+                            email: 'goradobra@krakow2016.com',
+                            name: 'Góra Dobra'
+                          },
+                          content: [
+                            {
+                              type: 'text/html',
+                              value: body,
+                            },
+                          ],
+                          categories: [
+                            'new_comment'
+                          ],
+                          template_id: sendgrid_template
+                        },
+                      })
+
+                      new_sg.API(request, function(error, response) {
+                        console.log('sendgrid:', JSON.stringify(error), response)
+                      })
+                  })
               })
           })
       })
