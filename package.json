@@ -60,7 +60,7 @@
     "request": "*",
     "rethinkdb": "2.3.2",
     "rethinkdbdash": "^2.3.17",
-    "sendgrid": "4.7.1",
+    "sendgrid": "^4.7.1",
     "serialize-javascript": "^1.0.0",
     "session-rethinkdb": "^2.0.0",
     "sharp": "^0.15.0",
