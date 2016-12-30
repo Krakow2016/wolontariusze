@@ -9,7 +9,7 @@ var config = require('./config.json')[env]
 // Połączenie z sendgrid daje nam możliwość wysyłania emaili
 var sendgrid = require('sendgrid')(process.env.SENDGRID_APIKEY)
 var sendgrid_template = process.env.SENDGRID_TEMPLATE
-var smtpapi = require('smtpapi')
+var new_sg = sendgrid
 
 // Lista zaplanowanych powiadomień o zakończeniu zgłoszeń do zadania
 var jobs = {}
@@ -21,32 +21,45 @@ var notifyMentioned = function(title, body, author) {
       // Anuluj jeżeli nie ma do kogo wysłać
       if(!all.length) { return }
 
-      // Build the smtpapi header
-      var header = new smtpapi()
-      header.addCategory('mention')
-      header.setTos(all.map(function(x){ return x.email }))
-      header.addSubstitution(':name', all.map(function(x){ return x.first_name }))
-      header.setFilters({
-        'templates': {
-          'settings': {
-            'enable': 1,
-            'template_id': sendgrid_template
-          }
-        }
+      var request = new_sg.emptyRequest({
+        method: 'POST',
+        path: '/v3/mail/send',
+        body: {
+          personalizations: all.map(function (volunteer) {
+              return {
+                  to: [
+                    {
+                      email: volunteer.email
+                    }
+                  ],
+                  subject: title,
+                  substitutions: {
+                    ":name": volunteer.first_name.toString(),
+                  }
+              }
+          }),
+          from: {
+            email: 'goradobra@krakow2016.com',
+            name: 'Góra Dobra'
+          },
+          content: [
+            {
+              type: 'text/html',
+              value: body,
+            },
+          ],
+          reply_to: {
+            email: author
+          },
+          categories: [
+            'mention'
+          ],
+          template_id: sendgrid_template
+        },
       })
 
-      var email = new sendgrid.Email({
-        to:       'goradobra@krakow2016.com', // Zostanie nadpisane przez nagłówek x-smtpapi
-        from:     'goradobra@krakow2016.com',
-        fromname: 'Góra Dobra',
-        replyto:  author,
-        subject:  title,
-        html:     body,
-        headers:  { 'x-smtpapi': header.jsonString() }
-      })
-
-      sendgrid.send(email, function(err, json) {
-        console.log('sendgrid:', err, json)
+      new_sg.API(request, function(error, response) {
+        console.log('sendgrid:', error, response)
       })
     })
   }
@@ -106,33 +119,51 @@ r.connect(config.rethinkdb, function(err, conn) {
                             was_joined = author.first_name +' '+ author.last_name +' - signed you up for the task <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>. Please confirm your participation by replying to this email. Thank you.'
                           }
 
-                          var email = new sendgrid.Email({
-                            to:       volunteer.email,
-                            cc:       owner.email,
-                            from:     'goradobra@krakow2016.com',
-                            fromname: 'Góra Dobra',
-                            replyto:  joint.user_id === joint.created_by ? owner.email : author.email,
-                            subject:  subject,
-                            html:     html.join('<hr/>')
+                          var request = new_sg.emptyRequest({
+                            method: 'POST',
+                            path: '/v3/mail/send',
+                            body: {
+                              personalizations: [
+                                {
+                                  to: [
+                                    {
+                                      email: volunteer.email
+                                    }
+                                  ],
+                                  cc: [
+                                    {
+                                      email: owner.email
+                                    }
+                                  ],
+                                  subject: subject,
+                                  substitutions: {
+                                    ":name": volunteer.first_name.toString(),
+                                    ":what_happend": joint.user_id === joint.created_by ? has_joined.toString() : was_joined.toString()
+                                  }
+                                },
+                              ],
+                              from: {
+                                email: 'goradobra@krakow2016.com',
+                                name: 'Góra Dobra'
+                              },
+                              content: [
+                                {
+                                  type: 'text/html',
+                                  value: html.join('<hr/>'),
+                                },
+                              ],
+                              reply_to: {
+                                email: joint.user_id === joint.created_by ? owner.email : author.email
+                              },
+                              categories: [
+                                'join'
+                              ],
+                              template_id: sendgrid_template
+                            } 
                           })
 
-                          email.addCategory('join')
-                          email.addSubstitution(':name', volunteer.first_name)
-                          email.addSubstitution(':what_happend', joint.user_id === joint.created_by ? ':has_joined' : ':was_joined')
-                          email.setFilters({
-                            'templates': {
-                              'settings': {
-                                'enable': 1,
-                                'template_id': sendgrid_template
-                              }
-                            }
-                          })
-
-                          email.addSection(':has_joined', has_joined)
-                          email.addSection(':was_joined', was_joined)
-                          
-                          sendgrid.send(email, function(err, json) {
-                            console.log('sendgrid:', err, json)
+                          new_sg.API(request, function(error, response) {
+                            console.log('sendgrid:', JSON.stringify(error), response)
                           })
                         })
                       }
@@ -144,28 +175,44 @@ r.connect(config.rethinkdb, function(err, conn) {
                         .count()
                         .run(conn, function(err, count) {
                           var limit = parseInt(activity.limit, 10)
-                          if(limit && count === limit) { // Ostatnie zgłoszenie - wyśwli wiadomość autorowi zadania
-                            var email = new sendgrid.Email({
-                              to:       author.email,
-                              from:     'goradobra@krakow2016.com',
-                              fromname: 'Góra Dobra',
-                              subject:  'Komplet zgłoszeń w zadaniu: '+ activity.name,
-                              html:     '<p>Komplet zgłoszeń!</p><p>Gratulacje - do Twojego zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">"'+ activity.name +'"</a> właśnie zgłosiła się ostatnia osoba. Teraz możesz być w kontakcie z wszystkimi zgłoszonymi uczestnikami, dodając aktualizacje na stronie zadania. Możesz również zrobić to, wysyłając bezpośrednio do każdego wiadomość drogą mailową.</p>'
+                          if(limit && count === limit) { // Ostatnie zgłoszenie - wyślij wiadomość autorowi zadania
+
+                            var request = new_sg.emptyRequest({
+                              method: 'POST',
+                              path: '/v3/mail/send',
+                              body: {
+                                personalizations: [
+                                  {
+                                    to: [
+                                      {
+                                        email: owner.email
+                                      }
+                                    ],
+                                    subject: 'Komplet zgłoszeń w zadaniu: '+ activity.name,
+                                    substitutions: {
+                                      ":name": owner.first_name.toString(),
+                                    }
+                                  },
+                                ],
+                                from: {
+                                  email: 'goradobra@krakow2016.com',
+                                  name: 'Góra Dobra'
+                                },
+                                content: [
+                                  {
+                                    type: 'text/html',
+                                    value: '<p>Komplet zgłoszeń!</p><p>Gratulacje - do Twojego zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">"'+ activity.name +'"</a> właśnie zgłosiła się ostatnia osoba. Teraz możesz być w kontakcie z wszystkimi zgłoszonymi uczestnikami, dodając aktualizacje na stronie zadania. Możesz również zrobić to, wysyłając bezpośrednio do każdego wiadomość drogą mailową.</p>'
+                                  },
+                                ],
+                                categories: [
+                                  'full'
+                                ],
+                                template_id: sendgrid_template
+                              } 
                             })
 
-                            email.addCategory('full')
-                            email.addSubstitution(':name', author.first_name)
-                            email.setFilters({
-                              'templates': {
-                                'settings': {
-                                  'enable': 1,
-                                  'template_id': sendgrid_template
-                                }
-                              }
-                            })
-
-                            sendgrid.send(email, function(err, json) {
-                              console.log('sendgrid:', err, json)
+                            new_sg.API(request, function(error, response) {
+                              console.log('sendgrid:', JSON.stringify(error), response)
                             })
                           }
                         })
@@ -181,6 +228,9 @@ r.connect(config.rethinkdb, function(err, conn) {
     .filter(
       r.row('new_val').hasFields('updates').and(r.row('new_val')('updates').count().gt(r.row('old_val')('updates').count()).default(true))
     )
+    .filter(
+      r.row('new_val')('updates').count().gt(0)
+    )
     .run(conn, function(err, changes) {
       changes.each(function(err, change){ // Nowa aktualizacja do aktywności
 
@@ -188,13 +238,16 @@ r.connect(config.rethinkdb, function(err, conn) {
         var update = activity.updates.pop()
         var html
         var subject = activity.name
+        var mailCategory
 
         if (activity.id == 'news') {
-          subject = "Góra Dobra - News"
+          subject = "New information on the Mountain of Good (Góra Dobra) portal"
           html =  '<p>Nowe informacje na Górze Dobra. Zobacz <a href ="'+config.base_url+'/aktualnosci">Aktualności</a></p>'+
                   '<p>EN: There are new infomation at the Mountain of Good portal. See <a href ="'+config.base_url+'/aktualnosci">News</a></p>'
+          mailCategory = 'newsletter'
         } else {
           html = '<p>PL: Nastąpiła najnowsza aktualizacja zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>, w którym uczestniczysz:</p><p>EN: There was an update to the task <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> you are participating in:</p>'
+          mailCategory = 'activity_update'
         }
 
 
@@ -224,7 +277,7 @@ r.connect(config.rethinkdb, function(err, conn) {
             var title = ''
             var mention_html = ''
             if (activity.id == 'news') {
-              title= 'Góra Dobra - News (You were mentioned)'
+              title= 'New information on the Mountain of Good (Góra Dobra) portal (You were mentioned)'
               mention_html = '<p>PL: '+ author.first_name +' '+ author.last_name +' wspomina Cię w aktualności na Górze Dobra. Zobacz <a href ="'+config.base_url+'/aktualnosci">Aktualności</a></p><p>'+body+'</p>'
                              '<p>EN: You were mentioned by'+ author.first_name +' '+ author.last_name +' in News at the Mountain of Good portal. See <a href ="'+config.base_url+'/aktualnosci">News</a></p><p>'+body+'</p>'
             } else {
@@ -254,34 +307,45 @@ r.connect(config.rethinkdb, function(err, conn) {
                   _.times(Math.ceil(size / 1000), function() {
                     // Lista 1000 osbiorców
                     var volunteers = all_volunteers.splice(0, 1000)
-
-                    // TODO: dodaj autora aktualizacji
-                    // Build the smtpapi header
-                    var header = new smtpapi()
-                    header.addCategory('update')
-                    header.setTos(volunteers.map(function(x){ return x.right.email }))
-                    header.addSubstitution(':name', volunteers.map(function(x){ return x.right.first_name }))
-                    header.setFilters({
-                      'templates': {
-                        'settings': {
-                          'enable': 1,
-                          'template_id': sendgrid_template
-                        }
-                      }
+                    var request = new_sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: {
+                        personalizations: volunteers.map(function (volunteer) {
+                          return {
+                              to: [
+                                {
+                                  email: volunteer.right.email
+                                }
+                              ],
+                              subject: subject,
+                              substitutions: {
+                                ":name": volunteer.right.first_name.toString(),
+                              }
+                          }
+                        }),
+                        from: {
+                          email: 'goradobra@krakow2016.com',
+                          name: 'Góra Dobra'
+                        },
+                        content: [
+                          {
+                            type: 'text/html',
+                            value: html,
+                          },
+                        ],
+                        reply_to: {
+                          email: author.email
+                        },
+                        categories: [
+                          mailCategory.toString()
+                        ],
+                        template_id: sendgrid_template
+                      },
                     })
 
-                    var email = new sendgrid.Email({
-                      to:       'goradobra@krakow2016.com', // Zostanie nadpisane przez nagłówek x-smtpapi
-                      from:     'goradobra@krakow2016.com',
-                      fromname: 'Góra Dobra',
-                      replyto:  author.email,
-                      subject:  subject,
-                      html:     html,
-                      headers:  { 'x-smtpapi': header.jsonString() }
-                    })
-
-                    sendgrid.send(email, function(err, json) {
-                      console.log('sendgrid:', err, json)
+                    new_sg.API(request, function(error, response) {
+                      console.log('sendgrid:', JSON.stringify(error), response)
                     })
                   })
                 })
@@ -308,28 +372,44 @@ r.connect(config.rethinkdb, function(err, conn) {
           html = '<p>We would like to invite you to the “Mountain of Good” - a portal for volunteers. The portal will be the main means of communication during the World Youth Days in Krakow and a tool for managing projects and events.  This is a place for building a community of young and engaged people, for sharing what we do, for providing you important news regarding World Youth Days, and for sharing information about tasks waiting for volunteers.</p><p> Thanks to the “Mountain of Good” you will be able to share the results of your volunteer work. You will be able to see and share how much heart and energy you and the other volunteers are giving for the World Youth Days Krakow 2016.</p><p> To activate your account please click on the following link:</p> <p><a href="'+ url +'">'+ url +'</a></p> <p>Important! The link you have just received is valid only for 72 hours. In case of any problems or questions please contact us using email - goradobra@krakow2016.com.</p><p>Ps. Want to get to know other WYD volunteers? Sign up now, and join this task (by clicking blue "I volunteer" button): <a href="https://wolontariusze.krakow2016.com/zadania/a2b519c6-0f9f-4b05-a0e5-3a81cf003f13">https://wolontariusze.krakow2016.com/zadania/a2b519c6-0f9f-4b05-a0e5-3a81cf003f13</a></p>'
         }
 
-        var email = new sendgrid.Email({
-          to:       row.email,
-          from:     'goradobra@krakow2016.com',
-          fromname: 'Góra Dobra',
-          subject:  subject,
-          html:     html
+        var request = new_sg.emptyRequest({
+          method: 'POST',
+          path: '/v3/mail/send',
+          body: {
+            personalizations: [
+              {
+                to: [
+                  {
+                    email: row.email
+                  }
+                ],
+                subject: subject,
+                substitutions: {
+                  ":name": row.first_name.toString(),
+                }
+              },
+            ],
+            from: {
+              email: 'goradobra@krakow2016.com',
+              name: 'Góra Dobra'
+            },
+            content: [
+              {
+                type: 'text/html',
+                value: html,
+              }
+            ],
+            categories: [
+              'invitation'
+            ],
+            template_id: sendgrid_template
+          } 
         })
 
-        email.addCategory('invitation')
-        email.addSubstitution(':name', row.first_name)
-        email.setFilters({
-          'templates': {
-            'settings': {
-              'enable': 1,
-              'template_id': sendgrid_template
-            }
-          }
+        new_sg.API(request, function(error, response) {
+          console.log('sendgrid:', error, response)
         })
 
-        sendgrid.send(email, function(err, json) {
-          console.log('sendgrid:', err, json)
-        })
       })
     })
 
@@ -344,39 +424,63 @@ r.connect(config.rethinkdb, function(err, conn) {
 
             var html = '<p>'+ admin.first_name +' '+ admin.last_name +' właśnie nadał/a Ci specjalne uprawnienia koordynatora, dzięki którym masz obecnie dostęp do bazy danych wszystkich wolontariuszy w systemie m.in. danych kontaktowych, umiejętności, doświadczenie itp.</p><p> Równocześnie informujemy, że otrzymując dostęp jako koordynator, jesteś zobowiązany/a do zachowania w tajemnicy i nie ujawniania osobom trzecim otrzymanych tu informacji i danych o charakterze poufnym, w tym danych osobowych oraz sposobów ich zabezpieczenia, do których będziesz mieć dostęp w związku z wykonywaniem zadań koordynatora wolontariuszy ŚDM Kraków 2016 zarówno w trakcie ich wykonywania, jak i po ich ustaniu. *<br /> Administratorem powyższych danych jest Archidiecezja Krakowska.</p> <p>* Zgodnie z przepisami Rozdziału 8. Ustawy o ochronie danych osobowych (Dz. U. z 2002 r. Nr 101, poz. 926 ze zm.) w wypadku naruszenia powyższych przepisów ustawy, ponoszona jest odpowiedzialność karna.</p>'
 
-            var email = new sendgrid.Email({
-              to:       row.email,
-              cc:       'goradobra@krakow2016.com',
-              from:     'goradobra@krakow2016.com',
-              fromname: 'Góra Dobra',
-              subject:  'Witaj w gronie koordynatorów wolontariuszy na Górze Dobra!',
-              html:     html
+            var request = new_sg.emptyRequest({
+              method: 'POST',
+              path: '/v3/mail/send',
+              body: {
+                personalizations: [
+                  {
+                    to: [
+                      {
+                        email: row.email
+                      }
+                    ],
+                    cc: [
+                      {
+                        email: 'goradobra@krakow2016.com'
+                      }
+                    ],
+                    subject: 'Witaj w gronie koordynatorów wolontariuszy na Górze Dobra!',
+                    substitutions: {
+                      ":name": row.first_name.toString(),
+                    }
+                  },
+                ],
+                from: {
+                  email: 'goradobra@krakow2016.com',
+                  name: 'Góra Dobra'
+                },
+                content: [
+                  {
+                    type: 'text/html',
+                    value: html
+                  },
+                ],
+                categories: [
+                  'admin'
+                ],
+                template_id: sendgrid_template
+              } 
             })
 
-            email.addCategory('admin')
-            email.addSubstitution(':name', row.first_name)
-            email.setFilters({
-              'templates': {
-                'settings': {
-                  'enable': 1,
-                  'template_id': sendgrid_template
-                }
-              }
-            })
-
-            sendgrid.send(email, function(err, json) {
-              console.log('sendgrid:', err, json)
+            new_sg.API(request, function(error, response) {
+              console.log('sendgrid:', error, response)
             })
           })
       })
     })
 
-  // Wzmianki w komentarzach
+  // Wzmianki w komentarzach na profilu wolontariuszy
   r.table('Comments').filter(r.row.hasFields({
     raw: {
       entityMap: {'0': true} // Tylko te które mają jakąś wzmiankę
-    }
+    },
+    volunteerId: true,
+    adminId: true
   })).changes()
+    .filter(
+      r.row('new_val').hasFields('adminId') // jeśli komentarz usunięty, to pomiń
+    )
     .run(conn, function(err, cursor){
       cursor.each(function(err, change){ // Nowy komentarz
 
@@ -399,6 +503,130 @@ r.connect(config.rethinkdb, function(err, conn) {
                 table.getAll.apply(table, receivers)
                   .filter(r.row('is_admin').eq(true)) // Powiadomienia dostają tylko koordynatorzy!
                   .run(conn, notifyMentioned(title, body, author.email)) // Pobierz wolontariusza
+              })
+          })
+      })
+    })
+
+  // Powiadomienia w komentarzach do aktywności
+  r.table('Comments').filter(r.row.hasFields({
+    raw: {
+      entityMap: {'0': true} // Tylko te które mają jakąś wzmiankę
+    },
+    activityId: true,
+    adminId: true
+  })).changes()
+    .filter(
+      r.row('new_val').hasFields('adminId') // jeśli komentarz usunięty, to pomiń
+    )
+    .run(conn, function(err, cursor){
+      cursor.each(function(err, change){ // Nowy komentarz
+
+        var comment = change.new_val
+        var tableActivities = r.table('Activities')
+        var tableVolunteers = r.table('Volunteers')
+
+        tableVolunteers.get(comment.adminId)
+          .run(conn, function(err, author) { // Pobierz autora komentarza
+            tableActivities.get(comment.activityId)
+              .run(conn, function(err, activity) { // Pobierz dane aktywności
+
+                // Identyfikatory odbiorców powiadomienia
+                var entities = comment.raw.entityMap || []
+                var receivers = _.compact(_.map(entities, function(map) {
+                  return map.data.mention && map.data.mention.id
+                }))
+                var title = 'You were mentioned in a comment on the Mountain of Good (Góra Dobra) portal'
+                var commentBody = backdraft(comment.raw, {
+                    'BOLD': ['<strong>', '</strong>'],
+                    'ITALIC': ['<i>', '</i>'],
+                    'UNDERLINE': ['<u>', '</u>'],
+                    'CODE': ['<span style="font-family: monospace">', '</span>']
+                  }).join('<br/>')
+                var body = '<p>PL: '+ author.first_name +' '+ author.last_name +' wspomina Cię w komentarzu do aktywności.</p><p>Kliknij w poniższy link, aby przejść do aktywności: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                          '<p>EN: '+ author.first_name +' '+ author.last_name +' mentioned you in a comment for an Activity</p><p>Click the link to go to Activity: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                          '<p>'+commentBody+'</p>'
+
+                tableVolunteers.getAll.apply(tableVolunteers, receivers)
+                  .run(conn, notifyMentioned(title, body, author.email)) // Pobierz wolontariusza
+              })
+          })
+      })
+    })
+
+  // Informacja o nowym komentarzu dla autora zadania
+  r.table('Comments').filter(r.row.hasFields({
+    activityId: true
+  })).changes()
+    .filter(
+      r.row('new_val').count().gt(r.row('old_val').count()).default(true)
+    )
+    .filter(
+      r.row('new_val').count().gt(0)
+    )
+    .run(conn, function(err, cursor){
+      cursor.each(function(err, change){ // Nowy komentarz
+
+        var comment = change.new_val
+        var tableActivities = r.table('Activities')
+        var tableVolunteers = r.table('Volunteers')
+
+        tableVolunteers.get(comment.adminId)
+          .run(conn, function(err, author) { // Pobierz autora komentarza
+            tableActivities.get(comment.activityId)
+              .run(conn, function(err, activity) { // Pobierz dane aktywności
+                tableVolunteers.get(activity.created_by)
+                  .run(conn, function(err, activityAuthor) { // Pobierz dane twórcy aktywności
+
+                    var title = 'Nowy komentarz do aktywności stworzonej przez Ciebie'
+                    var commentBody = backdraft(comment.raw, {
+                        'BOLD': ['<strong>', '</strong>'],
+                        'ITALIC': ['<i>', '</i>'],
+                        'UNDERLINE': ['<u>', '</u>'],
+                        'CODE': ['<span style="font-family: monospace">', '</span>']
+                      }).join('<br/>')
+                    var body = '<p>PL: '+ author.first_name +' '+ author.last_name +' dodał komentarz do aktywności.</p><p>Kliknij w poniższy link, aby przejść do aktywności: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                              '<p>EN: '+ author.first_name +' '+ author.last_name +' added a comment for an Activity</p><p>Click the link to go to Activity: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                              '<p>'+commentBody+'</p>'
+                    
+                    var request = new_sg.emptyRequest({
+                        method: 'POST',
+                        path: '/v3/mail/send',
+                        body: {
+                          personalizations: [
+                            {
+                                to: [
+                                  {
+                                    email: activityAuthor.email
+                                  }
+                                ],
+                                subject: title,
+                                substitutions: {
+                                  ":name": activityAuthor.first_name.toString(),
+                                }
+                            }
+                          ],
+                          from: {
+                            email: 'goradobra@krakow2016.com',
+                            name: 'Góra Dobra'
+                          },
+                          content: [
+                            {
+                              type: 'text/html',
+                              value: body,
+                            },
+                          ],
+                          categories: [
+                            'new_comment'
+                          ],
+                          template_id: sendgrid_template
+                        },
+                      })
+
+                      new_sg.API(request, function(error, response) {
+                        console.log('sendgrid:', JSON.stringify(error), response)
+                      })
+                  })
               })
           })
       })
@@ -437,32 +665,47 @@ r.connect(config.rethinkdb, function(err, conn) {
 
                   var html = '<p>'+ author.first_name +' '+ author.last_name +' wspomnia Cię w zadaniu.</p><p>'+ body +'</p><p>Kliknij w poniższy link, aby zobaczyć szczegóły: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>.</p>'
 
-                  // Build the smtpapi header
-                  var header = new smtpapi()
-                  header.addCategory('mention')
-                  header.setTos(all.map(function(x){ return x.email }))
-                  header.addSubstitution(':name', all.map(function(x){ return x.first_name }))
-                  header.setFilters({
-                    'templates': {
-                      'settings': {
-                        'enable': 1,
-                        'template_id': sendgrid_template
-                      }
-                    }
+                  var request = new_sg.emptyRequest({
+                    method: 'POST',
+                    path: '/v3/mail/send',
+                    body: {
+                      personalizations: all.map(function (volunteer) {
+                          return {
+                              to: [
+                                {
+                                  email: volunteer.email
+                                }
+                              ],
+                              subject: author.first_name +' '+ author.last_name +' wspomina Cię w zadaniu \"'+ activity.name +'\"',
+                              substitutions: {
+                                ":name": volunteer.first_name.toString(),
+                              }
+                          }
+                      }),
+                      from: {
+                        email: 'goradobra@krakow2016.com',
+                        name: 'Góra Dobra'
+                      },
+                      content: [
+                        {
+                          type: 'text/html',
+                          value: body,
+                        },
+                      ],
+                      reply_to: {
+                        email: author
+                      },
+                      categories: [
+                        'mention'
+                      ],
+                      template_id: sendgrid_template
+                    },
                   })
 
-                  var email = new sendgrid.Email({
-                    to:       'goradobra@krakow2016.com', // Zostanie nadpisane przez nagłówek x-smtpapi
-                    from:     'goradobra@krakow2016.com',
-                    fromname: 'Góra Dobra',
-                    subject:  author.first_name +' '+ author.last_name +' wspomina Cię w zadaniu \"'+ activity.name +'\"',
-                    html:     html,
-                    headers:  { 'x-smtpapi': header.jsonString() }
+                  new_sg.API(request, function(error, response) {
+                    console.log('sendgrid:', error, response)
                   })
 
-                  sendgrid.send(email, function(err, json) {
-                    console.log('sendgrid:', err, json)
-                  })
                 })
               })
           })
@@ -473,27 +716,43 @@ r.connect(config.rethinkdb, function(err, conn) {
     r.table('Volunteers').get(activity.created_by)
       .run(conn, function(err, author) {
         var html = '<p>Właśnie upłynął czas zgłaszania się do Twojego zadania <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a> i nie jest ono już widoczne w banku pracy.</p><p>Nie zapomnij powiadomić zgłoszonych wolontariuszy o szczegółach ich zadań. Możesz zrobić to wysyłając wiadomość  do każdego z osobna lub do wszystkich drogą e-mailową; bądź też poprzez umieszczenie aktualizacji do zadania na Górze Dobra.</p><p>Jeśli nie masz kompletu potrzebnych Ci do zadania osób, możesz przedłużyć czas zgłaszania edytując jego datę.</p>'
-        var email = new sendgrid.Email({
-          to:       author.email,
-          from:     'goradobra@krakow2016.com',
-          fromname: 'Góra Dobra',
-          subject:  'Upłynął czas zgłoszeń do Twojego zadania!',
-          html:     html
-        })
 
-        email.addCategory('finish')
-        email.addSubstitution(':name', author.first_name)
-        email.setFilters({
-          'templates': {
-            'settings': {
-              'enable': 1,
-              'template_id': sendgrid_template
-            }
+        var request = new_sg.emptyRequest({
+          method: 'POST',
+          path: '/v3/mail/send',
+          body: {
+            personalizations: [
+              {
+                to: [
+                  {
+                    email: author.email,
+                  },
+                ],
+                subject: 'Upłynął czas zgłoszeń do Twojego zadania!',
+                substitutions: {
+                  ":name": author.first_name.toString()
+                }
+              },
+            ],
+            from: {
+              email: 'goradobra@krakow2016.com',
+              name: 'Góra Dobra'
+            },
+            content: [
+              {
+                type: 'text/html',
+                value: html,
+              },
+            ],
+            categories: [
+              'finish'
+            ],
+            template_id: sendgrid_template
           }
         })
 
-        sendgrid.send(email, function(err, json) {
-          console.log('sendgrid:', err, json)
+        new_sg.API(request, function(error, response) {
+          console.log('sendgrid:', JSON.stringify(error), response)
         })
       })
   }
