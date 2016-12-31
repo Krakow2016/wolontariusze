@@ -82,6 +82,7 @@ input.menu-search-box {
 	padding: 0 1rem 0 1rem;
 	box-sizing: border-box;
 	font-size: inherit;
+	margin: 0;
 }
 
 .login-container{
@@ -224,6 +225,7 @@ label:hover:before {
 	font-size: 14px;
 	line-height: 1.42857143;
 	color: #555;
+	max-width: 300px;
 }
 .input-group-text,
 .input-group-text input,
@@ -999,15 +1001,26 @@ nav#head-nav .head-section{
 nav#head-nav #head-search{
 	text-align: center;
 	z-index: 2;
+	position: relative;
 }
 nav#head-nav #head-search > a{
     margin-top: 6px;
     display: block;
 }
-nav#head-nav #head-search #menu-search-submit{
-	top: 1rem;
-	z-index: 12;
-	right: 2rem;
+nav#head-nav #head-search .menu-search-box-container:after{
+	content: "";
+	position: absolute;
+	right: 1rem;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	transform: translateY(-50%);
+	width: 16px;
+	height: 16px;
+	background-image: url(/img/search.svg);
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
 }
 ul#nav-list,
 ul.nav{
@@ -1087,6 +1100,10 @@ div#mobile-nav{
 	}
 	div#mobile-nav{
 		display: block;
+		position: absolute;
+		top: 5rem;
+		left: 0.5rem;
+		padding: 5px;
 	}
 }
 
@@ -1904,6 +1921,10 @@ footer{
 /*-----------------RESPONSIVE--------------------*/
 
 @media only screen and (max-width: 821px) {
+	.row{
+		margin-left: 0;
+		margin-right: 0;
+	}
 	ul#nav-list li{
 		font-size: 0.9rem;
 	}
@@ -1914,10 +1935,10 @@ footer{
 		padding: 3rem 2rem;
 	}
 	.tiles-container p{
-		font-size: 0.8rem;
+		font-size: 1.3rem;
 	}
 	.tiles-container h1{
-		font-size: 1.8rem
+		font-size: 2rem
 	}
 	#inspiration-img img{
 		width: 160%;
@@ -1930,6 +1951,10 @@ footer{
 	}
 }
 @media only screen and (max-width: 768px) {
+	#btn-home-meet h1, #btn-home-what-we-do h1{
+		padding: 30px;
+		font-size: 23pt;
+	}
 	ul#nav-list li{
 		line-height: 1.5rem;
 		font-size: 0.7rem;
@@ -1937,7 +1962,7 @@ footer{
 	}
 	nav#head-nav .head-section{
 		top: auto;
-		position: inherit;
+		position: initial;
 		-webkit-transform: none;
 		-moz-transform: none;
 		-o-transform: none;
@@ -1946,7 +1971,7 @@ footer{
 	nav#head-nav{
 		height: auto;
 		padding: 0.5rem;
-		position: inherit;
+		position: initial;
 	}
 	textarea.settings{
 		width: auto;
@@ -1996,6 +2021,13 @@ footer{
 	}
 }
 @media only screen and (max-width: 375px){
+	#btn-home-meet h1, #btn-home-what-we-do h1{
+		padding: 17px;
+		font-size: 21pt;
+	}
+	.tiles-container img{
+		width: 100%;
+	}
 	ul#nav-list li{
 		line-height: 1.1rem;
 		font-size: 0.6rem;

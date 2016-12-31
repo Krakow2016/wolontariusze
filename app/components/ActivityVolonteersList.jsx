@@ -93,6 +93,17 @@ var ActivityVolonteersList = React.createClass ({
   },
 
   render: function () {
+    var theme = {
+      container:            'react-autosuggest__container menu-search-box-container',
+      containerOpen:        'react-autosuggest__container--open',
+      input:                'react-autosuggest__input',
+      suggestionsContainer: 'react-autosuggest__suggestions-container',
+      suggestionsList:      'react-autosuggest__suggestions-list',
+      suggestion:           'react-autosuggest__suggestion',
+      suggestionFocused:    'react-autosuggest__suggestion--focused',
+      sectionContainer:     'react-autosuggest__section-container',
+      sectionTitle:         'react-autosuggest__section-title'
+    }
     return (
       <AutoSuggest
         id={this.props.id}
@@ -104,7 +115,8 @@ var ActivityVolonteersList = React.createClass ({
         suggestions={this.state.suggestions}
         renderSuggestion={this.renderSuggestion}
         getSuggestionValue={this.getSuggestionValue}
-        onSuggestionSelected={this.onSuggestionSelected} />
+        onSuggestionSelected={this.onSuggestionSelected}
+        theme={theme} />
     )
   }
 })
