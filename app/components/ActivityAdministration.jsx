@@ -515,6 +515,10 @@ var ActivityAdministration = React.createClass({
           <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
           <br/>
 
+          <input id="is_public" type="checkbox" name="is_public" checked={this.state.activity.is_public} onChange={this.handleChange} />
+          <label htmlFor="is_public">Zadanie jest publiczne (widoczne nawet dla niezalogowanych) ?</label>
+          <br/>
+
           <b>Wolontariusze, którzy biorą udział:</b>
           <br/>
           {addVolonteer}

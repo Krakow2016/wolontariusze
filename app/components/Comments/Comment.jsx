@@ -132,8 +132,8 @@ var ProfileComment = React.createClass({
       )
     } else {
       var buttons=[]
-      var isAdmin = this.props.context.getUser().is_admin
-      var isOwner = ( this.props.context.getUser().id == this.props.comment.adminId )
+      var isAdmin = this.props.context.getUser() && this.props.context.getUser().is_admin
+      var isOwner = this.props.context.getUser() && ( this.props.context.getUser().id == this.props.comment.adminId )
 
       if (isAdmin || isOwner) {
         buttons.push(<span className="RichEditor-styleButton" onClick={this.editComment} key="editComment"><FormattedMessage id="comments_edit" /></span>)

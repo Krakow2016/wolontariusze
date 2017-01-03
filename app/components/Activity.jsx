@@ -232,23 +232,28 @@ var Activity = React.createClass({
 
     var priority = (activity.is_urgent) ? (<span className="urgent">PILNE</span>) : (<span clssName="normal">NORMALNE</span>)
 
+    var is_public = (activity.is_public) ? 'Tak' : 'Nie'
+
     var volunteers = this.state.volunteers
     var has_joined = !!this.mine()
 
-    var activeVolonteersList = volunteers.map(function(volunteer) {
-      return (
-        <span className="volonteerLabel" key={volunteer.id}>
-          <NavLink href={'/wolontariusz/'+volunteer.user_id} className="tooltip--bottom" data-hint={volunteer.first_name +' '+ volunteer.last_name} >
-            <ProfilePic src={volunteer.thumb_picture_url} className='profileThumbnail' />
-          </NavLink>
-        </span>
-      )
-    })
+    var activeVolonteersList 
+    if (this.user()) {
+      activeVolonteersList = volunteers.map(function(volunteer) {
+        return (
+          <span className="volonteerLabel" key={volunteer.id}>
+            <NavLink href={'/wolontariusz/'+volunteer.user_id} className="tooltip--bottom" data-hint={volunteer.first_name +' '+ volunteer.last_name} >
+              <ProfilePic src={volunteer.thumb_picture_url} className='profileThumbnail' />
+            </NavLink>
+          </span>
+        )
+      })
+    }
 
     var button
-    if (!has_joined && (volunteers.length < activity.limit || activity.limit==0)) { //acceptButton
+    if (this.user() && !has_joined && (volunteers.length < activity.limit || activity.limit==0)) { //acceptButton
       button = (<button className="button--xlg button--full" onClick={this.onAcceptButtonClick}><FormattedMessage id="activity_volunteer" /></button>)
-    } else if (has_joined) { // canceButton
+    } else if (this.user() && has_joined) { // canceButton
       button = (<button className="button--xsm button--full bg--muted" onClick={this.onCancelButtonClick}><FormattedMessage id="activity_volunteer_cancel" /></button>)
     }
 
@@ -285,6 +290,14 @@ var Activity = React.createClass({
       )
     }
 
+    var isPublicInfo
+    if(this.state.activity.is_public === true && !user) {
+      isPublicInfo = (
+        <div className="alert alert--warning">
+          <strong><FormattedMessage id="activity_public_attention" /> </strong><FormattedMessage id="activity_public_description" /> <b>goradobra@krakow2016.com</b></div>
+      )
+    }
+
     var creator = activity.created_by || {}
 
     // TODO
@@ -293,6 +306,9 @@ var Activity = React.createClass({
     return (
         <div className="container">
           <div className="row">
+
+            {isPublicInfo}
+
             <div className="col col7">
               <div className="text--center activity-header">
                 <h1>{this.state.activity.name}</h1>
@@ -349,6 +365,11 @@ var Activity = React.createClass({
                   <tr>
                     <td scope="Archiwalne">Archiwalne</td>
                     <td>{is_archived}</td>
+                  </tr>
+
+                  <tr>
+                    <td scope="Publiczne">Publiczne</td>
+                    <td>{is_public}</td>
                   </tr>
                   <tr>
                     <td scope="Priorytet">Priorytet</td>
