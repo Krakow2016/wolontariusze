@@ -543,8 +543,8 @@ r.connect(config.rethinkdb, function(err, conn) {
                     'UNDERLINE': ['<u>', '</u>'],
                     'CODE': ['<span style="font-family: monospace">', '</span>']
                   }).join('<br/>')
-                var body = '<p>PL: '+ author.first_name +' '+ author.last_name +' wspomina Cię w komentarzu do aktywności.</p><p>Kliknij w poniższy link, aby przejść do aktywności: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
-                          '<p>EN: '+ author.first_name +' '+ author.last_name +' mentioned you in a comment for an Activity</p><p>Click the link to go to Activity: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                var body = '<p>PL: '+ author.first_name +' '+ author.last_name +' wspomina Cię w komentarzu do aktywności.</p><p>Kliknij w poniższy link, aby przejść do aktywności: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                          '<p>EN: '+ author.first_name +' '+ author.last_name +' mentioned you in a comment for an Activity</p><p>Click the link to go to Activity: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
                           '<p>'+commentBody+'</p>'
 
                 tableVolunteers.getAll.apply(tableVolunteers, receivers)
@@ -585,8 +585,8 @@ r.connect(config.rethinkdb, function(err, conn) {
                         'UNDERLINE': ['<u>', '</u>'],
                         'CODE': ['<span style="font-family: monospace">', '</span>']
                       }).join('<br/>')
-                    var body = '<p>PL: '+ author.first_name +' '+ author.last_name +' dodał komentarz do aktywności.</p><p>Kliknij w poniższy link, aby przejść do aktywności: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
-                              '<p>EN: '+ author.first_name +' '+ author.last_name +' added a comment for an Activity</p><p>Click the link to go to Activity: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                    var body = '<p>PL: '+ author.first_name +' '+ author.last_name +' dodał komentarz do aktywności.</p><p>Kliknij w poniższy link, aby przejść do aktywności: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                              '<p>EN: '+ author.first_name +' '+ author.last_name +' added a comment for an Activity</p><p>Click the link to go to Activity: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
                               '<p>'+commentBody+'</p>'
                     
                     var request = new_sg.emptyRequest({
