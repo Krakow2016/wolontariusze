@@ -3,6 +3,9 @@
     "doc": {
       "type": "nested",
       "properties" : {
+        "parent_id" : {
+          "type" : "string"
+        },
         "name" : {
           "type" : "string"
         },
@@ -42,6 +45,9 @@
           "null_value": false
         },
         "is_urgent" : {
+          "type" : "boolean"
+        },
+        "is_public" : {
           "type" : "boolean"
         },
         "created_by" : {

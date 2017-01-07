@@ -3,6 +3,9 @@ module.exports = function(service) {
   var read = service.read
   service.read = function(req, resource, params, config, callback) {
     read(req, resource, params, config, function (error, data) {
+        if (error) {
+          callback(error,data)
+        }
         var isWhatWeDoPage = (resource == 'Activities' && params.id == 'what-we-do' )
         var isPublic = (data && data.is_public)
         var isActivity = (resource == 'Activities')
@@ -12,8 +15,6 @@ module.exports = function(service) {
         if( isActivity && !req.user && isPublic ) {
           data.volunteers = []
         }
-        //console.log ("data", data)
-        //console.log ("error", error)
         callback(error,data)              
     })
   }

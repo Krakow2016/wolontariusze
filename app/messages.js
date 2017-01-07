@@ -124,6 +124,9 @@ module.exports = {
     "activity_volunteers_count": "Wolontariusze, którzy biorą udział",
     "activity_public_attention": "Uwaga!",
     "activity_public_description": "Przeglądasz tę stronę jako niezalogowany użytkownik. Po zalogowaniu jest możliwość dołączenia do projektu/zadania, komentowanie oraz oglądanie profili innych wolontariuszy biorących udział w tym zadaniu. Użytkownicy, którzy przypiszą się do danej aktywności będą mogli otrzymywać aktualizacje mailowe dotyczące tej aktywności. Jeśli jesteś zainteresowany/a, napisz do nas e-maila w sprawie rejestracji na",
+    "activity_subtasks_header": "Podzadania",
+    "activity_updates_header": "Aktualności",
+    "activity_updates_more": "Więcej aktualności ...",
 
     "news_accept": "Chcę otrzymywać newsletter z aktualnościami na swój e-mail",
     "news_cancel": "Wypisuję się z newslettera",
@@ -284,6 +287,9 @@ module.exports = {
     "activity_volunteers_count": "Volunteers already taking part",
     "activity_public_attention": "Attention!",
     "activity_public_description": "You view this site as an not logged in user. After you login, you can take a part in  a project/task, comment and view profiles of other volunteers taking part in this activity. Users, which will be assigned to an activity, are able to receive emails regarding this activity. If you are interested in registration, write us email to",
+    "activity_subtasks_header": "Subtasks",
+    "activity_updates_header": "News",
+    "activity_updates_more": "More news ...",
 
     "news_accept": "I want to receive news via email!",
     "news_cancel": "Unsubscribe from newsletter",

@@ -18,6 +18,7 @@ var Editor = require('./Editor.jsx')
 var Draft = require('draft-js')
 
 var actions = require('../actions')
+var removeAction = actions.removeActivity
 var updateAction = actions.updateActivity
 var leaveActivityAction = actions.leaveActivity
 var createAction = actions.createActivity
@@ -229,6 +230,12 @@ var ActivityAdministration = React.createClass({
     })
   },
 
+  remove: function () {
+    var context = this.props.context
+    var activity = this.state.activity
+    context.executeAction(removeAction, activity)
+  },
+
   update: function () {
     var state = this.state
     var context = this.props.context
@@ -397,6 +404,11 @@ var ActivityAdministration = React.createClass({
                 </div>
     }
 
+    var removeButton = []
+    if (this.props.creationMode == false) {
+      removeButton = <button className={this.state.canSubmit ? 'bg--warning' : ''} disabled={!this.state.canSubmit} onClick={this.remove} >Usuń</button>
+    }
+
     var updateButton = []
     if (this.props.creationMode == false) {
       updateButton = <input type="submit" value="Zapisz" disabled={!this.state.canSubmit} />
@@ -545,6 +557,7 @@ var ActivityAdministration = React.createClass({
           <br/>
           <br/>
           <div id="activityEditToolbar" className="text--center">
+            {removeButton}
             {updateButton}
             {createButton}
             {createButton2}

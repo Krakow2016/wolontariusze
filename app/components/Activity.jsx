@@ -1,4 +1,6 @@
 var React = require('react')
+var update = require('react-addons-update')
+
 var NavLink = require('fluxible-router').NavLink
 var Draft = require('draft-js')
 var fromJS = require('immutable').fromJS
@@ -13,6 +15,9 @@ var actions = require('../actions')
 
 var Comments = require('./Comments/Comments.jsx')
 
+var UPDATES_HEIGHT = '50px'
+var UPDATES_PER_PAGE = 5
+
 var ActivityUpdate = React.createClass({
 
   getInitialState: function() {
@@ -25,24 +30,52 @@ var ActivityUpdate = React.createClass({
     var editorState = Draft.EditorState.createWithContent(contentState)
 
     return {
-      editorState: editorState
+      editorState: editorState,
+      isOpen: false
     }
   },
 
   onChange: function(editorState) {
     this.setState({
-      editorState: editorState
+      editorState: editorState,
+      isOpen: false
     })
   },
 
+  toggleOpen: function () {
+    var isOpen = !this.state.isOpen
+    this.setState(update(this.state, {
+      isOpen: { $set: isOpen }
+    }))
+  },
+
   render: function() {
+    var buttons = []
+    var editorStyle = {}
+    var btnOpenStyle = {'marginTop': 10, 'backgroundColor': '#33697b' }
+    btnOpenStyle['width'] = '100%';
+    if (this.state.isOpen) {
+      buttons.push(
+        <button onClick={this.toggleOpen} style={btnOpenStyle}>
+          <FormattedMessage id="news_close" />
+        </button>
+      )
+    } else {
+      buttons.push(
+        <button onClick={this.toggleOpen} style={btnOpenStyle}>
+          <FormattedMessage id="news_open" />
+        </button>
+      )
+      editorStyle = { textOverflow: 'ellipsis', height: UPDATES_HEIGHT, overflow: 'hidden'}
+    }
     return (
       <div className="activityUpdate">
         <hr />
         <p className="small italic">
           { moment(this.props.created_at).calendar() }
         </p>
-        <Editor editorState={this.state.editorState} onChange={this.onChange} readOnly={true} />
+        <Editor editorState={this.state.editorState} onChange={this.onChange} readOnly={true} style={editorStyle} />
+        {buttons}
       </div>
     )
   }
@@ -60,20 +93,22 @@ var Activity = React.createClass({
   },
 
   _changeListener: function() {
-    var state = this.props.context.getStore(ActivityStore)
+    var state = this.props.context.getStore(ActivityStore).getState()
 
     // Opis zadania
     var activityState = Draft.EditorState.push(this.state.activityState, Draft.ContentState.createFromBlockArray(state.activityState.getCurrentContent().getBlocksAsArray()))
 
     // Formularz nowej aktualizacji
     var newUpdateState = Draft.EditorState.push(this.state.newUpdateState, Draft.ContentState.createFromBlockArray(state.newUpdateState.getCurrentContent().getBlocksAsArray()))
-
+    console.log('CHANGE ACT STATE', state)
     this.setState({
       activity: state.activity,
       volunteers: state.volunteers,
       activityState: activityState,
       newUpdateState: newUpdateState,
-      updates: state.updates
+      updates: state.updates,
+      updatesPage: state.updatesPage,
+      children: state.children
     })
   },
 
@@ -82,7 +117,8 @@ var Activity = React.createClass({
       .addChangeListener(this._changeListener)
 
     this.setState({
-      mapReady: true
+      mapReady: true,
+      updatesPage: 1
     })
   },
 
@@ -169,18 +205,38 @@ var Activity = React.createClass({
       return
     }
 
-    var updates = this.state.activity.updates || []
-    updates.push({
+    var updates = this.state.updates || []
+    var newUpdate = {
       raw: rawState,
       created_at: new Date(),
       created_by: this.user().id
-    })
+    }
+    updates.unshift(newUpdate)
+
+    var newPage = this.state.updatesPage
+    if (updates.length > UPDATES_PER_PAGE * this.state.updatesPage) {
+      newPage = newPage + 1
+    }
 
     // Aktualizuje parametry aktywności
     context.executeAction(actions.postActivityUpdate, {
       id: this.state.activity.id,
-      updates: updates
+      update: newUpdate,
+      isToBeAdded: true,
+      page: this.state.updatesPage,
+      isNews: true
     })
+  },
+
+  moreUpdates: function () {
+    var updatesPage = this.state.updatesPage+1
+    
+    context.executeAction(actions.moreActivityUpdates, {
+      id: this.state.activity.id,
+      page: updatesPage
+    })
+
+
   },
 
   render: function () {
@@ -294,11 +350,62 @@ var Activity = React.createClass({
     if(this.state.activity.is_public === true && !user) {
       isPublicInfo = (
         <div className="alert alert--warning">
-          <strong><FormattedMessage id="activity_public_attention" /> </strong><FormattedMessage id="activity_public_description" /> <b>goradobra@krakow2016.com</b></div>
+          <strong><FormattedMessage id="activity_public_attention" /> </strong><FormattedMessage id="activity_public_description" /> <b>kontakt@goradobra.pl</b></div>
       )
     }
 
     var creator = activity.created_by || {}
+
+    var addSubtask
+    if(is_admin) {
+      addSubtask = <div className="alert clearfix">
+        <p>
+          Jako koordynator masz prawo do tworzenia nowych podzadań. Kliknij <NavLink href={'/zadania/nowe/'+ activity.id }>dodaj podzadanie</NavLink> aby przejść do strony tworzenia.
+        </p>
+      </div>
+    }
+    var childrenActs = this.state.children || []
+    var subtaskList = childrenActs.map(function (child) {
+
+
+      var subtaskState
+      var dateNow =  Date.now()
+      if (child.is_archived || ( child.endtime && dateNow > new Date(child.endtime).getTime() ) ) {
+        subtaskState = <span className="activity-subtask-state-nonfree">Zakończone</span>
+      } else if (child.datetime && dateNow> new Date(child.datetime).getTime()) {
+        subtaskState = <span className="activity-subtask-state-nonfree">Zakończenie zgłoszeń</span>
+      //} else if (child.volunteers.length == child.activity.limit && child.activity.limit!=0)
+      //   subtaskState = <span className="activity-subtask-state-nonfree">Zajęte</span>
+      } else {
+        subtaskState = <span className="activity-subtask-state-free">Trwa</span>
+      }
+      return (<div className="activity-subtask" >
+          <span className="activity-subtask-name"><a href={'/zadania/'+child.id} >{child.name}</a></span>
+          <span> {subtaskState} </span>
+        </div>
+      )
+    })
+
+
+    var subtasks = (<div>
+        <br/>
+        <b className="big-text"><FormattedMessage id="activity_subtasks_header" /> ({childrenActs.length}):</b>
+        {addSubtask}
+        {subtaskList}
+      </div>
+    )
+
+    var parentTaskLink="Nie"
+    if (this.state.activity.parent_id) {
+      parentTaskLink=(<NavLink href={"/zadania/"+this.state.activity.parent_id}>Tak</NavLink>)
+    }
+
+    var moreUpdatesButton = []
+    if (this.state.activity.updates_size > this.state.updatesPage * UPDATES_PER_PAGE ) {
+        moreUpdatesButton = <div className="activity-updates-more" onClick={this.moreUpdates}>
+          <b><FormattedMessage id="activity_updates_more" /></b>
+        </div>
+    }
 
     // TODO
     //<b>Dodano:</b> {TimeService.showTime(activity.creationTimestamp)} przez <span className="volonteerLabel"><a href={'/wolontariusz/'+activity.creator.id}>{activity.creator.name}</a></span>
@@ -320,9 +427,15 @@ var Activity = React.createClass({
 
               <Editor editorState={this.state.activityState} onChange={this.onChange2} readOnly={true} />
 
+              <br/>
+              <b className="big-text"><FormattedMessage id="activity_updates_header" /> ({this.state.activity.updates_size}):</b>
+        
               {updates.map(function(update, i) {
                 return <ActivityUpdate key={'update_'+activity.id+'_'+i} {...update} />
               })}
+
+              <br/>
+              {moreUpdatesButton}
 
               {updateForm}
 
@@ -379,10 +492,16 @@ var Activity = React.createClass({
                     <td scope="Limit osób">Limit osób</td>
                     <td>{volonteersLimit}</td>
                   </tr>
+                  <tr>
+                    <td scope="Jest podzadaniem">Jest podzadaniem</td>
+                    <td>{parentTaskLink}</td>
+                  </tr>
                 </tbody>
               </table>
 
               {button}
+
+              {subtasks}
           </div>
         </div>
 
