@@ -86,13 +86,14 @@ var ProfileComment = React.createClass({
       }
     } else {
       return {
-        editorState: Draft.EditorState.createEmpty()
+        editorState: Draft.EditorState.createEmpty(),
+        initialized: false
       }
     }
   },
 
   componentWillReceiveProps: function(nextProps) {
-    if (nextProps.comment.raw) {
+    if (nextProps.comment.raw && this.state.initialized) {
       var raw = Object.assign({}, nextProps.comment.raw)
       _.forEach(raw.entityMap, function(val, key) {
         val.data.mention = fromJS(val.data.mention)
@@ -112,6 +113,10 @@ var ProfileComment = React.createClass({
 
   editComment: function() {
     this.props.editComment(this.props.comment.id)
+    this.setState({
+      editorState: this.state.editorState,
+      initialized: true
+    })
   },
 
   cancelEditComment: function() {
