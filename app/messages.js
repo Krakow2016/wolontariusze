@@ -127,6 +127,7 @@ module.exports = {
     "activity_subtasks_header": "Podzadania",
     "activity_updates_header": "Aktualności",
     "activity_updates_more": "Więcej aktualności ...",
+    "activity_private_description": "Uwaga! Zadanie zostało oznaczone jako prywatne i nie będzie widoczne w Banku Pracy",
 
     "news_accept": "Chcę otrzymywać newsletter z aktualnościami na swój e-mail",
     "news_cancel": "Wypisuję się z newslettera",
@@ -290,6 +291,7 @@ module.exports = {
     "activity_subtasks_header": "Subtasks",
     "activity_updates_header": "News",
     "activity_updates_more": "More news ...",
+    "activity_private_description": "Attention! This task is marked as a private and you can not find it in Work Bank",
 
     "news_accept": "I want to receive news via email!",
     "news_cancel": "Unsubscribe from newsletter",

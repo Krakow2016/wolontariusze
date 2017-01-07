@@ -341,8 +341,8 @@ var Activity = React.createClass({
     if(this.state.activity.is_private === true) {
       warning = (
         <div className="alert alert--warning">
-          <strong>Uwaga!</strong> Uważaj z kim się dzielisz tą stroną. Została ona oznaczona jako prywatna i jest widoczna tylko dla osób które otrzymały tajny link.
-        </div>
+          <FormattedMessage id="activity_private_description" />
+      </div>
       )
     }
 
