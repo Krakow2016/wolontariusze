@@ -51,6 +51,10 @@ var Activities = module.exports = {
             activity.updates_size=activity.updates.length
             if(params.page) {
               activity.updates = activity.updates.reverse().slice(NEWS_PER_PAGE*(params.page-1), NEWS_PER_PAGE*params.page)
+            } else if (params.link) {
+              activity.updates = activity.updates.filter(function (update) {
+                return (typeof (update.link) === "string" && update.link == params.link)
+              });
             }
 
             activity.volunteers = volunteers || []
