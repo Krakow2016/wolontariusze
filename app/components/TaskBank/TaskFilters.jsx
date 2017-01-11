@@ -131,6 +131,9 @@ var TaskFilters = React.createClass({
                           <option value="">dowolny</option>
                           <option value="dalem_dla_sdm">Dałem dla ŚDM</option>
                           <option value="wzialem_od_sdm">Wziąłęm od ŚDM</option>
+                          <option value="projekt">Projekt</option>
+                          <option value="zadanie">Zadanie</option>
+                          <option value="wydarzenie">Wydarzenie</option>
                       </select>
                   </div>
                   <div>

@@ -58,15 +58,23 @@ var Activities = module.exports = {
             
             activity.volunteers = volunteers || []
             //console.log('ACTIVITY', activity)
-
             r.table('Activities')
-            .filter({parent_id: params.id.toString()})
-            .pluck('id', 'parent_id', 'name', 'limit', 'endtime', 'datetime', 'is_archived', 'created_at')
-            .orderBy(r.row('created_at'))
-            .run().then(function (children) {
-              activity.children = children || []
-              callback(null, activity)
-            })
+            .filter({id: activity.parent_id})
+            .pluck('id', 'name')
+            .run().then(function (parent) {
+              activity.parentName = (parent && parent.length) ? parent[0].name : null;
+              r.table('Activities')
+              .filter({parent_id: params.id.toString()})
+              .pluck('id', 'parent_id', 'name', 'limit', 'endtime', 'datetime', 'is_archived', 'created_at')
+              .orderBy(r.row('created_at'))
+              .run().then(function (children) {
+                activity.children = children || []
+                //console.log('activity', activity)
+                callback(null, activity)
+              })
+            }) 
+            
+
 
           })
         })

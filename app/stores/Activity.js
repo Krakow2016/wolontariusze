@@ -37,6 +37,7 @@ var ActivityStore = createStore({
     this.updates = []
     this.updatesPage = 1
     this.children = []
+    this.parentName = ''
   },
 
   load: function(data, page) {
@@ -57,6 +58,9 @@ var ActivityStore = createStore({
     // Aktualizacje
     this.updates = data.updates
     this.updatesPage = 1
+
+    // Nadzadanie
+    this.parentName = data.parentName
 
     // Podzadania
     this.children = data.children
@@ -132,7 +136,8 @@ var ActivityStore = createStore({
       updates: this.updates,
       newUpdateState: this.newUpdateState,
       updatesPage: this.updatesPage,
-      children: this.children
+      children: this.children,
+      parentName: this.parentName
     }
   },
 
@@ -144,7 +149,8 @@ var ActivityStore = createStore({
       newUpdateState: Draft.convertToRaw(this.newUpdateState.getCurrentContent()),
       updates: this.updates,
       updatesPage: this.updatesPage,
-      children: this.children
+      children: this.children,
+      parentName: this.parentName
     }
   },
 
@@ -153,7 +159,8 @@ var ActivityStore = createStore({
     this.volunteers = state.volunteers
     this.updates = state.updates
     this.updatesPage = state.updatesPage
-    this.children= state.children
+    this.children = state.children
+    this.parentName = state.parentName
 
     _.forEach(state.activityState.entityMap, function(val, key) {
       val.data.mention = fromJS(val.data.mention)
@@ -173,6 +180,8 @@ ActivityStore.attributes = function() {
   return [
     'id',
     'parent_id',
+    'parentName',
+    'children',
     'act_type',
     'created_at',
     'created_by',

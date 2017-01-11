@@ -144,18 +144,26 @@ var ProfileComment = React.createClass({
         buttons.push(<span className="RichEditor-styleButton" onClick={this.editComment} key="editComment"><FormattedMessage id="comments_edit" /></span>)
         buttons.push(<span className="RichEditor-styleButton" onClick={this.deleteComment} key="deleteComment"><FormattedMessage id="comments_remove" /></span>)
       }
+
+      var photo
+      var volName
+      if (this.props.context.getUser()) {
+        photo = <div className="comments-volonteer-label" >
+                  <NavLink href={'/wolontariusz/'+this.props.comment.adminId} className="tooltip--bottom" data-hint={this.full_name()} >
+                    <ProfilePic src={this.props.comment.thumb_picture_url} className='profileThumbnail' />
+                  </NavLink> 
+                </div>
+      } else {
+        volName = <span>, {this.full_name()}</span>
+      }
       return (
         <div className="comment">
           <div className="alert">
             <div className="comments-time">
-              <b>{ moment(this.props.comment.creationTimestamp).calendar() }</b>
+              <b>{ moment(this.props.comment.creationTimestamp).calendar() } {volName}</b>
             </div>
             <div className="row">
-              <div className="comments-volonteer-label" >
-                <NavLink href={'/wolontariusz/'+this.props.comment.adminId} className="tooltip--bottom" data-hint={this.full_name()} >
-                  <ProfilePic src={this.props.comment.thumb_picture_url} className='profileThumbnail' />
-                </NavLink>
-              </div>
+              {photo}
               <div className="comments-text-block">
                 <Editor editorState={this.state.editorState} onChange={this.onChange} readOnly={true} />
               </div>

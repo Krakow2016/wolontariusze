@@ -482,6 +482,9 @@ var ActivityAdministration = React.createClass({
             <option value="niezdefiniowany">Niezdefiniowany</option>
             <option value="dalem_dla_sdm">Dałem dla ŚDM</option>
             <option value="wzialem_od_sdm">Wziąłęm od ŚDM</option>
+            <option value="wydarzenie">Wydarzenie</option>
+            <option value="projekt">Projekt</option>
+            <option value="zadanie">Zadanie</option>
           </select>
           <br/>
           <br/>

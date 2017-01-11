@@ -100,7 +100,7 @@ var Activity = React.createClass({
 
     // Formularz nowej aktualizacji
     var newUpdateState = Draft.EditorState.push(this.state.newUpdateState, Draft.ContentState.createFromBlockArray(state.newUpdateState.getCurrentContent().getBlocksAsArray()))
-    console.log('CHANGE ACT STATE', state)
+    //console.log('CHANGE ACT STATE', state)
     this.setState({
       activity: state.activity,
       volunteers: state.volunteers,
@@ -108,7 +108,8 @@ var Activity = React.createClass({
       newUpdateState: newUpdateState,
       updates: state.updates,
       updatesPage: state.updatesPage,
-      children: state.children
+      children: state.children,
+      parentName: state.parentName
     })
   },
 
@@ -258,8 +259,16 @@ var Activity = React.createClass({
       switch(activity.act_type) {
       case 'wzialem_od_sdm':
         return 'Wziąłęm od ŚDM'
-      default:
+      case 'dalem_dla_sdm':
         return 'Dałem dla ŚDM'
+      case 'projekt':
+        return 'Projekt'
+      case 'zadanie':
+        return 'Zadanie'
+      case 'wydarzenie':
+        return 'Wydarzenie'
+      default:
+        return 'Niezdefiniowany'
       }
     }()
 
@@ -356,6 +365,14 @@ var Activity = React.createClass({
 
     var creator = activity.created_by || {}
 
+    var creatorPhoto
+    if (this.user()) {
+      creatorPhoto = <div className="text--center activity-image">
+                <ProfilePic src={creator.profile_picture_url} />
+              </div>
+    }
+
+
     var addSubtask
     if(is_admin) {
       addSubtask = <div className="alert clearfix">
@@ -366,8 +383,6 @@ var Activity = React.createClass({
     }
     var childrenActs = this.state.children || []
     var subtaskList = childrenActs.map(function (child) {
-
-
       var subtaskState
       var dateNow =  Date.now()
       if (child.is_archived || ( child.endtime && dateNow > new Date(child.endtime).getTime() ) ) {
@@ -387,17 +402,19 @@ var Activity = React.createClass({
     })
 
 
-    var subtasks = (<div>
-        <br/>
-        <b className="big-text"><FormattedMessage id="activity_subtasks_header" /> ({childrenActs.length}):</b>
-        {addSubtask}
-        {subtaskList}
-      </div>
-    )
+    var subtasks
+    if (childrenActs.length) {
+      subtasks = (<div>
+          <br/>
+          <b className="big-text"><FormattedMessage id="activity_subtasks_header" /> ({childrenActs.length}):</b>
+          {subtaskList}
+        </div>
+      )
+    }
 
     var parentTaskLink="Nie"
-    if (this.state.activity.parent_id) {
-      parentTaskLink=(<NavLink href={"/zadania/"+this.state.activity.parent_id}>Tak</NavLink>)
+    if (this.state.activity.parent_id && this.state.parentName) {
+      parentTaskLink=(<NavLink href={"/zadania/"+this.state.activity.parent_id}>{this.state.parentName}</NavLink>)
     }
 
     var moreUpdatesButton = []
@@ -405,6 +422,32 @@ var Activity = React.createClass({
         moreUpdatesButton = <div className="activity-updates-more" onClick={this.moreUpdates}>
           <b><FormattedMessage id="activity_updates_more" /></b>
         </div>
+    }
+
+    var taskUpdates
+    if (this.state.updates.length) {
+      taskUpdates = (
+          <div>
+            <b className="big-text"><FormattedMessage id="activity_updates_header" /> ({this.state.activity.updates_size}):</b>
+      
+            { updates.map(function(update, i) {
+              return <ActivityUpdate key={'update_'+activity.id+'_'+i} {...update} />
+            }) }
+
+            <br/>
+            {moreUpdatesButton}
+          </div>
+      )
+    }
+
+    var taskVolunteers
+    if (this.state.volunteers.length) {
+      taskVolunteers = (<div>
+        <b className="big-text"><FormattedMessage id="activity_volunteers_count" /> ({volunteers.length}):</b>
+        <p>
+          {activeVolonteersList}
+        </p>
+      </div>)
     }
 
     // TODO
@@ -428,23 +471,15 @@ var Activity = React.createClass({
               <Editor editorState={this.state.activityState} onChange={this.onChange2} readOnly={true} />
 
               <br/>
-              <b className="big-text"><FormattedMessage id="activity_updates_header" /> ({this.state.activity.updates_size}):</b>
-        
-              {updates.map(function(update, i) {
-                return <ActivityUpdate key={'update_'+activity.id+'_'+i} {...update} />
-              })}
-
-              <br/>
-              {moreUpdatesButton}
+              {taskUpdates}
 
               {updateForm}
 
             </div>
             <div className="col col5">
 
-              <div className="text--center activity-image">
-                <ProfilePic src={creator.profile_picture_url} />
-              </div>
+              {creatorPhoto}
+              
               <p className="activity-profile-name">
                 <NavLink href={'/wolontariusz/'+ creator.id}>
                   {creator.first_name} {creator.last_name}
@@ -502,15 +537,14 @@ var Activity = React.createClass({
               {button}
 
               {subtasks}
+
+              {addSubtask}
           </div>
         </div>
 
         { this.map() }
 
-        <b className="big-text"><FormattedMessage id="activity_volunteers_count" /> ({volunteers.length}):</b>
-        <p>
-          {activeVolonteersList}
-        </p>
+        {taskVolunteers}
 
         <Comments context={this.props.context} />
 

@@ -21,10 +21,26 @@ var Bank = React.createClass({
         more = (<span>...</span>)
       }
 
+      var taskActType = '/img/aktywnosc_zadanie.png'
+      if (task.act_type === 'wzialem_od_sdm') {
+        taskActType = '/img/flaga2.png'
+      }
+      if (task.act_type === 'dalem_dla_sdm') {
+        taskActType = '/img/flaga.png'
+      }
+      if (task.act_type === 'projekt') {
+        taskActType = '/img/aktywnosc_projekt.png'
+      }
+      if (task.act_type === 'zadanie') {
+        taskActType = '/img/aktywnosc_zadanie.png'
+      }
+      if (task.act_type === 'wydarzenie') {
+        taskActType = '/img/aktywnosc_wydarzenie.png'
+      }
       return (
         <div className="row task" key={task.id}>
           <div className="col col1 task-color">
-            <img src={task.act_type === 'wzialem_od_sdm' ? '/img/flaga2.png' : '/img/flaga.png'} />
+            <img src={taskActType} />
           </div>
 
           <div className="col col11 task-content">

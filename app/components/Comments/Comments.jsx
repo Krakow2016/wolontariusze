@@ -101,15 +101,15 @@ var ProfileComments = React.createClass({
         </div>
     }
     
-    return (
-      <div className="profileComments">
-        <b className="big-text"><FormattedMessage id="comments_header" /> ({this.state.store.comments.length}):</b>
-        {newComment}
-        <div className="comments-list-space" />
-        {comments}
-        {moreCommentsButton}
-      </div>
-    )
+      return (
+        <div className="profileComments">
+          <b className="big-text"><FormattedMessage id="comments_header" /> ({this.state.store.comments.length}):</b>
+          {newComment}
+          <div className="comments-list-space" />
+          {comments}
+          {moreCommentsButton}
+        </div>
+      )
   }
 })
 
