@@ -59,7 +59,7 @@ var notifyMentioned = function(title, body, author) {
       })
 
       new_sg.API(request, function(error, response) {
-        console.log('sendgrid:', error, response)
+        console.log('sendgrid:', JSON.stringify(error), response)
       })
     })
   }
@@ -407,7 +407,7 @@ r.connect(config.rethinkdb, function(err, conn) {
         })
 
         new_sg.API(request, function(error, response) {
-          console.log('sendgrid:', error, response)
+          console.log('sendgrid:', JSON.stringify(error), response)
         })
 
       })
@@ -464,7 +464,7 @@ r.connect(config.rethinkdb, function(err, conn) {
             })
 
             new_sg.API(request, function(error, response) {
-              console.log('sendgrid:', error, response)
+              console.log('sendgrid:', JSON.stringify(error), response)
             })
           })
       })
@@ -703,7 +703,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                   })
 
                   new_sg.API(request, function(error, response) {
-                    console.log('sendgrid:', error, response)
+                    console.log('sendgrid:', JSON.stringify(error), response)
                   })
 
                 })
