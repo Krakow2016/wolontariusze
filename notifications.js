@@ -39,8 +39,8 @@ var notifyMentioned = function(title, body, author) {
               }
           }),
           from: {
-            email: 'goradobra@krakow2016.com',
-            name: 'Góra Dobra'
+            email: 'portal@goradobra.pl',
+            name: 'Portal Góra Dobra'
           },
           content: [
             {
@@ -143,8 +143,8 @@ r.connect(config.rethinkdb, function(err, conn) {
                                 },
                               ],
                               from: {
-                                email: 'goradobra@krakow2016.com',
-                                name: 'Góra Dobra'
+                                email: 'portal@goradobra.pl',
+                                name: 'Portal Góra Dobra'
                               },
                               content: [
                                 {
@@ -195,8 +195,8 @@ r.connect(config.rethinkdb, function(err, conn) {
                                   },
                                 ],
                                 from: {
-                                  email: 'goradobra@krakow2016.com',
-                                  name: 'Góra Dobra'
+                                  email: 'portal@goradobra.pl',
+                                  name: 'Portal Góra Dobra'
                                 },
                                 content: [
                                   {
@@ -325,8 +325,8 @@ r.connect(config.rethinkdb, function(err, conn) {
                           }
                         }),
                         from: {
-                          email: 'goradobra@krakow2016.com',
-                          name: 'Góra Dobra'
+                          email: 'portal@goradobra.pl',
+                          name: 'Portal Góra Dobra'
                         },
                         content: [
                           {
@@ -366,10 +366,10 @@ r.connect(config.rethinkdb, function(err, conn) {
 
         if (row.nationality === "Polska") { // PL
           subject = 'Zaproszenie do Góry Dobra!'
-          html = '<p>Chcemy zaprosić Cię do Góry Dobra - portalu dla wolontariuszy, który będzie równocześnie naszą główną platformą komunikacji podczas Światowych Dni Młodzieży w Krakowie oraz narzędziem do organizacji projektów i wydarzeń.</p><p>To tutaj chcemy stworzyć środowisko młodych i zaangażowanych ludzi, dzielić się tym, co robimy i przekazywać Ci ważne informacje o ŚDM i zadaniach, jakie czekają na realizację.</p><p>Dzięki Górze Dobra będziesz mógł pochwalić się efektami swojej pracy. W tym też miejscu będziesz miał możliwość zobaczenia i dzielenia się z innymi informacjami o tym, jak dużo serca, i aktywności wolontariackiej dajesz na rzecz Światowych Dni Młodzieży w Krakowie.</p><p>Aby aktywować swoje konto kliknij w poniższy link:</p><p><a href="'+ url +'">'+ url +'</a></p><p>WAŻNE! Link, jaki otrzymujesz teraz do zalogowania, jest aktywny tylko przez 72h. W wypadku jakichkolwiek problemów bądź pytań, prosimy o kontakt na: goradobra@krakow2016.com.</p><p>Nie zwlekaj ani chwili dłużej i zostań już dziś Wolontariuszem ŚDM Kraków 2016.</p>'
+          html = '<p>Chcemy zaprosić Cię do Góry Dobra - portalu dla wolontariuszy, który będzie równocześnie naszą główną platformą komunikacji podczas Światowych Dni Młodzieży w Krakowie oraz narzędziem do organizacji projektów i wydarzeń.</p><p>To tutaj chcemy stworzyć środowisko młodych i zaangażowanych ludzi, dzielić się tym, co robimy i przekazywać Ci ważne informacje o ŚDM i zadaniach, jakie czekają na realizację.</p><p>Dzięki Górze Dobra będziesz mógł pochwalić się efektami swojej pracy. W tym też miejscu będziesz miał możliwość zobaczenia i dzielenia się z innymi informacjami o tym, jak dużo serca, i aktywności wolontariackiej dajesz na rzecz Światowych Dni Młodzieży w Krakowie.</p><p>Aby aktywować swoje konto kliknij w poniższy link:</p><p><a href="'+ url +'">'+ url +'</a></p><p>WAŻNE! Link, jaki otrzymujesz teraz do zalogowania, jest aktywny tylko przez 72h. W wypadku jakichkolwiek problemów bądź pytań, prosimy o kontakt na: kontakt@goradobra.pl.</p><p>Nie zwlekaj ani chwili dłużej i zostań już dziś Wolontariuszem ŚDM Kraków 2016.</p>'
         } else { // EN
           subject = 'Invitation to WYD Volunteers portal'
-          html = '<p>We would like to invite you to the “Mountain of Good” - a portal for volunteers. The portal will be the main means of communication during the World Youth Days in Krakow and a tool for managing projects and events.  This is a place for building a community of young and engaged people, for sharing what we do, for providing you important news regarding World Youth Days, and for sharing information about tasks waiting for volunteers.</p><p> Thanks to the “Mountain of Good” you will be able to share the results of your volunteer work. You will be able to see and share how much heart and energy you and the other volunteers are giving for the World Youth Days Krakow 2016.</p><p> To activate your account please click on the following link:</p> <p><a href="'+ url +'">'+ url +'</a></p> <p>Important! The link you have just received is valid only for 72 hours. In case of any problems or questions please contact us using email - goradobra@krakow2016.com.</p><p>Ps. Want to get to know other WYD volunteers? Sign up now, and join this task (by clicking blue "I volunteer" button): <a href="https://wolontariusze.krakow2016.com/zadania/a2b519c6-0f9f-4b05-a0e5-3a81cf003f13">https://wolontariusze.krakow2016.com/zadania/a2b519c6-0f9f-4b05-a0e5-3a81cf003f13</a></p>'
+          html = '<p>We would like to invite you to the “Mountain of Good” - a portal for volunteers. The portal will be the main means of communication during the World Youth Days in Krakow and a tool for managing projects and events.  This is a place for building a community of young and engaged people, for sharing what we do, for providing you important news regarding World Youth Days, and for sharing information about tasks waiting for volunteers.</p><p> Thanks to the “Mountain of Good” you will be able to share the results of your volunteer work. You will be able to see and share how much heart and energy you and the other volunteers are giving for the World Youth Days Krakow 2016.</p><p> To activate your account please click on the following link:</p> <p><a href="'+ url +'">'+ url +'</a></p> <p>Important! The link you have just received is valid only for 72 hours. In case of any problems or questions please contact us using email - kontakt@goradobra.pl.</p><p>Ps. Want to get to know other WYD volunteers? Sign up now, and join this task (by clicking blue "I volunteer" button): <a href="https://wolontariusze.krakow2016.com/zadania/a2b519c6-0f9f-4b05-a0e5-3a81cf003f13">https://wolontariusze.krakow2016.com/zadania/a2b519c6-0f9f-4b05-a0e5-3a81cf003f13</a></p>'
         }
 
         var request = new_sg.emptyRequest({
@@ -390,8 +390,8 @@ r.connect(config.rethinkdb, function(err, conn) {
               },
             ],
             from: {
-              email: 'goradobra@krakow2016.com',
-              name: 'Góra Dobra'
+              email: 'portal@goradobra.pl',
+              name: 'Portal Góra Dobra'
             },
             content: [
               {
@@ -437,7 +437,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                     ],
                     cc: [
                       {
-                        email: 'goradobra@krakow2016.com'
+                        email: 'portal@goradobra.pl'
                       }
                     ],
                     subject: 'Witaj w gronie koordynatorów wolontariuszy na Górze Dobra!',
@@ -447,8 +447,8 @@ r.connect(config.rethinkdb, function(err, conn) {
                   },
                 ],
                 from: {
-                  email: 'goradobra@krakow2016.com',
-                  name: 'Góra Dobra'
+                  email: 'portal@goradobra.pl',
+                  name: 'Portal Góra Dobra'
                 },
                 content: [
                   {
@@ -543,8 +543,8 @@ r.connect(config.rethinkdb, function(err, conn) {
                     'UNDERLINE': ['<u>', '</u>'],
                     'CODE': ['<span style="font-family: monospace">', '</span>']
                   }).join('<br/>')
-                var body = '<p>PL: '+ author.first_name +' '+ author.last_name +' wspomina Cię w komentarzu do aktywności.</p><p>Kliknij w poniższy link, aby przejść do aktywności: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
-                          '<p>EN: '+ author.first_name +' '+ author.last_name +' mentioned you in a comment for an Activity</p><p>Click the link to go to Activity: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                var body = '<p>PL: '+ author.first_name +' '+ author.last_name +' wspomina Cię w komentarzu do aktywności.</p><p>Kliknij w poniższy link, aby przejść do aktywności: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                          '<p>EN: '+ author.first_name +' '+ author.last_name +' mentioned you in a comment for an Activity</p><p>Click the link to go to Activity: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
                           '<p>'+commentBody+'</p>'
 
                 tableVolunteers.getAll.apply(tableVolunteers, receivers)
@@ -585,8 +585,8 @@ r.connect(config.rethinkdb, function(err, conn) {
                         'UNDERLINE': ['<u>', '</u>'],
                         'CODE': ['<span style="font-family: monospace">', '</span>']
                       }).join('<br/>')
-                    var body = '<p>PL: '+ author.first_name +' '+ author.last_name +' dodał komentarz do aktywności.</p><p>Kliknij w poniższy link, aby przejść do aktywności: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
-                              '<p>EN: '+ author.first_name +' '+ author.last_name +' added a comment for an Activity</p><p>Click the link to go to Activity: <a href="'+ config.base_url +'/zadanie/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                    var body = '<p>PL: '+ author.first_name +' '+ author.last_name +' dodał komentarz do aktywności.</p><p>Kliknij w poniższy link, aby przejść do aktywności: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
+                              '<p>EN: '+ author.first_name +' '+ author.last_name +' added a comment for an Activity</p><p>Click the link to go to Activity: <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name+'</a>.</p>'+
                               '<p>'+commentBody+'</p>'
                     
                     var request = new_sg.emptyRequest({
@@ -607,8 +607,8 @@ r.connect(config.rethinkdb, function(err, conn) {
                             }
                           ],
                           from: {
-                            email: 'goradobra@krakow2016.com',
-                            name: 'Góra Dobra'
+                            email: 'portal@goradobra.pl',
+                            name: 'Portal Góra Dobra'
                           },
                           content: [
                             {
@@ -683,8 +683,8 @@ r.connect(config.rethinkdb, function(err, conn) {
                           }
                       }),
                       from: {
-                        email: 'goradobra@krakow2016.com',
-                        name: 'Góra Dobra'
+                        email: 'portal@goradobra.pl',
+                        name: 'Portal Góra Dobra'
                       },
                       content: [
                         {
@@ -735,8 +735,8 @@ r.connect(config.rethinkdb, function(err, conn) {
               },
             ],
             from: {
-              email: 'goradobra@krakow2016.com',
-              name: 'Góra Dobra'
+              email: 'portal@goradobra.pl',
+              name: 'Portal Góra Dobra'
             },
             content: [
               {
