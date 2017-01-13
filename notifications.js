@@ -25,7 +25,7 @@ var notifyMentioned = function(title, body, author) {
         method: 'POST',
         path: '/v3/mail/send',
         body: {
-          personalizations: all.map(function (volunteer) {
+          personalizations: all.filter(function (volunteer) {return !!volunteer.email}).map(function (volunteer) {
               return {
                   to: [
                     {
@@ -119,29 +119,27 @@ r.connect(config.rethinkdb, function(err, conn) {
                             was_joined = author.first_name +' '+ author.last_name +' - signed you up for the task <a href="'+ config.base_url +'/zadania/'+ activity.id +'">'+ activity.name +'</a>. Please confirm your participation by replying to this email. Thank you.'
                           }
 
+                          var personalizations = [{
+                              to: [
+                                {
+                                  email: volunteer.email
+                                }
+                              ],
+                              subject: subject,
+                              substitutions: {
+                                ":name": volunteer.first_name.toString(),
+                                ":what_happend": joint.user_id === joint.created_by ? has_joined.toString() : was_joined.toString()
+                              }
+                          }]
+                          if (volunteer.mail != owner.mail) {
+                            personalizations[0].cc= [{email: owner.mail}]
+                          }
+
                           var request = new_sg.emptyRequest({
                             method: 'POST',
                             path: '/v3/mail/send',
                             body: {
-                              personalizations: [
-                                {
-                                  to: [
-                                    {
-                                      email: volunteer.email
-                                    }
-                                  ],
-                                  cc: [
-                                    {
-                                      email: owner.email
-                                    }
-                                  ],
-                                  subject: subject,
-                                  substitutions: {
-                                    ":name": volunteer.first_name.toString(),
-                                    ":what_happend": joint.user_id === joint.created_by ? has_joined.toString() : was_joined.toString()
-                                  }
-                                },
-                              ],
+                              personalizations: personalizations,
                               from: {
                                 email: 'portal@goradobra.pl',
                                 name: 'Portal Góra Dobra'
@@ -303,50 +301,45 @@ r.connect(config.rethinkdb, function(err, conn) {
                   var size = all_volunteers.length
                   if(!size) { return } // Nie ma do kogo wysłać
 
-                  // Podziel listę odbiorców na segmenty po 1000 adresów
-                  _.times(Math.ceil(size / 1000), function() {
-                    // Lista 1000 osbiorców
-                    var volunteers = all_volunteers.splice(0, 1000)
-                    var request = new_sg.emptyRequest({
-                      method: 'POST',
-                      path: '/v3/mail/send',
-                      body: {
-                        personalizations: volunteers.map(function (volunteer) {
-                          return {
-                              to: [
-                                {
-                                  email: volunteer.right.email
-                                }
-                              ],
-                              subject: subject,
-                              substitutions: {
-                                ":name": volunteer.right.first_name.toString(),
+                  var request = new_sg.emptyRequest({
+                    method: 'POST',
+                    path: '/v3/mail/send',
+                    body: {
+                      personalizations: all_volunteers.filter(function (volunteer) {return !!volunteer.right.email}).map(function (volunteer) {
+                        return {
+                            to: [
+                              {
+                                email: volunteer.right.email
                               }
-                          }
-                        }),
-                        from: {
-                          email: 'portal@goradobra.pl',
-                          name: 'Portal Góra Dobra'
-                        },
-                        content: [
-                          {
-                            type: 'text/html',
-                            value: html,
-                          },
-                        ],
-                        reply_to: {
-                          email: author.email
-                        },
-                        categories: [
-                          mailCategory.toString()
-                        ],
-                        template_id: sendgrid_template
+                            ],
+                            subject: subject,
+                            substitutions: {
+                              ":name": volunteer.right.first_name.toString(),
+                            }
+                        }
+                      }),
+                      from: {
+                        email: 'portal@goradobra.pl',
+                        name: 'Portal Góra Dobra'
                       },
-                    })
+                      content: [
+                        {
+                          type: 'text/html',
+                          value: html,
+                        },
+                      ],
+                      reply_to: {
+                        email: author.email
+                      },
+                      categories: [
+                        mailCategory.toString()
+                      ],
+                      template_id: sendgrid_template
+                    },
+                  })
 
-                    new_sg.API(request, function(error, response) {
-                      console.log('sendgrid:', JSON.stringify(error), response)
-                    })
+                  new_sg.API(request, function(error, response) {
+                    console.log('sendgrid:', JSON.stringify(error), response)
                   })
                 })
               })
@@ -669,7 +662,7 @@ r.connect(config.rethinkdb, function(err, conn) {
                     method: 'POST',
                     path: '/v3/mail/send',
                     body: {
-                      personalizations: all.map(function (volunteer) {
+                      personalizations: all.filter(function (volunteer) {return !!volunteer.email}).map(function (volunteer) {
                           return {
                               to: [
                                 {
