@@ -14,7 +14,9 @@ module.exports = function(service) {
             (!isActivity && !req.user) ) { return callback({statusCode: 403}) } 
         if( isActivity && !req.user && isPublic ) {
           data.volunteers = []
+          data.created_by.profile_picture_url=''
         }
+        //console.log("ACT", data)
         callback(error,data)              
     })
   }
