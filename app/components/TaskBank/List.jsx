@@ -37,6 +37,11 @@ var Bank = React.createClass({
       if (task.act_type === 'wydarzenie') {
         taskActType = '/img/aktywnosc_wydarzenie.png'
       }
+
+      var isPublic
+      if (task.is_public) {
+        isPublic = <span className="task-meta">Publiczne</span>
+      }
       return (
         <div className="row task" key={task.id}>
           <div className="col col1 task-color">
@@ -58,6 +63,7 @@ var Bank = React.createClass({
             <span className="task-meta">Wolnych miejsc: { task.limit != 0 ? (task.limit - (task.volunteers || []).length) : 'Bez limitu'}</span>
             <span className="task-meta">{((task.tags || []).length != 0) ? (task.tags || []).join(', ') : 'Brak kategorii' }</span>
             <span className="task-meta">Termin zgłoszeń mija: { task.datetime ? moment(task.datetime).calendar() : 'nigdy'}</span>
+            {isPublic}
             <p>
               <NavLink href={'/zadania/'+task.id}>
                 { task.description.substring(0,200) }
