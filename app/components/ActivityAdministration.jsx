@@ -366,6 +366,11 @@ var ActivityAdministration = React.createClass({
     }))
   },
 
+  onEnterPressed: function(e) {
+    if(e.key == 'Enter')
+      e.preventDefault();
+  },
+
   render: function() {
     var dateTime
     if (this.state.activity.datetime) {
@@ -421,12 +426,12 @@ var ActivityAdministration = React.createClass({
 
     var createButton2 = []
     if (this.props.creationMode == true) {
-      createButton2 = <input type="submit" value="Utwórz publiczne zadanie" disabled={!this.state.canSubmit} />
+      createButton2 = <button type="submit" disabled={!this.state.canSubmit}>Utwórz publiczne zadanie</button>
     }
 
     var showButton = []
     if (this.props.creationMode == false) {
-      showButton = <NavLink href={'/zadania/'+this.state.activity.id} >Wyświetl</NavLink>
+      showButton = <button><NavLink href={'/zadania/'+this.state.activity.id}>Wyświetl</NavLink></button>
     }
 
     var removeActiveVolonteer = this.removeActiveVolonteer
@@ -435,7 +440,8 @@ var ActivityAdministration = React.createClass({
       addVolonteer = <ActivityVolonteersList
             id="activeVolonteers"
             addActiveVolonteer={this.addActiveVolonteer}
-            excludedVolunteers={this.state.volunteers} />
+            excludedVolunteers={this.state.volunteers}
+            onKeyPress={this.onEnterPressed} />
     }
     var volunteers = this.state.volunteers || []
     var volunteersList = volunteers.map(function(volunteer) {
@@ -456,7 +462,8 @@ var ActivityAdministration = React.createClass({
           className="settingsForm"
           onValidSubmit={this.onValidSubmit}
           onValid={this.enableButton}
-          onInvalid={this.disableButton} >
+          onInvalid={this.disableButton}
+          preventExternalInvalidation>
 
           <b>Tytuł</b>
           <MyTextField required
@@ -467,7 +474,8 @@ var ActivityAdministration = React.createClass({
             validationError='Tytuł jest wymagany'
             disabled={false}
             value={this.state.activity.name}
-            onChange={this.handleChange} />
+            onChange={this.handleChange}
+            onKeyPress={this.onEnterPressed} />
 
           <br/>
           <b>Treść </b>
@@ -475,10 +483,10 @@ var ActivityAdministration = React.createClass({
           <Editor editorState={this.state.activityState} onChange={this.onChange} />
           <br/>
           <b>Kategorie:</b>
-          <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} />
+          <Tags data={tags} onSave={this.saveTag} onRemove={this.removeTag} onKeyPress={this.onEnterPressed} />
 
           <b>Typ</b>
-          <select name="act_type" selected={this.state.activity.act_type} onChange={this.handleChange}>
+          <select name="act_type" selected={this.state.activity.act_type} onChange={this.handleChange} onKeyPress={this.onEnterPressed}>
             <option value="niezdefiniowany">Niezdefiniowany</option>
             <option value="dalem_dla_sdm">Dałem dla ŚDM</option>
             <option value="wzialem_od_sdm">Wziąłęm od ŚDM</option>
@@ -488,7 +496,7 @@ var ActivityAdministration = React.createClass({
           </select>
           <br/>
           <br/>
-          <input id="datetime" type="checkbox" name="addDatetime" checked={ !!this.state.activity.datetime } onChange={this.handleAddDatetimeChange} />
+          <input id="datetime" type="checkbox" name="addDatetime" checked={ !!this.state.activity.datetime } onChange={this.handleAddDatetimeChange} onKeyPress={this.onEnterPressed} />
           <label htmlFor="datetime">Czas zakończenia zgłoszeń do zadania</label>
           {dateTime}
           <br/>
@@ -510,7 +518,8 @@ var ActivityAdministration = React.createClass({
               validationError='Miejsce jest wymagane'
               disabled={false}
               value={this.state.activity.place}
-              onChange={this.handleChange} />
+              onChange={this.handleChange}
+              onKeyPress={this.onEnterPressed} />
 
             <input type="button" value="Wyszukaj..." onClick={this.findCoordinates} disabled={this.state.activity.place === ''} />
           </div>
@@ -553,7 +562,8 @@ var ActivityAdministration = React.createClass({
               validationError='Ustaw maksymalną liczbę wolontariuszy lub 0 (brak limitu)'
               disabled={false}
               value={this.state.activity.limit}
-              onChange={this.handleChange} />
+              onChange={this.handleChange}
+              onKeyPress={this.onEnterPressed}/>
           </div>
 
           <br/>

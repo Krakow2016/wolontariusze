@@ -17,7 +17,7 @@ var Tags = React.createClass({
               )
           })}
         </ul>
-        <NewTag onSave={this.props.onSave} />
+        <NewTag onSave={this.props.onSave} onKeyPress={this.props.onKeyPress} />
       </div>
     )
   }

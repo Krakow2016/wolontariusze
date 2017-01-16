@@ -110,7 +110,8 @@ var ActivityVolonteersList = React.createClass ({
         inputProps={{
           value: this.state.value,
           onChange: this.handleChange,
-          className: this.props.className
+          className: this.props.className,
+          onKeyPress: this.props.onKeyPress
         }}
         suggestions={this.state.suggestions}
         renderSuggestion={this.renderSuggestion}
