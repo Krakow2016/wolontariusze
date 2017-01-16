@@ -12,12 +12,14 @@ var ActivityStore = createStore({
   handlers: {
     'LOAD_ACTIVITY': 'load',
     'PRECREATE_ACTIVITY': 'precreate',
+    'ACTIVITY_DELETED': 'deleted',
     'ACTIVITY_UPDATED': 'update',
     'JOINT_CREATED': 'join',
     'JOINT_DELETED': 'leave',
     'UPDATE_ADDED': 'update_published',
     'LOAD_NEWS_PAGE': 'load_page',
-    'NEWS_CHANGED': 'update_published'
+    'NEWS_CHANGED': 'update_published',
+    'MORE_ACTIVITY_UPDATES': 'more_updates'
   },
 
   initialize: function () {
@@ -26,13 +28,16 @@ var ActivityStore = createStore({
       act_type: 'niezdefiniowany',
       place: '',
       is_urgent: false,
-      limit: 0
+      limit: 0,
+      parent_id: null
     }
     this.volunteers = []
     this.activityState = Draft.EditorState.createEmpty()
     this.newUpdateState = Draft.EditorState.createEmpty()
     this.updates = []
     this.updatesPage = 1
+    this.children = []
+    this.parentName = ''
   },
 
   load: function(data, page) {
@@ -54,10 +59,22 @@ var ActivityStore = createStore({
     this.updates = data.updates
     this.updatesPage = 1
 
+    // Nadzadanie
+    this.parentName = data.parentName
+
+    // Podzadania
+    this.children = data.children
+
     this.emitChange()
   },
 
-  precreate: function() {
+  precreate: function(data) {
+    this.initialize()
+    this.activity.parent_id=data.parent_id
+    this.emitChange()
+  },
+
+  deleted: function (data) {
     this.initialize()
     this.emitChange()
   },
@@ -99,6 +116,18 @@ var ActivityStore = createStore({
     this.emitChange()
   },
 
+  more_updates: function (data) {
+    var that = this
+    //console.log ('MORE UPDATES', updates)
+    //var size = (this.activity.updates_size%NEWS_PER_PAGE == 0) ? NEWS_PER_PAGE : this.activity.updates_size%NEWS_PER_PAGE
+    //var newUpdates = updates.slice(0, NEWS_PER_PAGE)
+    data.updates.forEach(function(update){
+      that.updates.push(update)
+    })
+    this.updatesPage = data.page
+    this.emitChange()
+  },
+  
   getState: function () {
     return {
       activity: this.activity,
@@ -106,7 +135,9 @@ var ActivityStore = createStore({
       volunteers: this.volunteers,
       updates: this.updates,
       newUpdateState: this.newUpdateState,
-      updatesPage: this.updatesPage
+      updatesPage: this.updatesPage,
+      children: this.children,
+      parentName: this.parentName
     }
   },
 
@@ -117,7 +148,9 @@ var ActivityStore = createStore({
       activityState: Draft.convertToRaw(this.activityState.getCurrentContent()),
       newUpdateState: Draft.convertToRaw(this.newUpdateState.getCurrentContent()),
       updates: this.updates,
-      updatesPage: this.updatesPage
+      updatesPage: this.updatesPage,
+      children: this.children,
+      parentName: this.parentName
     }
   },
 
@@ -126,6 +159,8 @@ var ActivityStore = createStore({
     this.volunteers = state.volunteers
     this.updates = state.updates
     this.updatesPage = state.updatesPage
+    this.children = state.children
+    this.parentName = state.parentName
 
     _.forEach(state.activityState.entityMap, function(val, key) {
       val.data.mention = fromJS(val.data.mention)
@@ -144,6 +179,9 @@ var ActivityStore = createStore({
 ActivityStore.attributes = function() {
   return [
     'id',
+    'parent_id',
+    'parentName',
+    'children',
     'act_type',
     'created_at',
     'created_by',
@@ -153,6 +191,7 @@ ActivityStore.attributes = function() {
     'is_archived',
     'is_private',
     'is_urgent',
+    'is_public',
     'lat_lon',
     'limit',
     'name',

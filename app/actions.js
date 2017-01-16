@@ -316,6 +316,22 @@ module.exports = {
     })
   },
 
+  removeActivity: function(context, payload, cb) {
+    payload.isSafeToBeExecuted = true
+    context.service.delete('Activities', payload, {}, function (err, data) {
+      if(err) { 
+        debug(err) 
+        context.dispatch('SAVE_FLASH_FAILURE', 'Problem z usunięciem aktywności')
+    }
+      else {
+        context.dispatch('ACTIVITY_DELETED')
+        context.dispatch('SAVE_FLASH_SUCCESS', 'Aktywność usunięta')
+        context.executeAction(navigateAction, {url: '/'})
+      }
+      cb()
+    })
+  },
+
   updateActivity: function(context, payload, cb) {
     context.service.update('Activities', {}, payload, function (err, data) {
       if(err) { debug(err) }
@@ -336,13 +352,35 @@ module.exports = {
   },
 
   postActivityUpdate: function(context, payload, cb) {
-    context.service.update('Activities', {}, payload, function (err, data) {
+    context.service.update('Activities', payload, {} , function (err, data) {
       if(err) { debug(err) }
       else {
         context.dispatch('SAVE_FLASH_SUCCESS', 'Aktualizacja do zadania została pomyślnie opublikowana.')
-        context.dispatch('UPDATE_ADDED', payload.updates)
+        context.dispatch('MORE_ACTIVITY_UPDATES', {
+          updates: [ payload.update ],
+          page: payload.page
+        })
         cb()
       }
+    })
+  },
+
+  moreActivityUpdates: function(context, payload, cb) {
+
+    var newPage = payload.page
+    context.service.read('Activities', payload, {
+      store: 'Activity'
+    }, function (err, data) {
+      if(err) {
+        debug(err)
+      } else if(!data) {
+        debug('Błąd ładowania aktualizacji aktywności')
+      } else {
+        context.dispatch('MORE_ACTIVITY_UPDATES', {
+          updates: data.updates,
+          page: newPage})
+      }
+      cb()
     })
   },
 

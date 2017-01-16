@@ -80,6 +80,10 @@ var ProfileComments = React.createClass({
   render: function (){
     var that = this
     var commentsToRender = this.state.store.comments.slice(0, this.state.page*10)
+    var newComment
+    if ( this.props.context.getUser() ) {
+      newComment = (<NewComment context={this.props.context} />)
+    }
     var comments = commentsToRender.map(function(comment) {
       return (
         <Comment
@@ -96,15 +100,16 @@ var ProfileComments = React.createClass({
           <b><FormattedMessage id="comments_more" /></b>
         </div>
     }
-    return (
-      <div className="profileComments">
-        <b className="big-text"><FormattedMessage id="comments_header" /> ({this.state.store.comments.length}):</b>
-        <NewComment context={this.props.context} />
-        <div className="comments-list-space" />
-        {comments}
-        {moreCommentsButton}
-      </div>
-    )
+    
+      return (
+        <div className="profileComments">
+          <b className="big-text"><FormattedMessage id="comments_header" /> ({this.state.store.comments.length}):</b>
+          {newComment}
+          <div className="comments-list-space" />
+          {comments}
+          {moreCommentsButton}
+        </div>
+      )
   }
 })
 

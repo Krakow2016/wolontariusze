@@ -2,9 +2,23 @@ module.exports = function(service) {
 
   var read = service.read
   service.read = function(req, resource, params, config, callback) {
-    var isWhatWeDoPage = (resource == 'Activities' && params.id == 'what-we-do' )
-    if(!req.user && !isWhatWeDoPage) { return callback({statusCode: 403}) }
-    read(req, resource, params, config, callback)
+    read(req, resource, params, config, function (error, data) {
+        if (error) {
+          callback(error,data)
+        }
+        var isWhatWeDoPage = (resource == 'Activities' && params.id == 'what-we-do' )
+        var isPublic = (data && data.is_public)
+        var isActivity = (resource == 'Activities')
+
+        if( (isActivity && !req.user  && !isPublic ) ||
+            (!isActivity && !req.user) ) { return callback({statusCode: 403}) } 
+        if( isActivity && !req.user && isPublic ) {
+          data.volunteers = []
+          data.created_by.profile_picture_url=''
+        }
+        //console.log("ACT", data)
+        callback(error,data)              
+    })
   }
 
   var create = service.create

@@ -1495,6 +1495,41 @@ button + .activity-table{
   border-radius: 50%
 }
 
+.activity-subtask {
+	border-bottom: 1px solid black;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+.activity-subtask-name {
+	/*width: 70%;
+	overflow: hidden;
+	white-space: nowrap
+	text-overflow: ellipsis;
+	margin-right: 10px;
+	display: inline-block; */
+}
+
+.activity-subtask-state-free {
+	color: green;
+}
+
+.activity-subtask-state-nonfree {
+	color: darkred;
+}
+
+.activity-subtask-removeBtn {
+	font-weight: bold;
+}
+
+
+.activity-updates-more {
+	height: 20px;
+	width: 100%;
+	text-align: center;
+	cursor: pointer;
+}
+
 /*--------COMMENTS--------*/
 .comment {
 	margin-bottom: 45px;

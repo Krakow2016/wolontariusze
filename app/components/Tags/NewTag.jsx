@@ -58,13 +58,21 @@ var NewTag = React.createClass({
       })
   },
 
+  handleEnter: function(e){
+    if(e.key == 'Enter'){
+      e.preventDefault();
+      this.handleSave();
+    }
+  },
+
   render: function() {
 
     var inputProps = {
       placeholder: 'Dodaj projekt, kategorię...',
       value: this.state.value,
       onChange: this.onChange,
-      className: 'input-group-text'
+      className: 'input-group-text',
+      onKeyPress: this.handleEnter
     }
 
     return (
@@ -75,7 +83,8 @@ var NewTag = React.createClass({
           renderSuggestion={this.renderSuggestion}
           getSuggestionValue={this.getSuggestionValue}
           onSuggestionSelected={this.handleSave}
-          inputProps={inputProps} />
+          inputProps={inputProps}
+           />
         <div className="input-group-btn">
           <input type="button" className="bg--primary" value="Dodaj" onClick={this.handleSave} />
         </div>

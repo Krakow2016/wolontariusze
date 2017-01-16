@@ -136,6 +136,8 @@ module.exports = {
     }
   },
 
+
+
   activity_creation: {
     path: '/zadania/nowe',
     method: 'get',
@@ -143,7 +145,20 @@ module.exports = {
     action: function (context, payload, done) {
       context.dispatch('LOAD_URL', '/zadania/nowe')
       context.dispatch('UPDATE_PAGE_TITLE', { title: 'Nowa Aktywnosc' })
-      context.dispatch('PRECREATE_ACTIVITY', {})
+      context.dispatch('PRECREATE_ACTIVITY', {parent_id: null })
+      done()
+    }
+  },
+
+  activity_creation_with_parent: {
+    path: '/zadania/nowe/:parentId',
+    method: 'get',
+    handler: require('./components/ActivityCreate.jsx'),
+    action: function (context, payload, done) {
+      var activityParentId  = !!payload.params.parentId ? payload.params.parentId : null
+      context.dispatch('LOAD_URL', '/zadania/nowe/'+activityParentId)
+      context.dispatch('UPDATE_PAGE_TITLE', { title: 'Nowa Aktywnosc' })
+      context.dispatch('PRECREATE_ACTIVITY', {parent_id: activityParentId })
       done()
     }
   },

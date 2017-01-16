@@ -51,11 +51,31 @@ var Activities = module.exports = {
             activity.updates_size=activity.updates.length
             if(params.page) {
               activity.updates = activity.updates.reverse().slice(NEWS_PER_PAGE*(params.page-1), NEWS_PER_PAGE*params.page)
+            } else {
+              activity.updates = activity.updates.reverse().slice(0, NEWS_PER_PAGE)
             }
 
+            
             activity.volunteers = volunteers || []
             //console.log('ACTIVITY', activity)
-            callback(null, activity)
+            r.table('Activities')
+            .filter({id: activity.parent_id})
+            .pluck('id', 'name')
+            .run().then(function (parent) {
+              activity.parentName = (parent && parent.length) ? parent[0].name : null;
+              r.table('Activities')
+              .filter({parent_id: params.id.toString()})
+              .pluck('id', 'parent_id', 'name', 'limit', 'endtime', 'datetime', 'is_archived', 'created_at')
+              .orderBy(r.row('created_at'))
+              .run().then(function (children) {
+                activity.children = children || []
+                //console.log('activity', activity)
+                callback(null, activity)
+              })
+            }) 
+            
+
+
           })
         })
     } else {
@@ -77,10 +97,11 @@ var Activities = module.exports = {
       return
     }
 
-    if (params.isNews) {
+     if (params.isNews) {
       r.table(tableName).get(id).run().then (function (news) {
         var data;
         if (params.isToBeAdded) {
+          news.updates = news.updates || []
           news.updates.push(params.update)
           news.updates.reverse()
           data = news.updates.slice(NEWS_PER_PAGE*(params.page-1), NEWS_PER_PAGE*params.page)
@@ -106,21 +127,25 @@ var Activities = module.exports = {
         callback(null, resp)
       })
     }
-
   },
 
   delete: function(req, resource, params, config, callback) {
-    r.table(tableName).get(params.id).run().then(function (resp1) {
-      r.table(tableName).get(params.id).delete().run().then(function (resp2) {
-        // Usuń wszystkie zgłoszenia do aktywności
-        r.table('Joints')
-          .getAll(params.id, {index: 'activity_id'})
-          .delete()
-          .run().then(function(){
-              // ok
-            callback(null, resp2)
-          })
-      })
+    var activityId = params.id || config.id
+    // Błąd gdy brak id
+    if(!activityId) {
+      callback(400)
+      return
+    }
+
+    r.table(tableName).get(activityId).delete().run().then(function (resp2) {
+      // Usuń wszystkie zgłoszenia do aktywności
+      r.table('Joints')
+        .getAll(activityId, {index: 'activity_id'})
+        .delete()
+        .run().then(function(){
+            // ok
+          callback(null, resp2)
+        })
     })
   },
 
