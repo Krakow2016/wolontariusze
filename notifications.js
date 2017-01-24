@@ -301,45 +301,50 @@ r.connect(config.rethinkdb, function(err, conn) {
                   var size = all_volunteers.length
                   if(!size) { return } // Nie ma do kogo wysłać
 
-                  var request = new_sg.emptyRequest({
-                    method: 'POST',
-                    path: '/v3/mail/send',
-                    body: {
-                      personalizations: all_volunteers.filter(function (volunteer) {return !!volunteer.right.email}).map(function (volunteer) {
-                        return {
-                            to: [
-                              {
-                                email: volunteer.right.email
+                  // Podziel listę odbiorców na segmenty po 1000 adresów
+                  _.times(Math.ceil(size / 1000), function() {
+                    // Lista 1000 osbiorców
+                    var volunteers = all_volunteers.splice(0, 1000)
+                    var request = new_sg.emptyRequest({
+                      method: 'POST',
+                      path: '/v3/mail/send',
+                      body: {
+                        personalizations: volunteers.filter(function (volunteer) {return !!volunteer.right.email}).map(function (volunteer) {
+                          return {
+                              to: [
+                                {
+                                  email: volunteer.right.email
+                                }
+                              ],
+                              subject: subject,
+                              substitutions: {
+                                ":name": volunteer.right.first_name.toString(),
                               }
-                            ],
-                            subject: subject,
-                            substitutions: {
-                              ":name": volunteer.right.first_name.toString(),
-                            }
-                        }
-                      }),
-                      from: {
-                        email: 'portal@goradobra.pl',
-                        name: 'Portal Góra Dobra'
-                      },
-                      content: [
-                        {
-                          type: 'text/html',
-                          value: html,
+                          }
+                        }),
+                        from: {
+                          email: 'portal@goradobra.pl',
+                          name: 'Portal Góra Dobra'
                         },
-                      ],
-                      reply_to: {
-                        email: author.email
+                        content: [
+                          {
+                            type: 'text/html',
+                            value: html,
+                          },
+                        ],
+                        reply_to: {
+                          email: author.email
+                        },
+                        categories: [
+                          mailCategory.toString()
+                        ],
+                        template_id: sendgrid_template
                       },
-                      categories: [
-                        mailCategory.toString()
-                      ],
-                      template_id: sendgrid_template
-                    },
-                  })
+                    })
 
-                  new_sg.API(request, function(error, response) {
-                    console.log('sendgrid:', JSON.stringify(error), response)
+                    new_sg.API(request, function(error, response) {
+                      console.log('sendgrid:', JSON.stringify(error), response)
+                    })
                   })
                 })
               })
