@@ -116,7 +116,7 @@ module.exports = {
 
     "profile_question1": "Kim jestem?",
     "profile_question2": "Co chciałbym robić w życiu najbardziej?",
-    "profile_question3": "Dlaczego angażuję się w wolontariat ŚDM?",
+    "profile_question3": "Dlaczego angażuję się w wolontariat?",
     "profile_image_change": "Kliknij w zdjęcie aby je zmienić",
 
     "activity_volunteer": "Zgłaszam się!",
@@ -280,7 +280,7 @@ module.exports = {
 
     "profile_question1": "Who am I?",
     "profile_question2": "What would I like to do in life the most?",
-    "profile_question3": "Why do I volunteer for the WYD?",
+    "profile_question3": "Why do I volunteer?",
     "profile_image_change": "Click image to change it",
 
     "activity_volunteer": "I volunteer!",
