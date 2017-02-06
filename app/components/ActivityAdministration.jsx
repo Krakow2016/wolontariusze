@@ -455,6 +455,15 @@ var ActivityAdministration = React.createClass({
 
     var tags = this.state.activity.tags || []
 
+    var isArchivedCheckbox
+    if (this.props.creationMode == false) {
+      isArchivedCheckbox = <div>
+            <input id="is_archived" type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
+            <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
+            <br/>
+          </div>
+    }
+
     return (
       <div>
         <Formsy.Form
@@ -535,9 +544,7 @@ var ActivityAdministration = React.createClass({
           <label htmlFor="urgent">Zadanie jest PILNE ?</label>
           <br/>
 
-          <input id="is_archived" type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
-          <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
-          <br/>
+          {isArchivedCheckbox}
 
           <input id="is_public" type="checkbox" name="is_public" checked={this.state.activity.is_public} onChange={this.handleChange} />
           <label htmlFor="is_public">Zadanie jest publiczne (widoczne nawet dla niezalogowanych) ?</label>
