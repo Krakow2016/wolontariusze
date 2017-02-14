@@ -366,6 +366,12 @@ var ActivityAdministration = React.createClass({
     }))
   },
 
+  createNotPrivate: function() {
+    this.setState(update(this.state, {
+      activity: {is_private: {$set: false}}
+    }))
+  },
+
   onEnterPressed: function(e) {
     if(e.key == 'Enter')
       e.preventDefault();
@@ -407,6 +413,16 @@ var ActivityAdministration = React.createClass({
                       handleChange={this.handleEndtimeChange}
                     />
                 </div>
+    }
+
+    var createPrivateButton = []
+    if (this.props.creationMode == false && !this.state.activity.is_private) {
+      createPrivateButton = <button className={this.state.canSubmit ? 'bg--warning' : ''}  onClick={this.createPrivate}>Zamień na prywatne</button>
+    }
+
+    var createNotPrivateButton = []
+    if (this.props.creationMode == false && this.state.activity.is_private) {
+      createNotPrivateButton = <button onClick={this.createNotPrivate}>Zamień na publiczne</button>
     }
 
     var removeButton = []
@@ -575,6 +591,10 @@ var ActivityAdministration = React.createClass({
 
           <br/>
           <br/>
+          <div id="activityEditToolbar" className="text--center">
+            {createNotPrivateButton}
+            {createPrivateButton}
+          </div>
           <br/>
           <div id="activityEditToolbar" className="text--center">
             {removeButton}
