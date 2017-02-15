@@ -33,14 +33,14 @@ var Html = React.createClass({
           <meta name="twitter:site" content="@gora_dobra" />
           <meta name="twitter:title" content="Góra Dobra" />
           <meta name="twitter:description" content="Góra Dobra to portal dla Wolontariuszy Światowych Dni Młodzieży Kraków 2016 w całości przygotowywany przez nich ..." />
-          <meta name="twitter:image" content="http://wolontariusze.krakow2016.com/img/favicons/apple-icon-120x120.png" />
+          <meta name="twitter:image" content="http://goradobra.pl/img/favicons/apple-icon-120x120.png" />
 
           {/* FACEBOOK*/}
           <meta property="og:title" content="Góra Dobra" />
           <meta property="og:site_name" content="Góra Dobra dla ŚDM Kraków 2016" />
           <meta property="og:type" content="article" />
-          <meta property="og:url" content="http://wolontariusze.krakow2016.com" />
-          <meta property="og:image" content="http://wolontariusze.krakow2016.com/img/favicons/ms-icon-310x310.png" />
+          <meta property="og:url" content="http://goradobra.pl" />
+          <meta property="og:image" content="http://goradobra.pl/img/favicons/ms-icon-310x310.png" />
           <meta property="og:description" content="Góra Dobra to portal dla Wolontariuszy Światowych Dni Młodzieży Kraków 2016 w całości przygotowywany przez nich ..." />
 
           {/* FAVICONS */}

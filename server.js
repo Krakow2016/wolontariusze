@@ -187,7 +187,7 @@ module.exports = function(server) {
       if(req.visitor) {
         req.visitor.pageview({
           dp: req.path,
-          dh: 'https://wolontariusze.krakow2016.com',
+          dh: 'https://goradobra.pl',
           dr: req.headers['referer'],
           uip: req.headers['x-real-ip'],
           ua: req.headers['user-agent']
@@ -727,7 +727,7 @@ module.exports = function(server) {
     if(req.visitor) {
       req.visitor.pageview({
         dp: req.path,
-        dh: 'https://wolontariusze.krakow2016.com',
+        dh: 'https://goradobra.pl',
         dr: req.headers['referer'],
         uip: req.headers['x-real-ip'],
         ua: req.headers['user-agent']

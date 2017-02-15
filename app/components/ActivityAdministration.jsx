@@ -366,6 +366,12 @@ var ActivityAdministration = React.createClass({
     }))
   },
 
+  createNotPrivate: function() {
+    this.setState(update(this.state, {
+      activity: {is_private: {$set: false}}
+    }))
+  },
+
   onEnterPressed: function(e) {
     if(e.key == 'Enter')
       e.preventDefault();
@@ -407,6 +413,16 @@ var ActivityAdministration = React.createClass({
                       handleChange={this.handleEndtimeChange}
                     />
                 </div>
+    }
+
+    var createPrivateButton = []
+    if (this.props.creationMode == false && !this.state.activity.is_private) {
+      createPrivateButton = <button className={this.state.canSubmit ? 'bg--warning' : ''}  onClick={this.createPrivate}>Zamień na prywatne</button>
+    }
+
+    var createNotPrivateButton = []
+    if (this.props.creationMode == false && this.state.activity.is_private) {
+      createNotPrivateButton = <button onClick={this.createNotPrivate}>Zamień na publiczne</button>
     }
 
     var removeButton = []
@@ -454,6 +470,15 @@ var ActivityAdministration = React.createClass({
     })
 
     var tags = this.state.activity.tags || []
+
+    var isArchivedCheckbox
+    if (this.props.creationMode == false) {
+      isArchivedCheckbox = <div>
+            <input id="is_archived" type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
+            <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
+            <br/>
+          </div>
+    }
 
     return (
       <div>
@@ -535,12 +560,10 @@ var ActivityAdministration = React.createClass({
           <label htmlFor="urgent">Zadanie jest PILNE ?</label>
           <br/>
 
-          <input id="is_archived" type="checkbox" name="is_archived" checked={this.state.activity.is_archived} onChange={this.handleChange} />
-          <label htmlFor="is_archived">Zadanie jest w archiwum?</label>
-          <br/>
+          {isArchivedCheckbox}
 
           <input id="is_public" type="checkbox" name="is_public" checked={this.state.activity.is_public} onChange={this.handleChange} />
-          <label htmlFor="is_public">Zadanie jest publiczne (widoczne nawet dla niezalogowanych) ?</label>
+          <label htmlFor="is_public">Zadanie jest zewnętrzne (widoczne nawet dla niezalogowanych) ?</label>
           <br/>
 
           <b>Wolontariusze, którzy biorą udział:</b>
@@ -568,6 +591,10 @@ var ActivityAdministration = React.createClass({
 
           <br/>
           <br/>
+          <div id="activityEditToolbar" className="text--center">
+            {createNotPrivateButton}
+            {createPrivateButton}
+          </div>
           <br/>
           <div id="activityEditToolbar" className="text--center">
             {removeButton}
