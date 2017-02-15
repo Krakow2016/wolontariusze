@@ -1,6 +1,6 @@
 {
   "production": {
-    "base_url": "https://wolontariusze.krakow2016.com",
+    "base_url": "https://goradobra.pl",
     "port": 7000,
     "api_port": 3000,
     "domain": "localhost",
