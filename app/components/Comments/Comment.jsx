@@ -140,8 +140,11 @@ var ProfileComment = React.createClass({
       var isAdmin = this.props.context.getUser() && this.props.context.getUser().is_admin
       var isOwner = this.props.context.getUser() && ( this.props.context.getUser().id == this.props.comment.adminId )
 
-      if (isAdmin || isOwner) {
+      if (isOwner) {
         buttons.push(<span className="RichEditor-styleButton" onClick={this.editComment} key="editComment"><FormattedMessage id="comments_edit" /></span>)
+      }
+
+      if (isAdmin || isOwner) {
         buttons.push(<span className="RichEditor-styleButton" onClick={this.deleteComment} key="deleteComment"><FormattedMessage id="comments_remove" /></span>)
       }
 
