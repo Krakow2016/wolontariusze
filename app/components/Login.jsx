@@ -1,6 +1,7 @@
 var React = require('react')
 var NavLink = require('fluxible-router').NavLink
 var FormattedMessage = require('react-intl').FormattedMessage
+var FormattedHTMLMessage = require('react-intl').FormattedHTMLMessage
 var CurrentUrlStore = require('../stores/CurrentUrl')
 
 var App = React.createClass({
@@ -55,7 +56,7 @@ var App = React.createClass({
             </button>
           </form>
           <p>
-            <FormattedMessage id="no_account_message" />{' '}
+            <FormattedHTMLMessage id="no_account_message" />{' '}
           </p>
         </div>
       </div>

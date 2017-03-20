@@ -15,7 +15,7 @@ module.exports = {
     "logout": "Wyloguj się",
     "password": "Hasło",
     "password_repeat": "Powtórz hasło",
-    "no_account_message": "Nie masz konta a jesteś wolontariuszem lub zapomniałeś hasła? Napisz do nas mejla: kontakt@goradobra.pl",
+    "no_account_message": "Nie masz konta, a jesteś wolontariuszem lub zapomniałeś hasła?<br/> Napisz do nas mejla: <strong>kontakt@goradobra.pl</strong>",
     "click_here": "Kliknij tutaj!",
     "continue": "Kontynuuj",
 
@@ -179,7 +179,7 @@ module.exports = {
     "logout": "Sign out",
     "password": "Password",
     "password_repeat": "Repeat password",
-    "no_account_message": "Don't have an account but you are a volunteer or you forget password? Contact with us: kontakt@goradobra.pl",
+    "no_account_message": "Don't have an account but you are a volunteer or you forget password?<br/> Contact with us: <strong>kontakt@goradobra.pl</strong>",
     "click_here": "Click here!",
     "continue": "Continue",
 
