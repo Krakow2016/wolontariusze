@@ -56,7 +56,6 @@ var App = React.createClass({
           </form>
           <p>
             <FormattedMessage id="no_account_message" />{' '}
-            <NavLink href="/aktywacja"><FormattedMessage id="click_here" /></NavLink>
           </p>
         </div>
       </div>
