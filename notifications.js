@@ -366,7 +366,7 @@ r.connect(config.rethinkdb, function(err, conn) {
           subject = 'Zaproszenie do Góry Dobra!'
           html = '<p>Chcemy zaprosić Cię do Góry Dobra - portalu dla wolontariuszy, który będzie równocześnie naszą główną platformą komunikacji podczas Światowych Dni Młodzieży w Krakowie oraz narzędziem do organizacji projektów i wydarzeń.</p><p>To tutaj chcemy stworzyć środowisko młodych i zaangażowanych ludzi, dzielić się tym, co robimy i przekazywać Ci ważne informacje o ŚDM i zadaniach, jakie czekają na realizację.</p><p>Dzięki Górze Dobra będziesz mógł pochwalić się efektami swojej pracy. W tym też miejscu będziesz miał możliwość zobaczenia i dzielenia się z innymi informacjami o tym, jak dużo serca, i aktywności wolontariackiej dajesz na rzecz Światowych Dni Młodzieży w Krakowie.</p><p>Aby aktywować swoje konto kliknij w poniższy link:</p><p><a href="'+ url +'">'+ url +'</a></p><p>WAŻNE! Link, jaki otrzymujesz teraz do zalogowania, jest aktywny tylko przez 72h. W wypadku jakichkolwiek problemów bądź pytań, prosimy o kontakt na: kontakt@goradobra.pl.</p><p>Nie zwlekaj ani chwili dłużej i zostań już dziś Wolontariuszem ŚDM Kraków 2016.</p>'
         } else { // EN
-          subject = 'Invitation to WYD Volunteers portal'
+          subject = 'Invitation to Mountain of Good portal'
           html = '<p>We would like to invite you to the “Mountain of Good” - a portal for volunteers. The portal will be the main means of communication during the World Youth Days in Krakow and a tool for managing projects and events.  This is a place for building a community of young and engaged people, for sharing what we do, for providing you important news regarding World Youth Days, and for sharing information about tasks waiting for volunteers.</p><p> Thanks to the “Mountain of Good” you will be able to share the results of your volunteer work. You will be able to see and share how much heart and energy you and the other volunteers are giving for the World Youth Days Krakow 2016.</p><p> To activate your account please click on the following link:</p> <p><a href="'+ url +'">'+ url +'</a></p> <p>Important! The link you have just received is valid only for 72 hours. In case of any problems or questions please contact us using email - kontakt@goradobra.pl.</p><p>Ps. Want to get to know other WYD volunteers? Sign up now, and join this task (by clicking blue "I volunteer" button): <a href="https://wolontariusze.krakow2016.com/zadania/a2b519c6-0f9f-4b05-a0e5-3a81cf003f13">https://wolontariusze.krakow2016.com/zadania/a2b519c6-0f9f-4b05-a0e5-3a81cf003f13</a></p>'
         }
 
@@ -792,34 +792,34 @@ r.connect(config.rethinkdb, function(err, conn) {
       })
     })
 
-  // Informuje API Eventory o zmianach w grupach wolontariusza
-  r.table('Volunteers').changes()
-    .filter(r.row('new_val')('tags').eq(r.row('old_val')('tags').default([])).not())
-    .run(conn, function(err, cursor) {
-      cursor.each(function(err, change){
-        var row = change.new_val
-        request
-          .put('https://eventory.cc/webapi/v1/sdm/sync')
-          .send({volunteer_id: row.id, groups: row.tags})
-          .set('X-Operator-Api-Token', process.env.EVENTORY_API)
-          .end()
-      })
-    })
+//   // Informuje API Eventory o zmianach w grupach wolontariusza
+//   r.table('Volunteers').changes()
+//     .filter(r.row('new_val')('tags').eq(r.row('old_val')('tags').default([])).not())
+//     .run(conn, function(err, cursor) {
+//       cursor.each(function(err, change){
+//         var row = change.new_val
+//         request
+//           .put('https://eventory.cc/webapi/v1/sdm/sync')
+//           .send({volunteer_id: row.id, groups: row.tags})
+//           .set('X-Operator-Api-Token', process.env.EVENTORY_API)
+//           .end()
+//       })
+//     })
 
-  // Informuje API Eventory o zmianach w zdjęciu profilowym
-  r.table('Volunteers').changes()
-    .filter(r.row('new_val')('profile_picture_url').eq(r.row('old_val')('profile_picture_url').default('')).not())
-    .run(conn, function(err, cursor) {
-      cursor.each(function(err, change){
-        var row = change.new_val
-        request
-          .put('https://eventory.cc/webapi/v1/sdm/sync')
-          .send({
-            volunteer_id: row.id,
-            photo: row.profile_picture_url
-          })
-          .set('X-Operator-Api-Token', process.env.EVENTORY_API)
-          .end()
-      })
-    })
+//   // Informuje API Eventory o zmianach w zdjęciu profilowym
+//   r.table('Volunteers').changes()
+//     .filter(r.row('new_val')('profile_picture_url').eq(r.row('old_val')('profile_picture_url').default('')).not())
+//     .run(conn, function(err, cursor) {
+//       cursor.each(function(err, change){
+//         var row = change.new_val
+//         request
+//           .put('https://eventory.cc/webapi/v1/sdm/sync')
+//           .send({
+//             volunteer_id: row.id,
+//             photo: row.profile_picture_url
+//           })
+//           .set('X-Operator-Api-Token', process.env.EVENTORY_API)
+//           .end()
+//       })
+//     })
 })

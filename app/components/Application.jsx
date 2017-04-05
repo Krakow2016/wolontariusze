@@ -172,6 +172,7 @@ var Application = React.createClass({
     return (
       <IntlProvider locale={this.state.lang} messages={this.state.messages}>
         <div>
+          <div className="new-promo"><FormattedHTMLMessage id="new-promo"/></div>
           <header>
             <div className="head-photo">
               <NavLink href="/"><FormattedHTMLMessage id="home-img" /></NavLink>

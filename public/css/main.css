@@ -89,7 +89,7 @@ input.menu-search-box {
 	text-align: center;
 }
 .login-form{
-	margin: 0px auto;
+	margin: 0 auto;
 	display: inline-block;
 }
 .login-form label{
@@ -282,6 +282,32 @@ label:hover:before {
 	border-radius: 4px;
 }
 
+/*---------NEW PROMO----------*/
+
+.new-promo{
+	width: 100%;
+	padding: 1px;
+	background-color: #003753;
+	color: white;
+	text-align: center;
+}
+.new-promo h1{
+	color: white;
+	font-size: 1.4em;
+	margin: 5px;
+}
+@media only screen and (max-width: 760px){
+	.new-promo h1{
+		font-size: 1.2em;
+	}
+}
+@media only screen and (max-width: 400px){
+	.new-promo h1{
+		font-size: 0.9em;
+		margin: 0;
+	}
+}
+
 /*--------AUTO COMPLETE-------*/
 
 .react-autosuggest__container {
@@ -467,7 +493,7 @@ label:hover:before {
 	margin-top: 1rem;
 }
 .prolife-stone>.row{
-	color: fff;
+	color: #fff;
 }
 .prolife-stone-img {
   margin: 0 10px;
