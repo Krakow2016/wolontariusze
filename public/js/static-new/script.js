@@ -12,14 +12,15 @@ window.onload = function(){
 
 	let toggleButtons = document.querySelectorAll(".toggle-button, #nav .list-element");
 	let openPane = false;
-	toggleButtons.forEach(btn => {
+	var btn;
+	
+	for(var i=0; i<toggleButtons.length; i++){
+		btn = toggleButtons[i];
 		btn.addEventListener("click", () => {
 			nav.className = openPane ? nav.className.replace(/(?:^|\s)open(?!\S)/g, '') : nav.className + " open";
 			openPane = !openPane;
-			console.log("ClassName: ", nav.className);
-			console.log("OpenPane: ", openPane);
 		})
-	});
+	}
 
 	smoothScroll.init({
 		offset: nav.offsetHeight < 100 ? 50 : 0

@@ -95,7 +95,7 @@ body > header{
 
 body > section{
     color: #163550;
-    padding: 20px 0 40px;
+    padding: 50px 0 60px;
     font-size: 1.3em;
     position: relative;
 }
@@ -128,7 +128,8 @@ body > section.no-circle:after{
     content: initial;
 }
 section h2{
-    margin: 25px 0;
+    margin: 0;
+    margin-bottom: 30px;
     font-weight: 400;
 }
 section:nth-child(even){
@@ -141,12 +142,15 @@ section:nth-child(odd){
 }
 section#why{
     text-align: center;
+    padding: 50px 35px;
 }
 section p{
     font-weight: 300;
 }
-section#what .content{
-    padding: 30px;
+section#what{
+    padding: 35px;
+    padding-top: 75px;
+    padding-bottom: 70px;
 }
 section#team-photo{
     background: url('../img/static-new/team.JPG') no-repeat center top;
@@ -160,6 +164,7 @@ section#team2-photo{
 }
 section#who {
     text-align: center;
+    padding: 50px 20px 60px 10px;
 }
 section#who .container{
     position: relative;
@@ -182,7 +187,7 @@ section#who .flex .flex-50{
     flex-basis: 50%;
 }
 section#what-is{
-    padding: 50px 0 60px;
+    padding: 50px 20px 60px 20px;
 }
 section#what-is ul{
     list-style: none;
@@ -282,10 +287,18 @@ section#work > .container{
         position: fixed;
         width: 250px;
         height: 150%;
-        left: -252px;
+        -webkit-transform: translate3d(-100%, 0, 0);
+        -moz-transform: translate3d(-100%, 0, 0);
+        -ms-transform: translate3d(-100%, 0, 0);
+        -o-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0);
     }
     .main-nav.open#nav{
-        left: 0;
+        -webkit-transform: translate3d(0, 0, 0);
+        -moz-transform: translate3d(0, 0, 0);
+        -ms-transform: translate3d(0, 0, 0);
+        -o-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
     }
     .main-nav#nav ul{
         display: block;
@@ -332,10 +345,10 @@ section#work > .container{
         padding: 12px;
         background: white;
         border-bottom-right-radius: 12px;
-        -webkit-transform: translateX(100%);
-        -moz-transform: translateX(100%);
-        -ms-transform: translateX(100%);
-        -o-transform: translateX(100%);
-        transform: translateX(100%);
+        -webkit-transform: translate3d(100%,0,0);
+        -moz-transform: translate3d(100%,0,0);
+        -ms-transform: translate3d(100%,0,0);
+        -o-transform: translate3d(100%,0,0);
+        transform: translate3d(100%,0,0);
     }
 }

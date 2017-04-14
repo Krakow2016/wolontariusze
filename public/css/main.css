@@ -1613,7 +1613,16 @@ button + .activity-table{
 	width: 100%;
 }
 .content-texts p{
-	font-size: 1.5rem;
+	font-size: 1.3rem;
+	padding: 30px;
+}
+.content-texts ol{
+    font-size: 1.3em;
+    padding: 30px;
+    padding-top: 0;
+}
+.content-texts ol li{
+    margin-bottom: 25px;
 }
 .content-texts{
 	padding: 1rem 1rem 3rem 1rem;
