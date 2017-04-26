@@ -1163,7 +1163,6 @@ section:after{
 }
 section:last-of-type{
 	border: none;
-	margin-bottom: 12px;
 }
 .inspiration{
 	padding: 3.5rem;
@@ -1626,6 +1625,38 @@ button + .activity-table{
 }
 .content-texts{
 	padding: 1rem 1rem 3rem 1rem;
+}
+
+/*-------YT ROW-------*/
+
+.yt-container{
+    padding: 50px 1.7rem;
+	color: white;
+	background-color: #004f74;
+}
+.yt-container h1{
+    font-size: 3.5em;
+	font-weight: 100;
+	margin: 50px 0;
+    color: white;
+}
+.yt-iframe{
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+}
+.yt-iframe iframe{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.yt-container .yt-container-title{
+	position: relative;
+	top: 50px;
+	line-height: 1em;
 }
 
 /*-------BUTTONS------*/

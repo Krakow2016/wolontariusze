@@ -163,6 +163,19 @@ var App = React.createClass({
           <a href="/spotkajmy-sie"><h1><FormattedMessage id="meet_together" /></h1></a>
         </div>
 
+        <div className="yt-container volunteer-dashboard text--center">
+          <div className="row">
+            <div className="col col6">
+              <div className="yt-iframe">
+                <iframe src="https://www.youtube.com/embed/uCWaC7p_q-E" frameBorder="0" allowFullScreen></iframe>
+              </div>
+            </div>
+            <div className="col col6">
+              <h1 className="yt-container-title">Niedziela Palmowa Targi Miłosierdzia</h1>
+            </div>
+          </div>
+        </div>
+
         <div className="tiles-container why-and-what">
           <div className="row">
             <div className="col col6">

@@ -114,9 +114,12 @@ var Application = React.createClass({
     var cookie
 
     if(typeof this.state.cookie === undefined || this.state.cookie == -1){
-      cookie = "open"
+      cookie = (          <div className="open cookie-container">
+        <p>Ta strona używa plików Cookies</p>
+        <button onClick={this.setAgree}>Akceptuje</button>
+      </div>)
     }else{
-      cookie = ""
+      cookie = "";
     }
 
     if (this.user()) {
@@ -198,10 +201,7 @@ var Application = React.createClass({
               <NavLink href="/faq"><FormattedMessage id="footer_faq" /></NavLink> | <a href="mailto:kontakt@goradobra.pl" target="_balnk">E-mail</a> | <NavLink href="/kontakt"><FormattedMessage id="footer_contact" /></NavLink> | <NavLink href="/regulamin"><FormattedMessage id="footer_terms" /></NavLink> | <a href="https://github.com/Krakow2016/wolontariusze"><FormattedMessage id="footer_devs" /></a>
             </p>
           </footer>
-          <div className={cookie + " cookie-container"}>
-            <p>Ta strona używa plików Cookies</p>
-            <button onClick={this.setAgree}>Akceptuje</button>
-          </div>
+          {cookie}
         </div>
 
       </IntlProvider>
