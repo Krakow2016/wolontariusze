@@ -121,8 +121,7 @@ var Bank = React.createClass({
   },
 
   addActivityButton: function() {
-    var user = this.user()
-    return user.is_admin ? <AddActivityButton /> : null
+    return <AddActivityButton />
   },
 
   user: function() {
