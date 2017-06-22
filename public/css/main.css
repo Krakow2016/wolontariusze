@@ -1633,6 +1633,7 @@ button + .activity-table{
     padding: 50px 1.7rem;
 	color: white;
 	background-color: #004f74;
+	border-bottom: 1px white solid;
 }
 .yt-container h1{
     font-size: 3.5em;
