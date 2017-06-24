@@ -8,6 +8,7 @@ var ActivitiesStore = require('../../stores/Activities.js')
 var ActivitiesSearchForm = require('./Search.jsx')
 var actions = require('../../actions')
 var AddActivityButton = require('./AddActivityButton.jsx')
+var FormattedMessage = require('react-intl').FormattedMessage
 
 var Bank = React.createClass({
 
@@ -110,7 +111,7 @@ var Bank = React.createClass({
               onSubmit={this.onSubmit}
               query={this.state.query} />
 
-          {this.state.all.length > 3 ? this.addActivityButton() : ''}
+          {this.state.all.length > 3 ? this.addActivityButton(true) : ''}
           <List tasks={this.state.all} />
           {this.addActivityButton()}
         </div>
@@ -120,9 +121,15 @@ var Bank = React.createClass({
     }
   },
 
-  addActivityButton: function() {
+  addActivityButton: function(leaderText) {
     var user = this.user()
-    return user.is_admin ? <AddActivityButton /> : null
+    if ( user.is_admin || user.is_leader ) {
+      return <AddActivityButton />
+    } else if (leaderText) {
+      return <div className="alert alert--warning"><p><FormattedMessage id="bank_become_leader" /></p></div>
+    } else {
+      return null
+    }
   },
 
   user: function() {

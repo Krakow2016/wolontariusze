@@ -116,6 +116,20 @@ var VolunteerAdministration = React.createClass({
     })
     window.location.hash = 'close'
   },
+  _onLeaderDialogSubmit: function() {
+    this.props.context.executeAction(updateVolunteer, {
+      id: this.state.profile.id,
+      is_leader: true
+    })
+    window.location.hash = 'close'
+  },
+  _onLeaderRejectDialogSubmit: function() {
+    this.props.context.executeAction(updateVolunteer, {
+      id: this.state.profile.id,
+      is_leader: false
+    })
+    window.location.hash = 'close'
+  },
   saveTag: function(tag) {
     var tags = this.state.profile.tags || []
     this.props.context.executeAction(updateVolunteer, {
@@ -233,6 +247,30 @@ var VolunteerAdministration = React.createClass({
             <p className="text--right">
               <button onClick={this.updateResponsibilities}>Aktualizuj</button>
             </p>
+          </div>
+        </div>
+      )
+    }
+
+    if(!this.state.profile.is_leader) {
+      papers.push(
+        <div className="card" key="leader">
+          <div className="card-content text--center">
+            <p>Użytkownik nie posiada przywilejów lidera</p>
+            <div style={{textAlign: 'center'}}>
+              <a href="#leader" className="button">Awansuj do rangi lidera</a>
+            </div>
+          </div>
+        </div>
+      )
+    } else {
+      papers.push(
+        <div className="card" key="leader">
+          <div className="card-content text--center">
+            <p>Konto ma uprawnienia lidera</p>
+            <div style={{textAlign: 'center'}}>
+              <a href="#reject_leader" className="button">Odbierz prawa lidera</a>
+            </div>
           </div>
         </div>
       )
@@ -360,6 +398,52 @@ var VolunteerAdministration = React.createClass({
                   <div className="modal-footer">
                     <p>
                       <button className="bg--error" onClick={this._onAdminRejectDialogSubmit}>Tak, usuń prawa koordynatora</button>
+                      <a href="#close" className="button">Anuluj</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div id="leader" className="modal">
+                <div className="modal-container">
+                  <div className="modal-header">
+                    Czy jesteś pewien?
+
+                    <a href="#close" className="modal-close">&times;</a>
+                  </div>
+
+                  <div className="modal-body">
+                    <p>
+                      <strong>{this.state.profile.first_name} {this.state.profile.last_name}</strong> zyska prawa lidera. Czy jesteś pewien że chcesz to zrobić?
+                    </p>
+                  </div>
+
+                  <div className="modal-footer">
+                    <p>
+                      <button className="bg--error" onClick={this._onLeaderDialogSubmit}>Tak, nadaj prawa lidera</button>
+                      <a href="#close" className="button">Anuluj</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div id="reject_leader" className="modal">
+                <div className="modal-container">
+                  <div className="modal-header">
+                    Czy jesteś pewien?
+
+                    <a href="#close" className="modal-close">&times;</a>
+                  </div>
+
+                  <div className="modal-body">
+                    <p>
+                      <strong>{this.state.profile.first_name} {this.state.profile.last_name}</strong> straci prawa lidera. Czy jesteś pewien że chcesz to zrobić?
+                    </p>
+                  </div>
+
+                  <div className="modal-footer">
+                    <p>
+                      <button className="bg--error" onClick={this._onLeaderRejectDialogSubmit}>Tak, usuń prawa lidera</button>
                       <a href="#close" className="button">Anuluj</a>
                     </p>
                   </div>

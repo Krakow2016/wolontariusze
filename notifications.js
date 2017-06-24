@@ -468,6 +468,63 @@ r.connect(config.rethinkdb, function(err, conn) {
       })
     })
 
+  r.table('Volunteers').changes()
+    .filter(r.row('old_val')('is_leader').default(false).eq(true).not().and(r.row('new_val')('is_leader').eq(true)))
+    .run(conn, function(err, cursor) {
+      cursor.each(function(err, change){ // Wolontariusz został liderem
+        var row = change.new_val
+
+        r.table('Volunteers').get(row.promoted_to_leader_by)
+          .run(conn, function(err, admin) { // Pobierz autora zmiany
+
+            var html = '<p>'+ admin.first_name +' '+ admin.last_name +' właśnie nadał/a Ci specjalne uprawnienia koordynatora, dzięki którym możesz tworzyć nowe aktywności w Banku Pracy</p>'
+
+            var request = new_sg.emptyRequest({
+              method: 'POST',
+              path: '/v3/mail/send',
+              body: {
+                personalizations: [
+                  {
+                    to: [
+                      {
+                        email: row.email
+                      }
+                    ],
+                    cc: [
+                      {
+                        email: 'portal@goradobra.pl'
+                      }
+                    ],
+                    subject: 'Witaj w gronie liderów na Górze Dobra!',
+                    substitutions: {
+                      ":name": row.first_name.toString(),
+                    }
+                  },
+                ],
+                from: {
+                  email: 'portal@goradobra.pl',
+                  name: 'Portal Góra Dobra'
+                },
+                content: [
+                  {
+                    type: 'text/html',
+                    value: html
+                  },
+                ],
+                categories: [
+                  'admin'
+                ],
+                template_id: sendgrid_template
+              } 
+            })
+
+            new_sg.API(request, function(error, response) {
+              console.log('sendgrid:', JSON.stringify(error), response)
+            })
+          })
+      })
+    })
+
   // Wzmianki w komentarzach na profilu wolontariuszy
   r.table('Comments').filter(r.row.hasFields({
     raw: {
