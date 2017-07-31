@@ -5,8 +5,6 @@ var FormattedHTMLMessage = require('react-intl').FormattedHTMLMessage
 module.exports = function() {
   return (
     <div>
-      <FormattedMessage id="disclamer_1" tagName="p" />
-      <FormattedMessage id="disclamer_2" tagName="p" />
       <FormattedMessage id="disclamer_3" tagName="p" />
       <FormattedHTMLMessage id="disclamer_4" tagName="p" />
     </div>
