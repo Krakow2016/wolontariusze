@@ -16,6 +16,7 @@ var MyDatetime = require('./Formsy/MyDatetime.jsx')
 var MyTextField = require('./Formsy/MyTextField.jsx')
 var Editor = require('./Editor.jsx')
 var Draft = require('draft-js')
+var FormattedMessage = require('react-intl').FormattedMessage
 
 var actions = require('../actions')
 var removeAction = actions.removeActivity
@@ -378,6 +379,14 @@ var ActivityAdministration = React.createClass({
   },
 
   render: function() {
+
+    var user = this.user()
+    var is_admin = user && user.is_admin
+    var is_leader = user && user.is_leader
+    if (!is_admin && !is_leader) {
+      return <div className="alert alert--warning"><p><FormattedMessage id="bank_activity_administration_no_authorization" /></p></div>
+    }
+
     var dateTime
     if (this.state.activity.datetime) {
       var datetimeHint

@@ -44,6 +44,9 @@ module.exports = function(service) {
     if(body.is_admin) { // Nadanie praw admina
       body.promoted_by = req.user.id
     }
+    if(body.is_leader) { // Nadanie praw lidera
+      body.promoted_to_leader_by = req.user.id
+    }
     update(req, resource, params, body, config, callback)
   }
 

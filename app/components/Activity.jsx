@@ -244,13 +244,14 @@ var Activity = React.createClass({
 
     var user = this.user()
     var is_admin = user && user.is_admin
+    var is_leader = user && user.is_leader
     var activity = this.state.activity
 
     var editLink
-    if(is_admin) {
+    if(is_admin || is_leader) {
       editLink = <div className="alert clearfix">
         <p>
-          Jako koordynator masz prawo do edycji treści i parametrów zadań. <NavLink href={'/zadania/'+ activity.id +'/edytuj'}>Kliknij edytuj</NavLink> aby przejść do strony edycji.
+          Jako koordynator/lider masz prawo do edycji treści i parametrów zadań. <NavLink href={'/zadania/'+ activity.id +'/edytuj'}>Kliknij edytuj</NavLink> aby przejść do strony edycji.
         </p>
       </div>
     }
@@ -325,11 +326,11 @@ var Activity = React.createClass({
     var volonteersLimit = (activity.limit == 0) ? 'Brak' : activity.limit
 
     var updateForm
-    if(this.user() && this.user().is_admin) {
+    if(is_admin || is_leader) {
       updateForm = (
         <div className="alert activity--updateBox">
           <p>
-            Jako koordynator masz możliwość dodawania aktualiacji do
+            Jako koordynator/lider masz możliwość dodawania aktualizacji do
             zadania, które oprócz tego, że wyświetli się pod treścią
             zadania, będzie wysłane drogą e-mailową do wszystkich
             zgłoszonych do zadania wolontariuszy.
@@ -374,10 +375,10 @@ var Activity = React.createClass({
 
 
     var addSubtask
-    if(is_admin) {
+    if(is_admin || is_leader) {
       addSubtask = <div className="alert clearfix">
         <p>
-          Jako koordynator masz prawo do tworzenia nowych podzadań. Kliknij <NavLink href={'/zadania/nowe/'+ activity.id }>dodaj podzadanie</NavLink> aby przejść do strony tworzenia.
+          Jako koordynator/lider masz prawo do tworzenia nowych podzadań. Kliknij <NavLink href={'/zadania/nowe/'+ activity.id }>dodaj podzadanie</NavLink> aby przejść do strony tworzenia.
         </p>
       </div>
     }
