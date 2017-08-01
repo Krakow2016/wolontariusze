@@ -91,6 +91,18 @@ var Welcome = React.createClass({
 
             <div>
               <MyCheckbox required="isFalse"
+                id="cb3"
+                name="cb3" value={false} />
+
+              <label htmlFor="cb3">
+                <FormattedMessage id="welcome_agreement3" />
+              </label>
+
+              <FormattedMessage id="welcome_agreement3_details" tagName="p" />
+            </div>
+
+            <div>
+              <MyCheckbox required="isFalse"
                 id="cb1"
                 name="cb1" value={false} />
               <label htmlFor="cb1">
@@ -112,17 +124,6 @@ var Welcome = React.createClass({
               </label>
 
               <FormattedMessage id="welcome_agreement2_details" tagName="p" />
-            </div>
-            <div>
-              <MyCheckbox required="isFalse"
-                id="cb3"
-                name="cb3" value={false} />
-
-              <label htmlFor="cb3">
-                <FormattedMessage id="welcome_agreement3" />
-              </label>
-
-              <FormattedMessage id="welcome_agreement3_details" tagName="p" />
             </div>
 
             <button type="submit" className="pure-button pure-button-primary" disabled={!this.state.canSubmit}>
