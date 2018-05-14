@@ -875,16 +875,13 @@ h1 small .activityTagLabel:first-child{
 }
 
 #status h2 {
-	font-size: 1.4rem;
 	text-align: center;
-	margin: 0 0 1rem 0;
 }
 #status h3 {
 	font-size: 1.25rem;
 	margin: 20px 0;
 }
 #status i {
-	font-size: 1.25rem;
 	font-weight: 700;
 }
 #status span {
@@ -893,7 +890,6 @@ h1 small .activityTagLabel:first-child{
 	margin: 15px 0;
 }
 #status ol {
-	font-size: 1.25rem;
 	padding: 0 0 0 20px;
 	text-align: justify;
 }
@@ -912,7 +908,6 @@ h1 small .activityTagLabel:first-child{
 	text-align: center;
 }
 .private ol li {
-	font-size: 1.25rem;
 }
 .private span {
 	clear: both;
