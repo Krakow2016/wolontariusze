@@ -197,6 +197,19 @@ module.exports = function(server) {
 		}, fetchrPlugin.getMiddleware())
 	}
 
+  server.get('/rodo', urlencodedParser, (req, res) => {
+    let rodo = {
+      date: Date.now(),
+      token: req.query,
+      ip: req.connection.remoteAddress,
+      headers: req.headers
+    }
+    r.table('Rodo').insert(rodo).run()
+      .then((result) => {
+        res.redirect('https://goradobra.pl/regulamin')
+      })
+  })
+
 	// W pierwszej kolejności sprawdź ścieżki z poza single-page
 	// application
 	server.post('/login', jsonParser, urlencodedParser, function (req, res, next) {
