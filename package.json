@@ -65,7 +65,7 @@
     "session-rethinkdb": "^2.0.0",
     "sharp": "^0.15.0",
     "smtpapi": "^1.2.0",
-    "superagent": "2.0.0",
+    "superagent": "3.7.0",
     "universal-analytics": "^0.3.10",
     "uuid": "^3.0.0",
     "vis": "^4.17.0"
