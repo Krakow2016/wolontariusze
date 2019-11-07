@@ -53,8 +53,15 @@ createComponent = function(component, props, children) {
   props.context = context.getComponentContext()
 
   context.getActionContext().dispatch('LOAD_VOLUNTEER', {
+      id: 1,
       first_name: "Jan",
-      last_name: "Kowalski"
+      last_name: "Kowalski",
+      nationality: "UK",
+      profile_picture_url: "profilePhoto.img",
+      tags: ["Wolontariat Plus", "Młody Ambasador", "Admin"],
+      who_question: "Lorem ipsum dolor sit amet",
+      what_question: "Donec congue condimentum ante",
+      why_question: "Etiam massa orci"
   });
 
   return element(props, props_children)
